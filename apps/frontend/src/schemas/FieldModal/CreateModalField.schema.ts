@@ -8,41 +8,47 @@ const fieldKeySchema = z
             'Key must use only lowercase English letters, numbers, hyphens, and underscores (no spaces)',
     });
 
-// TODO D: for fields we should move order creation logic from back end to front end
 
 const fieldNameSchema = z.string().min(1).max(255);
 
-const fieldOptionSchema = z.object({
+export const fieldOptionSchema = z.object({
     value: z.string().min(1),
     label: z.string().min(1),
 });
 
-const inputParamsSchema = z.object({
+export const inputParamsSchema = z.object({
     placeholder: z.string().optional(),
     helpText: z.string().optional(),
 });
 
-const choiceParamsSchema = z.object({
+export const textAreaParamsSchema = z.object({
+    ...inputParamsSchema.shape,
+    rows: z.number().positive().optional(),
+});
+
+export const choiceParamsSchema = z.object({
     options: z.array(fieldOptionSchema).min(1, 'At least one option is required'),
     placeholder: z.string().optional(),
 });
 
-const groupParamsSchema = z.object({
+export const groupParamsSchema = z.object({
     description: z.string().optional(),
 });
 
-const checkboxParamsSchema = z.object({
+export const checkboxParamsSchema = z.object({
     helpText: z.string().optional(),
 });
 
-const fileParamsSchema = z.object({
+export const fileParamsSchema = z.object({
     accept: z.array(z.string()).optional(),
     maxSizeMb: z.number().positive().optional(),
 });
 
 const createFieldSchema = z.object({
+    id: z.uuidv7(),
     key: fieldKeySchema,
     name: fieldNameSchema,
+    order: z.number().positive()
 });
 
 const buildCreateModalFieldVariants = <
@@ -84,7 +90,7 @@ const buildCreateModalFieldVariants = <
         leafField('number', inputParams),
         leafField('date', inputParams),
         leafField('time', inputParams),
-        leafField('textarea', inputParams),
+        leafField('textarea', textAreaParamsSchema),
         leafField('select', choiceParams),
         leafField('radio', choiceParams),
         leafField('checkbox', checkboxParams),
@@ -122,4 +128,6 @@ export const createInputFieldSchema = z.discriminatedUnion('type', [
 
 export const createModalFieldSchema = z.discriminatedUnion('type', createModalFieldVariants);
 
-export type CreateModalFieldInput = z.infer<typeof createModalFieldSchema>;
+
+export type CreateModalFieldInput = z.input<typeof createModalFieldSchema>;
+export type CreateModalFieldOutput = z.infer<typeof createModalFieldSchema>;
