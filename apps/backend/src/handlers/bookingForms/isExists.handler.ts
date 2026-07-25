@@ -2,7 +2,7 @@ import { createFactory } from 'hono/factory';
 import { zValidator } from '@hono/zod-validator';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 import { isBookingFormExists } from '@/utils/isBookingFormExists.js';
-import { isBookingFormExistsSchema } from '@schemas/bookingForms/isExists.schema.js';
+import { isBookingFormExistsSchema } from '@/schemas/bookingForms/isExists.schema.js';
 
 const factory = createFactory().createHandlers;
 

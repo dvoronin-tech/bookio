@@ -8,7 +8,7 @@ import { getMemberByOrgAndUserId } from '@/utils/getMemberByOrgAndUserId.js';
 import {
     getOrganizationDataSchema,
     organizationSchema,
-} from '@schemas/organization/get.schema.js';
+} from '@/schemas/organization/get.schema.js';
 
 const factory = createFactory().createHandlers;
 

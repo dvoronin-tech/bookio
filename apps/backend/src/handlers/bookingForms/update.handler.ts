@@ -5,7 +5,7 @@ import { bookingForms } from '@bookio/db';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 import { isBookingFormExists } from '@/utils/isBookingFormExists.js';
 import { eq } from 'drizzle-orm';
-import { updateBookingFormSchema } from '@schemas/bookingForms/update.schema.js';
+import { updateBookingFormSchema } from '@/schemas/bookingForms/update.schema.js';
 
 const factory = createFactory().createHandlers;
 

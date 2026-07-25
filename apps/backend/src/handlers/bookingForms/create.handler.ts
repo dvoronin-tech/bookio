@@ -4,7 +4,7 @@ import { db } from '@/db.js';
 import { bookingForms, bookingFormStyles, bookingFormMetaData } from '@bookio/db';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 import { isBookingFormExists } from '@/utils/isBookingFormExists.js';
-import { createBookingFormSchema } from '@schemas/bookingForms/create.schema.js';
+import { createBookingFormSchema } from '@/schemas/bookingForms/create.schema.js';
 
 const factory = createFactory().createHandlers;
 

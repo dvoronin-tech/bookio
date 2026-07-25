@@ -4,7 +4,7 @@ import { db } from '@/db.js';
 import { bookingFormStyles } from '@bookio/db';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 import { eq } from 'drizzle-orm';
-import { updateBookingFormStylesSchema } from '@schemas/bookingFormStyles/update.schema.js';
+import { updateBookingFormStylesSchema } from '@/schemas/bookingFormStyles/update.schema.js';
 
 const factory = createFactory().createHandlers;
 
@@ -12,8 +12,15 @@ export const updateBookingFormStylesHandler = factory(
     zValidator('json', updateBookingFormStylesSchema),
     async (c) => {
         try {
-            const { bookingFormId, primary, bgMain, bgSecondary, borderColor, textMain, textSecondary } =
-                c.req.valid('json');
+            const {
+                bookingFormId,
+                primary,
+                bgMain,
+                bgSecondary,
+                borderColor,
+                textMain,
+                textSecondary,
+            } = c.req.valid('json');
 
             const existingStyles = await db.query.bookingFormStyles.findFirst({
                 where: (styles, { eq }) => eq(styles.bookingFormId, bookingFormId),

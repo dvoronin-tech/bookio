@@ -7,7 +7,7 @@ import { eq, inArray } from 'drizzle-orm';
 import {
     type SyncBookingFormFieldItem,
     syncBookingFormFieldsSchema,
-} from '@schemas/bookingFormFields/sync.schema.js';
+} from '@/schemas/bookingFormFields/sync.schema.js';
 import type { ContentfulStatusCode } from 'hono/utils/http-status';
 
 const factory = createFactory().createHandlers;

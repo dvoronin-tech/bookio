@@ -9,7 +9,7 @@ import {
     fileParamsSchema,
     groupParamsSchema,
     inputParamsSchema,
-} from '@schemas/bookingFormFields/shared.schema.js';
+} from '@/schemas/bookingFormFields/shared.schema.js';
 
 export const syncBookingFormFieldItemSchema = z.discriminatedUnion(
     'type',
@@ -41,7 +41,9 @@ export const syncBookingFormFieldsSchema = z
         const keys = new Set<string>();
         const ids = new Set<string>();
         const groupIds = new Set(
-            data.fields.filter((field) => field.type === 'group' && field.id).map((field) => field.id!),
+            data.fields
+                .filter((field) => field.type === 'group' && field.id)
+                .map((field) => field.id!),
         );
 
         for (const [index, field] of data.fields.entries()) {

@@ -10,7 +10,6 @@
         "types": ["node"],
         "paths": {
             "@/*": ["./src/*"],
-            "@schemas/*": ["./src/schemas/*"]
         },
         "jsx": "react-jsx",
         "jsxImportSource": "hono/jsx",

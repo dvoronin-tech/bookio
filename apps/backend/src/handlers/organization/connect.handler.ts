@@ -4,7 +4,7 @@ import { db } from '@/db.js';
 import { members, organizations } from '@bookio/db';
 import { and, eq } from 'drizzle-orm';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
-import { connectOrganizationSchema } from '@schemas/organization/connect.schema.js';
+import { connectOrganizationSchema } from '@/schemas/organization/connect.schema.js';
 
 const factory = createFactory().createHandlers;
 

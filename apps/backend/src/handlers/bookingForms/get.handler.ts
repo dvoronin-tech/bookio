@@ -7,7 +7,7 @@ import {
     getBookingFormBySlugsSchema,
     getBookingFormSchema,
     getBookingFormsSchema,
-} from '@schemas/bookingForms/get.schema.js';
+} from '@/schemas/bookingForms/get.schema.js';
 
 const factory = createFactory().createHandlers;
 
