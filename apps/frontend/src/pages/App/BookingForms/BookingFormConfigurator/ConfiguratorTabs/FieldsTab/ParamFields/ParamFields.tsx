@@ -1,10 +1,11 @@
 import type { BookingFormFieldType } from '@api/bookingForms/bookingFormFields/getBookingFormField';
-import { useCallback, type ChangeEvent, type FC } from 'react';
+import { useCallback, type ChangeEvent, type FC, useState, useEffect, useMemo } from 'react';
 import { paramsFieldConfig } from '@utils/paramsFieldConfig';
 import { Button, Input } from '@bookio/ui';
 import styles from './ParamFields.module.scss';
 import PlusIcon from '@assets/icons/plus.svg?react';
 import TrashIcon from '@assets/icons/trash.svg?react';
+import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
 
 interface OptionItem {
     value: string;
@@ -15,18 +16,34 @@ interface ParamFieldProps {
     type: BookingFormFieldType['type'] | undefined;
     options: OptionItem[];
     onAddOption: () => void;
-    onRemoveOption: (index: number) => void;
-    onUpdateOption: (index: number, field: keyof OptionItem, value: string) => void;
+    onRemoveOption: (index: string) => void;
+    onUpdateOption: (index: string, field: keyof OptionItem, value: string) => void;
 }
 
 interface OptionItemProps {
-    index: number;
+    index: string;
+    options: OptionItem[];
     option: OptionItem;
-    onRemoveOption: (index: number) => void;
-    onUpdateOption: (index: number, field: keyof OptionItem, value: string) => void;
+    onRemoveOption: (index: string) => void;
+    onUpdateOption: (index: string, field: keyof OptionItem, value: string) => void;
 }
 
-const OptionItem: FC<OptionItemProps> = ({ index, option, onRemoveOption, onUpdateOption }) => {
+const OptionItem: FC<OptionItemProps> = ({
+    index,
+    options,
+    option,
+    onRemoveOption,
+    onUpdateOption,
+}) => {
+    const { isLabelUnique, isValueUnique } = useMemo(() => {
+        if (options.length === 0) return { isValueUnique: undefined, isLabelUnique: undefined };
+
+        return {
+            isValueUnique: options.some((option) => option.value === option.value),
+            isLabelUnique: options.some((option) => option.label === option.label),
+        };
+    }, [options]);
+
     const handleRemoveOption = useCallback(() => {
         onRemoveOption(index);
     }, [index, onRemoveOption]);
@@ -47,15 +64,38 @@ const OptionItem: FC<OptionItemProps> = ({ index, option, onRemoveOption, onUpda
 
     return (
         <div className={styles.option}>
-            <Input label="Value" type="text" value={option.value} onChange={handleValueChange} />
-            <Input label="Label" type="text" value={option.label} onChange={handleLabelChange} />
-            <Button variant="red-clean" onClick={handleRemoveOption} className={styles.removeOptionButton}>
+            <ValidatableInput
+                isValid={isValueUnique}
+                label="Value"
+                type="text"
+                value={option.value}
+                onChange={handleValueChange}
+            />
+            <ValidatableInput
+                isValid={isLabelUnique}
+                label="Label"
+                type="text"
+                value={option.label}
+                onChange={handleLabelChange}
+            />
+            <Button
+                variant="red-clean"
+                onClick={handleRemoveOption}
+                className={styles.removeOptionButton}
+            >
                 <TrashIcon />
                 <span>Remove option</span>
             </Button>
         </div>
     );
 };
+
+// interface SelectQItemProps {
+
+// }
+
+// const SelectItem: FC<>
+
 export const ParamFields: FC<ParamFieldProps> = ({
     type,
     options,
@@ -78,7 +118,8 @@ export const ParamFields: FC<ParamFieldProps> = ({
                         {options.map((option, index) => (
                             <OptionItem
                                 key={index}
-                                index={index}
+                                index={option.value}
+                                options={options}
                                 option={option}
                                 onRemoveOption={onRemoveOption}
                                 onUpdateOption={onUpdateOption}
@@ -96,6 +137,10 @@ export const ParamFields: FC<ParamFieldProps> = ({
                 </div>
             );
         }
+
+        // if (field.type === 'select') {
+
+        // }
 
         return null;
     });

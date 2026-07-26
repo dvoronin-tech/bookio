@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, type FC } from 'react';
+import { memo, useCallback, useEffect, useMemo, type FC, type MouseEvent } from 'react';
 import styles from './CreateFieldModal.module.scss';
 import { Dialog, Input } from '@bookio/ui';
 import { ChoiceChip } from '@components/ChoiceChip/ChoiceChip';
@@ -47,39 +47,46 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
         [formData.type, formData.params],
     );
 
-    const handleCancel = useCallback(() => {
-        onOpenChange(false);
-    }, [onOpenChange]);
+    const handleCancel = useCallback(
+        (value: boolean | MouseEvent<HTMLButtonElement>) => {
+            if (typeof value === 'boolean') {
+                onOpenChange(value);
+            } else {
+                value.preventDefault();
+                value.stopPropagation();
+                onOpenChange(false);
+            }
+            reset();
+        },
+        [onOpenChange, reset],
+    );
 
     const handleAddOption = useCallback(() => {
         if (formData.type !== 'select' && formData.type !== 'radio') return;
 
-        setValue('params.options', [
-            ...choiceOptions,
-            { value: '', label: '' },
-        ]);
+        setValue('params.options', [...choiceOptions, { value: '', label: '' }]);
     }, [choiceOptions, formData.type, setValue]);
 
     const handleRemoveOption = useCallback(
-        (index: number) => {
+        (index: string) => {
             if (formData.type !== 'select' && formData.type !== 'radio') return;
 
             setValue(
                 'params.options',
-                choiceOptions.filter((_, optionIndex) => optionIndex !== index),
+                choiceOptions.filter((option) => option.value !== index),
             );
         },
         [choiceOptions, formData.type, setValue],
     );
 
     const handleUpdateOption = useCallback(
-        (index: number, field: 'value' | 'label', newValue: string) => {
+        (index: string, field: 'value' | 'label', newValue: string) => {
             if (formData.type !== 'select' && formData.type !== 'radio') return;
 
             setValue(
                 'params.options',
-                choiceOptions.map((option, optionIndex) =>
-                    optionIndex === index ? { ...option, [field]: newValue } : option,
+                choiceOptions.map((option) =>
+                    option.value === index ? { ...option, [field]: newValue } : option,
                 ),
             );
         },
@@ -88,7 +95,6 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
 
     useEffect(() => {
         if (!open) {
-            reset({});
             setCreateBookingFormField(null);
             return;
         }
@@ -100,12 +106,12 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
             ...(formData.key !== undefined ? { key: formData.key } : {}),
             ...(formData.params !== undefined ? { params: formData.params } : {}),
         });
-    }, [open, formData, reset, setCreateBookingFormField]);
+    }, [open, formData, setCreateBookingFormField]);
 
     return (
         <Dialog
             open={open}
-            onOpenChange={onOpenChange}
+            onOpenChange={handleCancel}
             closeOnEscape
             contentClassName={styles.content}
         >
@@ -172,4 +178,3 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
         </Dialog>
     );
 });
-
