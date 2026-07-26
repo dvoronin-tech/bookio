@@ -1,4 +1,3 @@
-import type { BookingFormFieldType } from '@api/bookingForms/bookingFormFields/getBookingFormField';
 import {
     inputParamsSchema,
     choiceParamsSchema,
@@ -76,29 +75,24 @@ const fileAcceptOptions = [
     'text/vcard',
 ] as const;
 
-interface BaseUIFieldType {
+export interface BaseUIFieldType {
     label: string;
     type: 'text' | 'checkbox' | 'number';
 }
 
-interface ScalarUIField {
-    label: string;
-    type: 'text';
-}
-
-interface OptionsUIField {
+export interface OptionsUIField {
     label: string;
     type: 'options';
-    itemFields: Record<FieldOptionKey, ScalarUIField>;
+    itemFields: Record<FieldOptionKey, BaseUIFieldType>;
 }
 
-interface FileUiField {
+export interface FileUiField {
     label: string;
     type: 'select';
     options: typeof fileAcceptOptions;
 }
 
-interface ImageUiField {
+export interface ImageUiField {
     label: string;
     type: 'select';
     options: typeof imageAcceptOptions;
@@ -185,9 +179,23 @@ const imageFieldsConfig: Record<FileParamKey, BaseUIFieldType | ImageUiField> = 
     },
 };
 
-type UIField = BaseUIFieldType | ChoiceUIField | FileUiField | ImageUiField;
+export type ParamsFieldConfig = {
+    text: BaseUIFieldType[];
+    email: BaseUIFieldType[];
+    phone: BaseUIFieldType[];
+    url: BaseUIFieldType[];
+    number: BaseUIFieldType[];
+    date: BaseUIFieldType[];
+    time: BaseUIFieldType[];
+    textarea: BaseUIFieldType[];
+    select: ChoiceUIField[];
+    radio: ChoiceUIField[];
+    checkbox: BaseUIFieldType[];
+    file: (BaseUIFieldType | FileUiField)[];
+    image: (BaseUIFieldType | ImageUiField)[];
+    group: BaseUIFieldType[];
+};
 
-type ParamsFieldConfig = Record<BookingFormFieldType['type'], UIField[]>;
 
 export const paramsFieldConfig: ParamsFieldConfig = {
     text: Object.values(inputFieldsConfig),
@@ -205,3 +213,5 @@ export const paramsFieldConfig: ParamsFieldConfig = {
     image: Object.values(imageFieldsConfig),
     group: Object.values(groupFieldsConfig),
 };
+
+export type UIFields = typeof paramsFieldConfig[keyof typeof paramsFieldConfig];
