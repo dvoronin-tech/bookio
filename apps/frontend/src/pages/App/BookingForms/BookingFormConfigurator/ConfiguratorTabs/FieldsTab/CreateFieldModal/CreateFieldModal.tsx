@@ -1,4 +1,4 @@
-import { memo, useCallback, useEffect, useMemo, type FC, type MouseEvent } from 'react';
+import { memo, useCallback, useEffect, useLayoutEffect, useMemo, type FC, type MouseEvent } from 'react';
 import styles from './CreateFieldModal.module.scss';
 import { Dialog, Input } from '@bookio/ui';
 import { ChoiceChip } from '@components/ChoiceChip/ChoiceChip';
@@ -16,7 +16,36 @@ import {
     type CreateModalFieldInput,
 } from '@schemas/FieldModal/CreateModalField.schema';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ParamFields } from '../ParamFields/ParamFields';
+import { ParamFields, type OptionItem } from '../ParamFields/ParamFields';
+
+const createEmptyOption = (): OptionItem => ({
+    id: crypto.randomUUID(),
+    value: '',
+    label: '',
+});
+
+const stripOptionIds = (options: OptionItem[]) =>
+    options.map(({ value, label }) => ({ value, label }));
+
+const ensureOptionIds = (
+    options: Array<{ value?: string; label?: string; id?: string }>,
+): OptionItem[] =>
+    options.map((option) => ({
+        id: option.id ?? crypto.randomUUID(),
+        value: option.value ?? '',
+        label: option.label ?? '',
+    }));
+
+const getChoiceOptionsFromParams = (
+    type: CreateModalFieldInput['type'] | undefined,
+    params: CreateModalFieldInput['params'] | undefined,
+) => {
+    if ((type !== 'select' && type !== 'radio') || !params || !('options' in params)) {
+        return [];
+    }
+
+    return params.options ?? [];
+};
 interface CreateFieldModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -36,16 +65,20 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
 
     const formData = useWatch({ control });
 
-    const choiceOptions = useMemo(
-        () =>
-            formData.type === 'select' || formData.type === 'radio'
-                ? (formData.params?.options ?? []).map((option) => ({
-                      value: option.value ?? '',
-                      label: option.label ?? '',
-                  }))
-                : [],
-        [formData.type, formData.params],
-    );
+    const choiceOptions = useMemo((): OptionItem[] => {
+        return getChoiceOptionsFromParams(formData.type, formData.params).map((option) => ({
+            id: (option as OptionItem).id,
+            value: option.value ?? '',
+            label: option.label ?? '',
+        }));
+    }, [formData.type, formData.params]);
+
+    useLayoutEffect(() => {
+        const options = getChoiceOptionsFromParams(formData.type, formData.params);
+        if (options.length === 0 || options.every((option) => (option as OptionItem).id)) return;
+
+        setValue('params.options', ensureOptionIds(options));
+    }, [formData.type, formData.params, setValue]);
 
     const handleCancel = useCallback(
         (value: boolean | MouseEvent<HTMLButtonElement>) => {
@@ -64,29 +97,29 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
     const handleAddOption = useCallback(() => {
         if (formData.type !== 'select' && formData.type !== 'radio') return;
 
-        setValue('params.options', [...choiceOptions, { value: '', label: '' }]);
+        setValue('params.options', [...choiceOptions, createEmptyOption()]);
     }, [choiceOptions, formData.type, setValue]);
 
     const handleRemoveOption = useCallback(
-        (index: string) => {
+        (id: string) => {
             if (formData.type !== 'select' && formData.type !== 'radio') return;
 
             setValue(
                 'params.options',
-                choiceOptions.filter((option) => option.value !== index),
+                choiceOptions.filter((option) => option.id !== id),
             );
         },
         [choiceOptions, formData.type, setValue],
     );
 
     const handleUpdateOption = useCallback(
-        (index: string, field: 'value' | 'label', newValue: string) => {
+        (id: string, field: 'value' | 'label', newValue: string) => {
             if (formData.type !== 'select' && formData.type !== 'radio') return;
 
             setValue(
                 'params.options',
                 choiceOptions.map((option) =>
-                    option.value === index ? { ...option, [field]: newValue } : option,
+                    option.id === id ? { ...option, [field]: newValue } : option,
                 ),
             );
         },
@@ -99,12 +132,21 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
             return;
         }
 
+        const choiceParamsOptions = getChoiceOptionsFromParams(formData.type, formData.params);
+        const params =
+            choiceParamsOptions.length > 0
+                ? {
+                      ...formData.params,
+                      options: stripOptionIds(ensureOptionIds(choiceParamsOptions)),
+                  }
+                : formData.params;
+
         setCreateBookingFormField({
             ...(formData.type ? { type: formData.type } : {}),
             required: formData.required ?? false,
             ...(formData.name !== undefined ? { name: formData.name } : {}),
             ...(formData.key !== undefined ? { key: formData.key } : {}),
-            ...(formData.params !== undefined ? { params: formData.params } : {}),
+            ...(params !== undefined ? { params } : {}),
         });
     }, [open, formData, setCreateBookingFormField]);
 

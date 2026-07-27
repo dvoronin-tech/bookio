@@ -1,5 +1,5 @@
 import type { BookingFormFieldType } from '@api/bookingForms/bookingFormFields/getBookingFormField';
-import { useCallback, type ChangeEvent, type FC, useState, useEffect, useMemo } from 'react';
+import { useCallback, type ChangeEvent, type FC, useMemo } from 'react';
 import { paramsFieldConfig } from '@utils/paramsFieldConfig';
 import { Button, Input } from '@bookio/ui';
 import styles from './ParamFields.module.scss';
@@ -7,7 +7,8 @@ import PlusIcon from '@assets/icons/plus.svg?react';
 import TrashIcon from '@assets/icons/trash.svg?react';
 import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
 
-interface OptionItem {
+export interface OptionItem {
+    id: string;
     value: string;
     label: string;
 }
@@ -16,50 +17,58 @@ interface ParamFieldProps {
     type: BookingFormFieldType['type'] | undefined;
     options: OptionItem[];
     onAddOption: () => void;
-    onRemoveOption: (index: string) => void;
-    onUpdateOption: (index: string, field: keyof OptionItem, value: string) => void;
+    onRemoveOption: (id: string) => void;
+    onUpdateOption: (id: string, field: 'value' | 'label', value: string) => void;
 }
 
 interface OptionItemProps {
-    index: string;
+    id: string;
     options: OptionItem[];
     option: OptionItem;
-    onRemoveOption: (index: string) => void;
-    onUpdateOption: (index: string, field: keyof OptionItem, value: string) => void;
+    onRemoveOption: (id: string) => void;
+    onUpdateOption: (id: string, field: 'value' | 'label', value: string) => void;
 }
 
 const OptionItem: FC<OptionItemProps> = ({
-    index,
+    id,
     options,
     option,
     onRemoveOption,
     onUpdateOption,
 }) => {
     const { isLabelUnique, isValueUnique } = useMemo(() => {
-        if (options.length === 0) return { isValueUnique: undefined, isLabelUnique: undefined };
+        const isValueUnique: boolean | undefined =
+            option.value === ''
+                ? undefined
+                : options.filter((o) => o.value === option.value).length === 1;
+
+        const isLabelUnique: boolean | undefined =
+            option.label === ''
+                ? undefined
+                : options.filter((o) => o.label === option.label).length === 1;
 
         return {
-            isValueUnique: options.some((option) => option.value === option.value),
-            isLabelUnique: options.some((option) => option.label === option.label),
+            isValueUnique,
+            isLabelUnique,
         };
-    }, [options]);
+    }, [options, option.value, option.label]);
 
     const handleRemoveOption = useCallback(() => {
-        onRemoveOption(index);
-    }, [index, onRemoveOption]);
+        onRemoveOption(id);
+    }, [id, onRemoveOption]);
 
     const handleValueChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
-            onUpdateOption(index, 'value', event.target.value);
+            onUpdateOption(id, 'value', event.target.value);
         },
-        [index, onUpdateOption],
+        [id, onUpdateOption],
     );
 
     const handleLabelChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
-            onUpdateOption(index, 'label', event.target.value);
+            onUpdateOption(id, 'label', event.target.value);
         },
-        [index, onUpdateOption],
+        [id, onUpdateOption],
     );
 
     return (
@@ -115,10 +124,10 @@ export const ParamFields: FC<ParamFieldProps> = ({
                 <div key={field.label} className={styles.optionsContainer}>
                     <span className={styles.optionsLabel}>{field.label}</span>
                     <div className={styles.optionsList}>
-                        {options.map((option, index) => (
+                        {options.map((option) => (
                             <OptionItem
-                                key={index}
-                                index={option.value}
+                                key={option.id}
+                                id={option.id}
                                 options={options}
                                 option={option}
                                 onRemoveOption={onRemoveOption}
