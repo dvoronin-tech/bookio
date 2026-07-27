@@ -36,6 +36,10 @@ export type InputFieldParams = {
     helpText?: string;
 };
 
+export type TextAreaFieldParams = InputFieldParams & {
+    rows?: number;
+};
+
 export type FieldOption = {
     id: string;
     value: string;
@@ -60,9 +64,11 @@ export type FileFieldParams = {
     maxSizeMb?: number;
 };
 
-export type FieldParamsByType<T extends FieldType> = T extends InputFieldType
-    ? InputFieldParams
-    : T extends ChoiceFieldType
+export type FieldParamsByType<T extends FieldType> = T extends 'textarea'
+    ? TextAreaFieldParams
+    : T extends InputFieldType
+      ? InputFieldParams
+      : T extends ChoiceFieldType
       ? ChoiceFieldParams
       : T extends 'group'
         ? GroupFieldParams

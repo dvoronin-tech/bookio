@@ -1,9 +1,9 @@
 import { useCallback, type ChangeEvent, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, ColorPicker, Input } from '@bookio/ui';
-import { useCreateBookingFormStore } from '@store/useCreateBookingFormStore';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
 import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
-import { DEFAULT_BOOKING_FORM_STYLES } from '@utils/defaultBookingFormStyles';
+import { DEFAULT_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyles';
 import { step3Schema } from '../../schemas/createBookingFormDraft.schema';
 import toast from 'react-hot-toast';
 import styles from './Step3Styles.module.scss';

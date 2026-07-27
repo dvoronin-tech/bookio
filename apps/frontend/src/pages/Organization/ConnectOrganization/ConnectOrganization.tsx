@@ -4,13 +4,13 @@ import { Button, Input } from '@bookio/ui';
 import {
     useConnectToOrganization,
     type ConnectToOrganizationRequest,
-} from '@api/organizations/connectToOrganization';
+} from '#api/organizations/connectToOrganization';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getFirstFieldError } from '@utils/formErrors';
+import { getFirstFieldError } from '#utils/formErrors';
 
 const formSchema = z.object({
     slug: z.string().min(1).max(255),

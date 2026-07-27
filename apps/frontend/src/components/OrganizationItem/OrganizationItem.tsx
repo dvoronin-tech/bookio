@@ -3,16 +3,16 @@ import styles from './OrganizationItem.module.scss';
 import { format } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import { clsx } from 'clsx';
-import PlaceholderImage from '@assets/images/OrganizationPlaceholder.webp';
+import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import { Dialog } from '@bookio/ui';
 
-import type { OrganizationType } from '@api/organizations/getOrganizationsByUserId';
+import type { OrganizationType } from '#api/organizations/getOrganizationsByUserId';
 import { Button } from '@bookio/ui';
 import { toast } from 'react-hot-toast';
 
-import TrashIcon from '@assets/icons/trash.svg?react';
-import { useLogoutOrganization } from '@api/organizations/logoutOgranization';
-import { useOnPress } from '@hooks/useOnPress';
+import TrashIcon from '#assets/icons/trash.svg?react';
+import { useLogoutOrganization } from '#api/organizations/logoutOgranization';
+import { useOnPress } from '#hooks/useOnPress';
 
 const getDialogContent = (organizationName: string, role: OrganizationType['role']) => {
     switch (role) {

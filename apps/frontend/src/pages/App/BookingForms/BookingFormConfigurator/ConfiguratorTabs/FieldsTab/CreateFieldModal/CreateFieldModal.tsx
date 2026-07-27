@@ -1,20 +1,20 @@
 import { memo, useCallback, useEffect, useLayoutEffect, useMemo, type FC, type MouseEvent } from 'react';
 import styles from './CreateFieldModal.module.scss';
 import { Dialog, Input } from '@bookio/ui';
-import { ChoiceChip } from '@components/ChoiceChip/ChoiceChip';
-import { RequiredRow } from '@components/RequiredRow/RequiredRow';
-import { fieldTypeIcons } from '@components/ConfiguratorField/fieldTypeIcons';
-import PlusIcon from '@assets/icons/plus.svg?react';
+import { ChoiceChip } from '#components/ChoiceChip/ChoiceChip';
+import { RequiredRow } from '#components/RequiredRow/RequiredRow';
+import { fieldTypeIcons } from '#components/ConfiguratorField/fieldTypeIcons';
+import PlusIcon from '#assets/icons/plus.svg?react';
 
-import { useBookingFormConfiguratorStore } from '@store/useBookingFormConfiguratorStore';
+import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { useForm, useWatch } from 'react-hook-form';
-import type { EntireBookingFormField } from '@api/bookingForms/getEntireBookingFormById';
+import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 import { useShallow } from 'zustand/shallow';
 
 import {
     createModalFieldSchema,
     type CreateModalFieldInput,
-} from '@schemas/FieldModal/CreateModalField.schema';
+} from '@bookio/backend/schemas';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ParamFields, type OptionItem } from '../ParamFields/ParamFields';
 

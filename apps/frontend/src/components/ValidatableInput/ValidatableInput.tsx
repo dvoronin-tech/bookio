@@ -13,7 +13,7 @@ import {
     useRole,
 } from '@floating-ui/react';
 import { BaseInput, InputField, type InputProps } from '@bookio/ui';
-import WarningIcon from '@assets/icons/warning.svg?react';
+import WarningIcon from '#assets/icons/warning.svg?react';
 import styles from './ValidatableInput.module.scss';
 
 type ValidatableInputBaseProps = {
@@ -126,7 +126,7 @@ function ValidatableTextareaInput(props: TextareaValidatableInputProps) {
         <InputField label={label} htmlFor={inputId}>
             <div className={rootClasses}>
                 <BaseInput {...inputProps} id={inputId} className={classes || undefined} />
-                {showError && <ErrorHint message={errorMessage} />}
+                {(showError && errorMessage) && <ErrorHint message={errorMessage} />}
             </div>
         </InputField>
     );
@@ -145,7 +145,7 @@ function ValidatableNativeInput(props: NativeValidatableInputProps) {
         <InputField label={label} htmlFor={inputId}>
             <div className={rootClasses}>
                 <BaseInput {...inputProps} id={inputId} className={classes || undefined} />
-                {showError && <ErrorHint message={errorMessage} />}
+                {(showError && errorMessage) && <ErrorHint message={errorMessage} />}
             </div>
         </InputField>
     );

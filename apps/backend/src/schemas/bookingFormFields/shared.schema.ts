@@ -5,12 +5,32 @@ import type {
     FileFieldParams,
     GroupFieldParams,
     InputFieldParams,
+    TextAreaFieldParams,
 } from '@bookio/db';
 import { z } from 'zod';
 
+export const fieldKeySchema = z
+    .string()
+    .min(1)
+    .max(255)
+    .regex(/^[a-z0-9][a-z0-9-_]*$/, {
+        message:
+            'Key must use only lowercase English letters, numbers, hyphens, and underscores (no spaces)',
+    });
+
+export const fieldNameSchema = z.string().min(1).max(255);
+
+export const fieldOptionValueSchema = z
+    .string()
+    .min(1)
+    .regex(/^[a-zA-Z0-9_-]+$/, {
+        message:
+            'Value must use only letters, numbers, hyphens, and underscores (no spaces)',
+    });
+
 export const fieldOptionSchema = z.object({
     id: z.string().min(1),
-    value: z.string().min(1),
+    value: fieldOptionValueSchema,
     label: z.string().min(1),
 }) satisfies z.ZodType<FieldOption>;
 
@@ -18,6 +38,11 @@ export const inputParamsSchema = z.object({
     placeholder: z.string().optional(),
     helpText: z.string().optional(),
 }) satisfies z.ZodType<InputFieldParams>;
+
+export const textAreaParamsSchema = z.object({
+    ...inputParamsSchema.shape,
+    rows: z.number().positive().optional(),
+}) satisfies z.ZodType<TextAreaFieldParams>;
 
 export const choiceParamsSchema = z.object({
     options: z.array(fieldOptionSchema).min(1, 'At least one option is required'),
@@ -37,20 +62,13 @@ export const fileParamsSchema = z.object({
     maxSizeMb: z.number().positive().optional(),
 }) satisfies z.ZodType<FileFieldParams>;
 
-export const fieldKeySchema = z
-    .string()
-    .min(1)
-    .max(255)
-    .regex(/^\S+$/, 'Key must not contain spaces');
-
-export const fieldNameSchema = z.string().min(1).max(255);
-
 type BuildFieldVariantsOptions<
     TBase extends z.ZodRawShape,
     TRequired extends z.ZodType,
     TGroupRequired extends z.ZodType,
     TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
+    TTextAreaParams extends z.ZodType,
     TChoiceParams extends z.ZodType,
     TCheckboxParams extends z.ZodType,
     TFileParams extends z.ZodType,
@@ -62,6 +80,7 @@ type BuildFieldVariantsOptions<
     groupParentId: TGroupParentId;
     leafParentId: z.ZodNullable<z.ZodUUID>;
     inputParams: TInputParams;
+    textAreaParams: TTextAreaParams;
     choiceParams: TChoiceParams;
     checkboxParams: TCheckboxParams;
     fileParams: TFileParams;
@@ -78,6 +97,7 @@ export const buildBookingFormFieldVariants = <
     TGroupRequired extends z.ZodType,
     TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
+    TTextAreaParams extends z.ZodType,
     TChoiceParams extends z.ZodType,
     TCheckboxParams extends z.ZodType,
     TFileParams extends z.ZodType,
@@ -89,6 +109,7 @@ export const buildBookingFormFieldVariants = <
     groupParentId,
     leafParentId,
     inputParams,
+    textAreaParams,
     choiceParams,
     checkboxParams,
     fileParams,
@@ -99,6 +120,7 @@ export const buildBookingFormFieldVariants = <
     TGroupRequired,
     TGroupParentId,
     TInputParams,
+    TTextAreaParams,
     TChoiceParams,
     TCheckboxParams,
     TFileParams,
@@ -121,7 +143,7 @@ export const buildBookingFormFieldVariants = <
         leafField('number', inputParams),
         leafField('date', inputParams),
         leafField('time', inputParams),
-        leafField('textarea', inputParams),
+        leafField('textarea', textAreaParams),
         leafField('select', choiceParams),
         leafField('radio', choiceParams),
         leafField('checkbox', checkboxParams),
@@ -136,3 +158,36 @@ export const buildBookingFormFieldVariants = <
         }),
     ] as const;
 };
+
+const createInputFieldVariants = buildBookingFormFieldVariants({
+    base: {
+        id: z.uuid(),
+        name: fieldNameSchema,
+        key: fieldKeySchema,
+        order: z.number().int().min(0),
+    },
+    required: z.boolean().default(false),
+    groupRequired: z.literal(false).default(false),
+    groupParentId: z.null(),
+    leafParentId: z.uuid().nullable(),
+    inputParams: inputParamsSchema.default({}),
+    textAreaParams: textAreaParamsSchema.default({}),
+    choiceParams: choiceParamsSchema,
+    checkboxParams: checkboxParamsSchema.default({}),
+    fileParams: fileParamsSchema.default({}),
+    groupParams: groupParamsSchema.default({}),
+});
+
+export const createInputFieldSchema = z.discriminatedUnion('type', [
+    createInputFieldVariants[0],
+    createInputFieldVariants[1],
+    createInputFieldVariants[2],
+    createInputFieldVariants[3],
+    createInputFieldVariants[4],
+    createInputFieldVariants[5],
+    createInputFieldVariants[6],
+    createInputFieldVariants[7],
+]);
+
+export type CreateInputFieldInput = z.input<typeof createInputFieldSchema>;
+export type CreateInputFieldOutput = z.infer<typeof createInputFieldSchema>;

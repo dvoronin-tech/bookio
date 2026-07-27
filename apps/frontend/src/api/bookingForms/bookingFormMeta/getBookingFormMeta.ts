@@ -1,5 +1,5 @@
-import hono from '@lib/hono-client';
-import { validateError } from '@utils/validateError';
+import hono from '#lib/hono-client';
+import { validateError } from '#utils/validateError';
 import type { InferResponseType } from 'hono/client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 

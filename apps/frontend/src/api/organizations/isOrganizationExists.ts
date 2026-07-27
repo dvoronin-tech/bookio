@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import hono from '@lib/hono-client';
+import hono from '#lib/hono-client';
 import { useDebounce } from 'use-debounce';
 import type { InferRequestType, InferResponseType } from 'hono/client';
 

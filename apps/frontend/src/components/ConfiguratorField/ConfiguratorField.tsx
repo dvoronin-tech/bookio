@@ -1,10 +1,10 @@
 import type { CSSProperties, FC } from 'react';
-import type { EntireBookingFormField } from '@api/bookingForms/getEntireBookingFormById';
+import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 import { Button } from '@bookio/ui';
 
-import GripVerticalIcon from '@assets/icons/grip-vertical.svg?react';
-import EditIcon from '@assets/icons/pen.svg?react';
-import TrashIcon from '@assets/icons/trash.svg?react';
+import GripVerticalIcon from '#assets/icons/grip-vertical.svg?react';
+import EditIcon from '#assets/icons/pen.svg?react';
+import TrashIcon from '#assets/icons/trash.svg?react';
 
 import { fieldTypeIcons } from './fieldTypeIcons';
 import styles from './ConfiguratorField.module.scss';

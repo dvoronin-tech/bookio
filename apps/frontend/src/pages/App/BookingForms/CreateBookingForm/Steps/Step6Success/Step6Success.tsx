@@ -2,11 +2,11 @@ import { useCallback, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/shallow';
 import { Button } from '@bookio/ui';
-import { useCreateBookingFormStore } from '@store/useCreateBookingFormStore';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
 import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
 import styles from './Step6Success.module.scss';
 
-import DoneIcon from '@assets/icons/done.svg?react';
+import DoneIcon from '#assets/icons/done.svg?react';
 
 export const Step6Success: FC = () => {
     const navigate = useNavigate();

@@ -1,8 +1,8 @@
 import { useCallback, type ChangeEvent, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, Input } from '@bookio/ui';
-import TrashIcon from '@assets/icons/trash.svg?react';
-import { useCreateBookingFormStore } from '@store/useCreateBookingFormStore';
+import TrashIcon from '#assets/icons/trash.svg?react';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
 import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
 import { step4Schema } from '../../schemas/createBookingFormDraft.schema';
 import toast from 'react-hot-toast';

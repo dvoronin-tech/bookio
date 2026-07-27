@@ -1,11 +1,11 @@
 import { useCallback, useMemo, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button } from '@bookio/ui';
-import { useCreateBookingForm } from '@api/bookingForms/createBookingForm';
+import { useCreateBookingForm } from '#api/bookingForms/createBookingForm';
 import {
     useCreateBookingFormStore,
     type CreateBookingFormDraft,
-} from '@store/useCreateBookingFormStore';
+} from '#store/useCreateBookingFormStore';
 import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';

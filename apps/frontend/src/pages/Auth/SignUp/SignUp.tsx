@@ -1,12 +1,12 @@
 import { type FC } from 'react';
 import { Button, Input } from '@bookio/ui';
 import styles from './SignUp.module.scss';
-import { useSignUp } from '@api/auth';
+import { useSignUp } from '#api/auth';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getFirstFieldError } from '@utils/formErrors';
+import { getFirstFieldError } from '#utils/formErrors';
 
 const passwordSchema = z
     .string()

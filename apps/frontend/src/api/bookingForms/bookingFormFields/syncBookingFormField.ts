@@ -1,9 +1,9 @@
-import hono from '@lib/hono-client';
+import hono from '#lib/hono-client';
 import type { InferRequestType, InferResponseType } from 'hono/client';
 import { useMutation } from '@tanstack/react-query';
-import { queryClient } from '@lib/query-client';
-import { validateError } from '@utils/validateError';
-import { trimObj } from '@utils/trimObj';
+import { queryClient } from '#lib/query-client';
+import { validateError } from '#utils/validateError';
+import { trimObj } from '#utils/trimObj';
 import { invalidateEntireBookingForm } from '../getEntireBookingFormById';
 
 export type SyncBookingFormFieldRequest = InferRequestType<typeof hono.fields.sync.$put>['json'];

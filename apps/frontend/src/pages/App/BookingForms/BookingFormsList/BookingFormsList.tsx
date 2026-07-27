@@ -1,13 +1,13 @@
 import { useCallback, type FC } from 'react';
 import styles from './BookingFormsList.module.scss';
-import { useGetBookingForms } from '@api/bookingForms/getBookingForms';
+import { useGetBookingForms } from '#api/bookingForms/getBookingForms';
 import { useParams } from 'react-router-dom';
 import { Button, Input } from '@bookio/ui';
-import { Spinner } from '@components/Spinner/Spinner';
-import { BookingFormCard } from '@components/BookingFormCard/BookingFormCard';
+import { Spinner } from '#components/Spinner/Spinner';
+import { BookingFormCard } from '#components/BookingFormCard/BookingFormCard';
 
-import PlusIcon from '@assets/icons/plus.svg?react';
-import SearchIcon from '@assets/icons/search.svg?react';
+import PlusIcon from '#assets/icons/plus.svg?react';
+import SearchIcon from '#assets/icons/search.svg?react';
 
 export const BookingForms: FC = () => {
     const { id } = useParams();

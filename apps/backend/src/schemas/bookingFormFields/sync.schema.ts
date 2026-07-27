@@ -9,7 +9,8 @@ import {
     fileParamsSchema,
     groupParamsSchema,
     inputParamsSchema,
-} from '@/schemas/bookingFormFields/shared.schema.js';
+    textAreaParamsSchema,
+} from './shared.schema.js';
 
 export const syncBookingFormFieldItemSchema = z.discriminatedUnion(
     'type',
@@ -25,6 +26,7 @@ export const syncBookingFormFieldItemSchema = z.discriminatedUnion(
         groupParentId: z.null(),
         leafParentId: z.uuid().nullable(),
         inputParams: inputParamsSchema.default({}),
+        textAreaParams: textAreaParamsSchema.default({}),
         choiceParams: choiceParamsSchema,
         checkboxParams: checkboxParamsSchema.default({}),
         fileParams: fileParamsSchema.default({}),
@@ -81,3 +83,9 @@ export const syncBookingFormFieldsSchema = z
 
 export type SyncBookingFormFieldItem = z.infer<typeof syncBookingFormFieldItemSchema>;
 export type SyncBookingFormFieldsInput = z.infer<typeof syncBookingFormFieldsSchema>;
+
+/** Alias for create-field modal — same shape as sync item schema. */
+export const createModalFieldSchema = syncBookingFormFieldItemSchema;
+
+export type CreateModalFieldInput = z.input<typeof createModalFieldSchema>;
+export type CreateModalFieldOutput = z.infer<typeof createModalFieldSchema>;

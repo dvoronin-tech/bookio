@@ -1,14 +1,14 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import type { UpdateBookingFormRequest } from '@api/bookingForms/updateBookingForm';
-import type { UpdateBookingFormStylesRequest } from '@api/bookingForms/bookingFormStyles/updateBookingFormStyles';
-import type { UpdateBookingFormMetaRequest } from '@api/bookingForms/bookingFormMeta/updateBookingFormMeta';
+import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
+import type { UpdateBookingFormStylesRequest } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles';
+import type { UpdateBookingFormMetaRequest } from '#api/bookingForms/bookingFormMeta/updateBookingFormMeta';
 
 import {
     DEFAULT_CONFIGURATOR_TAB,
     type ConfiguratorTabValue,
-} from '@pages/App/BookingForms/BookingFormConfigurator/configuratorTabs';
-import type { EntireBookingFormField } from '@api/bookingForms/getEntireBookingFormById';
+} from '#pages/App/BookingForms/BookingFormConfigurator/configuratorTabs';
+import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 
 interface BookingFormConfiguratorForm {
     bookingForm: UpdateBookingFormRequest | null;

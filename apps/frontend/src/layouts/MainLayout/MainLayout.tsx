@@ -1,7 +1,7 @@
 import { useEffect, type FC } from "react";
 import styles from './MainLayout.module.scss';
 import { Outlet, useNavigate } from "react-router-dom";
-import { useSession } from "@api/auth";
+import { useSession } from "#api/auth";
 import { toast } from 'react-hot-toast';
 
 export const MainLayout: FC = () => {

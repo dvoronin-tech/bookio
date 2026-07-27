@@ -1,21 +1,21 @@
 import { useCallback, type FC, useState } from 'react';
 import styles from './BookingFormCard.module.scss';
-import type { BookingFormType } from '@api/bookingForms/getBookingForms';
+import type { BookingFormType } from '#api/bookingForms/getBookingForms';
 import { Button } from '@bookio/ui';
-import { useUpdateBookingForm } from '@api/bookingForms/updateBookingForm';
+import { useUpdateBookingForm } from '#api/bookingForms/updateBookingForm';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { EditBookingFormDialog } from './EditBookingFormDialog';
 import { DeleteBookingFormDialog } from './DeleteBookingFormDialog';
-import { BOOKING_FORM_URL } from '@utils/constants';
+import { BOOKING_FORM_URL } from '#utils/constants';
 
-import TrashIcon from '@assets/icons/trash.svg?react';
-import EditIcon from '@assets/icons/pen.svg?react';
-import CalendarIcon from '@assets/icons/calendar.svg?react';
-import CopyIcon from '@assets/icons/copy.svg?react';
+import TrashIcon from '#assets/icons/trash.svg?react';
+import EditIcon from '#assets/icons/pen.svg?react';
+import CalendarIcon from '#assets/icons/calendar.svg?react';
+import CopyIcon from '#assets/icons/copy.svg?react';
 
 import { useParams } from 'react-router-dom';
-import { useGetOrganization } from '@api/organizations/getOrganizationData';
+import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
 export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingForm }) => {
     const { mutateAsync: updateBookingForm } = useUpdateBookingForm(bookingForm.id);

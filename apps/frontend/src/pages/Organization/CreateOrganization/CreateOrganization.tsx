@@ -1,19 +1,19 @@
 import { type FC, useCallback } from 'react';
 import styles from './CreateOrganization.module.scss';
 import { Button, Input, HiddenField } from '@bookio/ui';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 import {
     useCreateOrganization,
     type CreateOrganizationResponse,
-} from '@api/organizations/createOrganization';
-import { useSession } from '@api/auth';
+} from '#api/organizations/createOrganization';
+import { useSession } from '#api/auth';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
-import { type CreateOrganizationRequest } from '@api/organizations/createOrganization';
-import { useIsOrganizationExists } from '@api/organizations/isOrganizationExists';
+import { type CreateOrganizationRequest } from '#api/organizations/createOrganization';
+import { useIsOrganizationExists } from '#api/organizations/isOrganizationExists';
 import { Controller, useForm, useWatch, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getFirstFieldError } from '@utils/formErrors';
+import { getFirstFieldError } from '#utils/formErrors';
 
 const formSchema = z.object({
     name: z.string().min(3).max(255),

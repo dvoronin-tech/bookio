@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import { BOOKING_FORM_URL } from '@utils/constants';
+import { BOOKING_FORM_URL } from '#utils/constants';
 import styles from './BookingFormUrlPreview.module.scss';
 
 type BookingFormUrlPreviewProps = {

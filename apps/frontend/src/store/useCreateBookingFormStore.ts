@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { DEFAULT_BOOKING_FORM_STYLES } from '@utils/defaultBookingFormStyles';
+import { DEFAULT_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyles';
 
 export type CreateBookingFormStep = number;
 

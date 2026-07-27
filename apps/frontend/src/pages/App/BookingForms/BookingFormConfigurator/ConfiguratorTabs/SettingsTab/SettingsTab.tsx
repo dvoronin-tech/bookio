@@ -1,20 +1,20 @@
 import { useEffect, type FC } from 'react';
-import type { EntireBookingFormType } from '@api/bookingForms/getEntireBookingFormById';
-import type { UpdateBookingFormRequest } from '@api/bookingForms/updateBookingForm';
+import type { EntireBookingFormType } from '#api/bookingForms/getEntireBookingFormById';
+import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Checkbox, Input } from '@bookio/ui';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
-import { useIsBookingFormExists } from '@api/bookingForms/isBookingFormExists';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
+import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
 
 import styles from './SettingsTab.module.scss';
-import { BookingFormUrlPreview } from '@components/BookingFormUrlPreview/BookingFormUrlPreview';
-import { useGetOrganization, type OrganizationData } from '@api/organizations/getOrganizationData';
+import { BookingFormUrlPreview } from '#components/BookingFormUrlPreview/BookingFormUrlPreview';
+import { useGetOrganization, type OrganizationData } from '#api/organizations/getOrganizationData';
 
 import { useForm, useWatch } from 'react-hook-form';
 
-import { useBookingFormConfiguratorStore } from '@store/useBookingFormConfiguratorStore';
-import { useGetEntireBookingFormById } from '@api/bookingForms/getEntireBookingFormById';
-import { Spinner } from '@components/Spinner/Spinner';
+import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
+import { useGetEntireBookingFormById } from '#api/bookingForms/getEntireBookingFormById';
+import { Spinner } from '#components/Spinner/Spinner';
 
 type SettingsTabFormData = Omit<UpdateBookingFormRequest, 'bookingFormId'>;
 

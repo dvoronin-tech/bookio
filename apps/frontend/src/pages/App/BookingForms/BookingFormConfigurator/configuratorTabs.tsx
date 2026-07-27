@@ -1,8 +1,8 @@
 import type { ComponentType, ReactNode } from 'react';
 
-import SettingsIcon from '@assets/icons/settings.svg?react';
-import FieldsIcon from '@assets/icons/fields.svg?react';
-import StylesIcon from '@assets/icons/styles.svg?react';
+import SettingsIcon from '#assets/icons/settings.svg?react';
+import FieldsIcon from '#assets/icons/fields.svg?react';
+import StylesIcon from '#assets/icons/styles.svg?react';
 
 import { SettingsTab } from './ConfiguratorTabs/SettingsTab/SettingsTab';
 import { FieldsTab } from './ConfiguratorTabs/FieldsTab/FieldsTab';

@@ -1,11 +1,11 @@
-import type { BookingFormFieldType } from '@api/bookingForms/bookingFormFields/getBookingFormField';
+import type { BookingFormFieldType } from '#api/bookingForms/bookingFormFields/getBookingFormField';
 import { useCallback, type ChangeEvent, type FC, useMemo } from 'react';
-import { paramsFieldConfig } from '@utils/paramsFieldConfig';
+import { paramsFieldConfig } from '#utils/paramsFieldConfig';
 import { Button, Input } from '@bookio/ui';
 import styles from './ParamFields.module.scss';
-import PlusIcon from '@assets/icons/plus.svg?react';
-import TrashIcon from '@assets/icons/trash.svg?react';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
+import PlusIcon from '#assets/icons/plus.svg?react';
+import TrashIcon from '#assets/icons/trash.svg?react';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 
 export interface OptionItem {
     id: string;

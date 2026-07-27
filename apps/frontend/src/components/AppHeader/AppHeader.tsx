@@ -1,16 +1,16 @@
 import { useState, type FC } from 'react';
 import styles from './AppHeader.module.scss';
-import Logo from '@assets/logo.svg?react';
+import Logo from '#assets/logo.svg?react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { Dropdown } from '@bookio/ui';
 
-import { useGetOrganization } from '@api/organizations/getOrganizationData';
+import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
-import ArrowIcon from '@assets/icons/short-arrow.svg?react';
-import FormIcon from '@assets/icons/form.svg?react';
-import OrganizationIcon from '@assets/icons/organization.svg?react';
+import ArrowIcon from '#assets/icons/short-arrow.svg?react';
+import FormIcon from '#assets/icons/form.svg?react';
+import OrganizationIcon from '#assets/icons/organization.svg?react';
 
-import PlaceholderImage from '@assets/images/OrganizationPlaceholder.webp';
+import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import toast from 'react-hot-toast';
 
 export const AppHeader: FC = () => {

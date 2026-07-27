@@ -4,7 +4,7 @@ import { useShallow } from 'zustand/shallow';
 import {
     useCreateBookingFormStore,
     type CreateBookingFormStep,
-} from '@store/useCreateBookingFormStore';
+} from '#store/useCreateBookingFormStore';
 import { Step1NameDescription } from './Steps/Step1NameDescription/Step1NameDescription';
 import { Step2UrlSlug } from './Steps/Step2UrlSlug/Step2UrlSlug';
 import { Step3Styles } from './Steps/Step3Styles/Step3Styles';

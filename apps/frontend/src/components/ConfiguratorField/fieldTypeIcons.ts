@@ -1,20 +1,20 @@
 import type { FC, SVGProps } from 'react';
-import type { EntireBookingFormField } from '@api/bookingForms/getEntireBookingFormById';
+import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 
-import TextIcon from '@assets/icons/field-types/text.svg?react';
-import EmailIcon from '@assets/icons/field-types/email.svg?react';
-import PhoneIcon from '@assets/icons/field-types/phone.svg?react';
-import NumberIcon from '@assets/icons/field-types/number.svg?react';
-import TextareaIcon from '@assets/icons/field-types/textarea.svg?react';
-import SelectIcon from '@assets/icons/field-types/select.svg?react';
-import CheckboxIcon from '@assets/icons/field-types/checkbox.svg?react';
-import RadioIcon from '@assets/icons/field-types/radio.svg?react';
-import DateIcon from '@assets/icons/field-types/date.svg?react';
-import TimeIcon from '@assets/icons/field-types/time.svg?react';
-import UrlIcon from '@assets/icons/field-types/url.svg?react';
-import FileIcon from '@assets/icons/field-types/file.svg?react';
-import ImageIcon from '@assets/icons/field-types/image.svg?react';
-import GroupIcon from '@assets/icons/field-types/group.svg?react';
+import TextIcon from '#assets/icons/field-types/text.svg?react';
+import EmailIcon from '#assets/icons/field-types/email.svg?react';
+import PhoneIcon from '#assets/icons/field-types/phone.svg?react';
+import NumberIcon from '#assets/icons/field-types/number.svg?react';
+import TextareaIcon from '#assets/icons/field-types/textarea.svg?react';
+import SelectIcon from '#assets/icons/field-types/select.svg?react';
+import CheckboxIcon from '#assets/icons/field-types/checkbox.svg?react';
+import RadioIcon from '#assets/icons/field-types/radio.svg?react';
+import DateIcon from '#assets/icons/field-types/date.svg?react';
+import TimeIcon from '#assets/icons/field-types/time.svg?react';
+import UrlIcon from '#assets/icons/field-types/url.svg?react';
+import FileIcon from '#assets/icons/field-types/file.svg?react';
+import ImageIcon from '#assets/icons/field-types/image.svg?react';
+import GroupIcon from '#assets/icons/field-types/group.svg?react';
 
 type FieldType = EntireBookingFormField['type'];
 type IconComponent = FC<SVGProps<SVGSVGElement>>;

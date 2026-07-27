@@ -1,9 +1,9 @@
 import { useCallback, type ChangeEvent, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, Input } from '@bookio/ui';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
-import { useIsBookingFormExists } from '@api/bookingForms/isBookingFormExists';
-import { useCreateBookingFormStore } from '@store/useCreateBookingFormStore';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
+import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
 import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';

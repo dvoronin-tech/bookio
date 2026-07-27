@@ -1,17 +1,17 @@
 import {
-    inputParamsSchema,
+    checkboxParamsSchema,
     choiceParamsSchema,
     fieldOptionSchema,
-    groupParamsSchema,
     fileParamsSchema,
+    groupParamsSchema,
+    inputParamsSchema,
     textAreaParamsSchema,
-    checkboxParamsSchema,
-} from '@schemas/FieldModal/CreateModalField.schema';
+} from '@bookio/backend/schemas';
 import type { z } from 'zod';
 
 type InputParamKey = keyof z.infer<typeof inputParamsSchema>;
 type ChoiceParamKey = keyof z.infer<typeof choiceParamsSchema>;
-type FieldOptionKey = keyof z.infer<typeof fieldOptionSchema>;
+type FieldOptionKey = Exclude<keyof z.infer<typeof fieldOptionSchema>, 'id'>;
 type GroupParamKey = keyof z.infer<typeof groupParamsSchema>;
 type FileParamKey = keyof z.infer<typeof fileParamsSchema>;
 type TextAreaParamKey = keyof z.infer<typeof textAreaParamsSchema>;

@@ -1,18 +1,18 @@
 import { memo, useCallback, type FC } from 'react';
 import styles from './BookingFormCard.module.scss';
-import type { BookingFormType } from '@api/bookingForms/getBookingForms';
+import type { BookingFormType } from '#api/bookingForms/getBookingForms';
 import { Button, Dialog, Input } from '@bookio/ui';
 import {
     useUpdateBookingForm,
     type UpdateBookingFormRequest,
-} from '@api/bookingForms/updateBookingForm';
+} from '#api/bookingForms/updateBookingForm';
 import toast from 'react-hot-toast';
 import { useForm, type FieldErrors, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { getFirstFieldError } from '@utils/formErrors';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
-import { useIsBookingFormExists } from '@api/bookingForms/isBookingFormExists';
+import { getFirstFieldError } from '#utils/formErrors';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
+import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
 
 const updateBookingFormSchema = z.object({
     name: z.string().min(1).max(255),

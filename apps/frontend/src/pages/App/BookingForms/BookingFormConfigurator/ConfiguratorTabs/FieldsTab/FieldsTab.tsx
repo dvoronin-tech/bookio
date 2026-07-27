@@ -2,9 +2,9 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
     useGetEntireBookingFormById,
     type EntireBookingFormType,
-} from '@api/bookingForms/getEntireBookingFormById';
-import { useGetOrganization } from '@api/organizations/getOrganizationData';
-import { Spinner } from '@components/Spinner/Spinner';
+} from '#api/bookingForms/getEntireBookingFormById';
+import { useGetOrganization } from '#api/organizations/getOrganizationData';
+import { Spinner } from '#components/Spinner/Spinner';
 import { Button } from '@bookio/ui';
 
 import styles from './FieldsTab.module.scss';
@@ -15,7 +15,7 @@ interface FieldsTabFormProps {
     fields: EntireBookingFormType['fields'];
 }
 
-const FieldsTabForm: FC<FieldsTabFormProps> = ({ fields }) => {
+const FieldsTabForm: FC<FieldsTabFormProps> = ({ fields: _fields }) => {
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     const handleOpenModal = useCallback(() => {

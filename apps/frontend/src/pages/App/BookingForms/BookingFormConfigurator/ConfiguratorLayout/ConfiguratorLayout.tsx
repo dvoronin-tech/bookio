@@ -1,20 +1,20 @@
 import { memo, type FC, type ReactNode, useMemo, useCallback } from 'react';
 
-import PanelLeftCloseIcon from '@assets/icons/panel-left-close.svg?react';
+import PanelLeftCloseIcon from '#assets/icons/panel-left-close.svg?react';
 import { Button } from '@bookio/ui';
 
 import { useShallow } from 'zustand/shallow';
-import { useBookingFormConfiguratorStore } from '@store/useBookingFormConfiguratorStore';
+import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { configuratorTabs } from '../configuratorTabs';
 import styles from './ConfiguratorLayout.module.scss';
 import { ConfiguratorTabs } from './ConfiguratorTabs';
 import { useNavigate, useParams } from 'react-router-dom';
-import { useGetEntireBookingFormById } from '@api/bookingForms/getEntireBookingFormById';
+import { useGetEntireBookingFormById } from '#api/bookingForms/getEntireBookingFormById';
 import isEqual from 'fast-deep-equal';
-import { useUpdateBookingForm } from '@api/bookingForms/updateBookingForm';
+import { useUpdateBookingForm } from '#api/bookingForms/updateBookingForm';
 import toast from 'react-hot-toast';
-import { useSyncBookingFormField } from '@api/bookingForms/bookingFormFields/syncBookingFormField';
-import { toSyncBookingFormFieldsRequest } from '@api/bookingForms/bookingFormFields/bookingFormFieldMappers';
+import { useSyncBookingFormField } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
+import { toSyncBookingFormFieldsRequest } from '#api/bookingForms/bookingFormFields/bookingFormFieldMappers';
 
 export const ConfiguratorLayout = memo(function ConfiguratorLayout({
     children,

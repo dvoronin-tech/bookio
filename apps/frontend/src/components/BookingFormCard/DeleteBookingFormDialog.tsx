@@ -1,17 +1,17 @@
 import { memo, useCallback, useEffect, type FC } from 'react';
 import styles from './BookingFormCard.module.scss';
-import type { BookingFormType } from '@api/bookingForms/getBookingForms';
+import type { BookingFormType } from '#api/bookingForms/getBookingForms';
 import { Button, Dialog } from '@bookio/ui';
 import {
     useDeleteBookingForm,
     type DeleteBookingFormRequest,
-} from '@api/bookingForms/deleteBookingForm';
+} from '#api/bookingForms/deleteBookingForm';
 import toast from 'react-hot-toast';
 import { useForm, type FieldErrors, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { getFirstFieldError } from '@utils/formErrors';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
+import { getFirstFieldError } from '#utils/formErrors';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 import { useDebounce } from 'use-debounce';
 
 const deleteBookingFormSchema = z.object({

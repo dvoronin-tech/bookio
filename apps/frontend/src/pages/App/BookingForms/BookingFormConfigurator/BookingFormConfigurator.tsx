@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import { ConfiguratorLayout } from './ConfiguratorLayout/ConfiguratorLayout';
-import { useBookingFormConfiguratorStore } from '@store/useBookingFormConfiguratorStore';
+import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { getConfiguratorTab } from './configuratorTabs';
 import styles from './BookingFormConfigurator.module.scss';
 
