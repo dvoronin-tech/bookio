@@ -12,6 +12,7 @@ const fieldKeySchema = z
 const fieldNameSchema = z.string().min(1).max(255);
 
 export const fieldOptionSchema = z.object({
+    id: z.string(),
     value: z.string().min(1),
     label: z.string().min(1),
 });

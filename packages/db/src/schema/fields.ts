@@ -10,7 +10,6 @@ import {
     uuid,
     type AnyPgColumn,
 } from 'drizzle-orm/pg-core';
-import { v7 as uuidv7 } from 'uuid';
 import { relations } from 'drizzle-orm';
 import { bookingForms } from './booking-forms.js';
 import type { FieldParams } from './field-params.js';

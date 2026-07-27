@@ -37,6 +37,7 @@ export type InputFieldParams = {
 };
 
 export type FieldOption = {
+    id: string;
     value: string;
     label: string;
 };

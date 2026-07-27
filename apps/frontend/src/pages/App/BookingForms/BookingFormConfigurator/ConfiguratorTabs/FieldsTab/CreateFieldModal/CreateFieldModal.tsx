@@ -24,9 +24,6 @@ const createEmptyOption = (): OptionItem => ({
     label: '',
 });
 
-const stripOptionIds = (options: OptionItem[]) =>
-    options.map(({ value, label }) => ({ value, label }));
-
 const ensureOptionIds = (
     options: Array<{ value?: string; label?: string; id?: string }>,
 ): OptionItem[] =>
@@ -137,7 +134,7 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
             choiceParamsOptions.length > 0
                 ? {
                       ...formData.params,
-                      options: stripOptionIds(ensureOptionIds(choiceParamsOptions)),
+                      options: ensureOptionIds(choiceParamsOptions),
                   }
                 : formData.params;
 
