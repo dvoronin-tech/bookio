@@ -43,6 +43,17 @@ const getChoiceOptionsFromParams = (
 
     return params.options ?? [];
 };
+
+const getAcceptTypesFromParams = (
+    type: CreateModalFieldInput['type'] | undefined,
+    params: CreateModalFieldInput['params'] | undefined,
+) => {
+    if ((type !== 'file' && type !== 'image') || !params || !('accept' in params)) {
+        return [];
+    }
+
+    return params.accept ?? [];
+};
 interface CreateFieldModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
@@ -69,6 +80,11 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
             label: option.label ?? '',
         }));
     }, [formData.type, formData.params]);
+
+    const selectedAcceptTypes = useMemo(
+        () => getAcceptTypesFromParams(formData.type, formData.params),
+        [formData.type, formData.params],
+    );
 
     useLayoutEffect(() => {
         const options = getChoiceOptionsFromParams(formData.type, formData.params);
@@ -121,6 +137,19 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
             );
         },
         [choiceOptions, formData.type, setValue],
+    );
+
+    const handleToggleAcceptType = useCallback(
+        (acceptType: string) => {
+            if (formData.type !== 'file' && formData.type !== 'image') return;
+
+            const nextAccept = selectedAcceptTypes.includes(acceptType)
+                ? selectedAcceptTypes.filter((item) => item !== acceptType)
+                : [...selectedAcceptTypes, acceptType];
+
+            setValue('params.accept', nextAccept.length > 0 ? nextAccept : undefined);
+        },
+        [formData.type, selectedAcceptTypes, setValue],
     );
 
     useEffect(() => {
@@ -200,9 +229,11 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(({ open, onOpenC
                 <ParamFields
                     type={formData.type}
                     options={choiceOptions}
+                    selectedAcceptTypes={selectedAcceptTypes}
                     onAddOption={handleAddOption}
                     onRemoveOption={handleRemoveOption}
                     onUpdateOption={handleUpdateOption}
+                    onToggleAcceptType={handleToggleAcceptType}
                 />
             </form>
             <Dialog.Actions className={styles.actions}>

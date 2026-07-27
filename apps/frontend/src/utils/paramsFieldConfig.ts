@@ -17,63 +17,69 @@ type FileParamKey = keyof z.infer<typeof fileParamsSchema>;
 type TextAreaParamKey = keyof z.infer<typeof textAreaParamsSchema>;
 type CheckboxParamKey = keyof z.infer<typeof checkboxParamsSchema>;
 
-const imageAcceptOptions = [
-    'image/*',
-    'image/jpeg',
-    'image/png',
-    'image/gif',
-    'image/webp',
-    'image/svg+xml',
-    'image/avif',
-    'image/heic',
-    'image/heif',
-    'image/tiff',
-    'image/bmp',
-    'image/x-icon',
-    'image/vnd.microsoft.icon',
-] as const;
+const imageAcceptOptions = {
+    'All images': 'image/*',
+    '.jpg': 'image/jpeg',
+    '.jpeg': 'image/jpeg',
+    '.png': 'image/png',
+    '.gif': 'image/gif',
+    '.webp': 'image/webp',
+    '.svg': 'image/svg+xml',
+    '.avif': 'image/avif',
+    '.heic': 'image/heic',
+    '.heif': 'image/heif',
+    '.tif': 'image/tiff',
+    '.tiff': 'image/tiff',
+    '.bmp': 'image/bmp',
+    '.ico': 'image/x-icon',
+} as const;
 
-const fileAcceptOptions = [
-    '*/*',
+const fileAcceptOptions = {
+    'All files': '*/*',
     ...imageAcceptOptions,
-    'video/*',
-    'video/mp4',
-    'video/webm',
-    'video/ogg',
-    'video/quicktime',
-    'video/x-msvideo',
-    'video/x-matroska',
-    'audio/*',
-    'audio/mpeg',
-    'audio/wav',
-    'audio/ogg',
-    'audio/webm',
-    'audio/aac',
-    'audio/flac',
-    'audio/x-m4a',
-    'application/pdf',
-    'application/msword',
-    'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    'application/vnd.ms-excel',
-    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    'application/vnd.ms-powerpoint',
-    'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    'application/rtf',
-    'application/json',
-    'application/xml',
-    'application/zip',
-    'application/x-rar-compressed',
-    'application/gzip',
-    'application/x-7z-compressed',
-    'application/x-tar',
-    'application/octet-stream',
-    'text/plain',
-    'text/csv',
-    'text/html',
-    'text/markdown',
-    'text/calendar',
-    'text/vcard',
-] as const;
+    'All videos': 'video/*',
+    '.mp4': 'video/mp4',
+    '.webm': 'video/webm',
+    '.ogv': 'video/ogg',
+    '.mov': 'video/quicktime',
+    '.avi': 'video/x-msvideo',
+    '.mkv': 'video/x-matroska',
+    'All audio': 'audio/*',
+    '.mp3': 'audio/mpeg',
+    '.wav': 'audio/wav',
+    '.ogg': 'audio/ogg',
+    '.aac': 'audio/aac',
+    '.flac': 'audio/flac',
+    '.m4a': 'audio/x-m4a',
+    '.pdf': 'application/pdf',
+    '.doc': 'application/msword',
+    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+    '.xls': 'application/vnd.ms-excel',
+    '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+    '.ppt': 'application/vnd.ms-powerpoint',
+    '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+    '.rtf': 'application/rtf',
+    '.json': 'application/json',
+    '.xml': 'application/xml',
+    '.zip': 'application/zip',
+    '.rar': 'application/x-rar-compressed',
+    '.gz': 'application/gzip',
+    '.7z': 'application/x-7z-compressed',
+    '.tar': 'application/x-tar',
+    '.txt': 'text/plain',
+    '.csv': 'text/csv',
+    '.html': 'text/html',
+    '.md': 'text/markdown',
+    '.ics': 'text/calendar',
+    '.vcf': 'text/vcard',
+} as const;
+
+export type AcceptOptions = typeof fileAcceptOptions | typeof imageAcceptOptions;
+
+export const getAcceptOptionLabel = (
+    options: AcceptOptions,
+    mimeType: string,
+) => Object.entries(options).find(([, value]) => value === mimeType)?.[0] ?? mimeType;
 
 export interface BaseUIFieldType {
     label: string;
@@ -104,8 +110,8 @@ const groupFieldsConfig: Record<GroupParamKey, BaseUIFieldType> = {
     description: {
         label: 'Description',
         type: 'text',
-    }
-}
+    },
+};
 
 const checkboxFieldsConfig: Record<CheckboxParamKey, BaseUIFieldType> = {
     helpText: {
@@ -123,8 +129,8 @@ const choiceFieldsConfig: Record<ChoiceParamKey, ChoiceUIField> = {
         label: 'Options',
         type: 'options',
         itemFields: {
-            value: { label: 'Value', type: 'text' },
             label: { label: 'Label', type: 'text' },
+            value: { label: 'Value', type: 'text' },
         },
     },
 };
@@ -196,7 +202,6 @@ export type ParamsFieldConfig = {
     group: BaseUIFieldType[];
 };
 
-
 export const paramsFieldConfig: ParamsFieldConfig = {
     text: Object.values(inputFieldsConfig),
     email: Object.values(inputFieldsConfig),
@@ -214,4 +219,4 @@ export const paramsFieldConfig: ParamsFieldConfig = {
     group: Object.values(groupFieldsConfig),
 };
 
-export type UIFields = typeof paramsFieldConfig[keyof typeof paramsFieldConfig];
+export type UIFields = (typeof paramsFieldConfig)[keyof typeof paramsFieldConfig];
