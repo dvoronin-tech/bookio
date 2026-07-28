@@ -24,7 +24,10 @@ import { ParamFields, type OptionItem } from '../ParamFields/ParamFields';
 
 import { v7 as uuid7 } from 'uuid';
 import toast from 'react-hot-toast';
-import { flattenBookingFormFields, getNextSiblingFieldOrder } from '#utils/bookingFormFieldMappers';
+import {
+    flattenBookingFormFields,
+    getNextSiblingFieldOrder,
+} from '#utils/dataPreparers/bookingFormPreparers';
 
 const createEmptyOption = (): OptionItem => ({
     id: crypto.randomUUID(),

@@ -1,4 +1,4 @@
-import { memo, type FC, type ReactNode, useMemo, useCallback } from 'react';
+import { memo, type FC, type ReactNode, useMemo, useCallback, useEffect } from 'react';
 
 import PanelLeftCloseIcon from '#assets/icons/panel-left-close.svg?react';
 import { Button } from '@bookio/ui';
@@ -14,13 +14,25 @@ import isEqual from 'fast-deep-equal';
 import { useUpdateBookingForm } from '#api/bookingForms/updateBookingForm';
 import toast from 'react-hot-toast';
 import { useSyncBookingFormField } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
-import { toSyncBookingFormFieldsRequest } from '#utils/bookingFormFieldMappers';
+import {
+    toComparableBookingForm,
+    toSaveFieldsPayload,
+    toSyncBookingFormFieldsRequest,
+} from '#utils/dataPreparers/bookingFormPreparers';
 
 export const ConfiguratorLayout = memo(function ConfiguratorLayout({
     children,
 }: {
     children?: ReactNode;
 }) {
+    const reset = useBookingFormConfiguratorStore((state) => state.reset);
+
+    useEffect(() => {
+        return () => {
+            reset();
+        };
+    }, [reset]);
+
     return (
         <div className={styles.configuratorContainer}>
             <ConfiguratorTabsSection />
@@ -65,9 +77,8 @@ const ConfiguratorFooter: FC = memo(() => {
     const { bookingFormId } = useParams();
     const { data: baseLine } = useGetEntireBookingFormById(bookingFormId);
     const { bookingForm, bookingFormFields } = useBookingFormConfiguratorStore(
-        useShallow(({ bookingForm, bookingFormStyles, bookingFormFields }) => ({
+        useShallow(({ bookingForm, bookingFormFields }) => ({
             bookingForm,
-            bookingFormStyles,
             bookingFormFields,
         })),
     );
@@ -80,15 +91,15 @@ const ConfiguratorFooter: FC = memo(() => {
     const isDirtyBookingForm = useMemo(() => {
         if (!baseLine || !bookingForm) return false;
 
-        const baseBookingFormData = {
+        const baseBookingFormData = toComparableBookingForm({
             bookingFormId: baseLine.id,
             name: baseLine.name,
             description: baseLine.description,
             isActive: baseLine.isActive,
             slug: baseLine.slug,
-        };
+        });
 
-        return !isEqual(baseBookingFormData, bookingForm);
+        return !isEqual(baseBookingFormData, toComparableBookingForm(bookingForm));
     }, [baseLine, bookingForm]);
 
     const baselineSyncFields = useMemo(() => {
@@ -99,22 +110,28 @@ const ConfiguratorFooter: FC = memo(() => {
 
     const isDirtyBookingFormFields = useMemo(() => {
         if (!baselineSyncFields || !bookingFormFields) return false;
+        if (bookingFormFields.bookingFormId !== baseLine?.id) return false;
 
         return !isEqual(baselineSyncFields, bookingFormFields.fields);
-    }, [baselineSyncFields, bookingFormFields]);
+    }, [baselineSyncFields, bookingFormFields, baseLine?.id]);
 
     const saveRequestThunks = useMemo(() => {
+        if (!bookingFormId) return [];
+
         const thunks: Array<() => Promise<unknown>> = [];
 
         if (isDirtyBookingForm && bookingForm) {
-            thunks.push(() => updateBookingForm(bookingForm));
+            thunks.push(() => updateBookingForm(toComparableBookingForm(bookingForm)));
         }
         if (isDirtyBookingFormFields && bookingFormFields) {
-            thunks.push(() => syncBookingFormField(bookingFormFields));
+            thunks.push(() =>
+                syncBookingFormField(toSaveFieldsPayload(bookingFormId, bookingFormFields)),
+            );
         }
 
         return thunks;
     }, [
+        bookingFormId,
         isDirtyBookingForm,
         isDirtyBookingFormFields,
         bookingForm,
@@ -128,6 +145,8 @@ const ConfiguratorFooter: FC = memo(() => {
     }, [navigate]);
 
     const handleSave = useCallback(() => {
+        if (saveRequestThunks.length === 0) return;
+
         toast.promise(Promise.all(saveRequestThunks.map((request) => request())), {
             loading: 'Saving booking form...',
             success: () => {
@@ -138,6 +157,13 @@ const ConfiguratorFooter: FC = memo(() => {
         });
     }, [saveRequestThunks, navigate]);
 
+    const hasSomethingToSave = useMemo(
+        () => isDirtyBookingForm || isDirtyBookingFormFields,
+        [isDirtyBookingForm, isDirtyBookingFormFields],
+    );
+
+    console.log('hasSomethingToSave', hasSomethingToSave);
+
     return (
         <div className={styles.footer}>
             <Button type="button" variant="simple-clean" onClick={handleBack}>
@@ -147,7 +173,7 @@ const ConfiguratorFooter: FC = memo(() => {
                 variant="green-filled"
                 className={styles.saveButton}
                 onClick={handleSave}
-                disabled={!(isDirtyBookingForm || isDirtyBookingFormFields)}
+                disabled={!hasSomethingToSave}
             >
                 Save booking form
             </Button>

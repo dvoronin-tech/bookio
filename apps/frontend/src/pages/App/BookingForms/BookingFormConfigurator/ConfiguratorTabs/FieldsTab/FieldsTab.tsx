@@ -12,7 +12,7 @@ import { useState, type FC, useCallback, useEffect } from 'react';
 import { CreateFieldModal } from './CreateFieldModal/CreateFieldModal';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
-import { toSyncBookingFormFieldsRequest } from '#utils/bookingFormFieldMappers';
+import { toSyncBookingFormFieldsRequest } from '#utils/dataPreparers/bookingFormPreparers';
 import { useShallow } from 'zustand/shallow';
 
 import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField';
@@ -33,9 +33,12 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
             })),
         );
 
+    // Seed from server once per form. Do not overwrite local drafts on tab remount / refetch.
     useEffect(() => {
+        if (bookingFormFields?.bookingFormId === bookingFormId) return;
+
         setBookingFormFields(toSyncBookingFormFieldsRequest(bookingFormId, fields));
-    }, []);
+    }, [bookingFormId, fields, bookingFormFields, setBookingFormFields]);
 
     const handleOpenModal = useCallback(() => {
         setIsOpenModal(true);
