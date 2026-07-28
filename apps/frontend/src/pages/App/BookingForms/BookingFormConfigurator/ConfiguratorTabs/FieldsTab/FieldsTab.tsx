@@ -15,12 +15,17 @@ interface FieldsTabFormProps {
     fields: EntireBookingFormType['fields'];
 }
 
-const FieldsTabForm: FC<FieldsTabFormProps> = ({ fields: _fields }) => {
+const FieldsTabForm: FC<FieldsTabFormProps> = ({ fields }) => {
+    const { bookingFormId } = useParams();
     const [isOpenModal, setIsOpenModal] = useState(false);
 
     const handleOpenModal = useCallback(() => {
         setIsOpenModal(true);
     }, [setIsOpenModal]);
+
+    if (!bookingFormId) {
+        return null;
+    }
 
     return (
         <>
@@ -31,7 +36,12 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ fields: _fields }) => {
                     </Button>
                 </div>
             </div>
-            <CreateFieldModal open={isOpenModal} onOpenChange={setIsOpenModal} />
+            <CreateFieldModal
+                open={isOpenModal}
+                onOpenChange={setIsOpenModal}
+                bookingFormId={bookingFormId}
+                existingFields={fields}
+            />
         </>
     );
 };

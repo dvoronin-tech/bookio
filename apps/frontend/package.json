@@ -27,6 +27,7 @@
         "react-hot-toast": "^2.6.0",
         "react-router-dom": "^7.18.1",
         "use-debounce": "^10.1.1",
+        "uuid": "^14.0.1",
         "zod": "^4.4.3",
         "zustand": "^5.0.14"
     },

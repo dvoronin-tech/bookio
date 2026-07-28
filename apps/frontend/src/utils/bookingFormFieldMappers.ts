@@ -1,13 +1,24 @@
-import type { EntireBookingFormField } from '../getEntireBookingFormById';
-import type { SyncBookingFormFieldRequest } from './syncBookingFormField';
+import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
+import type { SyncBookingFormFieldRequest } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 
 type SyncBookingFormFieldItem = SyncBookingFormFieldRequest['fields'][number];
 type SyncableBookingFormField = Omit<EntireBookingFormField, 'bookingFormId' | 'childFields'>;
 
+/** Next order among siblings sharing the same parentId (null = root level). */
+export const getNextSiblingFieldOrder = (
+    fields: SyncBookingFormFieldItem[],
+    parentId: string | null,
+) =>
+    fields
+        .filter((field) => field.parentId === parentId)
+        .reduce((maxOrder, field) => Math.max(maxOrder, field.order), -1) + 1;
+
 const toSyncBookingFormFieldItem = (field: SyncableBookingFormField): SyncBookingFormFieldItem =>
     field as SyncBookingFormFieldItem;
 
-const flattenBookingFormFields = (fields: EntireBookingFormField[]): SyncBookingFormFieldItem[] =>
+export const flattenBookingFormFields = (
+    fields: EntireBookingFormField[],
+): SyncBookingFormFieldItem[] =>
     fields.flatMap((field) => {
         const { bookingFormId: _, childFields, ...syncData } = field;
         const items = [toSyncBookingFormFieldItem(syncData)];

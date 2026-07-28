@@ -14,7 +14,7 @@ import isEqual from 'fast-deep-equal';
 import { useUpdateBookingForm } from '#api/bookingForms/updateBookingForm';
 import toast from 'react-hot-toast';
 import { useSyncBookingFormField } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
-import { toSyncBookingFormFieldsRequest } from '#api/bookingForms/bookingFormFields/bookingFormFieldMappers';
+import { toSyncBookingFormFieldsRequest } from '#utils/bookingFormFieldMappers';
 
 export const ConfiguratorLayout = memo(function ConfiguratorLayout({
     children,
@@ -91,11 +91,17 @@ const ConfiguratorFooter: FC = memo(() => {
         return !isEqual(baseBookingFormData, bookingForm);
     }, [baseLine, bookingForm]);
 
-    const isDirtyBookingFormFields = useMemo(() => {
-        if (!baseLine || !bookingFormFields) return false;
+    const baselineSyncFields = useMemo(() => {
+        if (!baseLine) return null;
 
-        return !isEqual(baseLine.fields, bookingFormFields);
-    }, [baseLine, bookingFormFields]);
+        return toSyncBookingFormFieldsRequest(baseLine.id, baseLine.fields).fields;
+    }, [baseLine]);
+
+    const isDirtyBookingFormFields = useMemo(() => {
+        if (!baselineSyncFields || !bookingFormFields) return false;
+
+        return !isEqual(baselineSyncFields, bookingFormFields.fields);
+    }, [baselineSyncFields, bookingFormFields]);
 
     const saveRequestThunks = useMemo(() => {
         const thunks: Array<() => Promise<unknown>> = [];
@@ -103,12 +109,8 @@ const ConfiguratorFooter: FC = memo(() => {
         if (isDirtyBookingForm && bookingForm) {
             thunks.push(() => updateBookingForm(bookingForm));
         }
-        if (isDirtyBookingFormFields && bookingFormFields && bookingFormId) {
-            thunks.push(() =>
-                syncBookingFormField(
-                    toSyncBookingFormFieldsRequest(bookingFormId, bookingFormFields),
-                ),
-            );
+        if (isDirtyBookingFormFields && bookingFormFields) {
+            thunks.push(() => syncBookingFormField(bookingFormFields));
         }
 
         return thunks;
@@ -117,7 +119,6 @@ const ConfiguratorFooter: FC = memo(() => {
         isDirtyBookingFormFields,
         bookingForm,
         bookingFormFields,
-        bookingFormId,
         updateBookingForm,
         syncBookingFormField,
     ]);

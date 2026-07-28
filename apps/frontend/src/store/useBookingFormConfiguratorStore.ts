@@ -8,14 +8,13 @@ import {
     DEFAULT_CONFIGURATOR_TAB,
     type ConfiguratorTabValue,
 } from '#pages/App/BookingForms/BookingFormConfigurator/configuratorTabs';
-import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
+import type { SyncBookingFormFieldRequest } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 
 interface BookingFormConfiguratorForm {
     bookingForm: UpdateBookingFormRequest | null;
     bookingFormStyles: UpdateBookingFormStylesRequest | null;
     bookingFormMeta: UpdateBookingFormMetaRequest | null;
-    bookingFormFields: EntireBookingFormField[] | null;
-    createBookingFormField: Partial<EntireBookingFormField> | null;
+    bookingFormFields: SyncBookingFormFieldRequest | null;
 }
 
 interface BookingFormConfiguratorState extends BookingFormConfiguratorForm {
@@ -26,8 +25,7 @@ interface BookingFormConfiguratorState extends BookingFormConfiguratorForm {
     setBookingForm: (bookingForm: UpdateBookingFormRequest) => void;
     setBookingFormStyles: (bookingFormStyles: UpdateBookingFormStylesRequest) => void;
     setBookingFormMeta: (bookingFormMeta: UpdateBookingFormMetaRequest) => void;
-    setBookingFormFields: (bookingFormFields: EntireBookingFormField[]) => void;
-    setCreateBookingFormField: (createBookingFormField: Partial<EntireBookingFormField> | null) => void;
+    setBookingFormFields: (bookingFormFields: SyncBookingFormFieldRequest) => void;
 }
 
 export const useBookingFormConfiguratorStore = create<BookingFormConfiguratorState>()(
@@ -39,7 +37,6 @@ export const useBookingFormConfiguratorStore = create<BookingFormConfiguratorSta
             bookingFormStyles: null,
             bookingFormMeta: null,
             bookingFormFields: null,
-            createBookingFormField: null,
             setActiveTab: (activeTab) => set({ activeTab }, false, 'setActiveTab'),
             setIsCollapsed: (isCollapsed) => set({ isCollapsed }, false, 'setIsCollapsed'),
             setBookingForm: (bookingForm) => set({ bookingForm }, false, 'setBookingForm'),
@@ -49,8 +46,6 @@ export const useBookingFormConfiguratorStore = create<BookingFormConfiguratorSta
                 set({ bookingFormMeta }, false, 'setBookingFormMeta'),
             setBookingFormFields: (bookingFormFields) =>
                 set({ bookingFormFields }, false, 'setBookingFormFields'),
-            setCreateBookingFormField: (createBookingFormField) =>
-                set({ createBookingFormField }, false, 'setCreateBookingFormField'),
         }),
         { name: 'BookingFormConfiguratorStore' },
     ),
