@@ -1,4 +1,4 @@
-import type { CSSProperties, FC } from 'react';
+import { useCallback, type CSSProperties, type FC } from 'react';
 import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 import { Button } from '@bookio/ui';
 
@@ -15,7 +15,8 @@ interface ConfiguratorFieldProps {
     fieldKey: string;
     required?: boolean;
     onEdit?: () => void;
-    onDelete?: () => void;
+    onDelete?: (fieldId: string) => void;
+    fieldId: string;
 }
 
 export const ConfiguratorField: FC<ConfiguratorFieldProps> = ({
@@ -25,8 +26,13 @@ export const ConfiguratorField: FC<ConfiguratorFieldProps> = ({
     required,
     onEdit,
     onDelete,
+    fieldId,
 }) => {
     const { icon: TypeIcon, color } = fieldTypeIcons[type];
+
+    const handleDelete = useCallback(() => {
+        onDelete?.(fieldId);
+    }, [onDelete, fieldId]);
 
     return (
         <div className={styles.configuratorField}>
@@ -43,7 +49,9 @@ export const ConfiguratorField: FC<ConfiguratorFieldProps> = ({
                 <div className={styles.info}>
                     <div className={styles.nameRow}>
                         <span className={styles.name}>{name}</span>
-                        {required ? <span className={styles.requiredDot} aria-label="Required" /> : null}
+                        {required ? (
+                            <span className={styles.requiredDot} aria-label="Required" />
+                        ) : null}
                     </div>
                     <span className={styles.fieldKey}>{fieldKey}</span>
                 </div>
@@ -61,7 +69,7 @@ export const ConfiguratorField: FC<ConfiguratorFieldProps> = ({
                         type="button"
                         variant="red-clean"
                         className={styles.deleteButton}
-                        onClick={onDelete}
+                        onClick={handleDelete}
                         aria-label={`Delete ${name}`}
                     >
                         <TrashIcon />

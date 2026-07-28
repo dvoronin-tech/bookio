@@ -25,7 +25,6 @@ import { ParamFields, type OptionItem } from '../ParamFields/ParamFields';
 import { v7 as uuid7 } from 'uuid';
 import toast from 'react-hot-toast';
 import { flattenBookingFormFields, getNextSiblingFieldOrder } from '#utils/bookingFormFieldMappers';
-import { getFieldErrors } from '#utils/formErrors';
 
 const createEmptyOption = (): OptionItem => ({
     id: crypto.randomUUID(),
@@ -87,7 +86,7 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(
             })),
         );
 
-        const { control, setValue, reset, register, handleSubmit } = useForm<CreateModalFieldInput>({
+        const { control, setValue, reset, register } = useForm<CreateModalFieldInput>({
             defaultValues: {},
         });
 

@@ -8,16 +8,34 @@ import { Spinner } from '#components/Spinner/Spinner';
 import { Button } from '@bookio/ui';
 
 import styles from './FieldsTab.module.scss';
-import { useState, type FC, useCallback } from 'react';
+import { useState, type FC, useCallback, useEffect } from 'react';
 import { CreateFieldModal } from './CreateFieldModal/CreateFieldModal';
 
+import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
+import { toSyncBookingFormFieldsRequest } from '#utils/bookingFormFieldMappers';
+import { useShallow } from 'zustand/shallow';
+
+import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField';
+
 interface FieldsTabFormProps {
+    bookingFormId: string;
     fields: EntireBookingFormType['fields'];
 }
 
-const FieldsTabForm: FC<FieldsTabFormProps> = ({ fields }) => {
-    const { bookingFormId } = useParams();
+const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
     const [isOpenModal, setIsOpenModal] = useState(false);
+    const { setBookingFormFields, bookingFormFields, deleteBookingFormField } =
+        useBookingFormConfiguratorStore(
+            useShallow(({ setBookingFormFields, bookingFormFields, deleteBookingFormField }) => ({
+                setBookingFormFields,
+                bookingFormFields,
+                deleteBookingFormField,
+            })),
+        );
+
+    useEffect(() => {
+        setBookingFormFields(toSyncBookingFormFieldsRequest(bookingFormId, fields));
+    }, []);
 
     const handleOpenModal = useCallback(() => {
         setIsOpenModal(true);
@@ -31,6 +49,17 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ fields }) => {
         <>
             <div className={styles.fieldsTab}>
                 <div className={styles.fieldsList}>
+                    {bookingFormFields &&
+                        bookingFormFields.fields.map(({ id, name, type, key }) => (
+                            <ConfiguratorField
+                                key={id}
+                                fieldId={id}
+                                name={name}
+                                fieldKey={key}
+                                type={type}
+                                onDelete={deleteBookingFormField}
+                            />
+                        ))}
                     <Button variant="primary-outlined" onClick={handleOpenModal}>
                         Add field
                     </Button>
@@ -114,5 +143,5 @@ export const FieldsTab = () => {
         );
     }
 
-    return <FieldsTabForm fields={bookingForm.fields} />;
+    return <FieldsTabForm bookingFormId={bookingFormId} fields={bookingForm.fields} />;
 };

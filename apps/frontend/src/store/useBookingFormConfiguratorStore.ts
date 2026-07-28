@@ -26,6 +26,7 @@ interface BookingFormConfiguratorState extends BookingFormConfiguratorForm {
     setBookingFormStyles: (bookingFormStyles: UpdateBookingFormStylesRequest) => void;
     setBookingFormMeta: (bookingFormMeta: UpdateBookingFormMetaRequest) => void;
     setBookingFormFields: (bookingFormFields: SyncBookingFormFieldRequest) => void;
+    deleteBookingFormField: (fieldId: string) => void;
 }
 
 export const useBookingFormConfiguratorStore = create<BookingFormConfiguratorState>()(
@@ -46,6 +47,23 @@ export const useBookingFormConfiguratorStore = create<BookingFormConfiguratorSta
                 set({ bookingFormMeta }, false, 'setBookingFormMeta'),
             setBookingFormFields: (bookingFormFields) =>
                 set({ bookingFormFields }, false, 'setBookingFormFields'),
+            deleteBookingFormField: (fieldId) =>
+                set(
+                    (state) => {
+                        if (!state.bookingFormFields) return {};
+
+                        return {
+                            bookingFormFields: {
+                                ...state.bookingFormFields,
+                                fields: state.bookingFormFields.fields.filter(
+                                    (field) => field.id !== fieldId,
+                                ),
+                            },
+                        };
+                    },
+                    false,
+                    'deleteBookingFormField',
+                ),
         }),
         { name: 'BookingFormConfiguratorStore' },
     ),
