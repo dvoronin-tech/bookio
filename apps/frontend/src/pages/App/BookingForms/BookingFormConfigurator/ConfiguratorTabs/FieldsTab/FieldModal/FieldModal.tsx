@@ -7,7 +7,7 @@ import {
     type MouseEvent,
     type SubmitEvent,
 } from 'react';
-import styles from './CreateFieldModal.module.scss';
+import styles from './FieldModal.module.scss';
 import { Dialog, Input } from '@bookio/ui';
 import { ChoiceChip } from '#components/ChoiceChip/ChoiceChip';
 import { RequiredRow } from '#components/RequiredRow/RequiredRow';
@@ -15,7 +15,7 @@ import { fieldTypeIcons } from '#components/ConfiguratorField/fieldTypeIcons';
 import PlusIcon from '#assets/icons/plus.svg?react';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
-import { useForm, useWatch, type FieldErrors } from 'react-hook-form';
+import { useForm, useWatch } from 'react-hook-form';
 import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 import { useShallow } from 'zustand/shallow';
 
@@ -73,15 +73,18 @@ const normalizeFieldParams = (
     };
 };
 
-interface CreateFieldModalProps {
+interface FieldModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     bookingFormId: string;
     existingFields: EntireBookingFormField[];
+    fieldId?: string | null;
 }
 
-export const CreateFieldModal: FC<CreateFieldModalProps> = memo(
-    ({ open, onOpenChange, bookingFormId, existingFields }) => {
+export const FieldModal: FC<FieldModalProps> = memo(
+    ({ open, onOpenChange, bookingFormId, existingFields, fieldId }) => {
+        const isEditMode = Boolean(fieldId);
+
         const { setBookingFormFields, bookingFormFields } = useBookingFormConfiguratorStore(
             useShallow(({ setBookingFormFields, bookingFormFields }) => ({
                 setBookingFormFields,
@@ -107,6 +110,32 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(
             () => getAcceptTypesFromParams(formData.type, formData.params),
             [formData.type, formData.params],
         );
+
+        useLayoutEffect(() => {
+            if (!open) return;
+
+            if (!fieldId) {
+                reset({});
+                return;
+            }
+
+            const currentFields =
+                bookingFormFields?.fields ?? flattenBookingFormFields(existingFields);
+            const existingField = currentFields.find((field) => field.id === fieldId);
+
+            if (!existingField) {
+                onOpenChange(false);
+                return;
+            }
+
+            reset({
+                name: existingField.name,
+                key: existingField.key,
+                type: existingField.type,
+                required: existingField.required,
+                params: existingField.params,
+            });
+        }, [open, fieldId, bookingFormFields, existingFields, onOpenChange, reset]);
 
         useLayoutEffect(() => {
             const options = getChoiceOptionsFromParams(formData.type, formData.params);
@@ -174,18 +203,28 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(
             [formData.type, selectedAcceptTypes, setValue],
         );
 
-        const handleCreate = useCallback(
+        const handleSave = useCallback(
             (event: SubmitEvent<HTMLFormElement>) => {
                 event.preventDefault();
 
                 const currentFields =
                     bookingFormFields?.fields ?? flattenBookingFormFields(existingFields);
 
+                const existingField = fieldId
+                    ? currentFields.find((field) => field.id === fieldId)
+                    : undefined;
+
+                if (fieldId && !existingField) {
+                    onOpenChange(false);
+                    return;
+                }
+
                 const result = createModalFieldSchema.safeParse({
                     ...formData,
-                    id: uuid7(),
-                    parentId: null,
-                    order: getNextSiblingFieldOrder(currentFields, null),
+                    id: existingField?.id ?? uuid7(),
+                    parentId: existingField?.parentId ?? null,
+                    order:
+                        existingField?.order ?? getNextSiblingFieldOrder(currentFields, null),
                     required: formData.required ?? false,
                     params: normalizeFieldParams(formData.type, formData.params),
                 });
@@ -194,15 +233,21 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(
                     result.error.issues.forEach((issue) => {
                         toast.error(issue.message, {
                             position: 'top-right',
-                            duration: 4000
+                            duration: 4000,
                         });
                     });
                     return;
                 }
 
+                const nextFields = existingField
+                    ? currentFields.map((field) =>
+                          field.id === existingField.id ? result.data : field,
+                      )
+                    : [...currentFields, result.data];
+
                 setBookingFormFields({
                     bookingFormId,
-                    fields: [...currentFields, result.data],
+                    fields: nextFields,
                 });
 
                 reset();
@@ -212,6 +257,7 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(
                 bookingFormFields,
                 bookingFormId,
                 existingFields,
+                fieldId,
                 formData,
                 onOpenChange,
                 reset,
@@ -227,12 +273,14 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(
                 contentClassName={styles.content}
             >
                 <div className={styles.header}>
-                    <Dialog.Title>Create new field</Dialog.Title>
+                    <Dialog.Title>{isEditMode ? 'Edit field' : 'Create new field'}</Dialog.Title>
                     <Dialog.Description>
-                        Configure a new field for your booking form
+                        {isEditMode
+                            ? 'Update field settings'
+                            : 'Configure a new field for your booking form'}
                     </Dialog.Description>
                 </div>
-                <form className={styles.form} onSubmit={handleCreate}>
+                <form className={styles.form} onSubmit={handleSave}>
                     <Input label="Label" {...register('name')} />
 
                     <Input label="Key" {...register('key')} />
@@ -288,10 +336,16 @@ export const CreateFieldModal: FC<CreateFieldModalProps> = memo(
                         <Dialog.Button
                             type="submit"
                             variant="primary-filled"
-                            className={styles.createFieldButton}
+                            className={styles.submitButton}
                         >
-                            <PlusIcon />
-                            Create a new field
+                            {isEditMode ? (
+                                'Save changes'
+                            ) : (
+                                <>
+                                    <PlusIcon />
+                                    Create a new field
+                                </>
+                            )}
                         </Dialog.Button>
                     </Dialog.Actions>
                 </form>

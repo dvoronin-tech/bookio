@@ -9,7 +9,7 @@ import { Button } from '@bookio/ui';
 
 import styles from './FieldsTab.module.scss';
 import { useState, type FC, useCallback, useEffect } from 'react';
-import { CreateFieldModal } from './CreateFieldModal/CreateFieldModal';
+import { FieldModal } from './FieldModal/FieldModal';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { toSyncBookingFormFieldsRequest } from '#utils/dataPreparers/bookingFormPreparers';
@@ -24,6 +24,7 @@ interface FieldsTabFormProps {
 
 const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
     const [isOpenModal, setIsOpenModal] = useState(false);
+    const [editingFieldId, setEditingFieldId] = useState<string | null>(null);
     const { setBookingFormFields, bookingFormFields, deleteBookingFormField } =
         useBookingFormConfiguratorStore(
             useShallow(({ setBookingFormFields, bookingFormFields, deleteBookingFormField }) => ({
@@ -40,9 +41,20 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
         setBookingFormFields(toSyncBookingFormFieldsRequest(bookingFormId, fields));
     }, [bookingFormId, fields, bookingFormFields, setBookingFormFields]);
 
-    const handleOpenModal = useCallback(() => {
+    const handleOpenCreateModal = useCallback(() => {
+        setEditingFieldId(null);
         setIsOpenModal(true);
-    }, [setIsOpenModal]);
+    }, []);
+
+    const handleEditField = useCallback((fieldId: string) => {
+        setEditingFieldId(fieldId);
+        setIsOpenModal(true);
+    }, []);
+
+    const handleModalOpenChange = useCallback((open: boolean) => {
+        setIsOpenModal(open);
+        if (!open) setEditingFieldId(null);
+    }, []);
 
     if (!bookingFormId) {
         return null;
@@ -53,26 +65,29 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
             <div className={styles.fieldsTab}>
                 <div className={styles.fieldsList}>
                     {bookingFormFields &&
-                        bookingFormFields.fields.map(({ id, name, type, key }) => (
+                        bookingFormFields.fields.map(({ id, name, type, key, required }) => (
                             <ConfiguratorField
                                 key={id}
                                 fieldId={id}
                                 name={name}
                                 fieldKey={key}
                                 type={type}
+                                required={required}
+                                onEdit={() => handleEditField(id)}
                                 onDelete={deleteBookingFormField}
                             />
                         ))}
-                    <Button variant="primary-outlined" onClick={handleOpenModal}>
+                    <Button variant="primary-outlined" onClick={handleOpenCreateModal}>
                         Add field
                     </Button>
                 </div>
             </div>
-            <CreateFieldModal
+            <FieldModal
                 open={isOpenModal}
-                onOpenChange={setIsOpenModal}
+                onOpenChange={handleModalOpenChange}
                 bookingFormId={bookingFormId}
                 existingFields={fields}
+                fieldId={editingFieldId}
             />
         </>
     );
