@@ -19,7 +19,10 @@ import { useForm, useWatch } from 'react-hook-form';
 import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 import { useShallow } from 'zustand/shallow';
 
-import { createModalFieldSchema, type CreateModalFieldInput } from '@bookio/backend/schemas';
+import {
+    createModalFieldSchema,
+    type FieldModalFormValues,
+} from '@bookio/backend/schemas';
 import { ParamFields, type OptionItem } from '../ParamFields/ParamFields';
 
 import { v7 as uuid7 } from 'uuid';
@@ -36,8 +39,8 @@ const createEmptyOption = (): OptionItem => ({
 });
 
 const getChoiceOptionsFromParams = (
-    type: CreateModalFieldInput['type'] | undefined,
-    params: CreateModalFieldInput['params'] | undefined,
+    type: FieldModalFormValues['type'],
+    params: FieldModalFormValues['params'],
 ) => {
     if ((type !== 'select' && type !== 'radio') || !params || !('options' in params)) {
         return [];
@@ -47,8 +50,8 @@ const getChoiceOptionsFromParams = (
 };
 
 const getAcceptTypesFromParams = (
-    type: CreateModalFieldInput['type'] | undefined,
-    params: CreateModalFieldInput['params'] | undefined,
+    type: FieldModalFormValues['type'],
+    params: FieldModalFormValues['params'],
 ) => {
     if ((type !== 'file' && type !== 'image') || !params || !('accept' in params)) {
         return [];
@@ -58,8 +61,8 @@ const getAcceptTypesFromParams = (
 };
 
 const normalizeFieldParams = (
-    type: CreateModalFieldInput['type'] | undefined,
-    params: CreateModalFieldInput['params'] | undefined,
+    type: FieldModalFormValues['type'],
+    params: FieldModalFormValues['params'],
 ) => {
     const choiceParamsOptions = getChoiceOptionsFromParams(type, params);
 
@@ -92,7 +95,7 @@ export const FieldModal: FC<FieldModalProps> = memo(
             })),
         );
 
-        const { control, setValue, reset, register } = useForm<CreateModalFieldInput>({
+        const { control, setValue, reset, register } = useForm<FieldModalFormValues>({
             defaultValues: {},
         });
 

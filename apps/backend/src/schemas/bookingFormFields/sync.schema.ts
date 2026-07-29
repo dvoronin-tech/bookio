@@ -89,3 +89,8 @@ export const createModalFieldSchema = syncBookingFormFieldItemSchema;
 
 export type CreateModalFieldInput = z.input<typeof createModalFieldSchema>;
 export type CreateModalFieldOutput = z.infer<typeof createModalFieldSchema>;
+
+/** Partial modal form state — decoupled from discriminated-union input correlation. */
+export type FieldModalFormValues = Partial<
+    Pick<CreateModalFieldOutput, 'name' | 'key' | 'type' | 'required' | 'params'>
+>;
