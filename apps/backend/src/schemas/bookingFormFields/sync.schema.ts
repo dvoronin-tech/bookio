@@ -92,5 +92,5 @@ export type CreateModalFieldOutput = z.infer<typeof createModalFieldSchema>;
 
 /** Partial modal form state — decoupled from discriminated-union input correlation. */
 export type FieldModalFormValues = Partial<
-    Pick<CreateModalFieldOutput, 'name' | 'key' | 'type' | 'required' | 'params'>
+    Pick<CreateModalFieldOutput, 'name' | 'key' | 'type' | 'required' | 'params' | 'parentId'>
 >;

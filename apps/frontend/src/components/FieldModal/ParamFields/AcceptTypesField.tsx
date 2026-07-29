@@ -2,7 +2,7 @@ import { useCallback, useMemo, type FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import type { AcceptOptions } from '#utils/paramsFieldConfig';
-import { SelectDropdown } from './SelectDropdown';
+import { AcceptTypesDropdown } from './AcceptTypesDropdown';
 
 interface AcceptTypesFieldProps {
     label: string;
@@ -26,11 +26,11 @@ export const AcceptTypesField: FC<AcceptTypesFieldProps> = ({ label, options }) 
     );
 
     return (
-        <SelectDropdown
+        <AcceptTypesDropdown
             label={label}
             options={options}
-            selectedOptions={selectedAcceptTypes}
-            onClickOption={handleToggleAcceptType}
+            selected={selectedAcceptTypes}
+            onToggleOption={handleToggleAcceptType}
         />
     );
 };

@@ -19,8 +19,7 @@ type CheckboxParamKey = keyof z.infer<typeof checkboxParamsSchema>;
 
 const imageAcceptOptions = {
     'All images': 'image/*',
-    '.jpg': 'image/jpeg',
-    '.jpeg': 'image/jpeg',
+    '.jpg / .jpeg': 'image/jpeg',
     '.png': 'image/png',
     '.gif': 'image/gif',
     '.webp': 'image/webp',
@@ -75,9 +74,6 @@ const fileAcceptOptions = {
 } as const;
 
 export type AcceptOptions = typeof fileAcceptOptions | typeof imageAcceptOptions;
-
-export const getAcceptOptionLabel = (options: AcceptOptions, mimeType: string) =>
-    Object.entries(options).find(([, value]) => value === mimeType)?.[0] ?? mimeType;
 
 type BaseUIFieldConfig = {
     label: string;

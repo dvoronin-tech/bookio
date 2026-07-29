@@ -32,7 +32,6 @@ export const useFieldModalSubmit = ({
 
     return (formData: FieldModalFormValues) => {
         const currentFields = bookingFormFields?.fields ?? flattenBookingFormFields(existingFields);
-
         const existingField = fieldId
             ? currentFields.find((field) => field.id === fieldId)
             : undefined;
@@ -42,10 +41,16 @@ export const useFieldModalSubmit = ({
             return;
         }
 
+        const parentId = (() => {
+            if (formData.parentId === '') return null;
+            if (formData.parentId) return formData.parentId;
+            return existingField?.parentId ?? null;
+        })();
+
         const result = createModalFieldSchema.safeParse({
             ...formData,
             id: existingField?.id ?? uuid7(),
-            parentId: existingField?.parentId ?? null,
+            parentId,
             order: existingField?.order ?? getNextSiblingFieldOrder(currentFields, null),
             required: formData.required ?? false,
             params: normalizeFieldParams(formData.type, formData.params),

@@ -37,8 +37,7 @@ export const useFieldModalForm = ({
             return;
         }
 
-        const currentFields =
-            bookingFormFields?.fields ?? flattenBookingFormFields(existingFields);
+        const currentFields = bookingFormFields?.fields ?? flattenBookingFormFields(existingFields);
         const existingField = currentFields.find((field) => field.id === fieldId);
 
         if (!existingField) {
@@ -51,6 +50,7 @@ export const useFieldModalForm = ({
             key: existingField.key,
             type: existingField.type,
             required: existingField.required,
+            parentId: existingField.parentId,
             params: existingField.params,
         });
     }, [open, fieldId, bookingFormFields, existingFields, onOpenChange, reset]);
