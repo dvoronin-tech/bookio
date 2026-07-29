@@ -76,20 +76,22 @@ const fileAcceptOptions = {
 
 export type AcceptOptions = typeof fileAcceptOptions | typeof imageAcceptOptions;
 
-export const getAcceptOptionLabel = (
-    options: AcceptOptions,
-    mimeType: string,
-) => Object.entries(options).find(([, value]) => value === mimeType)?.[0] ?? mimeType;
+export const getAcceptOptionLabel = (options: AcceptOptions, mimeType: string) =>
+    Object.entries(options).find(([, value]) => value === mimeType)?.[0] ?? mimeType;
 
-export interface BaseUIFieldType {
+type BaseUIFieldConfig = {
     label: string;
     type: 'text' | 'checkbox' | 'number';
+};
+
+export interface BaseUIFieldType extends BaseUIFieldConfig {
+    name: string;
 }
 
 export interface OptionsUIField {
     label: string;
     type: 'options';
-    itemFields: Record<FieldOptionKey, BaseUIFieldType>;
+    itemFields: Record<FieldOptionKey, BaseUIFieldConfig>;
 }
 
 export interface FileUiField {
@@ -105,22 +107,50 @@ export interface ImageUiField {
 }
 
 type ChoiceUIField = BaseUIFieldType | OptionsUIField;
+type FileUIField = BaseUIFieldType | FileUiField;
+type ImageUIField = BaseUIFieldType | ImageUiField;
 
-const groupFieldsConfig: Record<GroupParamKey, BaseUIFieldType> = {
+/** Attach param key as `name` for form `register` on simple fields. */
+const namedBaseFields = (config: Record<string, BaseUIFieldConfig>): BaseUIFieldType[] =>
+    Object.entries(config).map(([name, field]) => ({ ...field, name }));
+
+const namedChoiceFields = (
+    config: Record<string, BaseUIFieldConfig | OptionsUIField>,
+): ChoiceUIField[] =>
+    Object.entries(config).map(([name, field]): ChoiceUIField => {
+        if (field.type === 'options') {
+            return field;
+        }
+
+        return { ...field, name };
+    });
+
+const namedSelectParamFields = <TSelect extends { type: 'select' }>(
+    config: Record<string, BaseUIFieldConfig | TSelect>,
+): Array<BaseUIFieldType | TSelect> =>
+    Object.entries(config).map(([name, field]): BaseUIFieldType | TSelect => {
+        if (field.type === 'select') {
+            return field;
+        }
+
+        return { ...field, name };
+    });
+
+const groupFieldsConfig: Record<GroupParamKey, BaseUIFieldConfig> = {
     description: {
         label: 'Description',
         type: 'text',
     },
 };
 
-const checkboxFieldsConfig: Record<CheckboxParamKey, BaseUIFieldType> = {
+const checkboxFieldsConfig: Record<CheckboxParamKey, BaseUIFieldConfig> = {
     helpText: {
         label: 'Help text',
         type: 'text',
     },
 };
 
-const choiceFieldsConfig: Record<ChoiceParamKey, ChoiceUIField> = {
+const choiceFieldsConfig: Record<ChoiceParamKey, BaseUIFieldConfig | OptionsUIField> = {
     placeholder: {
         label: 'Placeholder',
         type: 'text',
@@ -135,7 +165,7 @@ const choiceFieldsConfig: Record<ChoiceParamKey, ChoiceUIField> = {
     },
 };
 
-const inputFieldsConfig: Record<InputParamKey, BaseUIFieldType> = {
+const inputFieldsConfig: Record<InputParamKey, BaseUIFieldConfig> = {
     placeholder: {
         label: 'Placeholder',
         type: 'text',
@@ -146,7 +176,7 @@ const inputFieldsConfig: Record<InputParamKey, BaseUIFieldType> = {
     },
 };
 
-const textAreaFieldsConfig: Record<TextAreaParamKey, BaseUIFieldType> = {
+const textAreaFieldsConfig: Record<TextAreaParamKey, BaseUIFieldConfig> = {
     placeholder: {
         label: 'Placeholder',
         type: 'text',
@@ -161,7 +191,7 @@ const textAreaFieldsConfig: Record<TextAreaParamKey, BaseUIFieldType> = {
     },
 };
 
-const fileFieldsConfig: Record<FileParamKey, BaseUIFieldType | FileUiField> = {
+const fileFieldsConfig: Record<FileParamKey, BaseUIFieldConfig | FileUiField> = {
     accept: {
         label: 'Accepted file types',
         type: 'select',
@@ -173,7 +203,7 @@ const fileFieldsConfig: Record<FileParamKey, BaseUIFieldType | FileUiField> = {
     },
 };
 
-const imageFieldsConfig: Record<FileParamKey, BaseUIFieldType | ImageUiField> = {
+const imageFieldsConfig: Record<FileParamKey, BaseUIFieldConfig | ImageUiField> = {
     accept: {
         label: 'Accepted image types',
         type: 'select',
@@ -197,26 +227,26 @@ export type ParamsFieldConfig = {
     select: ChoiceUIField[];
     radio: ChoiceUIField[];
     checkbox: BaseUIFieldType[];
-    file: (BaseUIFieldType | FileUiField)[];
-    image: (BaseUIFieldType | ImageUiField)[];
+    file: FileUIField[];
+    image: ImageUIField[];
     group: BaseUIFieldType[];
 };
 
 export const paramsFieldConfig: ParamsFieldConfig = {
-    text: Object.values(inputFieldsConfig),
-    email: Object.values(inputFieldsConfig),
-    phone: Object.values(inputFieldsConfig),
-    url: Object.values(inputFieldsConfig),
-    number: Object.values(inputFieldsConfig),
-    date: Object.values(inputFieldsConfig),
-    time: Object.values(inputFieldsConfig),
-    textarea: Object.values(textAreaFieldsConfig),
-    select: Object.values(choiceFieldsConfig),
-    radio: Object.values(choiceFieldsConfig),
-    checkbox: Object.values(checkboxFieldsConfig),
-    file: Object.values(fileFieldsConfig),
-    image: Object.values(imageFieldsConfig),
-    group: Object.values(groupFieldsConfig),
+    text: namedBaseFields(inputFieldsConfig),
+    email: namedBaseFields(inputFieldsConfig),
+    phone: namedBaseFields(inputFieldsConfig),
+    url: namedBaseFields(inputFieldsConfig),
+    number: namedBaseFields(inputFieldsConfig),
+    date: namedBaseFields(inputFieldsConfig),
+    time: namedBaseFields(inputFieldsConfig),
+    textarea: namedBaseFields(textAreaFieldsConfig),
+    select: namedChoiceFields(choiceFieldsConfig),
+    radio: namedChoiceFields(choiceFieldsConfig),
+    checkbox: namedBaseFields(checkboxFieldsConfig),
+    file: namedSelectParamFields(fileFieldsConfig),
+    image: namedSelectParamFields(imageFieldsConfig),
+    group: namedBaseFields(groupFieldsConfig),
 };
 
 export type UIFields = (typeof paramsFieldConfig)[keyof typeof paramsFieldConfig];

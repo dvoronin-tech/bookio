@@ -28,6 +28,10 @@ const toSyncFieldItem = ({
 >): SyncBookingFormFieldItem =>
     ({ id, name, type, key, required, parentId, order, params }) as SyncBookingFormFieldItem;
 
+/**
+ * Flattens nested booking-form fields into a sync payload list.
+ * Root fields come first; for `group` fields, `childFields` are appended after the group itself.
+ */
 export const flattenBookingFormFields = (
     fields: EntireBookingFormField[],
 ): SyncBookingFormFieldItem[] =>

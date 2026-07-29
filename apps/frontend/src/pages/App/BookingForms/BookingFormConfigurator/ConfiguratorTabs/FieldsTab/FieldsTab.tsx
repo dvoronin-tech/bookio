@@ -9,7 +9,7 @@ import { Button } from '@bookio/ui';
 
 import styles from './FieldsTab.module.scss';
 import { useState, type FC, useCallback, useEffect } from 'react';
-import { FieldModal } from './FieldModal/FieldModal';
+import { FieldModal } from '#components/FieldModal/FieldModal';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { toSyncBookingFormFieldsRequest } from '#utils/dataPreparers/bookingFormPreparers';
