@@ -1,11 +1,14 @@
 .configuratorField {
+    --border-radius: 1rem;
     display: flex;
     align-items: center;
     width: 100%;
-    overflow: hidden;
-    border-radius: 0.6rem;
+    border-radius: var(--border-radius);
     border: 1px solid var(--color-border);
     background-color: var(--color-bg-ui);
+    position: relative;
+    z-index: 1;
+    transition: box-shadow 0.2s cubic-bezier(0.08, 0.84, 0.4, 1.2);
 }
 
 .dragHandle {
@@ -17,12 +20,20 @@
     height: 100%;
     min-height: 5rem;
     color: var(--color-text-secondary);
-    pointer-events: none;
+    cursor: grab;
 
     svg {
         width: 1.4rem;
         height: 1.4rem;
     }
+}
+
+.groupWhileDragging {
+    box-shadow: 0 0 2px 3px #ffffff25;
+}
+
+.groupWhileDraggingHover {
+    box-shadow: 0 0 2px 3px color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 
 .content {
@@ -42,7 +53,7 @@
     flex-shrink: 0;
     width: 3rem;
     height: 3rem;
-    border-radius: 0.6rem;
+    border-radius: var(--border-radius);
     background-color: color-mix(
         in srgb,
         var(--type-badge-color, var(--color-primary)) 9%,
@@ -124,5 +135,36 @@
             fill: none;
             stroke: currentColor;
         }
+    }
+}
+
+.group {
+    flex-direction: column;
+}
+
+.groupData {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.groupFieldsWrapper {
+    padding: .5rem;
+    width: 100%;
+    height: fit-content;
+}
+
+.groupFields {
+    display: flex;
+    flex-direction: column;
+    gap: .5rem;
+    padding: .5rem;
+    background-color: var(--color-bg-main);
+    border-radius: var(--border-radius);
+    border: 1px solid var(--color-border);
+
+    .configuratorField {
+        border: none;
+        background-color: var(--color-bg-main);
     }
 }

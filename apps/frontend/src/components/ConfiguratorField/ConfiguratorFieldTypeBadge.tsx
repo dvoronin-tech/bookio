@@ -1,0 +1,22 @@
+import type { CSSProperties, FC } from 'react';
+import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
+
+import { fieldTypeIcons } from './fieldTypeIcons';
+import styles from './ConfiguratorField.module.scss';
+
+interface ConfiguratorFieldTypeBadgeProps {
+    type: EntireBookingFormField['type'];
+}
+
+export const ConfiguratorFieldTypeBadge: FC<ConfiguratorFieldTypeBadgeProps> = ({ type }) => {
+    const { icon: TypeIcon, color } = fieldTypeIcons[type];
+
+    return (
+        <div
+            className={styles.typeBadge}
+            style={{ '--type-badge-color': color } as CSSProperties}
+        >
+            <TypeIcon />
+        </div>
+    );
+};

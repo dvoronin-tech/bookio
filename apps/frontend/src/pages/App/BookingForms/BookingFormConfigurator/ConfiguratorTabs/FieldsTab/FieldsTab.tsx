@@ -8,7 +8,7 @@ import { Spinner } from '#components/Spinner/Spinner';
 import { Button } from '@bookio/ui';
 
 import styles from './FieldsTab.module.scss';
-import { useState, type FC, useCallback, useEffect } from 'react';
+import { useState, type FC, useCallback, useEffect, useMemo } from 'react';
 import { FieldModal } from '#components/FieldModal/FieldModal';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
@@ -16,6 +16,7 @@ import { toSyncBookingFormFieldsRequest } from '#utils/dataPreparers/bookingForm
 import { useShallow } from 'zustand/shallow';
 
 import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField';
+import { useDragAndDrop } from '#hooks/useDragAndDrop';
 
 interface FieldsTabFormProps {
     bookingFormId: string;
@@ -56,6 +57,13 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
         if (!open) setEditingFieldId(null);
     }, []);
 
+    const sortedFields = useMemo(() => {
+        const fields = bookingFormFields?.fields ?? [];
+        return fields.sort((a, b) => a.order - b.order);
+    }, [bookingFormFields?.fields]);
+
+    const draggingProps = useDragAndDrop({ items: [], onReorder: () => {}, settings: { axis: 'y'} });
+
     if (!bookingFormId) {
         return null;
     }
@@ -64,19 +72,22 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
         <>
             <div className={styles.fieldsTab}>
                 <div className={styles.fieldsList}>
-                    {bookingFormFields &&
-                        bookingFormFields.fields.map(({ id, name, type, key, required }) => (
-                            <ConfiguratorField
-                                key={id}
-                                fieldId={id}
-                                name={name}
-                                fieldKey={key}
-                                type={type}
-                                required={required}
-                                onEdit={() => handleEditField(id)}
-                                onDelete={deleteBookingFormField}
-                            />
-                        ))}
+                    {sortedFields.map(({ id, name, type, key, required, parentId}) => (
+                        <ConfiguratorField
+                            draggingProps={draggingProps}
+                            key={id}
+                            fieldId={id}
+                            name={name}
+                            fieldKey={key}
+                            type={type}
+                            required={required}
+                            onEdit={() => handleEditField(id)}
+                            onDelete={deleteBookingFormField}
+                            parentId={parentId}
+                            fields={sortedFields}
+                            isRoot
+                        />
+                    ))}
                     <Button variant="primary-outlined" onClick={handleOpenCreateModal}>
                         Add field
                     </Button>

@@ -1,15 +1,23 @@
-import { useCallback, type CSSProperties, type FC } from 'react';
+import React, { useCallback, type FC, useRef, memo, useMemo } from 'react';
 import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
-import { Button } from '@bookio/ui';
 
-import GripVerticalIcon from '#assets/icons/grip-vertical.svg?react';
-import EditIcon from '#assets/icons/pen.svg?react';
-import TrashIcon from '#assets/icons/trash.svg?react';
-
-import { fieldTypeIcons } from './fieldTypeIcons';
 import styles from './ConfiguratorField.module.scss';
 
-interface ConfiguratorFieldProps {
+import { clsx } from 'clsx';
+import { ConfiguratorFieldActions } from './ConfiguratorFieldActions';
+import { ConfiguratorFieldDragHandle } from './ConfiguratorFieldDragHandle';
+import { ConfiguratorFieldInfo } from './ConfiguratorFieldInfo';
+import { ConfiguratorFieldTypeBadge } from './ConfiguratorFieldTypeBadge';
+import { ConfiguratorFieldGroupData } from './ConfiguratorFieldGroupData';
+import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormPreparers';
+import {
+    ConfiguratorFieldContext,
+    type ConfiguratorFieldContextValue,
+    useConfiguratorFieldContext,
+} from './ConfiguratorFieldContext';
+import type { UseDragAndDropReturn } from '#hooks/useDragAndDrop';
+
+export interface ConfiguratorFieldProps {
     name: string;
     type: EntireBookingFormField['type'];
     fieldKey: string;
@@ -17,6 +25,10 @@ interface ConfiguratorFieldProps {
     onEdit?: () => void;
     onDelete?: (fieldId: string) => void;
     fieldId: string;
+    parentId: string | null;
+    isRoot?: boolean;
+    draggingProps?: UseDragAndDropReturn;
+    fields: SyncBookingFormFieldItem[];
 }
 
 export const ConfiguratorField: FC<ConfiguratorFieldProps> = ({
@@ -27,55 +39,135 @@ export const ConfiguratorField: FC<ConfiguratorFieldProps> = ({
     onEdit,
     onDelete,
     fieldId,
+    parentId,
+    draggingProps,
+    fields,
+    isRoot
 }) => {
-    const { icon: TypeIcon, color } = fieldTypeIcons[type];
+    const fieldRef = useRef<HTMLDivElement>(null);
 
-    const handleDelete = useCallback(() => {
-        onDelete?.(fieldId);
-    }, [onDelete, fieldId]);
+    const handleDragStart = useCallback(
+        (e: React.PointerEvent<HTMLDivElement>) => {
+            e.preventDefault();
+            e.currentTarget.setPointerCapture(e.pointerId);
+            if (fieldRef.current !== null) {
+                draggingProps?.onDragStart?.(fieldId, fieldRef, e.clientX, e.clientY, type);
+            }
+        },
+        [draggingProps, fieldId, type],
+    );
+
+    const contextValue = useMemo<ConfiguratorFieldContextValue>(
+        () => ({
+            draggingProps,
+            onEdit,
+            onDelete,
+            onDragStart: handleDragStart,
+            fields,
+        }),
+        [draggingProps, onEdit, onDelete, fields, handleDragStart],
+    );
+
+    if (parentId !== null && isRoot) return null;
 
     return (
-        <div className={styles.configuratorField}>
-            <div className={styles.dragHandle} aria-hidden="true">
-                <GripVerticalIcon />
-            </div>
-            <div className={styles.content}>
-                <div
-                    className={styles.typeBadge}
-                    style={{ '--type-badge-color': color } as CSSProperties}
-                >
-                    <TypeIcon />
-                </div>
-                <div className={styles.info}>
-                    <div className={styles.nameRow}>
-                        <span className={styles.name}>{name}</span>
-                        {required ? (
-                            <span className={styles.requiredDot} aria-label="Required" />
-                        ) : null}
-                    </div>
-                    <span className={styles.fieldKey}>{fieldKey}</span>
-                </div>
-                <div className={styles.actions}>
-                    <Button
-                        type="button"
-                        variant="blue-clean"
-                        className={styles.editButton}
-                        onClick={onEdit}
-                        aria-label={`Edit ${name}`}
-                    >
-                        <EditIcon />
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="red-clean"
-                        className={styles.deleteButton}
-                        onClick={handleDelete}
-                        aria-label={`Delete ${name}`}
-                    >
-                        <TrashIcon />
-                    </Button>
-                </div>
-            </div>
-        </div>
+        <ConfiguratorFieldContext.Provider value={contextValue}>
+            {type === 'group' ? (
+                <ConfiguratorGroupItem
+                    fieldId={fieldId}
+                    fieldRef={fieldRef}
+                    required={required}
+                    name={name}
+                    fieldKey={fieldKey}
+                    type={type}
+                    fields={fields}
+                />
+            ) : (
+                <ConfiguratorFieldItem
+                    fieldId={fieldId}
+                    fieldRef={fieldRef}
+                    required={required}
+                    name={name}
+                    fieldKey={fieldKey}
+                    type={type}
+                />
+            )}
+        </ConfiguratorFieldContext.Provider>
     );
 };
+
+interface ConfiguratorItemProps {
+    fields?: SyncBookingFormFieldItem[];
+    fieldRef: React.RefObject<HTMLDivElement | null>;
+    fieldId: string;
+    name: string;
+    fieldKey: string;
+    type: EntireBookingFormField['type'];
+    required?: boolean;
+}
+
+const ConfiguratorGroupItem: FC<ConfiguratorItemProps> = memo(
+    ({ fieldRef, fieldId, type, required, name, fieldKey }) => {
+        const { draggingProps, onEdit, fields, onDelete, onDragStart } =
+            useConfiguratorFieldContext();
+
+        const { draggingId, isDragging, draggingType, hoverTargetId } = draggingProps ?? {};
+
+        const isDraggingNonGroupField = isDragging && draggingType !== 'group';
+
+        const configuratorFieldClass = clsx(styles.configuratorField, styles.group, {
+            [styles.groupWhileDragging]: isDraggingNonGroupField && draggingId !== fieldId,
+            [styles.groupWhileDraggingHover]: isDraggingNonGroupField && hoverTargetId === fieldId,
+        });
+
+        const childFields = useMemo(() => {
+            if (!fields) return [];
+            return fields
+                .filter((field) => field.parentId === fieldId)
+                .sort((a, b) => a.order - b.order);
+        }, [fields, fieldId]);
+
+        const handleDelete = useCallback(() => {
+            onDelete?.(fieldId);
+        }, [onDelete, fieldId]);
+
+        return (
+            <div className={configuratorFieldClass} ref={fieldRef} data-field-id={fieldId}>
+                <div className={styles.groupData}>
+                    <ConfiguratorFieldDragHandle onPointerDown={onDragStart} />
+                    <div className={styles.content}>
+                        <ConfiguratorFieldTypeBadge type={type} />
+                        <ConfiguratorFieldInfo
+                            name={name}
+                            fieldKey={fieldKey}
+                            required={required}
+                        />
+                        <ConfiguratorFieldActions onEdit={onEdit} onDelete={handleDelete} />
+                    </div>
+                </div>
+                {childFields.length > 0 && <ConfiguratorFieldGroupData childFields={childFields} />}
+            </div>
+        );
+    },
+);
+
+const ConfiguratorFieldItem: FC<ConfiguratorItemProps> = memo(
+    ({ fieldRef, fieldId, type, required, name, fieldKey }) => {
+        const { onEdit, onDelete, onDragStart } = useConfiguratorFieldContext();
+
+        const handleDelete = useCallback(() => {
+            onDelete?.(fieldId);
+        }, [onDelete, fieldId]);
+
+        return (
+            <div className={styles.configuratorField} ref={fieldRef} data-field-id={fieldId}>
+                <ConfiguratorFieldDragHandle onPointerDown={onDragStart} />
+                <div className={styles.content}>
+                    <ConfiguratorFieldTypeBadge type={type} />
+                    <ConfiguratorFieldInfo name={name} fieldKey={fieldKey} required={required} />
+                    <ConfiguratorFieldActions onEdit={onEdit} onDelete={handleDelete} />
+                </div>
+            </div>
+        );
+    },
+);

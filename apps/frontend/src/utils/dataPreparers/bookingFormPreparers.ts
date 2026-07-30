@@ -2,7 +2,8 @@ import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingF
 import type { SyncBookingFormFieldRequest } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
 
-type SyncBookingFormFieldItem = SyncBookingFormFieldRequest['fields'][number];
+export type SyncBookingFormFieldItem = SyncBookingFormFieldRequest['fields'][number];
+export type SyncBookingFormGroupFieldItem = Extract<SyncBookingFormFieldItem, { type: 'group' }>;
 
 /** Next order among siblings sharing the same parentId (null = root level). */
 export const getNextSiblingFieldOrder = (
