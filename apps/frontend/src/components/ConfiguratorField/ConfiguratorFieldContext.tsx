@@ -4,9 +4,9 @@ import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormP
 
 export interface ConfiguratorFieldContextValue {
     draggingProps?: UseDragAndDropReturn;
-    onEdit?: () => void;
+    onEdit?: (fieldId: string) => void;
     onDelete?: (fieldId: string) => void;
-    onDragStart: (e: React.PointerEvent<HTMLDivElement>) => void;
+    onDragStart?: (e: React.PointerEvent<HTMLDivElement>) => void;
     fields?: SyncBookingFormFieldItem[];
 }
 

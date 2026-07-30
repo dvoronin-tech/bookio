@@ -22,7 +22,7 @@ export interface ConfiguratorFieldProps {
     type: EntireBookingFormField['type'];
     fieldKey: string;
     required?: boolean;
-    onEdit?: () => void;
+    onEdit?: (fieldId: string) => void;
     onDelete?: (fieldId: string) => void;
     fieldId: string;
     parentId: string | null;
@@ -42,7 +42,7 @@ export const ConfiguratorField: FC<ConfiguratorFieldProps> = ({
     parentId,
     draggingProps,
     fields,
-    isRoot
+    isRoot,
 }) => {
     const fieldRef = useRef<HTMLDivElement>(null);
 
@@ -131,6 +131,12 @@ const ConfiguratorGroupItem: FC<ConfiguratorItemProps> = memo(
             onDelete?.(fieldId);
         }, [onDelete, fieldId]);
 
+        const handleEdit = useCallback(() => {
+            onEdit?.(fieldId);
+        }, [onEdit, fieldId]);
+
+        if (!onDragStart) return null;
+
         return (
             <div className={configuratorFieldClass} ref={fieldRef} data-field-id={fieldId}>
                 <div className={styles.groupData}>
@@ -142,7 +148,7 @@ const ConfiguratorGroupItem: FC<ConfiguratorItemProps> = memo(
                             fieldKey={fieldKey}
                             required={required}
                         />
-                        <ConfiguratorFieldActions onEdit={onEdit} onDelete={handleDelete} />
+                        <ConfiguratorFieldActions onEdit={handleEdit} onDelete={handleDelete} />
                     </div>
                 </div>
                 {childFields.length > 0 && <ConfiguratorFieldGroupData childFields={childFields} />}
@@ -159,13 +165,19 @@ const ConfiguratorFieldItem: FC<ConfiguratorItemProps> = memo(
             onDelete?.(fieldId);
         }, [onDelete, fieldId]);
 
+        const handleEdit = useCallback(() => {
+            onEdit?.(fieldId);
+        }, [onEdit, fieldId]);
+
+        if (!onDragStart) return null;
+
         return (
             <div className={styles.configuratorField} ref={fieldRef} data-field-id={fieldId}>
                 <ConfiguratorFieldDragHandle onPointerDown={onDragStart} />
                 <div className={styles.content}>
                     <ConfiguratorFieldTypeBadge type={type} />
                     <ConfiguratorFieldInfo name={name} fieldKey={fieldKey} required={required} />
-                    <ConfiguratorFieldActions onEdit={onEdit} onDelete={handleDelete} />
+                    <ConfiguratorFieldActions onEdit={handleEdit} onDelete={handleDelete} />
                 </div>
             </div>
         );

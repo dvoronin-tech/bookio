@@ -81,7 +81,7 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
                             fieldKey={key}
                             type={type}
                             required={required}
-                            onEdit={() => handleEditField(id)}
+                            onEdit={handleEditField}
                             onDelete={deleteBookingFormField}
                             parentId={parentId}
                             fields={sortedFields}
