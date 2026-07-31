@@ -8,7 +8,9 @@
     background-color: var(--color-bg-ui);
     position: relative;
     z-index: 1;
-    transition: box-shadow 0.2s cubic-bezier(0.08, 0.84, 0.4, 1.2);
+    transition:
+        box-shadow 0.2s cubic-bezier(0.08, 0.84, 0.4, 1.2),
+        transform 0.2s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .dragHandle {
@@ -149,7 +151,7 @@
 }
 
 .groupFieldsWrapper {
-    padding: .5rem;
+    padding: 0.5rem;
     width: 100%;
     height: fit-content;
 }
@@ -157,8 +159,8 @@
 .groupFields {
     display: flex;
     flex-direction: column;
-    gap: .5rem;
-    padding: .5rem;
+    gap: 0.5rem;
+    padding: 0.5rem;
     background-color: var(--color-bg-main);
     border-radius: var(--border-radius);
     border: 1px solid var(--color-border);

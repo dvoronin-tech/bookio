@@ -8,7 +8,7 @@ import { Spinner } from '#components/Spinner/Spinner';
 import { Button } from '@bookio/ui';
 
 import styles from './FieldsTab.module.scss';
-import { useState, type FC, useCallback, useEffect, useMemo } from 'react';
+import { useState, type FC, useCallback, useEffect, useMemo, useRef } from 'react';
 import { FieldModal } from '#components/FieldModal/FieldModal';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
@@ -34,6 +34,7 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
                 deleteBookingFormField,
             })),
         );
+    const containerRef = useRef<HTMLDivElement>(null);
 
     // Seed from server once per form. Do not overwrite local drafts on tab remount / refetch.
     useEffect(() => {
@@ -62,7 +63,7 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
         return fields.sort((a, b) => a.order - b.order);
     }, [bookingFormFields?.fields]);
 
-    const draggingProps = useDragAndDrop({ items: [], onReorder: () => {}, settings: { axis: 'y'} });
+    const draggingProps = useDragAndDrop({ items: [], onReorder: () => {}, containerRef });
 
     if (!bookingFormId) {
         return null;
@@ -71,8 +72,8 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
     return (
         <>
             <div className={styles.fieldsTab}>
-                <div className={styles.fieldsList}>
-                    {sortedFields.map(({ id, name, type, key, required, parentId}) => (
+                <div className={styles.fieldsList} ref={containerRef}>
+                    {sortedFields.map(({ id, name, type, key, required, parentId }) => (
                         <ConfiguratorField
                             draggingProps={draggingProps}
                             key={id}

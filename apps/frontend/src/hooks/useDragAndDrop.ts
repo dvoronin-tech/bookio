@@ -2,18 +2,11 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 import { Stack } from '#utils/stack';
 
-type DragAndDropSettings = {
-    axis: 'x' | 'y';
-};
-
 type UseDragAndDropProps<T> = {
     items: T[];
     onReorder: (items: T[]) => void;
-    settings?: DragAndDropSettings;
-};
-
-const DEFAULT_SETTINGS: DragAndDropSettings = {
-    axis: 'both',
+    axis?: 'x' | 'y';
+    containerRef: React.RefObject<HTMLDivElement | null>;
 };
 
 type Direction = 'toUp' | 'toDown' | 'toLeft' | 'toRight';
@@ -21,7 +14,8 @@ type Direction = 'toUp' | 'toDown' | 'toLeft' | 'toRight';
 export const useDragAndDrop = <T>({
     items,
     onReorder,
-    settings = DEFAULT_SETTINGS,
+    axis = 'y',
+    containerRef,
 }: UseDragAndDropProps<T>) => {
     const draggedItemRef = useRef<HTMLDivElement | null>(null);
     const dragStartMouseRef = useRef({ x: 0, y: 0 });
@@ -34,7 +28,19 @@ export const useDragAndDrop = <T>({
     const [hoverTargetId, setHoverTargetId] = useState<string | null>(null);
     const [draggingType, setDraggingType] = useState<string | null>(null);
 
-    const { axis } = settings;
+    /** Map of field ids to their corresponding elements. */
+    const fieldRefsMap = useMemo(() => {
+        const elements = document.querySelectorAll<HTMLDivElement>('[data-field-id]');
+        const map = new Map<string, HTMLDivElement>();
+
+        elements.forEach((el) => {
+            if (!el.dataset.fieldId) return;
+            map.set(el.dataset.fieldId, el);
+        });
+
+        return map;
+        // it's fine, I gotta refresh the map when the items change
+    }, [items]);
 
     /** Drag start handler */
     const onDragStart = useCallback(
@@ -73,7 +79,9 @@ export const useDragAndDrop = <T>({
         }
 
         draggedItemRef.current = null;
-    }, []);
+        movedStack.current.clear();
+        fieldRefsMap.forEach((el) => (el.style.transform = ''));
+    }, [fieldRefsMap]);
 
     /** Set group id which is hovered by the mouse while dragging. */
     const setGroupId = useCallback((mouseX: number, mouseY: number) => {
@@ -108,20 +116,6 @@ export const useDragAndDrop = <T>({
         },
         [axis],
     );
-
-    /** Map of field ids to their corresponding elements. */
-    const fieldRefsMap = useMemo(() => {
-        const elements = document.querySelectorAll<HTMLDivElement>('[data-field-id]');
-        const map = new Map<string, HTMLDivElement>();
-
-        elements.forEach((el) => {
-            if (!el.dataset.fieldId) return;
-            map.set(el.dataset.fieldId, el);
-        });
-
-        return map;
-        // it's fine, I gotta refresh the map when the items change
-    }, [items]);
 
     /** Set the movement direction of a field. */
     const setDirection = useCallback(() => {
@@ -177,13 +171,25 @@ export const useDragAndDrop = <T>({
                 (draggedCenterX < hoverCenterX && direction === 'toRight') ||
                 (draggedCenterX > hoverCenterX && direction === 'toLeft')
             ) {
+                const popId = stack.peek();
+                const element = fieldRefsMap.get(popId);
+                if (!element) return;
+                element.style.transform = '';
                 stack.pop();
             }
         },
-        [],
+        [fieldRefsMap],
     );
 
-    const moveNearElements = useCallback(() => {
+    const getContainerGap = useCallback(() => {
+        const container = containerRef.current;
+        if (!container) return 0;
+
+        const styles = getComputedStyle(container);
+        return parseInt(styles.gap);
+    }, [containerRef]);
+
+    const updateStack = useCallback(() => {
         if (draggingId === null) return;
 
         const draggedElement = fieldRefsMap.get(draggingId);
@@ -230,6 +236,67 @@ export const useDragAndDrop = <T>({
         }
     }, [draggingId, fieldRefsMap, setDirection, setStack, popStack]);
 
+    const resetStackOnBackDragged = useCallback(() => {
+        const stack = movedStack.current;
+        const startRect = dragStartRectRef.current;
+        const draggedElement = draggedItemRef.current;
+        const direction = directionRef.current;
+        const OFFSET = 30;
+        if (!startRect || !draggedElement) return;
+
+        const {
+            top: startTop,
+            left: startLeft,
+            bottom: startBottom,
+            right: startRight,
+        } = startRect;
+        const {
+            top: draggedTop,
+            left: draggedLeft,
+            bottom: draggedBottom,
+            right: draggedRight,
+        } = draggedElement.getBoundingClientRect();
+
+        if (
+            (draggedBottom > startTop + OFFSET && direction === 'toUp') ||
+            (draggedTop < startBottom - OFFSET && direction === 'toDown') ||
+            (draggedLeft < startRight - OFFSET && direction === 'toRight') ||
+            (draggedRight > startLeft + OFFSET && direction === 'toLeft')
+        ) {
+            // console.log('reset stack');
+            stack.clear();
+            fieldRefsMap.forEach((el) => {
+                if (el.dataset.fieldId === draggingId) return;
+                el.style.transform = '';
+            });
+        }
+    }, [fieldRefsMap, draggingId]);
+
+    const moveNearElements = useCallback(() => {
+        const stackContent = movedStack.current.getStack();
+        const draggedElement = draggedItemRef.current;
+        if (!draggedElement) return;
+
+        stackContent.forEach((id) => {
+            const field = fieldRefsMap.get(id);
+            if (!field) return;
+            const direction = directionRef.current;
+            const { height, width } = draggedElement.getBoundingClientRect();
+            const containerGap = getContainerGap();
+            console.log('called');
+
+            if (direction === 'toUp') {
+                field.style.transform = `translateY(${height + containerGap}px)`;
+            } else if (direction === 'toDown') {
+                field.style.transform = `translateY(-${height + containerGap}px)`;
+            } else if (direction === 'toLeft') {
+                field.style.transform = `translateX(-${width + containerGap}px)`;
+            } else if (direction === 'toRight') {
+                field.style.transform = `translateX(${width + containerGap}px)`;
+            }
+        });
+    }, [fieldRefsMap, getContainerGap]);
+
     const handlePointerMove = useCallback(
         (e: PointerEvent) => {
             const mouseX = e.clientX;
@@ -237,9 +304,18 @@ export const useDragAndDrop = <T>({
 
             handleElementMovementWhileDragging(mouseX, mouseY);
             setGroupId(mouseX, mouseY);
+            updateStack();
+            resetStackOnBackDragged();
             moveNearElements();
+            // console.log(movedStack.current.getStack());
         },
-        [handleElementMovementWhileDragging, setGroupId, moveNearElements],
+        [
+            handleElementMovementWhileDragging,
+            setGroupId,
+            updateStack,
+            resetStackOnBackDragged,
+            moveNearElements,
+        ],
     );
 
     // Drag move listener

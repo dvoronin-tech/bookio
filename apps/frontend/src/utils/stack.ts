@@ -24,4 +24,8 @@ export class Stack<T>  {
     clear() {
         this.items = [];
     }
+
+    getStack() {
+        return this.items
+    }
 }
