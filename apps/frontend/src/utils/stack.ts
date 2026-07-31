@@ -18,8 +18,8 @@ export class Stack<T>  {
     }
 
     size() {
-        return this.items.length;
-    }
+        return this.items.length
+    };
 
     clear() {
         this.items = [];
