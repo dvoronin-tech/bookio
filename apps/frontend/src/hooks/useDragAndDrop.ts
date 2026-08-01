@@ -2,21 +2,23 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import type { RefObject } from 'react';
 import { Stack } from '#utils/stack';
 
-type UseDragAndDropProps<T> = {
-    items: T[];
-    onReorder: (items: T[]) => void;
+export interface OnDragEndProps {
+    draggingId: string | null;
+    direction: Direction | null;
+    movedIds: string[];
+    hoverTargetId: string | null;
+}
+
+type UseDragAndDropProps = {
+    items: string[]
     axis?: 'x' | 'y';
     containerRef: React.RefObject<HTMLDivElement | null>;
+    onDrop: (props: OnDragEndProps) => void;
 };
 
 type Direction = 'toUp' | 'toDown' | 'toLeft' | 'toRight';
 
-export const useDragAndDrop = <T>({
-    items,
-    onReorder,
-    axis = 'y',
-    containerRef,
-}: UseDragAndDropProps<T>) => {
+export const useDragAndDrop = ({ axis = 'y', containerRef, onDrop }: UseDragAndDropProps) => {
     const draggedItemRef = useRef<HTMLDivElement | null>(null);
     const dragStartMouseRef = useRef({ x: 0, y: 0 });
     const dragStartRectRef = useRef<DOMRect | null>(null);
@@ -39,8 +41,7 @@ export const useDragAndDrop = <T>({
         });
 
         return map;
-        // it's fine, I gotta refresh the map when the items change
-    }, [items]);
+    }, []);
 
     /** Drag start handler */
     const onDragStart = useCallback(
@@ -78,10 +79,17 @@ export const useDragAndDrop = <T>({
             draggedItemRef.current.style.transition = 'transform 0.2s cubic-bezier(.08,.84,.4,1.2)';
         }
 
+        onDrop({
+            draggingId,
+            direction: directionRef.current,
+            movedIds: movedStack.current.getStack(),
+            hoverTargetId,
+        }); 
+
         draggedItemRef.current = null;
         movedStack.current.clear();
         fieldRefsMap.forEach((el) => (el.style.transform = ''));
-    }, [fieldRefsMap]);
+    }, [fieldRefsMap, onDrop, draggingId, directionRef, movedStack, hoverTargetId]);
 
     /** Set group id which is hovered by the mouse while dragging. */
     const setGroupId = useCallback((mouseX: number, mouseY: number) => {
@@ -135,6 +143,7 @@ export const useDragAndDrop = <T>({
         }
     }, []);
 
+    /** Add a field id to the stack if it's the next field in the direction of the drag. */
     const setStack = useCallback(
         (
             hoverFieldId: string,
@@ -155,6 +164,7 @@ export const useDragAndDrop = <T>({
         [],
     );
 
+    /** Remove a field id from the stack if it's not the next field in the direction of the drag. */
     const popStack = useCallback(
         ({
             draggedCenterX,
@@ -181,6 +191,7 @@ export const useDragAndDrop = <T>({
         [fieldRefsMap],
     );
 
+    /** Get the gap between the fields in the container. */
     const getContainerGap = useCallback(() => {
         const container = containerRef.current;
         if (!container) return 0;
@@ -189,12 +200,13 @@ export const useDragAndDrop = <T>({
         return parseInt(styles.gap);
     }, [containerRef]);
 
+    /** Update the stack of field ids based on the current drag position. */
     const updateStack = useCallback(() => {
         if (draggingId === null) return;
-
         const draggedElement = fieldRefsMap.get(draggingId);
+        console.log(fieldRefsMap);
         if (!draggedElement) return;
-
+        
         const {
             left: draggedLeft,
             right: draggedRight,
@@ -203,15 +215,15 @@ export const useDragAndDrop = <T>({
         } = draggedElement.getBoundingClientRect();
         const draggedCenterX = (draggedLeft + draggedRight) / 2;
         const draggedCenterY = (draggedTop + draggedBottom) / 2;
-
+        
         const hoverField = document
-            .elementFromPoint(draggedCenterX, draggedCenterY)
-            ?.closest<HTMLElement>('[data-field-id]');
+        .elementFromPoint(draggedCenterX, draggedCenterY)
+        ?.closest<HTMLElement>('[data-field-id]');
         const hoverFieldId = hoverField?.dataset.fieldId;
 
         setDirection();
         const stack = movedStack.current;
-
+        console.log(stack.peek(), hoverFieldId);
         if (hoverField && hoverFieldId) {
             const {
                 left: hoverLeft,
@@ -222,7 +234,6 @@ export const useDragAndDrop = <T>({
 
             const hoverCenterX = (hoverLeft + hoverRight) / 2;
             const hoverCenterY = (hoverTop + hoverBottom) / 2;
-
             if (stack.peek() !== hoverFieldId) {
                 setStack(hoverFieldId, {
                     draggedCenterX,
@@ -236,6 +247,7 @@ export const useDragAndDrop = <T>({
         }
     }, [draggingId, fieldRefsMap, setDirection, setStack, popStack]);
 
+    /** Reset the stack of field ids if the dragged element is back in the direction of the drag. */
     const resetStackOnBackDragged = useCallback(() => {
         const stack = movedStack.current;
         const startRect = dragStartRectRef.current;
@@ -263,7 +275,6 @@ export const useDragAndDrop = <T>({
             (draggedLeft < startRight - OFFSET && direction === 'toRight') ||
             (draggedRight > startLeft + OFFSET && direction === 'toLeft')
         ) {
-            // console.log('reset stack');
             stack.clear();
             fieldRefsMap.forEach((el) => {
                 if (el.dataset.fieldId === draggingId) return;
@@ -272,6 +283,7 @@ export const useDragAndDrop = <T>({
         }
     }, [fieldRefsMap, draggingId]);
 
+    /** Move the fields near the dragged element based on the stack. */
     const moveNearElements = useCallback(() => {
         const stackContent = movedStack.current.getStack();
         const draggedElement = draggedItemRef.current;
@@ -283,7 +295,6 @@ export const useDragAndDrop = <T>({
             const direction = directionRef.current;
             const { height, width } = draggedElement.getBoundingClientRect();
             const containerGap = getContainerGap();
-            console.log('called');
 
             if (direction === 'toUp') {
                 field.style.transform = `translateY(${height + containerGap}px)`;
@@ -297,6 +308,7 @@ export const useDragAndDrop = <T>({
         });
     }, [fieldRefsMap, getContainerGap]);
 
+    /** Handle the pointer move event. */
     const handlePointerMove = useCallback(
         (e: PointerEvent) => {
             const mouseX = e.clientX;
@@ -307,7 +319,6 @@ export const useDragAndDrop = <T>({
             updateStack();
             resetStackOnBackDragged();
             moveNearElements();
-            // console.log(movedStack.current.getStack());
         },
         [
             handleElementMovementWhileDragging,
@@ -318,7 +329,7 @@ export const useDragAndDrop = <T>({
         ],
     );
 
-    // Drag move listener
+    /** Drag move listener. */
     useEffect(() => {
         const abort = new AbortController();
         if (isDragging) {
@@ -332,7 +343,7 @@ export const useDragAndDrop = <T>({
         };
     }, [handlePointerMove, isDragging]);
 
-    // Drag end listener
+    /** Drag end listener. */
     useEffect(() => {
         if (draggingId === null) return;
         const abort = new AbortController();

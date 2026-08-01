@@ -16,7 +16,7 @@ import { toSyncBookingFormFieldsRequest } from '#utils/dataPreparers/bookingForm
 import { useShallow } from 'zustand/shallow';
 
 import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField';
-import { useDragAndDrop } from '#hooks/useDragAndDrop';
+import { useDragAndDrop, type OnDragEndProps } from '#hooks/useDragAndDrop';
 
 interface FieldsTabFormProps {
     bookingFormId: string;
@@ -63,7 +63,17 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
         return fields.sort((a, b) => a.order - b.order);
     }, [bookingFormFields?.fields]);
 
-    const draggingProps = useDragAndDrop({ items: [], onReorder: () => {}, containerRef });
+    const handleDrop = useCallback((props: OnDragEndProps) => {
+        const { draggingId, direction, movedIds } = props;
+        const offset = direction === 'toUp' ? movedIds.length : -movedIds.length;
+
+        const oldIndex = sortedFields.findIndex((field) => field.id === draggingId);
+        const newIndex = oldIndex + offset;
+
+
+    }, []);
+
+    const draggingProps = useDragAndDrop({ containerRef, onDrop: handleDrop, axis: 'y', items: sortedFields.map((field) => field.id) ?? [] });
 
     if (!bookingFormId) {
         return null;
