@@ -51,3 +51,4 @@ export type {
 
 export { Reorder } from './DragAndDrop/DragAndDrop.js';
 export { useReorderContext } from './DragAndDrop/ExternalReorderContext.js';
+export type { ItemId } from './DragAndDrop/InternalReorderContext.js';

@@ -5,14 +5,17 @@ import {
 } from '#api/bookingForms/getEntireBookingFormById';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 import { Spinner } from '#components/Spinner/Spinner';
-import { Button, Reorder } from '@bookio/ui';
+import { Button, Reorder, type ItemId } from '@bookio/ui';
 
 import styles from './FieldsTab.module.scss';
 import { useState, type FC, useCallback, useEffect, useMemo } from 'react';
 import { FieldModal } from '#components/FieldModal/FieldModal';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
-import { toSyncBookingFormFieldsRequest } from '#utils/dataPreparers/bookingFormPreparers';
+import {
+    reorderBookingFormSiblingFields,
+    toSyncBookingFormFieldsRequest,
+} from '#utils/dataPreparers/bookingFormPreparers';
 import { useShallow } from 'zustand/shallow';
 
 import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField';
@@ -55,9 +58,20 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
         if (!open) setEditingFieldId(null);
     }, []);
 
+    const handleRootReorder = useCallback(
+        (orderedIds: ItemId[]) => {
+            if (!bookingFormFields) return;
+            setBookingFormFields({
+                bookingFormId,
+                fields: reorderBookingFormSiblingFields(bookingFormFields.fields, null, orderedIds),
+            });
+        },
+        [bookingFormFields, bookingFormId, setBookingFormFields],
+    );
+
     const sortedFields = useMemo(() => {
         const fields = bookingFormFields?.fields ?? [];
-        return fields.sort((a, b) => a.order - b.order);
+        return [...fields].sort((a, b) => a.order - b.order);
     }, [bookingFormFields?.fields]);
 
     if (!bookingFormId) {
@@ -67,7 +81,7 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
     return (
         <>
             <div className={styles.fieldsTab}>
-                <Reorder axis="y" className={styles.fieldsList}>
+                <Reorder axis="y" className={styles.fieldsList} onReorder={handleRootReorder}>
                     {sortedFields.map(({ id, name, type, key, required, parentId }) => {
                         if (parentId) return null;
                         return (

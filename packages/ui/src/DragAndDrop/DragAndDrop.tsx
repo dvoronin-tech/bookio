@@ -8,9 +8,11 @@ import {
     type ItemsMap,
 } from './InternalReorderContext.js';
 import { ExternalReorderProvider } from './ExternalReorderContext.js';
+import { computeReorderedIds } from './reorderUtils.js';
 
 interface ReorderProps extends HTMLAttributes<HTMLDivElement> {
     axis: Axis;
+    onReorder?: (orderedIds: ItemId[]) => void;
     children: ReactNode;
 }
 
@@ -27,19 +29,22 @@ const OPPOSITE_DIRECTION: Record<Direction, Direction> = {
     toRight: 'toLeft',
 };
 
-const Container: FC<ReorderProps> = ({ axis, children, ...props }) => {
+const Container: FC<ReorderProps> = ({ axis, onReorder, children, ...props }) => {
     const directionRef = useRef<Direction | null>(null);
     const draggedItemRef = useRef<HTMLElement | null>(null);
+    const draggedItemIdRef = useRef<ItemId | null>(null);
     const itemsMapRef = useRef<ItemsMap>(new Map());
     const containerRef = useRef<HTMLDivElement>(null);
     const dragStartMouseRef = useRef({ x: 0, y: 0 });
     const lastPointerRef = useRef({ x: 0, y: 0 });
     const dragStartRectRef = useRef<DOMRect | null>(null);
     const shiftDistanceRef = useRef(0);
-
-    const [isDragging, setIsDragging] = useState(false);
+    const gapRef = useRef(0);
     const movedIdsRef = useRef<ItemId[]>([]);
     const movedDirectionRef = useRef<Direction | null>(null);
+    const settlingRef = useRef(false);
+
+    const [isDragging, setIsDragging] = useState(false);
 
     const registerItem = useCallback((id: ItemId, ref: React.RefObject<HTMLElement | null>) => {
         itemsMapRef.current.set(id, ref);
@@ -246,9 +251,11 @@ const Container: FC<ReorderProps> = ({ axis, children, ...props }) => {
 
     const onDragStart = useCallback(
         (fieldId: string, e: ReactPointerEvent<HTMLElement>) => {
+            if (draggedItemRef.current) return;
             const itemRef = itemsMapRef.current.get(fieldId)?.current;
             if (!itemRef) return;
             draggedItemRef.current = itemRef;
+            draggedItemIdRef.current = fieldId;
             dragStartMouseRef.current = { x: e.clientX, y: e.clientY };
             lastPointerRef.current = { x: e.clientX, y: e.clientY };
             dragStartRectRef.current = itemRef.getBoundingClientRect();
@@ -259,14 +266,13 @@ const Container: FC<ReorderProps> = ({ axis, children, ...props }) => {
             // Shift distance is fixed per drag: dragged item size + container gap.
             const container = containerRef.current;
             const gap = container
-                ? parseFloat(
-                      getComputedStyle(container)[axis === 'y' ? 'rowGap' : 'columnGap'],
-                  ) || 0
+                ? parseFloat(getComputedStyle(container)[axis === 'y' ? 'rowGap' : 'columnGap']) ||
+                  0
                 : 0;
             shiftDistanceRef.current =
-                (axis === 'y'
-                    ? dragStartRectRef.current.height
-                    : dragStartRectRef.current.width) + gap;
+                (axis === 'y' ? dragStartRectRef.current.height : dragStartRectRef.current.width) +
+                gap;
+            gapRef.current = gap;
 
             itemRef.onpointermove = handlePointerMove;
             itemRef.style.zIndex = '1000';
@@ -275,25 +281,107 @@ const Container: FC<ReorderProps> = ({ axis, children, ...props }) => {
         [axis, handlePointerMove],
     );
 
-    const onDragEnd = useCallback(() => {
-        const draggedItem = draggedItemRef.current;
-        if (!draggedItem) return;
-
-        movedIdsRef.current.forEach(resetSiblingShift);
-
-        draggedItem.style.transform = 'translate(0px, 0px)';
-        draggedItem.style.transition = 'transform 0.2s cubic-bezier(.08,.84,.4,1.2)';
+    const resetDragState = useCallback((draggedItem: HTMLElement) => {
         draggedItem.style.zIndex = 'auto';
         draggedItem.onpointermove = null;
         draggedItemRef.current = null;
+        draggedItemIdRef.current = null;
         dragStartMouseRef.current = { x: 0, y: 0 };
         lastPointerRef.current = { x: 0, y: 0 };
         directionRef.current = null;
         movedIdsRef.current = [];
         movedDirectionRef.current = null;
         shiftDistanceRef.current = 0;
+        gapRef.current = 0;
         setIsDragging(false);
-    }, [resetSiblingShift]);
+    }, []);
+
+    /** Slides the dragged item into its final slot, then commits the reorder and
+    clears all transforms without animation. Sibling shifts already match the
+    new layout exactly, so an instant clear keeps every item visually in place. */
+    const settleDraggedItem = useCallback(
+        (draggedItem: HTMLElement, draggedId: ItemId, movedIds: ItemId[]) => {
+            if (!onReorder) return;
+
+            draggedItem.onpointermove = null;
+            settlingRef.current = true;
+
+            // Final offset is the total size of passed neighbors (not the dragged
+            // item's own size) plus one gap per neighbor.
+            const neighborsSize = movedIds.reduce<number>((sum, id) => {
+                const rect = itemsMapRef.current.get(id)?.current?.getBoundingClientRect();
+                return rect ? sum + (axis === 'y' ? rect.height : rect.width) : sum;
+            }, 0);
+            const direction = movedDirectionRef.current;
+            const sign = direction === 'toUp' || direction === 'toLeft' ? -1 : 1;
+            const target = sign * (neighborsSize + gapRef.current * movedIds.length);
+
+            let settled = false;
+            const finish = () => {
+                if (settled) return;
+                settled = true;
+                draggedItem.removeEventListener('transitionend', handleTransitionEnd);
+                window.clearTimeout(fallbackId);
+
+                const nextOrderedIds = computeReorderedIds(
+                    [...itemsMapRef.current.keys()],
+                    draggedId,
+                    movedIds,
+                );
+                // React reorders DOM nodes without re-registering refs, so resync
+                // the map order to the committed order before the next drag.
+                const nextItemsMap: ItemsMap = new Map();
+                nextOrderedIds.forEach((id) => {
+                    const ref = itemsMapRef.current.get(id);
+                    if (ref) nextItemsMap.set(id, ref);
+                });
+                itemsMapRef.current = nextItemsMap;
+
+                onReorder(nextOrderedIds);
+
+                movedIds.forEach((id) => {
+                    const item = itemsMapRef.current.get(id)?.current;
+                    if (!item) return;
+                    item.style.transition = 'none';
+                    item.style.transform = 'translate(0px, 0px)';
+                });
+                draggedItem.style.transition = 'none';
+                draggedItem.style.transform = 'translate(0px, 0px)';
+
+                settlingRef.current = false;
+                resetDragState(draggedItem);
+            };
+            const handleTransitionEnd = (e: TransitionEvent) => {
+                if (e.target !== draggedItem || e.propertyName !== 'transform') return;
+                finish();
+            };
+
+            draggedItem.addEventListener('transitionend', handleTransitionEnd);
+            const fallbackId = window.setTimeout(finish, 300);
+
+            draggedItem.style.transition = SIBLING_SHIFT_TRANSITION;
+            draggedItem.style.transform =
+                axis === 'y' ? `translate(0px, ${target}px)` : `translate(${target}px, 0px)`;
+        },
+        [axis, onReorder, resetDragState],
+    );
+
+    const onDragEnd = useCallback(() => {
+        const draggedItem = draggedItemRef.current;
+        if (!draggedItem || settlingRef.current) return;
+
+        const draggedId = draggedItemIdRef.current;
+        if (onReorder && draggedId !== null && movedIdsRef.current.length > 0) {
+            settleDraggedItem(draggedItem, draggedId, [...movedIdsRef.current]);
+            return;
+        }
+
+        movedIdsRef.current.forEach(resetSiblingShift);
+
+        draggedItem.style.transform = 'translate(0px, 0px)';
+        draggedItem.style.transition = 'transform 0.2s cubic-bezier(.08,.84,.4,1.2)';
+        resetDragState(draggedItem);
+    }, [onReorder, resetSiblingShift, resetDragState, settleDraggedItem]);
 
     /** Drag end listener. */
     useEffect(() => {

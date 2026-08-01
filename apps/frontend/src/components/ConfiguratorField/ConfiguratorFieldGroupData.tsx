@@ -1,9 +1,14 @@
-import type { FC } from 'react';
+import { useCallback, type FC } from 'react';
 import styles from './ConfiguratorField.module.scss';
 import { ConfiguratorField } from './ConfiguratorField';
-import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormPreparers';
+import {
+    reorderBookingFormSiblingFields,
+    type SyncBookingFormFieldItem,
+} from '#utils/dataPreparers/bookingFormPreparers';
 import { useConfiguratorFieldContext } from './ConfiguratorFieldContext';
-import { Reorder } from '@bookio/ui';
+import { Reorder, type ItemId } from '@bookio/ui';
+import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
+import { useShallow } from 'zustand/shallow';
 
 interface ConfiguratorFieldGroupDataProps {
     childFields: SyncBookingFormFieldItem[];
@@ -13,10 +18,32 @@ export const ConfiguratorFieldGroupData: FC<ConfiguratorFieldGroupDataProps> = (
     childFields,
 }) => {
     const { onEdit, onDelete } = useConfiguratorFieldContext();
+    const { setBookingFormFields, bookingFormFields } = useBookingFormConfiguratorStore(
+        useShallow(({ setBookingFormFields, bookingFormFields }) => ({
+            setBookingFormFields,
+            bookingFormFields,
+        })),
+    );
+
+    const handleReorder = useCallback(
+        (orderedIds: ItemId[]) => {
+            if (!bookingFormFields) return;
+            const parentId = childFields[0]?.parentId ?? null;
+            setBookingFormFields({
+                bookingFormId: bookingFormFields.bookingFormId,
+                fields: reorderBookingFormSiblingFields(
+                    bookingFormFields.fields,
+                    parentId,
+                    orderedIds,
+                ),
+            });
+        },
+        [bookingFormFields, childFields, setBookingFormFields],
+    );
 
     return (
         <div className={styles.groupFieldsWrapper}>
-            <Reorder axis="y" className={styles.groupFields}>
+            <Reorder axis="y" className={styles.groupFields} onReorder={handleReorder}>
                 {childFields.map((field) => (
                     <Reorder.Item itemId={field.id} key={field.id}>
                         <ConfiguratorField
