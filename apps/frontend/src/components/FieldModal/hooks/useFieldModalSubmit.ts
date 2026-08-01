@@ -41,11 +41,17 @@ export const useFieldModalSubmit = ({
             return existingField?.parentId ?? null;
         })();
 
+        const order = (() => {
+            if (existingField?.parentId === parentId) return existingField?.order;
+
+            return getNextSiblingFieldOrder(currentFields, parentId);
+        })()
+
         const result = createModalFieldSchema.safeParse({
             ...formData,
             id: existingField?.id ?? uuid7(),
             parentId,
-            order: existingField?.order ?? getNextSiblingFieldOrder(currentFields, null),
+            order,
             required: formData.required ?? false,
             params: normalizeFieldParams(formData.type, formData.params),
         });
