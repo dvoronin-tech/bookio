@@ -27,7 +27,7 @@ export const getAcceptTypesFromParams = (
     type: FieldModalFormValues['type'],
     params: FieldModalFormValues['params'],
 ): string[] => {
-    if ((type !== 'file' && type !== 'image') || !params || !('accept' in params)) {
+    if (type !== 'image' || !params || !('accept' in params)) {
         return [];
     }
 

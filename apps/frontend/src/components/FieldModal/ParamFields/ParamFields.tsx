@@ -10,7 +10,7 @@ export const ParamFields: FC = () => {
     const { control } = useFormContext<FieldModalFormValues>();
     const type = useWatch({ control, name: 'type' });
 
-    if (!type) return null;
+    if (!type || type === 'file' || !(type in paramsFieldConfig)) return null;
 
     const fields = paramsFieldConfig[type];
 

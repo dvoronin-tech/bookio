@@ -14,9 +14,12 @@ export const FieldTypeSelector: FC = () => {
         <div className={styles.fieldTypesWrapper}>
             <span className={styles.fieldTypesLabel}>Field type</span>
             <div className={styles.fieldTypes}>
-                {(Object.keys(fieldTypeIcons) as Array<EntireBookingFormField['type']>).map(
-                    (typeOption) => {
-                        const { icon: Icon, color } = fieldTypeIcons[typeOption];
+                {(Object.keys(fieldTypeIcons) as Array<EntireBookingFormField['type']>)
+                    .filter((typeOption): typeOption is EntireBookingFormField['type'] => {
+                        return Boolean(fieldTypeIcons[typeOption]);
+                    })
+                    .map((typeOption) => {
+                        const { icon: Icon, color } = fieldTypeIcons[typeOption]!;
 
                         const handleSelectFieldType = () => {
                             setValue('type', typeOption);

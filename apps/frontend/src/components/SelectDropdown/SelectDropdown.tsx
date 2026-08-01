@@ -121,10 +121,15 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
                             filteredOptions.map((option) => {
                                 const handleOptionClick = () => {
                                     onOptionClick(option.value);
+
                                 };
 
                                 return Array.isArray(selected) ? (
-                                    <Dropdown.Item key={option.value} onClick={handleOptionClick} autoClose={false}>
+                                    <Dropdown.Item
+                                        key={option.value}
+                                        onClick={handleOptionClick}
+                                        autoClose={false}
+                                    >
                                         <Checkbox
                                             label={option.label}
                                             checked={selected.includes(option.value)}

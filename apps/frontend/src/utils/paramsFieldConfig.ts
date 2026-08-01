@@ -17,7 +17,7 @@ type FileParamKey = keyof z.infer<typeof fileParamsSchema>;
 type TextAreaParamKey = keyof z.infer<typeof textAreaParamsSchema>;
 type CheckboxParamKey = keyof z.infer<typeof checkboxParamsSchema>;
 
-const imageAcceptOptions = {
+export const imageAcceptOptions = {
     'All images': 'image/*',
     '.jpg / .jpeg': 'image/jpeg',
     '.png': 'image/png',
@@ -27,53 +27,52 @@ const imageAcceptOptions = {
     '.avif': 'image/avif',
     '.heic': 'image/heic',
     '.heif': 'image/heif',
-    '.tif': 'image/tiff',
-    '.tiff': 'image/tiff',
+    '.tif / .tiff': 'image/tiff',
     '.bmp': 'image/bmp',
     '.ico': 'image/x-icon',
 } as const;
 
-const fileAcceptOptions = {
-    'All files': '*/*',
-    ...imageAcceptOptions,
-    'All videos': 'video/*',
-    '.mp4': 'video/mp4',
-    '.webm': 'video/webm',
-    '.ogv': 'video/ogg',
-    '.mov': 'video/quicktime',
-    '.avi': 'video/x-msvideo',
-    '.mkv': 'video/x-matroska',
-    'All audio': 'audio/*',
-    '.mp3': 'audio/mpeg',
-    '.wav': 'audio/wav',
-    '.ogg': 'audio/ogg',
-    '.aac': 'audio/aac',
-    '.flac': 'audio/flac',
-    '.m4a': 'audio/x-m4a',
-    '.pdf': 'application/pdf',
-    '.doc': 'application/msword',
-    '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-    '.xls': 'application/vnd.ms-excel',
-    '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-    '.ppt': 'application/vnd.ms-powerpoint',
-    '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
-    '.rtf': 'application/rtf',
-    '.json': 'application/json',
-    '.xml': 'application/xml',
-    '.zip': 'application/zip',
-    '.rar': 'application/x-rar-compressed',
-    '.gz': 'application/gzip',
-    '.7z': 'application/x-7z-compressed',
-    '.tar': 'application/x-tar',
-    '.txt': 'text/plain',
-    '.csv': 'text/csv',
-    '.html': 'text/html',
-    '.md': 'text/markdown',
-    '.ics': 'text/calendar',
-    '.vcf': 'text/vcard',
-} as const;
+// const fileAcceptOptions = {
+//     'All files': '*/*',
+//     ...imageAcceptOptions,
+//     'All videos': 'video/*',
+//     '.mp4': 'video/mp4',
+//     '.webm': 'video/webm',
+//     '.ogv': 'video/ogg',
+//     '.mov': 'video/quicktime',
+//     '.avi': 'video/x-msvideo',
+//     '.mkv': 'video/x-matroska',
+//     'All audio': 'audio/*',
+//     '.mp3': 'audio/mpeg',
+//     '.wav': 'audio/wav',
+//     '.ogg': 'audio/ogg',
+//     '.aac': 'audio/aac',
+//     '.flac': 'audio/flac',
+//     '.m4a': 'audio/x-m4a',
+//     '.pdf': 'application/pdf',
+//     '.doc': 'application/msword',
+//     '.docx': 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+//     '.xls': 'application/vnd.ms-excel',
+//     '.xlsx': 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+//     '.ppt': 'application/vnd.ms-powerpoint',
+//     '.pptx': 'application/vnd.openxmlformats-officedocument.presentationml.presentation',
+//     '.rtf': 'application/rtf',
+//     '.json': 'application/json',
+//     '.xml': 'application/xml',
+//     '.zip': 'application/zip',
+//     '.rar': 'application/x-rar-compressed',
+//     '.gz': 'application/gzip',
+//     '.7z': 'application/x-7z-compressed',
+//     '.tar': 'application/x-tar',
+//     '.txt': 'text/plain',
+//     '.csv': 'text/csv',
+//     '.html': 'text/html',
+//     '.md': 'text/markdown',
+//     '.ics': 'text/calendar',
+//     '.vcf': 'text/vcard',
+// } as const;
 
-export type AcceptOptions = typeof fileAcceptOptions | typeof imageAcceptOptions;
+export type AcceptOptions = typeof imageAcceptOptions;
 
 type BaseUIFieldConfig = {
     label: string;
@@ -90,11 +89,11 @@ export interface OptionsUIField {
     itemFields: Record<FieldOptionKey, BaseUIFieldConfig>;
 }
 
-export interface FileUiField {
-    label: string;
-    type: 'select';
-    options: typeof fileAcceptOptions;
-}
+// export interface FileUiField {
+//     label: string;
+//     type: 'select';
+//     options: typeof fileAcceptOptions;
+// }
 
 export interface ImageUiField {
     label: string;
@@ -103,7 +102,7 @@ export interface ImageUiField {
 }
 
 type ChoiceUIField = BaseUIFieldType | OptionsUIField;
-type FileUIField = BaseUIFieldType | FileUiField;
+// type FileUIField = BaseUIFieldType | FileUiField;
 type ImageUIField = BaseUIFieldType | ImageUiField;
 
 /** Attach param key as `name` for form `register` on simple fields. */
@@ -187,17 +186,17 @@ const textAreaFieldsConfig: Record<TextAreaParamKey, BaseUIFieldConfig> = {
     },
 };
 
-const fileFieldsConfig: Record<FileParamKey, BaseUIFieldConfig | FileUiField> = {
-    accept: {
-        label: 'Accepted file types',
-        type: 'select',
-        options: fileAcceptOptions,
-    },
-    maxSizeMb: {
-        label: 'Maximum file size',
-        type: 'number',
-    },
-};
+// const fileFieldsConfig: Record<FileParamKey, BaseUIFieldConfig | FileUiField> = {
+//     accept: {
+//         label: 'Accepted file types',
+//         type: 'select',
+//         options: fileAcceptOptions,
+//     },
+//     maxSizeMb: {
+//         label: 'Maximum file size',
+//         type: 'number',
+//     },
+// };
 
 const imageFieldsConfig: Record<FileParamKey, BaseUIFieldConfig | ImageUiField> = {
     accept: {
@@ -223,7 +222,7 @@ export type ParamsFieldConfig = {
     select: ChoiceUIField[];
     radio: ChoiceUIField[];
     checkbox: BaseUIFieldType[];
-    file: FileUIField[];
+    // file: FileUIField[];
     image: ImageUIField[];
     group: BaseUIFieldType[];
 };
@@ -240,7 +239,7 @@ export const paramsFieldConfig: ParamsFieldConfig = {
     select: namedChoiceFields(choiceFieldsConfig),
     radio: namedChoiceFields(choiceFieldsConfig),
     checkbox: namedBaseFields(checkboxFieldsConfig),
-    file: namedSelectParamFields(fileFieldsConfig),
+    // file: namedSelectParamFields(fileFieldsConfig),
     image: namedSelectParamFields(imageFieldsConfig),
     group: namedBaseFields(groupFieldsConfig),
 };

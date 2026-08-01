@@ -9,7 +9,11 @@ interface ConfiguratorFieldTypeBadgeProps {
 }
 
 export const ConfiguratorFieldTypeBadge: FC<ConfiguratorFieldTypeBadgeProps> = ({ type }) => {
-    const { icon: TypeIcon, color } = fieldTypeIcons[type];
+    const iconData = fieldTypeIcons[type];
+
+    if (!iconData) return null;
+
+    const { icon: TypeIcon, color } = iconData;
 
     return (
         <div

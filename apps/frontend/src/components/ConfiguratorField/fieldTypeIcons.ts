@@ -12,7 +12,7 @@ import RadioIcon from '#assets/icons/field-types/radio.svg?react';
 import DateIcon from '#assets/icons/field-types/date.svg?react';
 import TimeIcon from '#assets/icons/field-types/time.svg?react';
 import UrlIcon from '#assets/icons/field-types/url.svg?react';
-import FileIcon from '#assets/icons/field-types/file.svg?react';
+// import FileIcon from '#assets/icons/field-types/file.svg?react';
 import ImageIcon from '#assets/icons/field-types/image.svg?react';
 import GroupIcon from '#assets/icons/field-types/group.svg?react';
 
@@ -24,7 +24,7 @@ export interface FieldTypeIconData {
     color: string;
 }
 
-export const fieldTypeIcons: Record<FieldType, FieldTypeIconData> = {
+export const fieldTypeIcons: Partial<Record<FieldType, FieldTypeIconData>> = {
     text: { icon: TextIcon, color: 'var(--color-primary)' },
     textarea: { icon: TextareaIcon, color: 'var(--color-primary)' },
     email: { icon: EmailIcon, color: 'var(--color-system-blue)' },
@@ -51,7 +51,7 @@ export const fieldTypeIcons: Record<FieldType, FieldTypeIconData> = {
         icon: TimeIcon,
         color: 'color-mix(in srgb, var(--color-system-blue) 55%, var(--color-system-green))',
     },
-    file: { icon: FileIcon, color: 'var(--color-system-red)' },
+    // file: { icon: FileIcon, color: 'var(--color-system-red)' },
     image: {
         icon: ImageIcon,
         color: 'color-mix(in srgb, var(--color-primary) 55%, var(--color-system-red))',
