@@ -16,6 +16,7 @@ const testHandler = factory(zValidator('query', testSchema), async (c) => {
             fields: true,
         },
     });
+    
 
     return c.json(form);
 });
