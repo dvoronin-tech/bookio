@@ -9,8 +9,14 @@
     position: relative;
     z-index: 1;
     transition:
-        box-shadow 0.2s cubic-bezier(0.08, 0.84, 0.4, 1.2),
+        border-color 0.15s ease,
         transform 0.2s cubic-bezier(0.19, 1, 0.22, 1);
+
+    &:hover {
+        .actions {
+            opacity: 1;
+        }
+    }
 }
 
 .dragHandle {
@@ -30,14 +36,16 @@
     }
 }
 
-// Root list marks drags that can end inside a group: all top-level groups glow white.
+// Root list marks drags that can end inside a group: all top-level groups get a dashed border.
 [data-can-drop-into='true'] > * > .group {
-    box-shadow: 0 0 2px 3px #ffffff25;
+    border-style: dashed;
+    border-color: color-mix(in srgb, white 50%, transparent);
 }
 
-// The group under the dragged item switches to the primary glow.
+// The group under the dragged item switches to the primary dashed border.
 [data-drop-target-hover='true'] > .group {
-    box-shadow: 0 0 2px 3px color-mix(in srgb, var(--color-primary) 40%, transparent);
+    border-style: dashed;
+    border-color: var(--color-primary);
 }
 
 .content {
@@ -124,6 +132,8 @@
     align-items: center;
     flex-shrink: 0;
     gap: 0.6rem;
+    opacity: 0;
+    transition: opacity 0.15s ease;
 }
 
 .actions button {
