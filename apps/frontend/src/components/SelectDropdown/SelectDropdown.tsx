@@ -121,7 +121,6 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
                             filteredOptions.map((option) => {
                                 const handleOptionClick = () => {
                                     onOptionClick(option.value);
-
                                 };
 
                                 return Array.isArray(selected) ? (
@@ -133,6 +132,8 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
                                         <Checkbox
                                             label={option.label}
                                             checked={selected.includes(option.value)}
+                                            readOnly
+                                            className={styles.optionCheckbox}
                                         />
                                     </Dropdown.Item>
                                 ) : (

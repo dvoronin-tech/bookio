@@ -98,3 +98,7 @@
 .selectTriggerIconOpen {
     transform: rotate(180deg);
 }
+
+.optionCheckbox {
+    pointer-events: none;
+}

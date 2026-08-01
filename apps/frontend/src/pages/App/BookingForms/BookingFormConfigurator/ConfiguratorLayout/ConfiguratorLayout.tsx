@@ -162,8 +162,6 @@ const ConfiguratorFooter: FC = memo(() => {
         [isDirtyBookingForm, isDirtyBookingFormFields],
     );
 
-    console.log('hasSomethingToSave', hasSomethingToSave);
-
     return (
         <div className={styles.footer}>
             <Button type="button" variant="simple-clean" onClick={handleBack}>
