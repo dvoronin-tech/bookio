@@ -5,10 +5,10 @@ import {
 } from '#api/bookingForms/getEntireBookingFormById';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 import { Spinner } from '#components/Spinner/Spinner';
-import { Button } from '@bookio/ui';
+import { Button, Reorder } from '@bookio/ui';
 
 import styles from './FieldsTab.module.scss';
-import { useState, type FC, useCallback, useEffect, useMemo, useRef } from 'react';
+import { useState, type FC, useCallback, useEffect, useMemo } from 'react';
 import { FieldModal } from '#components/FieldModal/FieldModal';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
@@ -16,7 +16,6 @@ import { toSyncBookingFormFieldsRequest } from '#utils/dataPreparers/bookingForm
 import { useShallow } from 'zustand/shallow';
 
 import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField';
-import { useDragAndDrop, type OnDragEndProps } from '#hooks/useDragAndDrop';
 
 interface FieldsTabFormProps {
     bookingFormId: string;
@@ -34,8 +33,6 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
                 deleteBookingFormField,
             })),
         );
-    const containerRef = useRef<HTMLDivElement>(null);
-
     // Seed from server once per form. Do not overwrite local drafts on tab remount / refetch.
     useEffect(() => {
         if (bookingFormFields?.bookingFormId === bookingFormId) return;
@@ -63,18 +60,6 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
         return fields.sort((a, b) => a.order - b.order);
     }, [bookingFormFields?.fields]);
 
-    const handleDrop = useCallback((props: OnDragEndProps) => {
-        const { draggingId, direction, movedIds } = props;
-        const offset = direction === 'toUp' ? movedIds.length : -movedIds.length;
-
-        const oldIndex = sortedFields.findIndex((field) => field.id === draggingId);
-        const newIndex = oldIndex + offset;
-
-
-    }, []);
-
-    const draggingProps = useDragAndDrop({ containerRef, onDrop: handleDrop, axis: 'y', items: sortedFields.map((field) => field.id) ?? [] });
-
     if (!bookingFormId) {
         return null;
     }
@@ -82,27 +67,28 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
     return (
         <>
             <div className={styles.fieldsTab}>
-                <div className={styles.fieldsList} ref={containerRef}>
+                <Reorder axis="y" className={styles.fieldsList}>
                     {sortedFields.map(({ id, name, type, key, required, parentId }) => (
-                        <ConfiguratorField
-                            draggingProps={draggingProps}
-                            key={id}
-                            fieldId={id}
-                            name={name}
-                            fieldKey={key}
-                            type={type}
-                            required={required}
-                            onEdit={handleEditField}
-                            onDelete={deleteBookingFormField}
-                            parentId={parentId}
-                            fields={sortedFields}
-                            isRoot
-                        />
+                        <Reorder.Item key={id} itemId={id}>
+                            <ConfiguratorField
+                                key={id}
+                                fieldId={id}
+                                name={name}
+                                fieldKey={key}
+                                type={type}
+                                required={required}
+                                onEdit={handleEditField}
+                                onDelete={deleteBookingFormField}
+                                parentId={parentId}
+                                fields={sortedFields}
+                                isRoot
+                            />
+                        </Reorder.Item>
                     ))}
                     <Button variant="primary-outlined" onClick={handleOpenCreateModal}>
                         Add field
                     </Button>
-                </div>
+                </Reorder>
             </div>
             <FieldModal
                 open={isOpenModal}

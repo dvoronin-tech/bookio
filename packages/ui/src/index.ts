@@ -48,3 +48,6 @@ export type {
     TabsItemProps,
     TabsProps,
 } from './Tabs/Tabs.js';
+
+export { Reorder } from './DragAndDrop/DragAndDrop.js';
+export { useReorderContext } from './DragAndDrop/ExternalReorderContext.js';

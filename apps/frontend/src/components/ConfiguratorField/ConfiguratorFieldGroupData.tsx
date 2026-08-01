@@ -11,7 +11,7 @@ interface ConfiguratorFieldGroupDataProps {
 export const ConfiguratorFieldGroupData: FC<ConfiguratorFieldGroupDataProps> = ({
     childFields,
 }) => {
-    const { draggingProps, onEdit, onDelete } = useConfiguratorFieldContext();
+    const { onEdit, onDelete } = useConfiguratorFieldContext();
 
     return (
         <div className={styles.groupFieldsWrapper}>
@@ -25,7 +25,6 @@ export const ConfiguratorFieldGroupData: FC<ConfiguratorFieldGroupDataProps> = (
                         type={field.type}
                         name={field.name}
                         required={field.required}
-                        draggingProps={draggingProps}
                         onDelete={onDelete}
                         onEdit={onEdit}
                         fields={childFields}
