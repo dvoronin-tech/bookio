@@ -68,23 +68,26 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
         <>
             <div className={styles.fieldsTab}>
                 <Reorder axis="y" className={styles.fieldsList}>
-                    {sortedFields.map(({ id, name, type, key, required, parentId }) => (
-                        <Reorder.Item key={id} itemId={id}>
-                            <ConfiguratorField
-                                key={id}
-                                fieldId={id}
-                                name={name}
-                                fieldKey={key}
-                                type={type}
-                                required={required}
-                                onEdit={handleEditField}
-                                onDelete={deleteBookingFormField}
-                                parentId={parentId}
-                                fields={sortedFields}
-                                isRoot
-                            />
-                        </Reorder.Item>
-                    ))}
+                    {sortedFields.map(({ id, name, type, key, required, parentId }) => {
+                        if (parentId) return null;
+                        return (
+                            <Reorder.Item key={id} itemId={id}>
+                                <ConfiguratorField
+                                    key={id}
+                                    fieldId={id}
+                                    name={name}
+                                    fieldKey={key}
+                                    type={type}
+                                    required={required}
+                                    onEdit={handleEditField}
+                                    onDelete={deleteBookingFormField}
+                                    parentId={parentId}
+                                    fields={sortedFields}
+                                    isRoot
+                                />
+                            </Reorder.Item>
+                        );
+                    })}
                     <Button variant="primary-outlined" onClick={handleOpenCreateModal}>
                         Add field
                     </Button>

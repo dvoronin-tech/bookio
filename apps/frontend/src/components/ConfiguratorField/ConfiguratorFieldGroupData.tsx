@@ -3,6 +3,7 @@ import styles from './ConfiguratorField.module.scss';
 import { ConfiguratorField } from './ConfiguratorField';
 import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormPreparers';
 import { useConfiguratorFieldContext } from './ConfiguratorFieldContext';
+import { Reorder } from '@bookio/ui';
 
 interface ConfiguratorFieldGroupDataProps {
     childFields: SyncBookingFormFieldItem[];
@@ -15,22 +16,24 @@ export const ConfiguratorFieldGroupData: FC<ConfiguratorFieldGroupDataProps> = (
 
     return (
         <div className={styles.groupFieldsWrapper}>
-            <div className={styles.groupFields}>
+            <Reorder axis="y" className={styles.groupFields}>
                 {childFields.map((field) => (
-                    <ConfiguratorField
-                        parentId={field.parentId}
-                        key={field.id}
-                        fieldId={field.id}
-                        fieldKey={field.key}
-                        type={field.type}
-                        name={field.name}
-                        required={field.required}
-                        onDelete={onDelete}
-                        onEdit={onEdit}
-                        fields={childFields}
-                    />
+                    <Reorder.Item itemId={field.id} key={field.id}>
+                        <ConfiguratorField
+                            parentId={field.parentId}
+                            key={field.id}
+                            fieldId={field.id}
+                            fieldKey={field.key}
+                            type={field.type}
+                            name={field.name}
+                            required={field.required}
+                            onDelete={onDelete}
+                            onEdit={onEdit}
+                            fields={childFields}
+                        />
+                    </Reorder.Item>
                 ))}
-            </div>
+            </Reorder>
         </div>
     );
 };
