@@ -2,25 +2,19 @@ import { v7 as uuid7 } from 'uuid';
 import toast from 'react-hot-toast';
 import { useShallow } from 'zustand/shallow';
 import { createModalFieldSchema, type FieldModalFormValues } from '@bookio/backend/schemas';
-import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
-import {
-    flattenBookingFormFields,
-    getNextSiblingFieldOrder,
-} from '#utils/dataPreparers/bookingFormPreparers';
+import { getNextSiblingFieldOrder } from '#utils/dataPreparers/bookingFormPreparers';
 import { normalizeFieldParams } from '../utils/fieldModalParams';
 
 interface UseFieldModalSubmitParams {
     fieldId?: string | null;
     bookingFormId: string;
-    existingFields: EntireBookingFormField[];
     onSuccess: () => void;
 }
 
 export const useFieldModalSubmit = ({
     fieldId,
     bookingFormId,
-    existingFields,
     onSuccess,
 }: UseFieldModalSubmitParams) => {
     const { setBookingFormFields, bookingFormFields } = useBookingFormConfiguratorStore(
@@ -31,7 +25,7 @@ export const useFieldModalSubmit = ({
     );
 
     return (formData: FieldModalFormValues) => {
-        const currentFields = bookingFormFields?.fields ?? flattenBookingFormFields(existingFields);
+        const currentFields = bookingFormFields?.fields ?? [];
         const existingField = fieldId
             ? currentFields.find((field) => field.id === fieldId)
             : undefined;

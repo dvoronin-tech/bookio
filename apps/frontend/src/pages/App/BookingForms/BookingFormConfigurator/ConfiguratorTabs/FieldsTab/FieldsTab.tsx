@@ -97,7 +97,6 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
                 open={isOpenModal}
                 onOpenChange={handleModalOpenChange}
                 bookingFormId={bookingFormId}
-                existingFields={fields}
                 fieldId={editingFieldId}
             />
         </>

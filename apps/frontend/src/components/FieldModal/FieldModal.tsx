@@ -1,7 +1,6 @@
 import { memo, useCallback, type FC, type MouseEvent } from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
 import { Dialog } from '@bookio/ui';
-import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 import { FieldBasicFields } from './FieldBasicFields';
 import { FieldModalActions } from './FieldModalActions';
 import { FieldModalHeader } from './FieldModalHeader';
@@ -16,18 +15,16 @@ interface FieldModalProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     bookingFormId: string;
-    existingFields: EntireBookingFormField[];
     fieldId?: string | null;
 }
 
 export const FieldModal: FC<FieldModalProps> = memo(
-    ({ open, onOpenChange, bookingFormId, existingFields, fieldId }) => {
+    ({ open, onOpenChange, bookingFormId, fieldId }) => {
         const isEditMode = Boolean(fieldId);
 
         const methods = useFieldModalForm({
             open,
             fieldId,
-            existingFields,
             onOpenChange,
         });
 
@@ -41,7 +38,6 @@ export const FieldModal: FC<FieldModalProps> = memo(
         const onSave = useFieldModalSubmit({
             fieldId,
             bookingFormId,
-            existingFields,
             onSuccess: handleSuccess,
         });
 
