@@ -30,11 +30,13 @@
     }
 }
 
-.groupWhileDragging {
+// Root list marks drags that can end inside a group: all top-level groups glow white.
+[data-can-drop-into='true'] > * > .group {
     box-shadow: 0 0 2px 3px #ffffff25;
 }
 
-.groupWhileDraggingHover {
+// The group under the dragged item switches to the primary glow.
+[data-drop-target-hover='true'] > .group {
     box-shadow: 0 0 2px 3px color-mix(in srgb, var(--color-primary) 40%, transparent);
 }
 
@@ -164,9 +166,21 @@
     background-color: var(--color-bg-main);
     border-radius: var(--border-radius);
     border: 1px solid var(--color-border);
+    transition: border-color 0.15s ease;
 
     .configuratorField {
         border: none;
         background-color: var(--color-bg-main);
+    }
+
+    // Dragged child left the container: the group sinks to the middle level
+    // while the dragged field stays on top (z-index set inline by Reorder).
+    &[data-dragged-out='true'] {
+        border-style: dashed;
+        border-color: var(--color-primary);
+
+        > *:not([data-dragging='true']) {
+            opacity: 0.4;
+        }
     }
 }

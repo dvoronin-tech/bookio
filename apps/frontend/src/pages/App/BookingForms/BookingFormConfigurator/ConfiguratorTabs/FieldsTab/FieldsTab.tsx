@@ -13,6 +13,7 @@ import { FieldModal } from '#components/FieldModal/FieldModal';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import {
+    moveBookingFormFieldToParent,
     reorderBookingFormSiblingFields,
     toSyncBookingFormFieldsRequest,
 } from '#utils/dataPreparers/bookingFormPreparers';
@@ -69,6 +70,33 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
         [bookingFormFields, bookingFormId, setBookingFormFields],
     );
 
+    // Only plain fields can be dropped into a group — groups cannot nest.
+    const isGroupDropTarget = useCallback(
+        (draggedId: ItemId, targetId: ItemId) => {
+            const fields = bookingFormFields?.fields;
+            if (!fields) return false;
+            const dragged = fields.find((field) => field.id === draggedId);
+            const target = fields.find((field) => field.id === targetId);
+            return dragged !== undefined && dragged.type !== 'group' && target?.type === 'group';
+        },
+        [bookingFormFields?.fields],
+    );
+
+    const handleDropIntoGroup = useCallback(
+        (draggedId: ItemId, targetId: ItemId) => {
+            if (!bookingFormFields) return;
+            setBookingFormFields({
+                bookingFormId,
+                fields: moveBookingFormFieldToParent(
+                    bookingFormFields.fields,
+                    draggedId,
+                    String(targetId),
+                ),
+            });
+        },
+        [bookingFormFields, bookingFormId, setBookingFormFields],
+    );
+
     const sortedFields = useMemo(() => {
         const fields = bookingFormFields?.fields ?? [];
         return [...fields].sort((a, b) => a.order - b.order);
@@ -81,7 +109,13 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
     return (
         <>
             <div className={styles.fieldsTab}>
-                <Reorder axis="y" className={styles.fieldsList} onReorder={handleRootReorder}>
+                <Reorder
+                    axis="y"
+                    className={styles.fieldsList}
+                    onReorder={handleRootReorder}
+                    isDropTarget={isGroupDropTarget}
+                    onDropInto={handleDropIntoGroup}
+                >
                     {sortedFields.map(({ id, name, type, key, required, parentId }) => {
                         if (parentId) return null;
                         return (

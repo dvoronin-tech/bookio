@@ -2,6 +2,7 @@ import { useCallback, type FC } from 'react';
 import styles from './ConfiguratorField.module.scss';
 import { ConfiguratorField } from './ConfiguratorField';
 import {
+    moveBookingFormFieldToParent,
     reorderBookingFormSiblingFields,
     type SyncBookingFormFieldItem,
 } from '#utils/dataPreparers/bookingFormPreparers';
@@ -41,9 +42,25 @@ export const ConfiguratorFieldGroupData: FC<ConfiguratorFieldGroupDataProps> = (
         [bookingFormFields, childFields, setBookingFormFields],
     );
 
+    const handleDropOut = useCallback(
+        (draggedId: ItemId) => {
+            if (!bookingFormFields) return;
+            setBookingFormFields({
+                bookingFormId: bookingFormFields.bookingFormId,
+                fields: moveBookingFormFieldToParent(bookingFormFields.fields, draggedId, null),
+            });
+        },
+        [bookingFormFields, setBookingFormFields],
+    );
+
     return (
         <div className={styles.groupFieldsWrapper}>
-            <Reorder axis="y" className={styles.groupFields} onReorder={handleReorder}>
+            <Reorder
+                axis="y"
+                className={styles.groupFields}
+                onReorder={handleReorder}
+                onDropOut={handleDropOut}
+            >
                 {childFields.map((field) => (
                     <Reorder.Item itemId={field.id} key={field.id}>
                         <ConfiguratorField

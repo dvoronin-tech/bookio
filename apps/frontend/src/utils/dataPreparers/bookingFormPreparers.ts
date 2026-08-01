@@ -28,6 +28,19 @@ export const reorderBookingFormSiblingFields = (
     });
 };
 
+/** Moves a field to another parent (null = root) and appends it after its new siblings. */
+export const moveBookingFormFieldToParent = (
+    fields: SyncBookingFormFieldItem[],
+    fieldId: string | number,
+    parentId: string | null,
+): SyncBookingFormFieldItem[] => {
+    const order = getNextSiblingFieldOrder(fields, parentId);
+    return fields.map((field) => {
+        if (field.id !== fieldId || field.type === 'group') return field;
+        return { ...field, parentId, order };
+    });
+};
+
 const toSyncFieldItem = ({
     id,
     name,
