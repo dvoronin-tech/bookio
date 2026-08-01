@@ -124,11 +124,10 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
                                 };
 
                                 return Array.isArray(selected) ? (
-                                    <Dropdown.Item key={option.value} hoverable={false}>
+                                    <Dropdown.Item key={option.value} onClick={handleOptionClick} autoClose={false}>
                                         <Checkbox
                                             label={option.label}
                                             checked={selected.includes(option.value)}
-                                            onChange={handleOptionClick}
                                         />
                                     </Dropdown.Item>
                                 ) : (

@@ -116,7 +116,15 @@ function DropdownRoot({
             getFloatingProps,
             getItemProps,
         }),
-        [open, onOpenChange, refs, floatingStyles, getReferenceProps, getFloatingProps, getItemProps],
+        [
+            open,
+            onOpenChange,
+            refs,
+            floatingStyles,
+            getReferenceProps,
+            getFloatingProps,
+            getItemProps,
+        ],
     );
 
     return <DropdownContext.Provider value={contextValue}>{children}</DropdownContext.Provider>;
@@ -172,7 +180,7 @@ function DropdownContent({ children, className }: DropdownContentProps) {
 }
 
 export type DropdownItemProps = ButtonAsButtonProps & {
-    hoverable?: boolean;
+    autoClose?: boolean;
 };
 
 function DropdownItem({
@@ -180,25 +188,23 @@ function DropdownItem({
     className,
     variant = 'simple-clean',
     disabled = false,
-    hoverable = true,
     onClick,
+    autoClose = true,
     ...props
 }: DropdownItemProps) {
     const { onOpenChange, getItemProps } = useDropdownContext();
 
-    const classes = [styles.item, !hoverable && styles.itemNotHoverable, className]
-        .filter(Boolean)
-        .join(' ') || undefined;
+    const classes = [styles.item, className].filter(Boolean).join(' ') || undefined;
 
     const handleClick = useCallback(
         (event: MouseEvent<HTMLButtonElement>) => {
             if (disabled) return;
             onClick?.(event);
-            if (hoverable) {
+            if (autoClose) {
                 onOpenChange(false);
             }
         },
-        [disabled, hoverable, onClick, onOpenChange],
+        [disabled, onClick, onOpenChange],
     );
 
     return (
