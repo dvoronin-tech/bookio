@@ -5,12 +5,10 @@ import { Button } from '@bookio/ui';
 import { useUpdateBookingForm } from '#api/bookingForms/updateBookingForm';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
-import { EditBookingFormDialog } from './EditBookingFormDialog';
 import { DeleteBookingFormDialog } from './DeleteBookingFormDialog';
 import { BOOKING_FORM_URL } from '#utils/constants';
 
 import TrashIcon from '#assets/icons/trash.svg?react';
-import EditIcon from '#assets/icons/pen.svg?react';
 import CalendarIcon from '#assets/icons/calendar.svg?react';
 import CopyIcon from '#assets/icons/copy.svg?react';
 
@@ -21,7 +19,6 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
     const { mutateAsync: updateBookingForm } = useUpdateBookingForm(bookingForm.id);
     const { id } = useParams<{ id: string }>();
     const { data: organization } = useGetOrganization(id);
-    const [isEditing, setIsEditing] = useState(false);
     const [isDeleting, setIsDeleting] = useState(false);
 
     const bookingFormUrl = `${BOOKING_FORM_URL}/${organization?.slug}/${bookingForm.slug}`;
@@ -41,10 +38,6 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
             },
         );
     }, [updateBookingForm, bookingForm.name, bookingForm.id, bookingForm.isActive]);
-
-    const handleOpenEditDialog = useCallback(() => {
-        setIsEditing(true);
-    }, []);
 
     const handleOpenDeleteDialog = useCallback(() => {
         setIsDeleting(true);
@@ -116,14 +109,6 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
                         <TrashIcon />
                     </Button>
                     <Button
-                        variant="blue-clean"
-                        onClick={handleOpenEditDialog}
-                        className={styles.bookingFormCardButton}
-                        aria-label="Edit booking form"
-                    >
-                        <EditIcon />
-                    </Button>
-                    <Button
                         variant="simple-filled"
                         type="link"
                         to={`${bookingForm.id}/configurator`}
@@ -133,12 +118,6 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
                     </Button>
                 </div>
             </div>
-
-            <EditBookingFormDialog
-                bookingForm={bookingForm}
-                open={isEditing}
-                onOpenChange={setIsEditing}
-            />
 
             <DeleteBookingFormDialog
                 bookingForm={bookingForm}

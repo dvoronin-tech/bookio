@@ -74,7 +74,7 @@ const ConfiguratorHeader: FC = memo(() => {
 });
 
 const ConfiguratorFooter: FC = memo(() => {
-    const { bookingFormId } = useParams();
+    const { bookingFormId, id } = useParams<{ id: string; bookingFormId: string }>();
     const { data: baseLine } = useGetEntireBookingFormById(bookingFormId);
     const { bookingForm, bookingFormFields } = useBookingFormConfiguratorStore(
         useShallow(({ bookingForm, bookingFormFields }) => ({
@@ -144,9 +144,13 @@ const ConfiguratorFooter: FC = memo(() => {
         syncBookingFormField,
     ]);
 
-    const handleBack = useCallback(() => {
-        navigate(-1);
-    }, [navigate]);
+    const navigateToBookingForms = useCallback(() => {
+        if (id) {
+            navigate(`/${id}/booking-forms`);
+        } else {
+            navigate('/organizations/list');
+        }
+    }, [id, navigate]);
 
     const handleSave = useCallback(() => {
         if (saveRequestThunks.length === 0 || isSaving) return;
@@ -154,12 +158,12 @@ const ConfiguratorFooter: FC = memo(() => {
         toast.promise(Promise.all(saveRequestThunks.map((request) => request())), {
             loading: 'Saving booking form...',
             success: () => {
-                navigate(-1);
+                navigateToBookingForms();
                 return 'Booking form saved successfully';
             },
             error: 'Failed to save booking form',
         });
-    }, [saveRequestThunks, navigate, isSaving]);
+    }, [saveRequestThunks, navigateToBookingForms, isSaving]);
 
     const hasSomethingToSave = useMemo(
         () => isDirtyBookingForm || isDirtyBookingFormFields,
@@ -168,7 +172,7 @@ const ConfiguratorFooter: FC = memo(() => {
 
     return (
         <div className={styles.footer}>
-            <Button type="button" variant="simple-clean" onClick={handleBack}>
+            <Button type="button" variant="simple-clean" onClick={navigateToBookingForms}>
                 Back
             </Button>
             <Button
