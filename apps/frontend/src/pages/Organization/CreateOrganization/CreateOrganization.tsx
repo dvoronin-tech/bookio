@@ -14,6 +14,8 @@ import { useIsOrganizationExists } from '#api/organizations/isOrganizationExists
 import { Controller, useForm, useWatch, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
+import { useNavigate } from 'react-router-dom';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 
 const formSchema = z.object({
     name: z.string().min(3).max(255),
@@ -37,6 +39,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export const CreateOrganization: FC = () => {
+    const navigate = useNavigate();
     const { data: session } = useSession();
     const { data: organization, mutateAsync, isPending, isSuccess } = useCreateOrganization();
 
@@ -53,22 +56,33 @@ export const CreateOrganization: FC = () => {
     const slug = useWatch({ control, name: 'slug', defaultValue: '' });
     const { isValid: slugIsValid } = useIsOrganizationExists({ slug });
 
-    const onSubmit = async (data: FormData) => {
-        if (slugIsValid === false) {
-            toast.error('Organization slug is already taken');
-            return;
-        }
+    const onSubmit = useCallback(
+        async (data: FormData) => {
+            if (slugIsValid === false) {
+                toast.error('Organization slug is already taken');
+                return;
+            }
 
-        await toast.promise(mutateAsync({ ...data, userId: session!.user.id }), {
-            loading: 'Creating organization...',
-            success: 'Organization created successfully',
-            error: (error: Error) => error.message,
-        });
-    };
+            await toast.promise(mutateAsync({ ...data, userId: session!.user.id }), {
+                loading: 'Creating organization...',
+                success: 'Organization created successfully',
+                error: (error: Error) => error.message,
+            });
+        },
+        [mutateAsync, session, slugIsValid],
+    );
 
-    const onInvalid = (errors: FieldErrors<FormData>) => {
+    const onInvalid = useCallback((errors: FieldErrors<FormData>) => {
         toast.error(getFirstFieldError(errors) ?? 'Invalid form data');
-    };
+    }, []);
+
+    const handleSubmitForm = useCallback(() => {
+        handleSubmit(onSubmit, onInvalid)();
+    }, [handleSubmit, onSubmit, onInvalid]);
+
+    const handleClose = useCallback(() => {
+        navigate(-1);
+    }, [navigate]);
 
     if (isSuccess && organization) {
         return <SuccessfulOrganizationCreation data={organization} />;
@@ -77,46 +91,54 @@ export const CreateOrganization: FC = () => {
     const isDisabled = isPending || isSubmitting;
 
     return (
-        <div className={styles.createOrganization}>
-            <form className={styles.form} onSubmit={handleSubmit(onSubmit, onInvalid)}>
-                <h2 className={styles.title}>Lets create your organization</h2>
-                <div className={styles.formGroup}>
-                    <Input
-                        placeholder="Organization name"
+        <FormWizardLayout
+            stepNumber={1}
+            title="Let's create your organization"
+            description="Choose a name and unique slug for your organization. You'll also set a password to protect access."
+            onEnterComplete={isDisabled ? undefined : handleSubmitForm}
+            footer={
+                <div className={styles.footerActions}>
+                    <Button
+                        type="button"
+                        variant="primary-filled"
+                        onClick={handleSubmitForm}
                         disabled={isDisabled}
-                        {...register('name')}
-                    />
-                    <Controller
-                        name="slug"
-                        control={control}
-                        render={({ field }) => (
-                            <ValidatableInput
-                                {...field}
-                                placeholder="Unique organization slug"
-                                isValid={slugIsValid}
-                                errorMessage="Organization slug is already taken"
-                                disabled={isDisabled}
-                            />
-                        )}
-                    />
-                    <Input
-                        type="password"
-                        placeholder="Organization password"
-                        autoComplete="new-password"
-                        disabled={isDisabled}
-                        {...register('password')}
-                    />
+                    >
+                        Create Organization
+                    </Button>
+                    <Button type="button" variant="simple-clean" onClick={handleClose}>
+                        Close
+                    </Button>
                 </div>
-                <Button
-                    className={styles.button}
-                    variant="primary-filled"
-                    type="submit"
-                    disabled={isDisabled}
-                >
-                    Create Organization
-                </Button>
-            </form>
-        </div>
+            }
+        >
+            <Input
+                placeholder="Organization name"
+                disabled={isDisabled}
+                autoFocus
+                {...register('name')}
+            />
+            <Controller
+                name="slug"
+                control={control}
+                render={({ field }) => (
+                    <ValidatableInput
+                        {...field}
+                        placeholder="Unique organization slug"
+                        isValid={slugIsValid}
+                        errorMessage="Organization slug is already taken"
+                        disabled={isDisabled}
+                    />
+                )}
+            />
+            <Input
+                type="password"
+                placeholder="Organization password"
+                autoComplete="new-password"
+                disabled={isDisabled}
+                {...register('password')}
+            />
+        </FormWizardLayout>
     );
 };
 
@@ -128,25 +150,19 @@ const SuccessfulOrganizationCreation: FC<{ data: CreateOrganizationResponse['dat
     }, []);
 
     return (
-        <div className={styles.createOrganization}>
-            <div className={styles.content}>
-                <h2 className={styles.title}>
-                    Organization {data.organization.name} created successfully
-                </h2>
-                <p className={styles.description}>
-                    Your organization has been created successfully. Bellow, in the hidden field,
-                    you can find the organization secret key. Copy and keep it in a safe place.
-                </p>
-                <HiddenField value={data.organization.secretKey} onCopy={handleCopy} />
-                <Button
-                    type="link"
-                    to="/organizations/list"
-                    className={styles.button}
-                    variant="primary-filled"
-                >
-                    Go to organizations
-                </Button>
-            </div>
-        </div>
+        <FormWizardLayout
+            stepNumber={2}
+            title={`Organization ${data.organization.name} created successfully`}
+            description="Your organization has been created successfully. Below, in the hidden field, you can find the organization secret key. Copy and keep it in a safe place."
+            footer={
+                <div className={styles.footerActions}>
+                    <Button type="link" to="/organizations/list" variant="primary-filled">
+                        Go to organizations
+                    </Button>
+                </div>
+            }
+        >
+            <HiddenField value={data.organization.secretKey} onCopy={handleCopy} />
+        </FormWizardLayout>
     );
 };

@@ -6,7 +6,7 @@ import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput'
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
-import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { step2Schema } from '../../schemas/createBookingFormDraft.schema';
 import toast from 'react-hot-toast';
 import styles from './Step2UrlSlug.module.scss';
@@ -72,7 +72,7 @@ export const Step2UrlSlug: FC = () => {
     }, [trimmedSlug, slugExistsIsValid, setField, goToNextStep]);
 
     return (
-        <BookingFormConfiguratorLayout
+        <FormWizardLayout
             stepNumber={2}
             title="Choose a unique URL slug"
             description="This slug becomes part of the public booking form link together with your organization slug. Clients will open this URL to book — keep it short and unique within your organization."
@@ -100,6 +100,6 @@ export const Step2UrlSlug: FC = () => {
                 organizationSlug={organizationSlug}
                 formSlug={previewSlug}
             />
-        </BookingFormConfiguratorLayout>
+        </FormWizardLayout>
     );
 };

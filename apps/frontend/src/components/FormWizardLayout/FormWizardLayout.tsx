@@ -1,8 +1,8 @@
 import { useRef, type FC, type ReactNode } from 'react';
 import { useEnterFieldNavigation } from '#hooks/useEnterFieldNavigation';
-import styles from './BookingFormConfiguratorLayout.module.scss';
+import styles from './FormWizardLayout.module.scss';
 
-type BookingFormConfiguratorLayoutProps = {
+type FormWizardLayoutProps = {
     stepNumber: number;
     title: string;
     description: string;
@@ -11,7 +11,7 @@ type BookingFormConfiguratorLayoutProps = {
     onEnterComplete?: () => void;
 };
 
-export const BookingFormConfiguratorLayout: FC<BookingFormConfiguratorLayoutProps> = ({
+export const FormWizardLayout: FC<FormWizardLayoutProps> = ({
     stepNumber,
     title,
     description,

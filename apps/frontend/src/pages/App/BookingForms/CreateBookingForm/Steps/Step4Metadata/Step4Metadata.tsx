@@ -3,7 +3,7 @@ import { useShallow } from 'zustand/shallow';
 import { Button, Input } from '@bookio/ui';
 import TrashIcon from '#assets/icons/trash.svg?react';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
-import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { step4Schema } from '../../schemas/createBookingFormDraft.schema';
 import toast from 'react-hot-toast';
 import styles from './Step4Metadata.module.scss';
@@ -81,7 +81,7 @@ export const Step4Metadata: FC = () => {
     }, [metaTitle, metaDescription, additionalMeta, setField, goToNextStep]);
 
     return (
-        <BookingFormConfiguratorLayout
+        <FormWizardLayout
             stepNumber={4}
             title="Set page metadata"
             description="Title and description are required for SEO and social previews. Use Add more to define extra meta properties as name/value pairs."
@@ -142,6 +142,6 @@ export const Step4Metadata: FC = () => {
             <Button type="button" variant="simple-clean" onClick={handleAddMore}>
                 Add more
             </Button>
-        </BookingFormConfiguratorLayout>
+        </FormWizardLayout>
     );
 };

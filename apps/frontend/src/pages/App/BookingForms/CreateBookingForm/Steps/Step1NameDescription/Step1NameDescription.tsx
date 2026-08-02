@@ -4,7 +4,7 @@ import { Button, Input } from '@bookio/ui';
 import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
-import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import styles from './Step1NameDescription.module.scss';
@@ -47,7 +47,7 @@ export const Step1NameDescription: FC = () => {
     }, [navigate]);
 
     return (
-        <BookingFormConfiguratorLayout
+        <FormWizardLayout
             stepNumber={1}
             title="Enter name and description of booking form"
             description="The name must be unique within your organization. The description should explain the purpose of this booking form."
@@ -76,6 +76,6 @@ export const Step1NameDescription: FC = () => {
                 onChange={handleDescriptionChange}
                 placeholder="Description"
             />
-        </BookingFormConfiguratorLayout>
+        </FormWizardLayout>
     );
 };
