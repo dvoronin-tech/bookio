@@ -7,15 +7,31 @@ interface SimpleParamInputProps {
     name: string;
     label: string;
     type: 'text' | 'checkbox' | 'number';
+    min?: number;
+    max?: number;
 }
 
-export const SimpleParamInput: FC<SimpleParamInputProps> = ({ name, label, type }) => {
+export const SimpleParamInput: FC<SimpleParamInputProps> = ({ name, label, type, min, max }) => {
     const { register } = useFormContext<FieldModalFormValues>();
     const fieldPath = `params.${name}` as FieldPath<FieldModalFormValues>;
 
     if (type === 'number') {
         return (
-            <Input label={label} type="number" {...register(fieldPath, { valueAsNumber: true })} />
+            <Input
+                label={label}
+                type="number"
+                min={min}
+                max={max}
+                {...register(fieldPath, {
+                    valueAsNumber: true,
+                    ...(min !== undefined && {
+                        min: { value: min, message: `Minimum value is ${min}` },
+                    }),
+                    ...(max !== undefined && {
+                        max: { value: max, message: `Maximum value is ${max}` },
+                    }),
+                })}
+            />
         );
     }
 

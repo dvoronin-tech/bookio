@@ -31,8 +31,8 @@ export const FieldBasicFields: FC = () => {
 
     return (
         <>
-            <Input label="Label" {...register('name')} />
-            <Input label="Key" {...register('key')} />
+            <Input label="Label*" {...register('name')} />
+            <Input label="Key*" {...register('key')} />
             {watchedType !== 'group' && (
                 <ChooseParentDropdown
                     options={[noGroupOption, ...groupFields]}

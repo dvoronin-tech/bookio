@@ -12,7 +12,7 @@ export const FieldTypeSelector: FC = () => {
 
     return (
         <div className={styles.fieldTypesWrapper}>
-            <span className={styles.fieldTypesLabel}>Field type</span>
+            <span className={styles.fieldTypesLabel}>Field type*</span>
             <div className={styles.fieldTypes}>
                 {(Object.keys(fieldTypeIcons) as Array<EntireBookingFormField['type']>)
                     .filter((typeOption): typeOption is EntireBookingFormField['type'] => {
