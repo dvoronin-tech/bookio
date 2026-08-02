@@ -85,8 +85,12 @@ const ConfiguratorFooter: FC = memo(() => {
 
     const navigate = useNavigate();
 
-    const { mutateAsync: updateBookingForm } = useUpdateBookingForm(bookingFormId);
-    const { mutateAsync: syncBookingFormField } = useSyncBookingFormField(bookingFormId);
+    const { mutateAsync: updateBookingForm, isPending: isUpdatePending } =
+        useUpdateBookingForm(bookingFormId);
+    const { mutateAsync: syncBookingFormField, isPending: isSyncPending } =
+        useSyncBookingFormField(bookingFormId);
+
+    const isSaving = isUpdatePending || isSyncPending;
 
     const isDirtyBookingForm = useMemo(() => {
         if (!baseLine || !bookingForm) return false;
@@ -145,7 +149,7 @@ const ConfiguratorFooter: FC = memo(() => {
     }, [navigate]);
 
     const handleSave = useCallback(() => {
-        if (saveRequestThunks.length === 0) return;
+        if (saveRequestThunks.length === 0 || isSaving) return;
 
         toast.promise(Promise.all(saveRequestThunks.map((request) => request())), {
             loading: 'Saving booking form...',
@@ -155,7 +159,7 @@ const ConfiguratorFooter: FC = memo(() => {
             },
             error: 'Failed to save booking form',
         });
-    }, [saveRequestThunks, navigate]);
+    }, [saveRequestThunks, navigate, isSaving]);
 
     const hasSomethingToSave = useMemo(
         () => isDirtyBookingForm || isDirtyBookingFormFields,
@@ -171,9 +175,9 @@ const ConfiguratorFooter: FC = memo(() => {
                 variant="green-filled"
                 className={styles.saveButton}
                 onClick={handleSave}
-                disabled={!hasSomethingToSave}
+                disabled={!hasSomethingToSave || isSaving}
             >
-                Save booking form
+                {isSaving ? 'Saving…' : 'Save booking form'}
             </Button>
         </div>
     );
