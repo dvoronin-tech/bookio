@@ -12,7 +12,7 @@ export const deleteBookingFormHandler = factory(
     zValidator('json', deleteBookingFormSchema),
     async (c) => {
         try {
-            const { bookingFormId, name } = c.req.valid('json');
+            const { bookingFormId, name, organizationPassword } = c.req.valid('json');
 
             const bookingForm = await db.query.bookingForms.findFirst({
                 where: (bookingForm, { eq, and }) =>
@@ -21,6 +21,18 @@ export const deleteBookingFormHandler = factory(
 
             if (!bookingForm) {
                 return c.json(prepareError('Booking form not found'), 404);
+            }
+
+            const organization = await db.query.organizations.findFirst({
+                where: (organization, { eq }) => eq(organization.id, bookingForm.organizationId),
+            });
+
+            if (!organization) {
+                return c.json(prepareError('Organization not found'), 404);
+            }
+
+            if (organization.password !== organizationPassword) {
+                return c.json(prepareError('Invalid organization password'), 401);
             }
 
             const [deletedBookingForm] = await db
