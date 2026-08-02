@@ -1,4 +1,5 @@
-import type { FC, ReactNode } from 'react';
+import { useRef, type FC, type ReactNode } from 'react';
+import { useEnterFieldNavigation } from '#hooks/useEnterFieldNavigation';
 import styles from './BookingFormConfiguratorLayout.module.scss';
 
 type BookingFormConfiguratorLayoutProps = {
@@ -7,6 +8,7 @@ type BookingFormConfiguratorLayoutProps = {
     description: string;
     children: ReactNode;
     footer?: ReactNode;
+    onEnterComplete?: () => void;
 };
 
 export const BookingFormConfiguratorLayout: FC<BookingFormConfiguratorLayoutProps> = ({
@@ -15,8 +17,11 @@ export const BookingFormConfiguratorLayout: FC<BookingFormConfiguratorLayoutProp
     description,
     children,
     footer,
+    onEnterComplete,
 }) => {
     const stepLabel = String(stepNumber).padStart(2, '0');
+    const fieldsRef = useRef<HTMLDivElement>(null);
+    const handleFieldsKeyDown = useEnterFieldNavigation(fieldsRef, onEnterComplete);
 
     return (
         <div className={styles.wrapper}>
@@ -28,7 +33,13 @@ export const BookingFormConfiguratorLayout: FC<BookingFormConfiguratorLayoutProp
                 </aside>
 
                 <div className={styles.stage}>
-                    <div className={styles.fields}>{children}</div>
+                    <div
+                        ref={fieldsRef}
+                        className={styles.fields}
+                        onKeyDown={onEnterComplete ? handleFieldsKeyDown : undefined}
+                    >
+                        {children}
+                    </div>
                     {footer ? <div className={styles.footer}>{footer}</div> : null}
                 </div>
             </div>

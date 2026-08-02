@@ -46,11 +46,13 @@ export const Step1NameDescription: FC = () => {
     const handleClose = useCallback(() => {
         navigate(-1);
     }, [navigate]);
+
     return (
         <BookingFormConfiguratorLayout
             stepNumber={1}
             title="Enter name and description of booking form"
             description="The name must be unique within your organization. The description should explain the purpose of this booking form."
+            onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
                     <Button type="button" variant="primary-filled" onClick={handleClickNext}>
@@ -70,6 +72,7 @@ export const Step1NameDescription: FC = () => {
                 errorMessage={
                     nameExists === true ? 'Booking form with this name already exists' : undefined
                 }
+                autoFocus
             />
             <Input
                 value={description}

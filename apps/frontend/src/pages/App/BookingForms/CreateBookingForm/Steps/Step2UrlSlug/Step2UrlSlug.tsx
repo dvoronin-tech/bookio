@@ -82,6 +82,7 @@ export const Step2UrlSlug: FC = () => {
             stepNumber={2}
             title="Choose a unique URL slug"
             description="This slug becomes part of the public booking form link together with your organization slug. Clients will open this URL to book — keep it short and unique within your organization."
+            onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
                     <Button type="button" variant="primary-filled" onClick={handleClickNext}>
@@ -99,6 +100,7 @@ export const Step2UrlSlug: FC = () => {
                 placeholder="Slug*"
                 isValid={slugIsValid}
                 errorMessage={slugErrorMessage}
+                autoFocus
             />
             <BookingFormUrlPreview
                 organizationSlug={organizationSlug}

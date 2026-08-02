@@ -10,6 +10,7 @@ import { useFieldModalForm } from './hooks/useFieldModalForm';
 import { useFieldModalSubmit } from './hooks/useFieldModalSubmit';
 import { ParamFields } from './ParamFields/ParamFields';
 import styles from './FieldModal.module.scss';
+import { useOnPress } from '#hooks/useOnPress';
 
 interface FieldModalProps {
     open: boolean;
@@ -56,6 +57,12 @@ export const FieldModal: FC<FieldModalProps> = memo(
             },
             [reset, onOpenChange],
         );
+
+        const submit = useCallback(() => {
+            void handleSubmit(onSave)();
+        }, [handleSubmit, onSave]);
+
+        useOnPress('Enter', submit);
 
         return (
             <Dialog
