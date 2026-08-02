@@ -40,7 +40,7 @@ export const AppHeader: FC = () => {
                         <ArrowIcon className={styles.arrowIcon} />
                     </Dropdown.Trigger>
                     <Dropdown.Content className={styles.dropdownContent}>
-                        <Dropdown.Item className={styles.companyInfo} hoverable={false}>
+                        <Dropdown.Item className={styles.companyInfo}>
                             <img
                                 src={PlaceholderImage}
                                 alt="Organization image"
