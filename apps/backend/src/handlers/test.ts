@@ -20,7 +20,6 @@ const testHandler = factory(zValidator('query', testSchema), async (c) => {
 
     return c.json(form);
 });
-
 const test = new Hono().get('/', ...testHandler);
 
 export default test;
