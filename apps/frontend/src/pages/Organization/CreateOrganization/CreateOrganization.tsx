@@ -16,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { useNavigate } from 'react-router-dom';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
+import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
 
 const formSchema = z.object({
     name: z.string().min(3).max(255),
@@ -84,61 +85,63 @@ export const CreateOrganization: FC = () => {
         navigate(-1);
     }, [navigate]);
 
-    if (isSuccess && organization) {
-        return <SuccessfulOrganizationCreation data={organization} />;
-    }
-
     const isDisabled = isPending || isSubmitting;
 
     return (
-        <FormWizardLayout
-            stepNumber={1}
-            title="Let's create your organization"
-            description="Choose a name and unique slug for your organization. You'll also set a password to protect access."
-            onEnterComplete={isDisabled ? undefined : handleSubmitForm}
-            footer={
-                <div className={styles.footerActions}>
-                    <Button
-                        type="button"
-                        variant="primary-filled"
-                        onClick={handleSubmitForm}
+        <FormWizardLayoutProvider totalSteps={2}>
+            {isSuccess && organization ? (
+                <SuccessfulOrganizationCreation data={organization} />
+            ) : (
+                <FormWizardLayout
+                    stepNumber={1}
+                    title="Let's create your organization"
+                    description="Choose a name and unique slug for your organization. You'll also set a password to protect access."
+                    onEnterComplete={isDisabled ? undefined : handleSubmitForm}
+                    footer={
+                        <div className={styles.footerActions}>
+                            <Button
+                                type="button"
+                                variant="primary-filled"
+                                onClick={handleSubmitForm}
+                                disabled={isDisabled}
+                            >
+                                Create Organization
+                            </Button>
+                            <Button type="button" variant="simple-clean" onClick={handleClose}>
+                                Close
+                            </Button>
+                        </div>
+                    }
+                >
+                    <Input
+                        placeholder="Organization name"
                         disabled={isDisabled}
-                    >
-                        Create Organization
-                    </Button>
-                    <Button type="button" variant="simple-clean" onClick={handleClose}>
-                        Close
-                    </Button>
-                </div>
-            }
-        >
-            <Input
-                placeholder="Organization name"
-                disabled={isDisabled}
-                autoFocus
-                {...register('name')}
-            />
-            <Controller
-                name="slug"
-                control={control}
-                render={({ field }) => (
-                    <ValidatableInput
-                        {...field}
-                        placeholder="Unique organization slug"
-                        isValid={slugIsValid}
-                        errorMessage="Organization slug is already taken"
-                        disabled={isDisabled}
+                        autoFocus
+                        {...register('name')}
                     />
-                )}
-            />
-            <Input
-                type="password"
-                placeholder="Organization password"
-                autoComplete="new-password"
-                disabled={isDisabled}
-                {...register('password')}
-            />
-        </FormWizardLayout>
+                    <Controller
+                        name="slug"
+                        control={control}
+                        render={({ field }) => (
+                            <ValidatableInput
+                                {...field}
+                                placeholder="Unique organization slug"
+                                isValid={slugIsValid}
+                                errorMessage="Organization slug is already taken"
+                                disabled={isDisabled}
+                            />
+                        )}
+                    />
+                    <Input
+                        type="password"
+                        placeholder="Organization password"
+                        autoComplete="new-password"
+                        disabled={isDisabled}
+                        {...register('password')}
+                    />
+                </FormWizardLayout>
+            )}
+        </FormWizardLayoutProvider>
     );
 };
 

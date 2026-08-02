@@ -1,118 +1,225 @@
 .wrapper {
+    position: relative;
     width: 100%;
-    height: 100%;
     flex: 1;
+    height: 100%;
     min-height: 0;
     display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 2rem;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--color-bg-main);
 }
 
-.configurator {
-    max-width: 110rem;
-    max-height: 60rem;
+.progress {
+    flex: none;
+    display: flex;
+    justify-content: center;
+    padding: 0.8rem 0;
+    overflow: visible;
+}
+
+.progressTrack {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    overflow: visible;
+}
+
+.progressLine {
+    width: 3.8rem;
+    height: 1.5px;
+    background-color: var(--color-border);
+    opacity: 0.5;
+}
+
+.stepDot {
+    position: relative;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background-color: var(--color-border);
+    flex-shrink: 0;
+}
+
+.stepDotComplete {
+    background-color: var(--color-primary);
+}
+
+.stepDotActive {
+    background-color: var(--color-primary);
+}
+
+.stepDotActive::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
     width: 100%;
     height: 100%;
-    display: flex;
-    background-color: var(--color-bg-ui);
-    border: 1px solid var(--color-border);
-    border-radius: 1rem;
-    overflow: hidden;
-    animation: panelIn 0.45s ease-out;
-}
-
-.rail {
-    flex: 0 1 34rem;
-    min-width: 24rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 1.6rem;
-    padding: 4rem 3.2rem;
-    border-right: 1px solid var(--color-border);
-    background:
-        linear-gradient(
-            165deg,
-            color-mix(in srgb, var(--color-primary) 14%, transparent) 0%,
-            transparent 55%
-        ),
-        var(--color-bg-ui);
-    animation: railIn 0.5s ease-out;
-}
-
-.stepBadge {
-    display: inline-flex;
-    align-self: flex-start;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 0.4rem 1rem;
-    border: 1px solid color-mix(in srgb, var(--color-primary) 55%, var(--color-border));
-    border-radius: 0.4rem;
-    font-size: 1.2rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--color-primary);
-    animation: badgeIn 0.55s ease-out both;
-}
-
-.stepBadge::before {
-    content: '';
-    width: 0.6rem;
-    height: 0.6rem;
     border-radius: 50%;
-    background-color: var(--color-primary);
-    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 50%, transparent);
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 65%, transparent);
     animation: pulseDot 2.2s ease-out infinite;
 }
 
+.heroAccent {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.heroAccentLine {
+    width: 5.6rem;
+    height: 1.5px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--color-primary) 70%, transparent)
+    );
+    opacity: 0.7;
+}
+
+.heroAccentLine:last-child {
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-primary) 70%, transparent),
+        transparent
+    );
+}
+
+.heroAccentOrb {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-color: var(--color-primary);
+}
+
+.heroAccentOrb::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 65%, transparent);
+    animation: pulseDot 2.2s ease-out infinite;
+}
+
+.stage {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.stageContent {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    width: 100%;
+    min-height: 0;
+    max-height: 100%;
+    margin-block: auto;
+    overflow: hidden;
+}
+
+.hero {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 2.4rem 2rem 2.4rem;
+    text-align: center;
+}
+
 .title {
-    font-size: 2.8rem;
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(3.2rem, 5vw, 4.4rem);
     font-weight: 700;
     line-height: 1.2;
-    text-align: left;
+    text-align: center;
 }
 
 .description {
     font-size: 1.5rem;
     font-weight: 400;
     line-height: 1.5;
-    text-align: left;
+    text-align: center;
     color: var(--color-text-secondary);
-    max-width: 28rem;
+    max-width: 48rem;
 }
 
-.stage {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: safe center;
-    gap: 2.4rem;
-    padding: 4rem 4.8rem;
-    min-width: 0;
+.body {
+    flex: 1 1 auto;
     min-height: 0;
+    padding: 0 2rem;
     overflow-y: auto;
-    animation: stageIn 0.55s ease-out both;
+    overscroll-behavior: contain;
 }
 
 .fields {
     width: 100%;
+    max-width: 48rem;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: center;
     gap: 1.2rem;
+    padding-bottom: 2rem;
 }
 
 .footer {
+    flex: none;
     width: 100%;
+    max-width: 48rem;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
     align-items: stretch;
-    padding-top: 0.8rem;
+    padding: 0.8rem 2rem 3.2rem;
 }
 
-@keyframes panelIn {
+@media (min-width: 769px) {
+    .body {
+        max-height: 400px;
+    }
+}
+
+@keyframes pulseDot {
+    0% {
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 65%, transparent);
+    }
+
+    70% {
+        box-shadow: 0 0 0 1.3rem transparent;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 transparent;
+    }
+}
+
+@keyframes progressIn {
+    from {
+        opacity: 0;
+        transform: translateY(-0.8rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes stageIn {
     from {
         opacity: 0;
         transform: translateY(1.2rem);
@@ -124,119 +231,106 @@
     }
 }
 
-@keyframes railIn {
+@keyframes stepIn {
     from {
         opacity: 0;
-        transform: translateX(-1rem);
+        transform: translateY(0.8rem);
     }
 
     to {
         opacity: 1;
-        transform: translateX(0);
+        transform: translateY(0);
     }
 }
 
-@keyframes stageIn {
-    from {
-        opacity: 0;
-        transform: translateX(1rem);
-    }
-
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
+.enterProgress {
+    animation: progressIn 0.45s ease-out both;
 }
 
-@keyframes badgeIn {
-    from {
-        opacity: 0;
-        transform: scale(0.92);
-    }
-
-    to {
-        opacity: 1;
-        transform: scale(1);
-    }
+.enterHero {
+    animation: stageIn 0.5s ease-out 0.1s both;
 }
 
-@keyframes pulseDot {
-    0% {
-        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 45%, transparent);
+.enterBody {
+    animation: stageIn 0.5s ease-out 0.18s both;
+}
+
+.enterFooter {
+    animation: stageIn 0.5s ease-out 0.26s both;
+}
+
+.stepEnter {
+    animation: stepIn 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .enterProgress,
+    .enterHero,
+    .enterBody,
+    .enterFooter,
+    .stepEnter {
+        animation: none;
     }
 
-    70% {
-        box-shadow: 0 0 0 0.8rem transparent;
-    }
-
-    100% {
-        box-shadow: 0 0 0 0 transparent;
+    .stepDotActive::after,
+    .heroAccentOrb::after {
+        animation: none;
+        box-shadow: none;
     }
 }
 
 @media (max-width: 768px) {
     .wrapper {
-        padding: 1.2rem;
-        align-items: stretch;
-        min-height: 0;
-        overflow: hidden;
-    }
-
-    .configurator {
-        flex-direction: column;
-        max-height: 100%;
         height: 100%;
-        overflow-x: hidden;
-        overflow-y: auto;
-    }
-
-    .rail {
-        position: sticky;
-        top: 0;
-        z-index: 2;
-        flex: none;
-        min-width: 0;
-        width: 100%;
-        height: fit-content;
-        justify-content: flex-start;
-        padding: 2.4rem 2rem 2rem;
-        border-right: none;
-        border-bottom: 1px solid var(--color-border);
-    }
-
-    .description {
-        max-width: none;
+        min-height: 0;
     }
 
     .stage {
-        flex: none;
-        height: auto;
+        flex: 1;
         min-height: 0;
-        overflow: visible;
-        padding: 2.4rem 2rem 2.8rem;
-        justify-content: flex-start;
     }
 
-    .fields,
+    .stageContent {
+        flex: 1;
+        max-height: none;
+        margin-block: 0;
+        min-height: 0;
+    }
+
+    .body {
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+    }
+
+    .hero {
+        padding: 1.6rem 1.6rem 2rem;
+        gap: 1.2rem;
+    }
+
+    .body {
+        padding: 0 1.6rem;
+    }
+
     .footer {
-        max-width: none;
+        padding: 0.8rem 1.6rem 2.4rem;
     }
 }
 
 @media screen and (max-width: 440px) {
-    .configurator {
-        border-radius: 0;
+    .hero {
+        padding: 1.2rem 1rem 1.6rem;
     }
 
-    .wrapper {
-        padding: 0;
+    .body {
+        padding: 0 1rem;
     }
 
-    .rail {
-        padding: 2rem 1rem;
+    .footer {
+        padding: 0.8rem 1rem 2rem;
     }
 
-    .stage {
-        padding: 2rem 1rem;
+    .progressLine {
+        width: 2.8rem;
     }
 }
