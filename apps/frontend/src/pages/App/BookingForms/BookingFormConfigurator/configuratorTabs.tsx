@@ -6,6 +6,7 @@ import StylesIcon from '#assets/icons/styles.svg?react';
 
 import { SettingsTab } from './ConfiguratorTabs/SettingsTab/SettingsTab';
 import { FieldsTab } from './ConfiguratorTabs/FieldsTab/FieldsTab';
+import { StylesTab } from './ConfiguratorTabs/StylesTab/StylesTab';
 
 export const CONFIGURATOR_TAB_VALUES = ['settings', 'fields', 'styles'] as const;
 
@@ -35,6 +36,7 @@ export const configuratorTabs: ConfiguratorTabConfig[] = [
         value: 'styles',
         content: 'Styles',
         icon: <StylesIcon />,
+        Panel: StylesTab,
     },
 ];
 
