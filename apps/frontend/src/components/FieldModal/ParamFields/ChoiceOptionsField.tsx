@@ -33,24 +33,37 @@ export const ChoiceOptionsField: FC<ChoiceOptionsFieldProps> = ({ label }) => {
 
     return (
         <div className={styles.optionsContainer}>
-            <span className={styles.optionsLabel}>{label}</span>
-            <div className={styles.optionsList}>
-                {fields.map((field, index) => (
-                    <OptionItem
-                        key={field.fieldKey}
-                        index={index}
-                        onRemove={handleRemoveOption}
-                    />
-                ))}
+            <div className={styles.optionsHeader}>
+                <span className={styles.optionsLabel}>{label}</span>
+                {fields.length > 0 && (
+                    <span className={styles.optionsCount}>{fields.length}</span>
+                )}
             </div>
-            <Button
-                variant="simple-clean"
-                className={styles.addOptionButton}
-                onClick={handleAddOption}
-            >
-                <PlusIcon />
-                Add option
-            </Button>
+
+            <div className={styles.optionsPanel}>
+                {fields.length === 0 ? (
+                    <p className={styles.optionsEmpty}>No options yet. Add the first one below.</p>
+                ) : (
+                    <div className={styles.optionsList}>
+                        {fields.map((field, index) => (
+                            <OptionItem
+                                key={field.fieldKey}
+                                index={index}
+                                onRemove={handleRemoveOption}
+                            />
+                        ))}
+                    </div>
+                )}
+
+                <Button
+                    variant="simple-outlined"
+                    className={styles.addOptionButton}
+                    onClick={handleAddOption}
+                >
+                    <PlusIcon />
+                    Add option
+                </Button>
+            </div>
         </div>
     );
 };

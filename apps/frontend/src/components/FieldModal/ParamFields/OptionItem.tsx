@@ -44,26 +44,34 @@ export const OptionItem: FC<OptionItemProps> = ({ index, onRemove }) => {
     return (
         <div className={styles.option}>
             <input type="hidden" {...register(`params.options.${index}.id`)} />
-            <ValidatableInput
-                isValid={isValueUnique}
-                label="Value"
-                type="text"
-                {...register(`params.options.${index}.value`)}
-            />
-            <ValidatableInput
-                isValid={isLabelUnique}
-                label="Label"
-                type="text"
-                {...register(`params.options.${index}.label`)}
-            />
-            <Button
-                variant="red-clean"
-                onClick={handleRemoveOption}
-                className={styles.removeOptionButton}
-            >
-                <TrashIcon />
-                <span>Remove option</span>
-            </Button>
+
+            <div className={styles.optionHeader}>
+                <span className={styles.optionIndex}>{index + 1}</span>
+                <Button
+                    variant="red-clean"
+                    onClick={handleRemoveOption}
+                    className={styles.removeOptionButton}
+                    aria-label="Remove option"
+                >
+                    <TrashIcon />
+                    <span>Remove option</span>
+                </Button>
+            </div>
+
+            <div className={styles.optionFields}>
+                <ValidatableInput
+                    isValid={isValueUnique}
+                    label="Value"
+                    type="text"
+                    {...register(`params.options.${index}.value`)}
+                />
+                <ValidatableInput
+                    isValid={isLabelUnique}
+                    label="Label"
+                    type="text"
+                    {...register(`params.options.${index}.label`)}
+                />
+            </div>
         </div>
     );
 };
