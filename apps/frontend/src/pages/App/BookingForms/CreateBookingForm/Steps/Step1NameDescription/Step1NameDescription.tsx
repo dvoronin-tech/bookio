@@ -23,11 +23,10 @@ export const Step1NameDescription: FC = () => {
             })),
         );
 
-    const { exists: nameExists } = useIsBookingFormExists({
+    const { isValid: nameIsValid } = useIsBookingFormExists({
         organizationId,
         name: name.trim(),
     });
-    const nameIsValid = nameExists === undefined ? undefined : !nameExists;
 
     const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setField('name', event.target.value);
@@ -69,9 +68,7 @@ export const Step1NameDescription: FC = () => {
                 onChange={handleNameChange}
                 placeholder="Name*"
                 isValid={nameIsValid}
-                errorMessage={
-                    nameExists === true ? 'Booking form with this name already exists' : undefined
-                }
+                errorMessage={'Booking form with this name already exists'}
                 autoFocus
             />
             <Input

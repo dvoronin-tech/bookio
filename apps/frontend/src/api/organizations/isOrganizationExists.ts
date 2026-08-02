@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import hono from '#lib/hono-client';
 import { useDebounce } from 'use-debounce';
 import type { InferRequestType, InferResponseType } from 'hono/client';
+import { toExistsIsValid } from '#utils/existsValidity';
 
 const isExistsClient = hono.organizations['is-exists'];
 
@@ -22,7 +23,12 @@ export const isOrgExists = async (requestData: IsOrganizationExistsRequest) => {
 
 const SLUG_CHECK_DEBOUNCE_MS = 500;
 
-export const useIsOrganizationExists = (slug: string) => {
+type UseIsOrganizationExistsParams = {
+    slug: string;
+    unchangedValue?: string;
+};
+
+export const useIsOrganizationExists = ({ slug, unchangedValue }: UseIsOrganizationExistsParams) => {
     const [debouncedSlug] = useDebounce(slug, SLUG_CHECK_DEBOUNCE_MS);
     const isSlugSettled = slug === debouncedSlug;
     const [checkResult, setCheckResult] = useState<{ slug: string; exists: boolean } | null>(null);
@@ -48,5 +54,7 @@ export const useIsOrganizationExists = (slug: string) => {
             ? checkResult.exists
             : undefined;
 
-    return { exists };
+    const isValid = toExistsIsValid(exists, { currentValue: slug, unchangedValue });
+
+    return { isValid };
 };

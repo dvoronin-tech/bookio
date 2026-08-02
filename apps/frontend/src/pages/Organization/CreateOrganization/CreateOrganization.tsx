@@ -51,11 +51,10 @@ export const CreateOrganization: FC = () => {
     });
 
     const slug = useWatch({ control, name: 'slug', defaultValue: '' });
-    const { exists: slugExists } = useIsOrganizationExists(slug);
-    const slugIsValid = slugExists === undefined ? undefined : !slugExists;
+    const { isValid: slugIsValid } = useIsOrganizationExists({ slug });
 
     const onSubmit = async (data: FormData) => {
-        if (slugExists === true) {
+        if (slugIsValid === false) {
             toast.error('Organization slug is already taken');
             return;
         }
@@ -95,11 +94,7 @@ export const CreateOrganization: FC = () => {
                                 {...field}
                                 placeholder="Unique organization slug"
                                 isValid={slugIsValid}
-                                errorMessage={
-                                    slugExists === true
-                                        ? 'Organization slug is already taken'
-                                        : undefined
-                                }
+                                errorMessage="Organization slug is already taken"
                                 disabled={isDisabled}
                             />
                         )}

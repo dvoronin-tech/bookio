@@ -23,18 +23,6 @@ type SettingsTabFormProps = {
     organization: OrganizationData;
 };
 
-function getFieldExistsValidity(
-    currentValue: string,
-    originalValue: string,
-    exists: boolean | undefined,
-): boolean | undefined {
-    if (currentValue === originalValue || exists === undefined) {
-        return undefined;
-    }
-
-    return !exists;
-}
-
 const SettingsTabForm: FC<SettingsTabFormProps> = ({ bookingForm, organization }) => {
     const setBookingForm = useBookingFormConfiguratorStore((state) => state.setBookingForm);
 
@@ -67,17 +55,16 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({ bookingForm, organization }
     const originalName = (bookingForm.name ?? '').trim();
     const originalSlug = (bookingForm.slug ?? '').trim();
 
-    const { exists: nameExists } = useIsBookingFormExists({
+    const { isValid: nameIsValid } = useIsBookingFormExists({
         organizationId: organization.id,
         name: trimmedName,
+        unchangedValue: originalName,
     });
-    const { exists: slugExists } = useIsBookingFormExists({
+    const { isValid: slugIsValid } = useIsBookingFormExists({
         organizationId: organization.id,
         slug: trimmedSlug,
+        unchangedValue: originalSlug,
     });
-
-    const nameIsValid = getFieldExistsValidity(trimmedName, originalName, nameExists);
-    const slugIsValid = getFieldExistsValidity(trimmedSlug, originalSlug, slugExists);
 
     return (
         <div className={styles.settingsTab}>
@@ -86,9 +73,7 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({ bookingForm, organization }
                 className={styles.input}
                 {...register('name')}
                 isValid={nameIsValid}
-                errorMessage={
-                    nameExists === true ? 'Booking form with this name already exists' : undefined
-                }
+                errorMessage="Booking form with this name already exists"
             />
             <Input
                 label="Description"
@@ -101,9 +86,7 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({ bookingForm, organization }
                 className={styles.input}
                 {...register('slug')}
                 isValid={slugIsValid}
-                errorMessage={
-                    slugExists === true ? 'Booking form with this slug already exists' : undefined
-                }
+                errorMessage="Booking form with this slug already exists"
             />
             <BookingFormUrlPreview
                 formSlug={trimmedSlug || originalSlug}

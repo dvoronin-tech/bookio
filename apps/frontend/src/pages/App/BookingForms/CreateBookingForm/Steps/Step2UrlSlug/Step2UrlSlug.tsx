@@ -30,27 +30,21 @@ export const Step2UrlSlug: FC = () => {
         trimmedSlug.length > 0 ? step2Schema.safeParse({ slug: trimmedSlug }) : null;
     const isFormatValid = formatResult?.success === true;
 
-    const { exists: slugExists } = useIsBookingFormExists({
+    const { isValid: slugExistsIsValid } = useIsBookingFormExists({
         organizationId,
         slug: isFormatValid ? trimmedSlug : '',
     });
 
     const slugIsValid =
-        trimmedSlug.length === 0
-            ? undefined
-            : !isFormatValid
-              ? false
-              : slugExists === undefined
-                ? undefined
-                : !slugExists;
+        trimmedSlug.length === 0 ? undefined : !isFormatValid ? false : slugExistsIsValid;
 
     const slugErrorMessage =
         slugIsValid !== false
             ? undefined
-            : ((formatResult && !formatResult.success
-                  ? formatResult.error.issues[0]?.message
-                  : undefined) ??
-              (slugExists === true ? 'Booking form with this slug already exists' : undefined));
+            : !isFormatValid
+              ? (formatResult?.error.issues[0]?.message ??
+                'Invalid slug')
+              : 'Booking form with this slug already exists';
 
     const organizationSlug = organization?.slug ?? 'your-org';
     const previewSlug = trimmedSlug || 'your-form';
@@ -65,17 +59,17 @@ export const Step2UrlSlug: FC = () => {
             return toast.error(parsed.error.issues[0]?.message ?? 'Invalid slug');
         }
 
-        if (slugExists === true) {
+        if (slugExistsIsValid === false) {
             return toast.error('Booking form with this slug already exists');
         }
 
-        if (slugExists === undefined && trimmedSlug.length > 0) {
+        if (slugExistsIsValid === undefined && trimmedSlug.length > 0) {
             return toast.error('Please wait until the slug availability check finishes');
         }
 
         setField('slug', trimmedSlug);
         goToNextStep();
-    }, [trimmedSlug, slugExists, setField, goToNextStep]);
+    }, [trimmedSlug, slugExistsIsValid, setField, goToNextStep]);
 
     return (
         <BookingFormConfiguratorLayout
