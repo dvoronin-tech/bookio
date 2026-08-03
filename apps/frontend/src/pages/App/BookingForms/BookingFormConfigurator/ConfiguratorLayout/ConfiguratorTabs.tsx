@@ -1,6 +1,6 @@
 import type { FC, ReactNode } from 'react';
 import { memo } from 'react';
-import { Tabs } from '@bookio/ui';
+import Tabs from '#components/Tabs/Tabs';
 
 import type { ConfiguratorTabValue } from '../configuratorTabs';
 

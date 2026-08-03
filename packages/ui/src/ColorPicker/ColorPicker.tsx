@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import {
     autoUpdate,
     flip,
@@ -161,17 +162,13 @@ function ColorPicker({
     const hueColor = hueToCss(hsv.h);
     const previewHex = hsvToHex(hsv.h, hsv.s, hsv.v);
 
-    const rootClasses = [styles.root, !showValue && styles.rootCompact, className]
-        .filter(Boolean)
-        .join(' ');
-    const triggerClasses = [
+    const rootClasses = clsx(styles.root, !showValue && styles.rootCompact, className);
+    const triggerClasses = clsx(
         styles.trigger,
         !showValue && styles.triggerCompact,
         open && styles.triggerOpen,
         disabled && styles.triggerDisabled,
-    ]
-        .filter(Boolean)
-        .join(' ');
+    );
 
     const svStyle = {
         backgroundColor: hueColor,

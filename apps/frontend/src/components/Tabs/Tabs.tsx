@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import {
     createContext,
     memo,
@@ -34,7 +35,7 @@ export type TabsProps = {
 };
 
 function TabsRoot({ value, onValueChange, children, className }: TabsProps) {
-    const classes = [styles.root, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.root, className);
 
     return (
         <TabsContext.Provider value={{ value, onValueChange }}>
@@ -55,9 +56,7 @@ function TabsItem({ value, children, className, disabled, onClick, ...props }: T
     const { value: selectedValue, onValueChange } = useTabsContext();
     const selected = selectedValue === value;
 
-    const classes = [styles.item, selected && styles.itemSelected, className]
-        .filter(Boolean)
-        .join(' ');
+    const classes = clsx(styles.item, selected && styles.itemSelected, className);
 
     const handleClick = useCallback(
         (event: MouseEvent<HTMLButtonElement>) => {
@@ -89,7 +88,7 @@ export type TabsIconProps = {
 };
 
 function TabsIcon({ children, className }: TabsIconProps) {
-    const classes = [styles.icon, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.icon, className);
 
     return (
         <span className={classes} aria-hidden>
@@ -104,7 +103,7 @@ export type TabsContentProps = {
 };
 
 function TabsContent({ children, className }: TabsContentProps) {
-    const classes = [styles.content, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.content, className);
 
     return <span className={classes}>{children}</span>;
 }

@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { memo, type ComponentProps } from 'react';
 import { Link } from 'react-router-dom';
 import styles from './Button.module.scss';
@@ -40,13 +41,11 @@ const VARIANT_CLASS: Record<Exclude<ButtonVariant, 'plain'>, string> = {
 };
 
 function getClasses(variant: ButtonVariant, className?: string) {
-    return [
+    return clsx(
         styles.button,
-        variant !== 'plain' ? VARIANT_CLASS[variant] : undefined,
+        variant !== 'plain' && VARIANT_CLASS[variant],
         className,
-    ]
-        .filter(Boolean)
-        .join(' ');
+    );
 }
 
 function Button(props: ButtonProps) {

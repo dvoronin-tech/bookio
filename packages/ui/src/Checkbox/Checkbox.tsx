@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { memo, useId, type ComponentProps, type ReactNode } from 'react';
 import { CheckIcon } from './icons/CheckIcon.js';
 import styles from './Checkbox.module.scss';
@@ -10,7 +11,7 @@ export type CheckboxProps = {
 function Checkbox({ label, className, id, ...inputProps }: CheckboxProps) {
     const generatedId = useId();
     const inputId = id ?? generatedId;
-    const classes = [styles.checkbox, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.checkbox, className);
 
     return (
         <label className={classes} htmlFor={inputId}>
