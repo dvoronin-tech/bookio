@@ -92,10 +92,15 @@
 }
 
 .simpleOutlined {
-    @include outlined-variant(var(--color-text-main), var(--color-text-main));
+    @include variant-base;
+    background-color: transparent;
+    border-color: var(--color-border);
+    color: var(--color-text-secondary);
 
     &:hover:not(:disabled) {
-        background-color: color-mix(in srgb, var(--color-text-main) 8%, transparent);
+        background-color: color-mix(in srgb, var(--color-text-main) 6%, transparent);
+        border-color: color-mix(in srgb, var(--color-text-main) 20%, var(--color-border));
+        color: var(--color-text-main);
     }
 }
 

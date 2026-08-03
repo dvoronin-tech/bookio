@@ -63,7 +63,7 @@
 
 .input {
     width: 100%;
-    padding: 1.2rem 1.6rem;
+    padding: 1rem 1.2rem;
     border-radius: 0.8rem;
     font-size: 1.6rem;
     font-family: var(--font-family);
@@ -92,6 +92,16 @@
     &:disabled {
         opacity: 0.5;
         cursor: not-allowed;
+    }
+
+    &[type='number'] {
+        -moz-appearance: textfield;
+
+        &::-webkit-inner-spin-button,
+        &::-webkit-outer-spin-button {
+            -webkit-appearance: none;
+            margin: 0;
+        }
     }
 }
 

@@ -1,16 +1,17 @@
-import { type FC } from 'react';
+import { type FC, useCallback } from 'react';
 import styles from './ConnectOrganization.module.scss';
 import { Button, Input } from '@bookio/ui';
 import {
     useConnectToOrganization,
     type ConnectToOrganizationRequest,
-} from '@api/organizations/connectToOrganization';
+} from '#api/organizations/connectToOrganization';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getFirstFieldError } from '@utils/formErrors';
+import { getFirstFieldError } from '#utils/formErrors';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 
 const formSchema = z.object({
     slug: z.string().min(1).max(255),
@@ -32,17 +33,25 @@ export const ConnectOrganization: FC = () => {
         defaultValues: { slug: '', password: '' },
     });
 
-    const onSubmit = async (data: FormData) => {
+    const onSubmit = useCallback(async (data: FormData) => {
         await toast.promise(mutateAsync(data), {
             loading: 'Connecting to organization...',
             success: 'Connected to organization successfully',
             error: (error: Error) => error.message,
         });
-    };
+    }, [mutateAsync]);
 
-    const onInvalid = (errors: FieldErrors<FormData>) => {
+    const onInvalid = useCallback((errors: FieldErrors<FormData>) => {
         toast.error(getFirstFieldError(errors) ?? 'Invalid form data');
-    };
+    }, []);
+
+    const handleSubmitForm = useCallback(() => {
+        handleSubmit(onSubmit, onInvalid)();
+    }, [handleSubmit, onSubmit, onInvalid]);
+
+    const handleClose = useCallback(() => {
+        navigate(-1);
+    }, [navigate]);
 
     if (isSuccess) {
         navigate('/organizations/list', { replace: true });
@@ -51,31 +60,39 @@ export const ConnectOrganization: FC = () => {
     const isDisabled = isPending || isSubmitting;
 
     return (
-        <div className={styles.connectOrganization}>
-            <form className={styles.form} onSubmit={handleSubmit(onSubmit, onInvalid)}>
-                <h2 className={styles.title}>Lets connect to organization</h2>
-                <div className={styles.formGroup}>
-                    <Input
-                        placeholder="Organization slug"
+        <FormWizardLayout
+            stepNumber={1}
+            title="Let's connect to an organization"
+            description="Enter the organization slug and password you received from the organization owner."
+            onEnterComplete={isDisabled ? undefined : handleSubmitForm}
+            footer={
+                <div className={styles.footerActions}>
+                    <Button
+                        type="button"
+                        variant="primary-filled"
+                        onClick={handleSubmitForm}
                         disabled={isDisabled}
-                        {...register('slug')}
-                    />
-                    <Input
-                        type="password"
-                        placeholder="Organization password"
-                        disabled={isDisabled}
-                        {...register('password')}
-                    />
+                    >
+                        Connect to Organization
+                    </Button>
+                    <Button type="button" variant="simple-clean" onClick={handleClose}>
+                        Close
+                    </Button>
                 </div>
-                <Button
-                    className={styles.button}
-                    variant="primary-filled"
-                    type="submit"
-                    disabled={isDisabled}
-                >
-                    Connect to Organization
-                </Button>
-            </form>
-        </div>
+            }
+        >
+            <Input
+                placeholder="Organization slug"
+                disabled={isDisabled}
+                autoFocus
+                {...register('slug')}
+            />
+            <Input
+                type="password"
+                placeholder="Organization password"
+                disabled={isDisabled}
+                {...register('password')}
+            />
+        </FormWizardLayout>
     );
 };

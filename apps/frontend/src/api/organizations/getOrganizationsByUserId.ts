@@ -1,7 +1,7 @@
-import { useSession } from '@api/auth';
-import hono from '@lib/hono-client';
+import { useSession } from '#api/auth';
+import hono from '#lib/hono-client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import { validateError } from '@utils/validateError';
+import { validateError } from '#utils/validateError';
 import type { InferResponseType } from 'hono/client';
 
 export type OrganizationsResponse200 = InferResponseType<typeof hono.organizations.$get, 200>;

@@ -1,0 +1,3 @@
+ALTER TABLE "booking_form_fields" ADD COLUMN "params" jsonb DEFAULT '{}'::jsonb NOT NULL;--> statement-breakpoint
+CREATE UNIQUE INDEX "booking_form_fields_booking_form_id_key_unique" ON "booking_form_fields" USING btree ("booking_form_id","key");--> statement-breakpoint
+CREATE INDEX "booking_form_fields_form_parent_order_idx" ON "booking_form_fields" USING btree ("booking_form_id","parent_id","order");

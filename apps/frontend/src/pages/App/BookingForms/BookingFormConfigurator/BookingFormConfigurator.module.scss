@@ -2,13 +2,8 @@
     display: flex;
     gap: 3rem;
     justify-content: space-between;
-    height: 100%;
-}
-
-.configuratorContainer {
-    flex: 1 1;
-    height: 100%;
-    background-color: var(--color-bg-ui);
+    flex: 1;
+    min-height: 0;
 }
 
 .configuratorPreview {

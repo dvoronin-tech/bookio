@@ -1,8 +1,8 @@
-import hono from '@lib/hono-client';
-import { validateError } from '@utils/validateError';
+import hono from '#lib/hono-client';
+import { validateError } from '#utils/validateError';
 import type { InferResponseType } from 'hono/client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import { useSession } from '@api/auth';
+import { useSession } from '#api/auth';
 
 const getBookingFormClient = hono['booking-forms']['get-one'];
 

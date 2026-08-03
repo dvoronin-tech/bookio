@@ -74,9 +74,14 @@ svg {
     path {
         fill: currentColor;
     }
+
+    path[fill='none'] {
+        fill: none;
+    }
 }
 
 html {
+    overflow: hidden;
     font-size: 10px;
     -webkit-text-size-adjust: 100%;
     background-color: var(--color-bg-main);
@@ -176,8 +181,8 @@ p {
     --color-text-secondary: #d9d2d2;
 
     --color-border: #544d4d;
-    --color-system-red: #cc2b0e;
-    --color-system-green: #1ecc0e;
+    --color-system-red: #cf3116;
+    --color-system-green: #167b0d;
     --color-system-blue: #0e6ecc;
 }
 

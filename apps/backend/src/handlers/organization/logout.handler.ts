@@ -1,18 +1,12 @@
 import { createFactory } from 'hono/factory';
 import { zValidator } from '@hono/zod-validator';
-import { z } from 'zod';
 import { db } from '@/db.js';
 import { and, eq } from 'drizzle-orm';
 import { members, organizations } from '@bookio/db';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
+import { logoutOrganizationSchema } from '@/schemas/organization/logout.schema.js';
 
 const factory = createFactory().createHandlers;
-
-const logoutOrganizationSchema = z.object({
-    userId: z.string(),
-    organizationId: z.string(),
-    organizationPassword: z.string().optional()
-});
 
 export const logoutOrganizationHandler = factory(
     zValidator('json', logoutOrganizationSchema),
@@ -29,7 +23,10 @@ export const logoutOrganizationHandler = factory(
         }
 
         if (member.role === 'owner') {
-            const [organization] = await db.select().from(organizations).where(eq(organizations.id, organizationId));
+            const [organization] = await db
+                .select()
+                .from(organizations)
+                .where(eq(organizations.id, organizationId));
             if (!organization) {
                 return c.json(prepareError('Organization not found'), 404);
             }
@@ -38,7 +35,10 @@ export const logoutOrganizationHandler = factory(
                 return c.json(prepareError('Invalid organization password'), 401);
             }
 
-            const [deletedOrganization] = await db.delete(organizations).where(eq(organizations.id, organizationId)).returning();
+            const [deletedOrganization] = await db
+                .delete(organizations)
+                .where(eq(organizations.id, organizationId))
+                .returning();
 
             if (deletedOrganization) {
                 return c.json(prepareSuccess('Organization deleted successfully'));

@@ -1,9 +1,9 @@
-import hono from '@lib/hono-client';
+import hono from '#lib/hono-client';
 import type { InferRequestType, InferResponseType } from 'hono/client';
 import { useMutation } from '@tanstack/react-query';
-import { useSession } from '@api/auth';
-import { queryClient } from '@lib/query-client';
-import { validateError } from '@utils/validateError';
+import { useSession } from '#api/auth';
+import { queryClient } from '#lib/query-client';
+import { validateError } from '#utils/validateError';
 
 export type ConnectToOrganizationRequest = InferRequestType<
     typeof hono.organizations.connect.$put

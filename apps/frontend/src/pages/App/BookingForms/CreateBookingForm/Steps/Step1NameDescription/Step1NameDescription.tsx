@@ -1,10 +1,10 @@
 import { useCallback, type ChangeEvent, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, Input } from '@bookio/ui';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
-import { useIsBookingFormExists } from '@api/bookingForms/isBookingFormExists';
-import { useCreateBookingFormStore } from '@store/useCreateBookingFormStore';
-import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
+import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
 import styles from './Step1NameDescription.module.scss';
@@ -23,11 +23,10 @@ export const Step1NameDescription: FC = () => {
             })),
         );
 
-    const { exists: nameExists } = useIsBookingFormExists({
+    const { isValid: nameIsValid } = useIsBookingFormExists({
         organizationId,
         name: name.trim(),
     });
-    const nameIsValid = nameExists === undefined ? undefined : !nameExists;
 
     const handleNameChange = (event: ChangeEvent<HTMLInputElement>) => {
         setField('name', event.target.value);
@@ -46,11 +45,13 @@ export const Step1NameDescription: FC = () => {
     const handleClose = useCallback(() => {
         navigate(-1);
     }, [navigate]);
+
     return (
-        <BookingFormConfiguratorLayout
+        <FormWizardLayout
             stepNumber={1}
             title="Enter name and description of booking form"
             description="The name must be unique within your organization. The description should explain the purpose of this booking form."
+            onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
                     <Button type="button" variant="primary-filled" onClick={handleClickNext}>
@@ -67,15 +68,14 @@ export const Step1NameDescription: FC = () => {
                 onChange={handleNameChange}
                 placeholder="Name*"
                 isValid={nameIsValid}
-                errorMessage={
-                    nameExists === true ? 'Booking form with this name already exists' : undefined
-                }
+                errorMessage={'Booking form with this name already exists'}
+                autoFocus
             />
             <Input
                 value={description}
                 onChange={handleDescriptionChange}
                 placeholder="Description"
             />
-        </BookingFormConfiguratorLayout>
+        </FormWizardLayout>
     );
 };

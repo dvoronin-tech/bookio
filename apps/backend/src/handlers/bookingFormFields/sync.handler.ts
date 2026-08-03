@@ -1,0 +1,192 @@
+import { createFactory } from 'hono/factory';
+import { zValidator } from '@hono/zod-validator';
+import { db } from '@/db.js';
+import { bookingFormFields, type BookingFormFieldSelect } from '@bookio/db';
+import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
+import { eq, inArray } from 'drizzle-orm';
+import {
+    type SyncBookingFormFieldItem,
+    syncBookingFormFieldsSchema,
+} from '@/schemas/bookingFormFields/sync.schema.js';
+import type { ContentfulStatusCode } from 'hono/utils/http-status';
+
+const factory = createFactory().createHandlers;
+
+const sortFieldsForUpsert = (fields: SyncBookingFormFieldItem[]) =>
+    [...fields].sort((a, b) => {
+        if (a.parentId === null && b.parentId !== null) return -1;
+        if (a.parentId !== null && b.parentId === null) return 1;
+        return 0;
+    });
+
+const resolveParentField = (
+    parentId: string,
+    fields: SyncBookingFormFieldItem[],
+    existingById: Map<string, { id: string; type: string }>,
+) => {
+    const parentInPayload = fields.find((field) => field.id === parentId);
+    if (parentInPayload) {
+        return parentInPayload;
+    }
+
+    return existingById.get(parentId);
+};
+
+export const syncBookingFormFieldsHandler = factory(
+    zValidator('json', syncBookingFormFieldsSchema),
+    async (c) => {
+        try {
+            const { bookingFormId, fields } = c.req.valid('json');
+            const existingFields = await db.query.bookingFormFields.findMany({
+                where: (field, { eq }) => eq(field.bookingFormId, bookingFormId),
+            });
+            const existingById = new Map(existingFields.map((field) => [field.id, field]));
+
+            const incomingIds = fields.flatMap((field) => (field.id ? [field.id] : []));
+
+            checkBookingFormExists(bookingFormId);
+            checkFieldsRelatedToBookingForm(incomingIds, bookingFormId);
+            checkFieldHasValidParentField(fields, existingById);
+
+            const incomingIdSet = new Set(incomingIds);
+            const fieldIdsToDelete = existingFields
+                .filter((field) => !incomingIdSet.has(field.id))
+                .map((field) => field.id);
+
+            await db.transaction(async (tx) => {
+                if (fieldIdsToDelete.length > 0) {
+                    await tx
+                        .delete(bookingFormFields)
+                        .where(inArray(bookingFormFields.id, fieldIdsToDelete));
+                }
+
+                for (const field of sortFieldsForUpsert(fields)) {
+                    const parentId = field.type === 'group' ? null : field.parentId;
+                    const fieldValues = {
+                        bookingFormId,
+                        id: field.id,
+                        name: field.name,
+                        type: field.type,
+                        required: field.type === 'group' ? false : field.required,
+                        key: field.key,
+                        order: field.order,
+                        parentId,
+                        params: field.params,
+                    };
+
+                    const existingField = field.id ? existingById.get(field.id) : undefined;
+
+                    if (existingField) {
+                        const [updatedField] = await tx
+                            .update(bookingFormFields)
+                            .set(fieldValues)
+                            .where(eq(bookingFormFields.id, field.id!))
+                            .returning();
+
+                        if (!updatedField) {
+                            throw new Error(
+                                `Failed to update booking form field with name ${field.name}`,
+                            );
+                        }
+
+                        continue;
+                    }
+
+                    const [createdField] = await tx
+                        .insert(bookingFormFields)
+                        .values(fieldValues)
+                        .returning();
+
+                    if (!createdField) {
+                        throw new Error('Failed to create booking form field');
+                    }
+                }
+            });
+
+            const syncedFields = await db.query.bookingFormFields.findMany({
+                where: (field, { eq, and, isNull }) =>
+                    and(eq(field.bookingFormId, bookingFormId), isNull(field.parentId)),
+                with: {
+                    childFields: true,
+                },
+                orderBy: (field, { asc }) => [asc(field.order)],
+            });
+
+            return c.json(prepareSuccess(syncedFields));
+        } catch (error) {
+            if (error instanceof SyncFieldsError) {
+                return c.json(error.getError(), error.getStatusCode());
+            }
+
+            return c.json(prepareError('Failed to sync booking form fields'), 500);
+        }
+    },
+);
+
+class SyncFieldsError {
+    constructor(
+        private error: ReturnType<typeof prepareError>,
+        private status: ContentfulStatusCode,
+    ) {}
+
+    getErrorMessage() {
+        return this.error;
+    }
+
+    getStatusCode() {
+        return this.status;
+    }
+
+    getError() {
+        return { error: this.error, status: this.status };
+    }
+}
+
+const checkBookingFormExists = async (bookingFormId: string) => {
+    const bookingForm = await db.query.bookingForms.findFirst({
+        where: (forms, { eq }) => eq(forms.id, bookingFormId),
+        columns: { id: true },
+    });
+
+    if (!bookingForm) {
+        throw new SyncFieldsError(prepareError('Booking form not found'), 404);
+    }
+};
+
+const checkFieldsRelatedToBookingForm = async (incomingIds: string[], bookingFormId: string) => {
+    if (incomingIds.length > 0) {
+        const fieldsWithIncomingIds = await db.query.bookingFormFields.findMany({
+            where: (field, { inArray }) => inArray(field.id, incomingIds),
+        });
+
+        for (const field of fieldsWithIncomingIds) {
+            if (field.bookingFormId !== bookingFormId) {
+                throw new SyncFieldsError(
+                    prepareError('Field belongs to a different booking form'),
+                    400,
+                );
+            }
+        }
+    }
+};
+
+const checkFieldHasValidParentField = async (
+    fields: SyncBookingFormFieldItem[],
+    existingById: Map<string, BookingFormFieldSelect>,
+) => {
+    for (const field of fields) {
+        if (field.type === 'group' || field.parentId === null) {
+            continue;
+        }
+
+        const parentField = resolveParentField(field.parentId, fields, existingById);
+
+        if (!parentField) {
+            throw new SyncFieldsError(prepareError('Parent field not found'), 404);
+        }
+
+        if (parentField.type !== 'group') {
+            throw new SyncFieldsError(prepareError('Parent field must be of type group'), 400);
+        }
+    }
+};

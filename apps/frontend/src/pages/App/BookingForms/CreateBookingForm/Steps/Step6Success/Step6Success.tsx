@@ -2,11 +2,11 @@ import { useCallback, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useShallow } from 'zustand/shallow';
 import { Button } from '@bookio/ui';
-import { useCreateBookingFormStore } from '@store/useCreateBookingFormStore';
-import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import styles from './Step6Success.module.scss';
 
-import DoneIcon from '@assets/icons/done.svg?react';
+import DoneIcon from '#assets/icons/done.svg?react';
 
 export const Step6Success: FC = () => {
     const navigate = useNavigate();
@@ -30,7 +30,7 @@ export const Step6Success: FC = () => {
     }, [navigate, organizationId]);
 
     return (
-        <BookingFormConfiguratorLayout
+        <FormWizardLayout
             stepNumber={6}
             title="Booking form created"
             description="Your booking form is ready. Continue to the configurator to set it up, or finish and return to the list."
@@ -53,6 +53,6 @@ export const Step6Success: FC = () => {
             <div className={styles.content}>
                 <DoneIcon className={styles.doneIcon} aria-hidden />
             </div>
-        </BookingFormConfiguratorLayout>
+        </FormWizardLayout>
     );
 };

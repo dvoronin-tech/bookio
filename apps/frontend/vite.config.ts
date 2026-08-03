@@ -10,18 +10,25 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 export default defineConfig({
     plugins: [react(), svgr()],
     resolve: {
-        alias: {
-            '@assets': path.resolve(__dirname, 'src/assets'),
-            '@hooks': path.resolve(__dirname, 'src/hooks'),
-            '@layouts': path.resolve(__dirname, 'src/layouts'),
-            '@lib': path.resolve(__dirname, 'src/lib'),
-            '@pages': path.resolve(__dirname, 'src/pages'),
-            '@components': path.resolve(__dirname, 'src/components'),
-            '@utils': path.resolve(__dirname, 'src/utils'),
-            '@api': path.resolve(__dirname, 'src/api'),
-            '@store': path.resolve(__dirname, 'src/store'),
-            '@bookio/backend': path.resolve(__dirname, '../backend/src/routes/index.ts'),
-        },
+        alias: [
+            {
+                find: '@bookio/backend/schemas',
+                replacement: path.resolve(__dirname, '../backend/src/schemas/index.ts'),
+            },
+            {
+                find: '@bookio/backend',
+                replacement: path.resolve(__dirname, '../backend/src/routes/index.ts'),
+            },
+            { find: '#assets', replacement: path.resolve(__dirname, 'src/assets') },
+            { find: '#hooks', replacement: path.resolve(__dirname, 'src/hooks') },
+            { find: '#layouts', replacement: path.resolve(__dirname, 'src/layouts') },
+            { find: '#lib', replacement: path.resolve(__dirname, 'src/lib') },
+            { find: '#pages', replacement: path.resolve(__dirname, 'src/pages') },
+            { find: '#components', replacement: path.resolve(__dirname, 'src/components') },
+            { find: '#utils', replacement: path.resolve(__dirname, 'src/utils') },
+            { find: '#api', replacement: path.resolve(__dirname, 'src/api') },
+            { find: '#store', replacement: path.resolve(__dirname, 'src/store') },
+        ],
     },
     build: {
         rollupOptions: {

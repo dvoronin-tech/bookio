@@ -12,6 +12,10 @@
         ".": {
             "types": "./src/routes/index.ts",
             "default": "./src/routes/index.ts"
+        },
+        "./schemas": {
+            "types": "./src/schemas/index.ts",
+            "default": "./src/schemas/index.ts"
         }
     },
     "dependencies": {

@@ -10,3 +10,18 @@ export function getFirstFieldError(errors: FieldErrors): string | undefined {
         if (nested) return nested;
     }
 }
+
+export function getFieldErrors(errors: FieldErrors): string[] {
+    const result: string[] = [];
+
+    for (const error of Object.values(errors)) {
+        if (!error) continue;
+        if ('message' in error && typeof error.message === 'string') {
+            result.push(error.message);
+            continue;
+        }
+        result.push(...getFieldErrors(error as FieldErrors));
+    }
+
+    return result;
+}

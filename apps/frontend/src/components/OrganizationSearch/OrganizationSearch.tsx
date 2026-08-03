@@ -1,20 +1,20 @@
 import type { FC } from 'react';
 import styles from './OrganizationSearch.module.scss';
 import { Input } from '@bookio/ui';
-import { useOrganizationListStore } from '@store/useOrganizationListStore';
+import { useOrganizationListStore } from '#store/useOrganizationListStore';
 import { useShallow } from 'zustand/shallow';
-import { useOnPress } from '@hooks/useOnPress';
+import { useOnPress } from '#hooks/useOnPress';
 import { useCallback, useRef, useState } from 'react';
 import { clsx } from 'clsx';
-import { useOutsideClick } from '@hooks/useOutsideClick';
+import { useOutsideClick } from '#hooks/useOutsideClick';
 import {
     useGetOrganizationsByUserId,
     type OrganizationsType,
-} from '@api/organizations/getOrganizationsByUserId';
-import { OrganizationItem } from '@components/OrganizationItem/OrganizationItem';
+} from '#api/organizations/getOrganizationsByUserId';
+import { OrganizationItem } from '#components/OrganizationItem/OrganizationItem';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
-import SearchIcon from '@assets/icons/search.svg?react';
+import SearchIcon from '#assets/icons/search.svg?react';
 
 const createTrigrams = (value: string) => {
     return value

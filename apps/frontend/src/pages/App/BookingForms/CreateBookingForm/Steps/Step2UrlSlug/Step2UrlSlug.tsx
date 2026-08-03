@@ -1,12 +1,12 @@
 import { useCallback, type ChangeEvent, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button } from '@bookio/ui';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
-import { useIsBookingFormExists } from '@api/bookingForms/isBookingFormExists';
-import { useGetOrganization } from '@api/organizations/getOrganizationData';
-import { useCreateBookingFormStore } from '@store/useCreateBookingFormStore';
-import { BOOKING_FORM_URL } from '@utils/constants';
-import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
+import { BookingFormUrlPreview } from '#components/BookingFormUrlPreview/BookingFormUrlPreview';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
+import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
+import { useGetOrganization } from '#api/organizations/getOrganizationData';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { step2Schema } from '../../schemas/createBookingFormDraft.schema';
 import toast from 'react-hot-toast';
 import styles from './Step2UrlSlug.module.scss';
@@ -30,27 +30,21 @@ export const Step2UrlSlug: FC = () => {
         trimmedSlug.length > 0 ? step2Schema.safeParse({ slug: trimmedSlug }) : null;
     const isFormatValid = formatResult?.success === true;
 
-    const { exists: slugExists } = useIsBookingFormExists({
+    const { isValid: slugExistsIsValid } = useIsBookingFormExists({
         organizationId,
         slug: isFormatValid ? trimmedSlug : '',
     });
 
     const slugIsValid =
-        trimmedSlug.length === 0
-            ? undefined
-            : !isFormatValid
-              ? false
-              : slugExists === undefined
-                ? undefined
-                : !slugExists;
+        trimmedSlug.length === 0 ? undefined : !isFormatValid ? false : slugExistsIsValid;
 
     const slugErrorMessage =
         slugIsValid !== false
             ? undefined
-            : ((formatResult && !formatResult.success
-                  ? formatResult.error.issues[0]?.message
-                  : undefined) ??
-              (slugExists === true ? 'Booking form with this slug already exists' : undefined));
+            : !isFormatValid
+              ? (formatResult?.error.issues[0]?.message ??
+                'Invalid slug')
+              : 'Booking form with this slug already exists';
 
     const organizationSlug = organization?.slug ?? 'your-org';
     const previewSlug = trimmedSlug || 'your-form';
@@ -65,23 +59,24 @@ export const Step2UrlSlug: FC = () => {
             return toast.error(parsed.error.issues[0]?.message ?? 'Invalid slug');
         }
 
-        if (slugExists === true) {
+        if (slugExistsIsValid === false) {
             return toast.error('Booking form with this slug already exists');
         }
 
-        if (slugExists === undefined && trimmedSlug.length > 0) {
+        if (slugExistsIsValid === undefined && trimmedSlug.length > 0) {
             return toast.error('Please wait until the slug availability check finishes');
         }
 
         setField('slug', trimmedSlug);
         goToNextStep();
-    }, [trimmedSlug, slugExists, setField, goToNextStep]);
+    }, [trimmedSlug, slugExistsIsValid, setField, goToNextStep]);
 
     return (
-        <BookingFormConfiguratorLayout
+        <FormWizardLayout
             stepNumber={2}
             title="Choose a unique URL slug"
             description="This slug becomes part of the public booking form link together with your organization slug. Clients will open this URL to book — keep it short and unique within your organization."
+            onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
                     <Button type="button" variant="primary-filled" onClick={handleClickNext}>
@@ -99,14 +94,12 @@ export const Step2UrlSlug: FC = () => {
                 placeholder="Slug*"
                 isValid={slugIsValid}
                 errorMessage={slugErrorMessage}
+                autoFocus
             />
-            <div className={styles.urlPreview}>
-                <span className={styles.urlPreviewLabel}>Public form URL</span>
-                <span className={styles.urlPreviewValue}>
-                    {BOOKING_FORM_URL}/{organizationSlug}/
-                    <span className={styles.urlPreviewSlug}>{previewSlug}</span>
-                </span>
-            </div>
-        </BookingFormConfiguratorLayout>
+            <BookingFormUrlPreview
+                organizationSlug={organizationSlug}
+                formSlug={previewSlug}
+            />
+        </FormWizardLayout>
     );
 };

@@ -1,7 +1,7 @@
 import { type FC, useEffect, Suspense } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
-import { useSession } from '@api/auth';
-import { PageLoader } from '@components/PageLoader/PageLoader';
+import { useSession } from '#api/auth';
+import { PageLoader } from '#components/PageLoader/PageLoader';
 import styles from './AuthLayout.module.scss';
 
 export const AuthLayout: FC = () => {

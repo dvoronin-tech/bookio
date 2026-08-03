@@ -1,7 +1,7 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
-import { lazyRoute } from '@lib/lazy-route';
-import { MainLayout } from '@layouts/MainLayout/MainLayout';
-import { PageLoader } from '@components/PageLoader/PageLoader';
+import { lazyRoute } from '#lib/lazy-route';
+import { MainLayout } from '#layouts/MainLayout/MainLayout';
+import { PageLoader } from '#components/PageLoader/PageLoader';
 
 export const router = createBrowserRouter([
     {
@@ -9,7 +9,7 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/auth',
-                lazy: lazyRoute(() => import('@layouts/AuthLayout/AuthLayout'), 'AuthLayout'),
+                lazy: lazyRoute(() => import('#layouts/AuthLayout/AuthLayout'), 'AuthLayout'),
                 children: [
                     {
                         index: true,
@@ -17,11 +17,11 @@ export const router = createBrowserRouter([
                     },
                     {
                         path: 'sign-up',
-                        lazy: lazyRoute(() => import('@pages/Auth/SignUp/SignUp'), 'SignUp'),
+                        lazy: lazyRoute(() => import('#pages/Auth/SignUp/SignUp'), 'SignUp'),
                     },
                     {
                         path: 'sign-in',
-                        lazy: lazyRoute(() => import('@pages/Auth/SignIn/SignIn'), 'SignIn'),
+                        lazy: lazyRoute(() => import('#pages/Auth/SignIn/SignIn'), 'SignIn'),
                     },
                 ],
             },
@@ -32,7 +32,7 @@ export const router = createBrowserRouter([
                     {
                         path: 'organizations',
                         lazy: lazyRoute(
-                            () => import('@layouts/OrganizationLayout/OrganizationLayout'),
+                            () => import('#layouts/OrganizationLayout/OrganizationLayout'),
                             'OrganizationLayout',
                         ),
                         children: [
@@ -44,7 +44,7 @@ export const router = createBrowserRouter([
                                 path: 'list',
                                 lazy: lazyRoute(
                                     () =>
-                                        import('@pages/Organization/OrganizationList/OrganizationList'),
+                                        import('#pages/Organization/OrganizationList/OrganizationList'),
                                     'OrganizationList',
                                 ),
                             },
@@ -52,7 +52,7 @@ export const router = createBrowserRouter([
                                 path: 'create',
                                 lazy: lazyRoute(
                                     () =>
-                                        import('@pages/Organization/CreateOrganization/CreateOrganization'),
+                                        import('#pages/Organization/CreateOrganization/CreateOrganization'),
                                     'CreateOrganization',
                                 ),
                             },
@@ -60,7 +60,7 @@ export const router = createBrowserRouter([
                                 path: 'connect',
                                 lazy: lazyRoute(
                                     () =>
-                                        import('@pages/Organization/ConnectOrganization/ConnectOrganization'),
+                                        import('#pages/Organization/ConnectOrganization/ConnectOrganization'),
                                     'ConnectOrganization',
                                 ),
                             },
@@ -68,7 +68,7 @@ export const router = createBrowserRouter([
                     },
                     {
                         path: ':id',
-                        lazy: lazyRoute(() => import('@layouts/AppLayout/AppLayout'), 'AppLayout'),
+                        lazy: lazyRoute(() => import('#layouts/AppLayout/AppLayout'), 'AppLayout'),
                         children: [
                             {
                                 path: 'booking-forms',
@@ -77,7 +77,7 @@ export const router = createBrowserRouter([
                                     {
                                         index: true,
                                         lazy: lazyRoute(
-                                            () => import('@pages/App/BookingForms/BookingForms'),
+                                            () => import('#pages/App/BookingForms/BookingFormsList/BookingFormsList'),
                                             'BookingForms',
                                         ),
                                     },
@@ -86,7 +86,7 @@ export const router = createBrowserRouter([
                                         lazy: lazyRoute(
                                             () =>
                                                 import(
-                                                    '@pages/App/BookingForms/CreateBookingForm/CreateBookingForm'
+                                                    '#pages/App/BookingForms/CreateBookingForm/CreateBookingForm'
                                                 ),
                                             'CreateBookingForm',
                                         ),
@@ -96,7 +96,7 @@ export const router = createBrowserRouter([
                                         lazy: lazyRoute(
                                             () =>
                                                 import(
-                                                    '@pages/App/BookingForms/BookingFormConfigurator/BookingFormConfigurator'
+                                                    '#pages/App/BookingForms/BookingFormConfigurator/BookingFormConfigurator'
                                                 ),
                                             'BookingFormConfigurator',
                                         ),

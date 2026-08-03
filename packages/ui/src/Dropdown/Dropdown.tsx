@@ -4,6 +4,7 @@ import {
     FloatingPortal,
     offset,
     shift,
+    size,
     useClick,
     useDismiss,
     useFloating,
@@ -23,6 +24,8 @@ import {
 } from 'react';
 import Button, { type ButtonAsButtonProps } from '../Button/Button.js';
 import styles from './Dropdown.module.scss';
+
+const OUTSIDE_CLICK_IGNORE_ATTR = 'data-outside-click-ignore';
 
 type DropdownContextValue = {
     open: boolean;
@@ -54,6 +57,7 @@ export type DropdownProps = {
     offset?: number;
     closeOnOutsideClick?: boolean;
     closeOnEscape?: boolean;
+    matchTriggerWidth?: boolean;
 };
 
 function DropdownRoot({
@@ -64,12 +68,28 @@ function DropdownRoot({
     offset: offsetValue = 4,
     closeOnOutsideClick = true,
     closeOnEscape = true,
+    matchTriggerWidth = false,
 }: DropdownProps) {
     const { refs, floatingStyles, context } = useFloating({
         open,
         onOpenChange,
         placement,
-        middleware: [offset(offsetValue), flip(), shift({ padding: 8 })],
+        middleware: [
+            offset(offsetValue),
+            flip(),
+            shift({ padding: 8 }),
+            ...(matchTriggerWidth
+                ? [
+                      size({
+                          apply({ rects, elements }) {
+                              Object.assign(elements.floating.style, {
+                                  width: `${rects.reference.width}px`,
+                              });
+                          },
+                      }),
+                  ]
+                : []),
+        ],
         whileElementsMounted: autoUpdate,
     });
 
@@ -96,12 +116,18 @@ function DropdownRoot({
             getFloatingProps,
             getItemProps,
         }),
-        [open, onOpenChange, refs, floatingStyles, getReferenceProps, getFloatingProps, getItemProps],
+        [
+            open,
+            onOpenChange,
+            refs,
+            floatingStyles,
+            getReferenceProps,
+            getFloatingProps,
+            getItemProps,
+        ],
     );
 
-    return (
-        <DropdownContext.Provider value={contextValue}>{children}</DropdownContext.Provider>
-    );
+    return <DropdownContext.Provider value={contextValue}>{children}</DropdownContext.Provider>;
 }
 
 export type DropdownTriggerProps = {
@@ -145,6 +171,7 @@ function DropdownContent({ children, className }: DropdownContentProps) {
                 style={floatingStyles}
                 className={classes}
                 {...getFloatingProps()}
+                {...{ [OUTSIDE_CLICK_IGNORE_ATTR]: '' }}
             >
                 {children}
             </div>
@@ -153,7 +180,7 @@ function DropdownContent({ children, className }: DropdownContentProps) {
 }
 
 export type DropdownItemProps = ButtonAsButtonProps & {
-    hoverable?: boolean;
+    autoClose?: boolean;
 };
 
 function DropdownItem({
@@ -161,25 +188,23 @@ function DropdownItem({
     className,
     variant = 'simple-clean',
     disabled = false,
-    hoverable = true,
     onClick,
+    autoClose = true,
     ...props
 }: DropdownItemProps) {
     const { onOpenChange, getItemProps } = useDropdownContext();
 
-    const classes = [styles.item, !hoverable && styles.itemNotHoverable, className]
-        .filter(Boolean)
-        .join(' ') || undefined;
+    const classes = [styles.item, className].filter(Boolean).join(' ') || undefined;
 
     const handleClick = useCallback(
         (event: MouseEvent<HTMLButtonElement>) => {
             if (disabled) return;
             onClick?.(event);
-            if (hoverable) {
+            if (autoClose) {
                 onOpenChange(false);
             }
         },
-        [disabled, hoverable, onClick, onOpenChange],
+        [disabled, onClick, onOpenChange],
     );
 
     return (

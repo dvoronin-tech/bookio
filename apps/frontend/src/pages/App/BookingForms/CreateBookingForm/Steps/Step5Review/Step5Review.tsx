@@ -1,12 +1,12 @@
 import { useCallback, useMemo, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button } from '@bookio/ui';
-import { useCreateBookingForm } from '@api/bookingForms/createBookingForm';
+import { useCreateBookingForm } from '#api/bookingForms/createBookingForm';
 import {
     useCreateBookingFormStore,
     type CreateBookingFormDraft,
-} from '@store/useCreateBookingFormStore';
-import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
+} from '#store/useCreateBookingFormStore';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import styles from './Step5Review.module.scss';
@@ -120,7 +120,7 @@ export const Step5Review: FC = () => {
     }, [createBookingForm, data, goToNextStep, setCreatedBookingFormId]);
 
     return (
-        <BookingFormConfiguratorLayout
+        <FormWizardLayout
             stepNumber={5}
             title="Review your booking form"
             description="Please confirm that all information is correct. You can go back to edit any step, or create the booking form."
@@ -184,6 +184,6 @@ export const Step5Review: FC = () => {
                     </section>
                 ))}
             </div>
-        </BookingFormConfiguratorLayout>
+        </FormWizardLayout>
     );
 };

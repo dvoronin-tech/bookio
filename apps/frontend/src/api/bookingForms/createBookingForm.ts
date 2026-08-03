@@ -1,8 +1,8 @@
-import hono from '@lib/hono-client';
-import { queryClient } from '@lib/query-client';
+import hono from '#lib/hono-client';
+import { queryClient } from '#lib/query-client';
 import { useMutation } from '@tanstack/react-query';
-import { validateError } from '@utils/validateError';
-import { trimObj } from '@utils/trimObj';
+import { validateError } from '#utils/validateError';
+import { trimObj } from '#utils/trimObj';
 import type { InferRequestType, InferResponseType } from 'hono/client';
 
 const createBookingFormClient = hono['booking-forms']['create'];

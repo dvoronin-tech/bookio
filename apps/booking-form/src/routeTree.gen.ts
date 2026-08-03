@@ -9,27 +9,52 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OrganizationSlugBookingFormSlugRouteImport } from './routes/$organizationSlug.$bookingFormSlug'
 
-export interface FileRoutesByFullPath {}
-export interface FileRoutesByTo {}
+const OrganizationSlugBookingFormSlugRoute =
+  OrganizationSlugBookingFormSlugRouteImport.update({
+    id: '/$organizationSlug/$bookingFormSlug',
+    path: '/$organizationSlug/$bookingFormSlug',
+    getParentRoute: () => rootRouteImport,
+  } as any)
+
+export interface FileRoutesByFullPath {
+  '/$organizationSlug/$bookingFormSlug': typeof OrganizationSlugBookingFormSlugRoute
+}
+export interface FileRoutesByTo {
+  '/$organizationSlug/$bookingFormSlug': typeof OrganizationSlugBookingFormSlugRoute
+}
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/$organizationSlug/$bookingFormSlug': typeof OrganizationSlugBookingFormSlugRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: never
+  fullPaths: '/$organizationSlug/$bookingFormSlug'
   fileRoutesByTo: FileRoutesByTo
-  to: never
-  id: '__root__'
+  to: '/$organizationSlug/$bookingFormSlug'
+  id: '__root__' | '/$organizationSlug/$bookingFormSlug'
   fileRoutesById: FileRoutesById
 }
-export interface RootRouteChildren {}
-
-declare module '@tanstack/react-router' {
-  interface FileRoutesByPath {}
+export interface RootRouteChildren {
+  OrganizationSlugBookingFormSlugRoute: typeof OrganizationSlugBookingFormSlugRoute
 }
 
-const rootRouteChildren: RootRouteChildren = {}
+declare module '@tanstack/react-router' {
+  interface FileRoutesByPath {
+    '/$organizationSlug/$bookingFormSlug': {
+      id: '/$organizationSlug/$bookingFormSlug'
+      path: '/$organizationSlug/$bookingFormSlug'
+      fullPath: '/$organizationSlug/$bookingFormSlug'
+      preLoaderRoute: typeof OrganizationSlugBookingFormSlugRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+  }
+}
+
+const rootRouteChildren: RootRouteChildren = {
+  OrganizationSlugBookingFormSlugRoute: OrganizationSlugBookingFormSlugRoute,
+}
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()

@@ -1,19 +1,22 @@
 import { type FC, useCallback } from 'react';
 import styles from './CreateOrganization.module.scss';
 import { Button, Input, HiddenField } from '@bookio/ui';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 import {
     useCreateOrganization,
     type CreateOrganizationResponse,
-} from '@api/organizations/createOrganization';
-import { useSession } from '@api/auth';
+} from '#api/organizations/createOrganization';
+import { useSession } from '#api/auth';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
-import { type CreateOrganizationRequest } from '@api/organizations/createOrganization';
-import { useIsOrganizationExists } from '@api/organizations/isOrganizationExists';
+import { type CreateOrganizationRequest } from '#api/organizations/createOrganization';
+import { useIsOrganizationExists } from '#api/organizations/isOrganizationExists';
 import { Controller, useForm, useWatch, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getFirstFieldError } from '@utils/formErrors';
+import { getFirstFieldError } from '#utils/formErrors';
+import { useNavigate } from 'react-router-dom';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
+import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
 
 const formSchema = z.object({
     name: z.string().min(3).max(255),
@@ -37,6 +40,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export const CreateOrganization: FC = () => {
+    const navigate = useNavigate();
     const { data: session } = useSession();
     const { data: organization, mutateAsync, isPending, isSuccess } = useCreateOrganization();
 
@@ -51,40 +55,68 @@ export const CreateOrganization: FC = () => {
     });
 
     const slug = useWatch({ control, name: 'slug', defaultValue: '' });
-    const { exists: slugExists } = useIsOrganizationExists(slug);
-    const slugIsValid = slugExists === undefined ? undefined : !slugExists;
+    const { isValid: slugIsValid } = useIsOrganizationExists({ slug });
 
-    const onSubmit = async (data: FormData) => {
-        if (slugExists === true) {
-            toast.error('Organization slug is already taken');
-            return;
-        }
+    const onSubmit = useCallback(
+        async (data: FormData) => {
+            if (slugIsValid === false) {
+                toast.error('Organization slug is already taken');
+                return;
+            }
 
-        await toast.promise(mutateAsync({ ...data, userId: session!.user.id }), {
-            loading: 'Creating organization...',
-            success: 'Organization created successfully',
-            error: (error: Error) => error.message,
-        });
-    };
+            await toast.promise(mutateAsync({ ...data, userId: session!.user.id }), {
+                loading: 'Creating organization...',
+                success: 'Organization created successfully',
+                error: (error: Error) => error.message,
+            });
+        },
+        [mutateAsync, session, slugIsValid],
+    );
 
-    const onInvalid = (errors: FieldErrors<FormData>) => {
+    const onInvalid = useCallback((errors: FieldErrors<FormData>) => {
         toast.error(getFirstFieldError(errors) ?? 'Invalid form data');
-    };
+    }, []);
 
-    if (isSuccess && organization) {
-        return <SuccessfulOrganizationCreation data={organization} />;
-    }
+    const handleSubmitForm = useCallback(() => {
+        handleSubmit(onSubmit, onInvalid)();
+    }, [handleSubmit, onSubmit, onInvalid]);
+
+    const handleClose = useCallback(() => {
+        navigate(-1);
+    }, [navigate]);
 
     const isDisabled = isPending || isSubmitting;
 
     return (
-        <div className={styles.createOrganization}>
-            <form className={styles.form} onSubmit={handleSubmit(onSubmit, onInvalid)}>
-                <h2 className={styles.title}>Lets create your organization</h2>
-                <div className={styles.formGroup}>
+        <FormWizardLayoutProvider totalSteps={2}>
+            {isSuccess && organization ? (
+                <SuccessfulOrganizationCreation data={organization} />
+            ) : (
+                <FormWizardLayout
+                    stepNumber={1}
+                    title="Let's create your organization"
+                    description="Choose a name and unique slug for your organization. You'll also set a password to protect access."
+                    onEnterComplete={isDisabled ? undefined : handleSubmitForm}
+                    footer={
+                        <div className={styles.footerActions}>
+                            <Button
+                                type="button"
+                                variant="primary-filled"
+                                onClick={handleSubmitForm}
+                                disabled={isDisabled}
+                            >
+                                Create Organization
+                            </Button>
+                            <Button type="button" variant="simple-clean" onClick={handleClose}>
+                                Close
+                            </Button>
+                        </div>
+                    }
+                >
                     <Input
                         placeholder="Organization name"
                         disabled={isDisabled}
+                        autoFocus
                         {...register('name')}
                     />
                     <Controller
@@ -95,11 +127,7 @@ export const CreateOrganization: FC = () => {
                                 {...field}
                                 placeholder="Unique organization slug"
                                 isValid={slugIsValid}
-                                errorMessage={
-                                    slugExists === true
-                                        ? 'Organization slug is already taken'
-                                        : undefined
-                                }
+                                errorMessage="Organization slug is already taken"
                                 disabled={isDisabled}
                             />
                         )}
@@ -111,17 +139,9 @@ export const CreateOrganization: FC = () => {
                         disabled={isDisabled}
                         {...register('password')}
                     />
-                </div>
-                <Button
-                    className={styles.button}
-                    variant="primary-filled"
-                    type="submit"
-                    disabled={isDisabled}
-                >
-                    Create Organization
-                </Button>
-            </form>
-        </div>
+                </FormWizardLayout>
+            )}
+        </FormWizardLayoutProvider>
     );
 };
 
@@ -133,25 +153,19 @@ const SuccessfulOrganizationCreation: FC<{ data: CreateOrganizationResponse['dat
     }, []);
 
     return (
-        <div className={styles.createOrganization}>
-            <div className={styles.content}>
-                <h2 className={styles.title}>
-                    Organization {data.organization.name} created successfully
-                </h2>
-                <p className={styles.description}>
-                    Your organization has been created successfully. Bellow, in the hidden field,
-                    you can find the organization secret key. Copy and keep it in a safe place.
-                </p>
-                <HiddenField value={data.organization.secretKey} onCopy={handleCopy} />
-                <Button
-                    type="link"
-                    to="/organizations/list"
-                    className={styles.button}
-                    variant="primary-filled"
-                >
-                    Go to organizations
-                </Button>
-            </div>
-        </div>
+        <FormWizardLayout
+            stepNumber={2}
+            title={`Organization ${data.organization.name} created successfully`}
+            description="Your organization has been created successfully. Below, in the hidden field, you can find the organization secret key. Copy and keep it in a safe place."
+            footer={
+                <div className={styles.footerActions}>
+                    <Button type="link" to="/organizations/list" variant="primary-filled">
+                        Go to organizations
+                    </Button>
+                </div>
+            }
+        >
+            <HiddenField value={data.organization.secretKey} onCopy={handleCopy} />
+        </FormWizardLayout>
     );
 };

@@ -9,7 +9,7 @@
         "skipLibCheck": true,
         "types": ["node"],
         "paths": {
-            "@/*": ["./src/*"]
+            "@/*": ["./src/*"],
         },
         "jsx": "react-jsx",
         "jsxImportSource": "hono/jsx",

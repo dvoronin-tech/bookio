@@ -1,0 +1,336 @@
+.wrapper {
+    position: relative;
+    width: 100%;
+    flex: 1;
+    height: 100%;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    background-color: var(--color-bg-main);
+}
+
+.progress {
+    flex: none;
+    display: flex;
+    justify-content: center;
+    padding: 0.8rem 0;
+    overflow: visible;
+}
+
+.progressTrack {
+    display: flex;
+    align-items: center;
+    gap: 0.2rem;
+    overflow: visible;
+}
+
+.progressLine {
+    width: 3.8rem;
+    height: 1.5px;
+    background-color: var(--color-border);
+    opacity: 0.5;
+}
+
+.stepDot {
+    position: relative;
+    width: 0.8rem;
+    height: 0.8rem;
+    border-radius: 50%;
+    background-color: var(--color-border);
+    flex-shrink: 0;
+}
+
+.stepDotComplete {
+    background-color: var(--color-primary);
+}
+
+.stepDotActive {
+    background-color: var(--color-primary);
+}
+
+.stepDotActive::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 65%, transparent);
+    animation: pulseDot 2.2s ease-out infinite;
+}
+
+.heroAccent {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+}
+
+.heroAccentLine {
+    width: 5.6rem;
+    height: 1.5px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--color-primary) 70%, transparent)
+    );
+    opacity: 0.7;
+}
+
+.heroAccentLine:last-child {
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-primary) 70%, transparent),
+        transparent
+    );
+}
+
+.heroAccentOrb {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-color: var(--color-primary);
+}
+
+.heroAccentOrb::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 65%, transparent);
+    animation: pulseDot 2.2s ease-out infinite;
+}
+
+.stage {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.stageContent {
+    display: flex;
+    flex-direction: column;
+    flex: 0 1 auto;
+    width: 100%;
+    min-height: 0;
+    max-height: 100%;
+    margin-block: auto;
+    overflow: hidden;
+}
+
+.hero {
+    flex: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    padding: 2.4rem 2rem 2.4rem;
+    text-align: center;
+}
+
+.title {
+    font-family: 'Nunito', sans-serif;
+    font-size: clamp(3.2rem, 5vw, 4.4rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-align: center;
+}
+
+.description {
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.5;
+    text-align: center;
+    color: var(--color-text-secondary);
+    max-width: 48rem;
+}
+
+.body {
+    flex: 1 1 auto;
+    min-height: 0;
+    padding: 0 2rem;
+    overflow-y: auto;
+    overscroll-behavior: contain;
+}
+
+.fields {
+    width: 100%;
+    max-width: 48rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.2rem;
+    padding-bottom: 2rem;
+}
+
+.footer {
+    flex: none;
+    width: 100%;
+    max-width: 48rem;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding: 0.8rem 2rem 3.2rem;
+}
+
+@media (min-width: 769px) {
+    .body {
+        max-height: 400px;
+    }
+}
+
+@keyframes pulseDot {
+    0% {
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 65%, transparent);
+    }
+
+    70% {
+        box-shadow: 0 0 0 1.3rem transparent;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 transparent;
+    }
+}
+
+@keyframes progressIn {
+    from {
+        opacity: 0;
+        transform: translateY(-0.8rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes stageIn {
+    from {
+        opacity: 0;
+        transform: translateY(1.2rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes stepIn {
+    from {
+        opacity: 0;
+        transform: translateY(0.8rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.enterProgress {
+    animation: progressIn 0.45s ease-out both;
+}
+
+.enterHero {
+    animation: stageIn 0.5s ease-out 0.1s both;
+}
+
+.enterBody {
+    animation: stageIn 0.5s ease-out 0.18s both;
+}
+
+.enterFooter {
+    animation: stageIn 0.5s ease-out 0.26s both;
+}
+
+.stepEnter {
+    animation: stepIn 0.4s ease-out both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .enterProgress,
+    .enterHero,
+    .enterBody,
+    .enterFooter,
+    .stepEnter {
+        animation: none;
+    }
+
+    .stepDotActive::after,
+    .heroAccentOrb::after {
+        animation: none;
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .wrapper {
+        height: 100%;
+        min-height: 0;
+    }
+
+    .stage {
+        flex: 1;
+        min-height: 0;
+    }
+
+    .stageContent {
+        flex: 1;
+        max-height: none;
+        margin-block: 0;
+        min-height: 0;
+    }
+
+    .body {
+        flex: 1;
+        min-height: 0;
+        max-height: none;
+    }
+
+    .hero {
+        padding: 1.6rem 1.6rem 2rem;
+        gap: 1.2rem;
+    }
+
+    .body {
+        padding: 0 1.6rem;
+    }
+
+    .footer {
+        padding: 0.8rem 1.6rem 2.4rem;
+    }
+}
+
+@media screen and (max-width: 440px) {
+    .hero {
+        padding: 1.2rem 1rem 1.6rem;
+    }
+
+    .body {
+        padding: 0 1rem;
+    }
+
+    .footer {
+        padding: 0.8rem 1rem 2rem;
+    }
+
+    .progressLine {
+        width: 2.8rem;
+    }
+}

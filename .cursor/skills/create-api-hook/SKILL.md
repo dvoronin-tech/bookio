@@ -22,14 +22,14 @@ apps/frontend/src/api/<domain>/
 - Domain folder: camelCase (`bookingForms`, `fields`, `organizations`, `bookingFormMeta`).
 - File name: camelCase `<action><Resource>.ts` (e.g. `createBookingForm.ts`, `getBookingFormFields.ts`).
 - One primary hook (and its fetch/request helper + types) per file.
-- Imports use path aliases: `@lib/`, `@utils/`, `@api/` — **no** `.js` extension on frontend imports.
+- Imports use path aliases: `#lib/`, `#utils/`, `#api/` — **no** `.js` extension on frontend imports.
 
 ## Checklist
 
 Copy and track:
 
 ```
-- [ ] Client path from hono typed client (`@lib/hono-client`)
+- [ ] Client path from hono typed client (`#lib/hono-client`)
 - [ ] Exported Request/Response types via InferRequestType / InferResponseType
 - [ ] Domain data type from Response['data'] when useful
 - [ ] request/fetch helper: $method → response.json() → validateError → return body.data
@@ -46,7 +46,7 @@ Copy and track:
 2. **Never** import or call `parseError` inside API hooks. It is an internal detail of `validateError`.
 3. **Always** return `body.data` after validation (not the whole body).
 4. Types come from the hono client (`InferRequestType` / `InferResponseType`), not hand-written DTOs.
-5. Mutations: `queryClient` from `@lib/query-client` (singleton). Do not use `useQueryClient()` unless matching an existing auth exception.
+5. Mutations: `queryClient` from `#lib/query-client` (singleton). Do not use `useQueryClient()` unless matching an existing auth exception.
 6. Auth (`apps/frontend/src/api/auth`) uses `authClient` / better-auth — **do not** use that pattern for REST resource hooks.
 
 ## Error handling (`validateError` + `parseError`)
@@ -136,11 +136,11 @@ On mutation `onSuccess`, invalidate the related keys (list and/or one), same as 
 ### Mutation (create / update / delete)
 
 ```ts
-import hono from '@lib/hono-client';
-import { queryClient } from '@lib/query-client';
+import hono from '#lib/hono-client';
+import { queryClient } from '#lib/query-client';
 import { useMutation } from '@tanstack/react-query';
-import { validateError } from '@utils/validateError';
-import { trimObj } from '@utils/trimObj'; // create/update only
+import { validateError } from '#utils/validateError';
+import { trimObj } from '#utils/trimObj'; // create/update only
 import type { InferRequestType, InferResponseType } from 'hono/client';
 
 const createXClient = hono['resource-path']['create'];
@@ -175,11 +175,11 @@ Method mapping: create → `$post`, update → `$put`, delete → `$delete`.
 ### Query (get one / get all)
 
 ```ts
-import hono from '@lib/hono-client';
-import { validateError } from '@utils/validateError';
+import hono from '#lib/hono-client';
+import { validateError } from '#utils/validateError';
 import type { InferResponseType } from 'hono/client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
-import { useSession } from '@api/auth'; // when siblings gate on session
+import { useSession } from '#api/auth'; // when siblings gate on session
 
 const getXClient = hono['resource-path']['get-one'];
 
@@ -221,11 +221,11 @@ Prefer extracting a `*Client` const (bookingForms style). Dot access (`hono.fiel
 ### Create — `bookingForms/createBookingForm.ts`
 
 ```ts
-import hono from '@lib/hono-client';
-import { queryClient } from '@lib/query-client';
+import hono from '#lib/hono-client';
+import { queryClient } from '#lib/query-client';
 import { useMutation } from '@tanstack/react-query';
-import { validateError } from '@utils/validateError';
-import { trimObj } from '@utils/trimObj';
+import { validateError } from '#utils/validateError';
+import { trimObj } from '#utils/trimObj';
 import type { InferRequestType, InferResponseType } from 'hono/client';
 
 const createBookingFormClient = hono['booking-forms']['create'];
@@ -392,7 +392,7 @@ Avoid matching these when generating new hooks:
 - Hand-rolled response types instead of `InferResponseType`.
 - Calling `parseError` directly in the hook.
 - Returning full `body` instead of `body.data`.
-- `useQueryClient()` for resource mutations (use `@lib/query-client`).
+- `useQueryClient()` for resource mutations (use `#lib/query-client`).
 
 ## Workflow
 

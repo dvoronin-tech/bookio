@@ -1,14 +1,14 @@
 import { memo, type FC, useCallback } from 'react';
 import styles from './OrganizationHeader.module.scss';
-import Logo from '@assets/logo.svg?react';
+import Logo from '#assets/logo.svg?react';
 import { Button, Input } from '@bookio/ui';
 import { clsx } from 'clsx';
 
-import ConnectIcon from '@assets/icons/connect.svg?react';
-import PlusIcon from '@assets/icons/plus.svg?react';
-import SearchIcon from '@assets/icons/search.svg?react';
+import ConnectIcon from '#assets/icons/connect.svg?react';
+import PlusIcon from '#assets/icons/plus.svg?react';
+import SearchIcon from '#assets/icons/search.svg?react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { useOrganizationListStore } from '@store/useOrganizationListStore';
+import { useOrganizationListStore } from '#store/useOrganizationListStore';
 
 export const OrganizationHeader: FC = memo(() => {
     const navigate = useNavigate();

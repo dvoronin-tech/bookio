@@ -1,21 +1,22 @@
 import { memo, useCallback, useEffect, type FC } from 'react';
 import styles from './BookingFormCard.module.scss';
-import type { BookingFormType } from '@api/bookingForms/getBookingForms';
+import type { BookingFormType } from '#api/bookingForms/getBookingForms';
 import { Button, Dialog } from '@bookio/ui';
 import {
     useDeleteBookingForm,
     type DeleteBookingFormRequest,
-} from '@api/bookingForms/deleteBookingForm';
+} from '#api/bookingForms/deleteBookingForm';
 import toast from 'react-hot-toast';
 import { useForm, type FieldErrors, useWatch } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import { getFirstFieldError } from '@utils/formErrors';
-import { ValidatableInput } from '@components/ValidatableInput/ValidatableInput';
+import { getFirstFieldError } from '#utils/formErrors';
+import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 import { useDebounce } from 'use-debounce';
 
 const deleteBookingFormSchema = z.object({
     name: z.string().min(1).max(255),
+    organizationPassword: z.string().min(1),
 }) satisfies z.ZodType<Omit<DeleteBookingFormRequest, 'bookingFormId'>>;
 
 type DeleteBookingFormFormData = z.infer<typeof deleteBookingFormSchema>;
@@ -33,13 +34,14 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
         const { register, handleSubmit, control, reset } = useForm<DeleteBookingFormFormData>({
             defaultValues: {
                 name: '',
+                organizationPassword: '',
             },
             resolver: zodResolver(deleteBookingFormSchema),
         });
 
         useEffect(() => {
             if (open) {
-                reset({ name: '' });
+                reset({ name: '', organizationPassword: '' });
             }
         }, [open, reset]);
 
@@ -54,6 +56,7 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
                     deleteBookingForm({
                         bookingFormId: bookingForm.id,
                         name: data.name.trim(),
+                        organizationPassword: data.organizationPassword,
                     }),
                     {
                         loading: `Deleting ${bookingForm.name}`,
@@ -72,6 +75,7 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
         }, []);
 
         const name = useWatch({ control, name: 'name' });
+        const organizationPassword = useWatch({ control, name: 'organizationPassword' });
         const [debouncedName] = useDebounce(name ?? '', 500);
         const isNameSettled = name === debouncedName;
 
@@ -80,7 +84,10 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
                 ? undefined
                 : debouncedName.trim() === bookingForm.name.trim();
 
-        const canDelete = isNameSettled && debouncedName.trim() === bookingForm.name.trim();
+        const canDelete =
+            isNameSettled &&
+            debouncedName.trim() === bookingForm.name.trim() &&
+            organizationPassword.trim().length > 0;
 
         return (
             <Dialog open={open} onOpenChange={onOpenChange}>
@@ -89,8 +96,8 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
                     Are you sure you want to delete this booking form?
                 </Dialog.Description>
                 <Dialog.Description>
-                    If you really want to delete this booking form, please enter booking form name
-                    and click on the delete button.
+                    If you really want to delete this booking form, please enter the booking form
+                    name, your organization password, and click on the delete button.
                 </Dialog.Description>
                 <form
                     onSubmit={handleSubmit(onSubmit, onInvalid)}
@@ -106,6 +113,11 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
                                     ? 'Booking form name does not match'
                                     : undefined
                             }
+                        />
+                        <ValidatableInput
+                            {...register('organizationPassword')}
+                            type="password"
+                            placeholder="Enter organization password"
                         />
                     </div>
                     <div className={styles.buttonsGroup}>

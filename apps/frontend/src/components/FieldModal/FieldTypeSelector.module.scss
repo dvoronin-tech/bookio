@@ -1,0 +1,17 @@
+.fieldTypes {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+    gap: 0.8rem;
+}
+
+.fieldTypesWrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+
+    .fieldTypesLabel {
+        font-size: 1.4rem;
+        font-weight: 500;
+        color: var(--color-text-secondary);
+    }
+}

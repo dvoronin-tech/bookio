@@ -1,9 +1,9 @@
 import { useCallback, type ChangeEvent, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, ColorPicker, Input } from '@bookio/ui';
-import { useCreateBookingFormStore } from '@store/useCreateBookingFormStore';
-import { BookingFormConfiguratorLayout } from '../../BookingFormConfiguratorLayout/BookingFormConfiguratorLayout';
-import { DEFAULT_BOOKING_FORM_STYLES } from '@utils/defaultBookingFormStyles';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
+import { DEFAULT_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyles';
 import { step3Schema } from '../../schemas/createBookingFormDraft.schema';
 import toast from 'react-hot-toast';
 import styles from './Step3Styles.module.scss';
@@ -118,10 +118,11 @@ export const Step3Styles: FC = () => {
     ]);
 
     return (
-        <BookingFormConfiguratorLayout
+        <FormWizardLayout
             stepNumber={3}
             title="Choose booking form colors"
             description="Set the color palette for the public booking form. Use hex values like #RGB or #RRGGBB for primary, backgrounds, border, and text."
+            onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
                     <Button type="button" variant="primary-filled" onClick={handleClickNext}>
@@ -155,6 +156,6 @@ export const Step3Styles: FC = () => {
                     />
                 </div>
             ))}
-        </BookingFormConfiguratorLayout>
+        </FormWizardLayout>
     );
 };

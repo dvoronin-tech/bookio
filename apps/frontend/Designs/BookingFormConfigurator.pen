@@ -370,7 +370,8 @@
                                       "width": "fill_container",
                                       "content": "Consultation",
                                       "fontFamily": "$font-family",
-                                      "fontSize": 13
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
                                     }
                                   ]
                                 }
@@ -418,7 +419,8 @@
                                       "width": "fill_container",
                                       "content": "Book a 30-min call",
                                       "fontFamily": "$font-family",
-                                      "fontSize": 13
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
                                     }
                                   ]
                                 }
@@ -467,7 +469,8 @@
                                       "width": "fill_container",
                                       "content": "consultation",
                                       "fontFamily": "$font-family",
-                                      "fontSize": 13
+                                      "fontSize": 13,
+                                      "fontWeight": "normal"
                                     }
                                   ]
                                 }
@@ -513,7 +516,8 @@
                   "fill": "$border",
                   "content": "Live form preview placeholder",
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -849,7 +853,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "uGzMT",
+                              "id": "RiNMr",
                               "name": "Fields Hint",
                               "fill": "$text-secondary",
                               "content": "Drag to reorder · red dot = required",
@@ -859,96 +863,92 @@
                             },
                             {
                               "type": "frame",
-                              "id": "j8bNW",
-                              "name": "Fields Stack",
-                              "clip": true,
+                              "id": "Dlytm",
+                              "name": "Fields List",
                               "width": "fill_container",
-                              "fill": "$bg-main",
-                              "cornerRadius": "$radius",
-                              "stroke": "$border",
-                              "strokeWidth": 1,
                               "layout": "vertical",
+                              "gap": 6,
                               "children": [
                                 {
-                                  "type": "rectangle",
-                                  "id": "KQMiO",
-                                  "name": "Stack Rail",
-                                  "fill": "$primary",
-                                  "width": "fill_container",
-                                  "height": 3
-                                },
-                                {
                                   "type": "frame",
-                                  "id": "JF78u",
-                                  "name": "Fields List",
+                                  "id": "LH42q",
+                                  "name": "Full name Zone",
+                                  "clip": true,
                                   "width": "fill_container",
-                                  "layout": "vertical",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
                                   "children": [
                                     {
                                       "type": "frame",
-                                      "id": "EUYxv",
-                                      "name": "Full name Row",
+                                      "id": "A3KeGH",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "GZvlN",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "WG64n",
                                       "width": "fill_container",
-                                      "stroke": "$border",
-                                      "strokeWidth": {
-                                        "bottom": 1
-                                      },
                                       "gap": 10,
-                                      "padding": 12,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
                                       "alignItems": "center",
                                       "children": [
                                         {
                                           "type": "frame",
-                                          "id": "JLH4p",
-                                          "name": "Full name Index Col",
-                                          "width": 28,
-                                          "layout": "vertical",
-                                          "gap": 4,
+                                          "id": "Ao4HC",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#8510f218",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
                                           "alignItems": "center",
                                           "children": [
                                             {
-                                              "type": "text",
-                                              "id": "d0Bmzv",
-                                              "name": "Full name Index",
-                                              "fill": "$text-main",
-                                              "content": "01",
-                                              "fontFamily": "$font-family",
-                                              "fontSize": 11,
-                                              "fontWeight": "800",
-                                              "letterSpacing": 0.5
-                                            },
-                                            {
                                               "type": "icon",
-                                              "id": "o9w5d1",
-                                              "name": "Full name Grip",
-                                              "width": 12,
-                                              "height": 12,
-                                              "icon": "grip-vertical",
+                                              "id": "o1g4Bh",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "type",
                                               "library": "lucide",
-                                              "fill": "$border"
+                                              "fill": "$primary"
                                             }
                                           ]
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "cFeYf",
-                                          "name": "Full name Info",
+                                          "id": "MnKK5",
                                           "width": "fill_container",
                                           "layout": "vertical",
-                                          "gap": 4,
+                                          "gap": 2,
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "uAFm3",
-                                              "name": "Full name Title Row",
-                                              "width": "fill_container",
+                                              "id": "v0MN6",
                                               "gap": 6,
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "text",
-                                                  "id": "bKxYi",
-                                                  "name": "Full name Name",
+                                                  "id": "lzG2A",
                                                   "fill": "$text-main",
                                                   "content": "Full name",
                                                   "fontFamily": "$font-family",
@@ -956,23 +956,19 @@
                                                   "fontWeight": "700"
                                                 },
                                                 {
-                                                  "type": "text",
-                                                  "id": "XX1ve",
-                                                  "name": "Full name Name",
-                                                  "fill": "#e00d0dff",
-                                                  "content": "*",
-                                                  "fontFamily": "$font-family",
-                                                  "fontSize": 13,
-                                                  "fontWeight": "700"
+                                                  "type": "ellipse",
+                                                  "id": "l9kMt",
+                                                  "fill": "$system-red",
+                                                  "width": 6,
+                                                  "height": 6
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "text",
-                                              "id": "LB8K2",
-                                              "name": "Full name Type Key",
+                                              "id": "h6TFj",
                                               "fill": "$text-secondary",
-                                              "content": "key · text",
+                                              "content": "key",
                                               "fontFamily": "$font-family",
                                               "fontSize": 11,
                                               "fontWeight": "500"
@@ -981,49 +977,44 @@
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "lQRys",
-                                          "name": "Full name Actions",
+                                          "id": "YA1A7",
                                           "gap": 6,
                                           "alignItems": "center",
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "H6LbZP",
-                                              "name": "Full name Edit Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#0E6ECC1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "QGsRj",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "eEmJK",
-                                                  "name": "Full name Edit",
+                                                  "id": "i5Zxpl",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "pencil",
                                                   "library": "lucide",
-                                                  "fill": "$systemBlue"
+                                                  "fill": "$system-blue"
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "frame",
-                                              "id": "Z1XF8M",
-                                              "name": "Full name Delete Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#CC2B0E1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "oUiEO",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "s5lgo",
-                                                  "name": "Full name Delete",
+                                                  "id": "FvGyk",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "trash-2",
@@ -1035,72 +1026,89 @@
                                           ]
                                         }
                                       ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "AVwUm",
+                                  "name": "Email Zone",
+                                  "clip": true,
+                                  "width": "fill_container",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "pFSfp",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "Pyvba",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
                                     },
                                     {
                                       "type": "frame",
-                                      "id": "grbvB",
-                                      "name": "Email Row",
+                                      "id": "t6WIy",
                                       "width": "fill_container",
-                                      "stroke": "$border",
-                                      "strokeWidth": {
-                                        "bottom": 1
-                                      },
                                       "gap": 10,
-                                      "padding": 12,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
                                       "alignItems": "center",
                                       "children": [
                                         {
                                           "type": "frame",
-                                          "id": "BTZNQ",
-                                          "name": "Email Index Col",
-                                          "width": 28,
-                                          "layout": "vertical",
-                                          "gap": 4,
+                                          "id": "W16TC",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#0E6ECC18",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
                                           "alignItems": "center",
                                           "children": [
                                             {
-                                              "type": "text",
-                                              "id": "DxJ07",
-                                              "name": "Email Index",
-                                              "fill": "$text-main",
-                                              "content": "02",
-                                              "fontFamily": "$font-family",
-                                              "fontSize": 11,
-                                              "fontWeight": "800",
-                                              "letterSpacing": 0.5
-                                            },
-                                            {
                                               "type": "icon",
-                                              "id": "oaeFQ",
-                                              "name": "Email Grip",
-                                              "width": 12,
-                                              "height": 12,
-                                              "icon": "grip-vertical",
+                                              "id": "BwUYW",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "mail",
                                               "library": "lucide",
-                                              "fill": "$border"
+                                              "fill": "$system-blue"
                                             }
                                           ]
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "iyO9E",
-                                          "name": "Email Info",
+                                          "id": "u48U45",
                                           "width": "fill_container",
                                           "layout": "vertical",
-                                          "gap": 4,
+                                          "gap": 2,
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "gcGhO",
-                                              "name": "Email Title Row",
-                                              "width": "fill_container",
+                                              "id": "KDsqi",
                                               "gap": 6,
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "text",
-                                                  "id": "m3kRk",
-                                                  "name": "Email Name",
+                                                  "id": "yRgdg",
                                                   "fill": "$text-main",
                                                   "content": "Email",
                                                   "fontFamily": "$font-family",
@@ -1108,23 +1116,19 @@
                                                   "fontWeight": "700"
                                                 },
                                                 {
-                                                  "type": "text",
-                                                  "id": "y3n0NV",
-                                                  "name": "Email Name",
+                                                  "type": "ellipse",
+                                                  "id": "aoPvU",
                                                   "fill": "$system-red",
-                                                  "content": "*",
-                                                  "fontFamily": "$font-family",
-                                                  "fontSize": 13,
-                                                  "fontWeight": "700"
+                                                  "width": 6,
+                                                  "height": 6
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "text",
-                                              "id": "wQerJ",
-                                              "name": "Email Type Key",
+                                              "id": "pbXzv",
                                               "fill": "$text-secondary",
-                                              "content": "key · email",
+                                              "content": "key",
                                               "fontFamily": "$font-family",
                                               "fontSize": 11,
                                               "fontWeight": "500"
@@ -1133,49 +1137,44 @@
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "CcraZ",
-                                          "name": "Email Actions",
+                                          "id": "ucDfK",
                                           "gap": 6,
                                           "alignItems": "center",
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "tE7OS",
-                                              "name": "Email Edit Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#0E6ECC1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "SjeXp",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "Q7oCHu",
-                                                  "name": "Email Edit",
+                                                  "id": "N3XFUn",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "pencil",
                                                   "library": "lucide",
-                                                  "fill": "$systemBlue"
+                                                  "fill": "$system-blue"
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "frame",
-                                              "id": "w6N4Gw",
-                                              "name": "Email Delete Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#CC2B0E1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "KmOcH",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "YbqfJ",
-                                                  "name": "Email Delete",
+                                                  "id": "CUPlB",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "trash-2",
@@ -1187,86 +1186,94 @@
                                           ]
                                         }
                                       ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "RK8ar",
+                                  "name": "Phone Zone",
+                                  "clip": true,
+                                  "width": "fill_container",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "GU4Lb",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "F0Aay",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
                                     },
                                     {
                                       "type": "frame",
-                                      "id": "i8G1J",
-                                      "name": "Phone Row",
+                                      "id": "xmKWJ",
                                       "width": "fill_container",
-                                      "stroke": "$border",
-                                      "strokeWidth": {
-                                        "bottom": 1
-                                      },
                                       "gap": 10,
-                                      "padding": 12,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
                                       "alignItems": "center",
                                       "children": [
                                         {
                                           "type": "frame",
-                                          "id": "AJIdM",
-                                          "name": "Phone Index Col",
-                                          "width": 28,
-                                          "layout": "vertical",
-                                          "gap": 4,
+                                          "id": "Um8lp",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#1ECC0E18",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
                                           "alignItems": "center",
                                           "children": [
                                             {
-                                              "type": "text",
-                                              "id": "IK5k1",
-                                              "name": "Phone Index",
-                                              "fill": "$text-main",
-                                              "content": "03",
-                                              "fontFamily": "$font-family",
-                                              "fontSize": 11,
-                                              "fontWeight": "800",
-                                              "letterSpacing": 0.5
-                                            },
-                                            {
                                               "type": "icon",
-                                              "id": "JxRFV",
-                                              "name": "Phone Grip",
-                                              "width": 12,
-                                              "height": 12,
-                                              "icon": "grip-vertical",
+                                              "id": "J1mwf",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "phone",
                                               "library": "lucide",
-                                              "fill": "$border"
+                                              "fill": "$system-green"
                                             }
                                           ]
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "UvyTO",
-                                          "name": "Phone Info",
+                                          "id": "nTnsj",
                                           "width": "fill_container",
                                           "layout": "vertical",
-                                          "gap": 4,
+                                          "gap": 2,
                                           "children": [
                                             {
-                                              "type": "frame",
-                                              "id": "zjGCK",
-                                              "name": "Phone Title Row",
-                                              "width": "fill_container",
-                                              "gap": 6,
-                                              "alignItems": "center",
-                                              "children": [
-                                                {
-                                                  "type": "text",
-                                                  "id": "oZllv",
-                                                  "name": "Phone Name",
-                                                  "fill": "$text-main",
-                                                  "content": "Phone",
-                                                  "fontFamily": "$font-family",
-                                                  "fontSize": 13,
-                                                  "fontWeight": "700"
-                                                }
-                                              ]
+                                              "type": "text",
+                                              "id": "TBxki",
+                                              "fill": "$text-main",
+                                              "content": "Phone",
+                                              "fontFamily": "$font-family",
+                                              "fontSize": 13,
+                                              "fontWeight": "700"
                                             },
                                             {
                                               "type": "text",
-                                              "id": "XSlEr",
-                                              "name": "Phone Type Key",
+                                              "id": "wQ4cj",
                                               "fill": "$text-secondary",
-                                              "content": "key · phone",
+                                              "content": "key",
                                               "fontFamily": "$font-family",
                                               "fontSize": 11,
                                               "fontWeight": "500"
@@ -1275,49 +1282,44 @@
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "BNAea",
-                                          "name": "Phone Actions",
+                                          "id": "HM4yz",
                                           "gap": 6,
                                           "alignItems": "center",
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "vmww7",
-                                              "name": "Phone Edit Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#0E6ECC1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "e4Y2V",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "tZbBO",
-                                                  "name": "Phone Edit",
+                                                  "id": "hce3I",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "pencil",
                                                   "library": "lucide",
-                                                  "fill": "$systemBlue"
+                                                  "fill": "$system-blue"
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "frame",
-                                              "id": "RVgfv",
-                                              "name": "Phone Delete Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#CC2B0E1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "R0ktrz",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "rWf2b",
-                                                  "name": "Phone Delete",
+                                                  "id": "xjt1n",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "trash-2",
@@ -1329,87 +1331,94 @@
                                           ]
                                         }
                                       ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "t7N07",
+                                  "name": "Notes Zone",
+                                  "clip": true,
+                                  "width": "fill_container",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "dLNF7",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "G9i3cZ",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
                                     },
                                     {
                                       "type": "frame",
-                                      "id": "H6uWZ1",
-                                      "name": "Notes Row",
+                                      "id": "c4Tce7",
                                       "width": "fill_container",
-                                      "stroke": {
-                                        "type": "color",
-                                        "color": "$border",
-                                        "enabled": false
-                                      },
                                       "gap": 10,
-                                      "padding": 12,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
                                       "alignItems": "center",
                                       "children": [
                                         {
                                           "type": "frame",
-                                          "id": "Qyqho",
-                                          "name": "Notes Index Col",
-                                          "width": 28,
-                                          "layout": "vertical",
-                                          "gap": 4,
+                                          "id": "mWfNf",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#544d4d30",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
                                           "alignItems": "center",
                                           "children": [
                                             {
-                                              "type": "text",
-                                              "id": "GajyZ",
-                                              "name": "Notes Index",
-                                              "fill": "$text-main",
-                                              "content": "04",
-                                              "fontFamily": "$font-family",
-                                              "fontSize": 11,
-                                              "fontWeight": "800",
-                                              "letterSpacing": 0.5
-                                            },
-                                            {
                                               "type": "icon",
-                                              "id": "M4ywdY",
-                                              "name": "Notes Grip",
-                                              "width": 12,
-                                              "height": 12,
-                                              "icon": "grip-vertical",
+                                              "id": "yyTsu",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "file-text",
                                               "library": "lucide",
-                                              "fill": "$border"
+                                              "fill": "$text-secondary"
                                             }
                                           ]
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "A04EoC",
-                                          "name": "Notes Info",
+                                          "id": "LhYik",
                                           "width": "fill_container",
                                           "layout": "vertical",
-                                          "gap": 4,
+                                          "gap": 2,
                                           "children": [
                                             {
-                                              "type": "frame",
-                                              "id": "BSgHb",
-                                              "name": "Notes Title Row",
-                                              "width": "fill_container",
-                                              "gap": 6,
-                                              "alignItems": "center",
-                                              "children": [
-                                                {
-                                                  "type": "text",
-                                                  "id": "RnvcN",
-                                                  "name": "Notes Name",
-                                                  "fill": "$text-main",
-                                                  "content": "Notes",
-                                                  "fontFamily": "$font-family",
-                                                  "fontSize": 13,
-                                                  "fontWeight": "700"
-                                                }
-                                              ]
+                                              "type": "text",
+                                              "id": "WufnN",
+                                              "fill": "$text-main",
+                                              "content": "Notes",
+                                              "fontFamily": "$font-family",
+                                              "fontSize": 13,
+                                              "fontWeight": "700"
                                             },
                                             {
                                               "type": "text",
-                                              "id": "JMHRZ",
-                                              "name": "Notes Type Key",
+                                              "id": "kVClr",
                                               "fill": "$text-secondary",
-                                              "content": "key · textarea",
+                                              "content": "key",
                                               "fontFamily": "$font-family",
                                               "fontSize": 11,
                                               "fontWeight": "500"
@@ -1418,49 +1427,44 @@
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "p1Ie1",
-                                          "name": "Notes Actions",
+                                          "id": "YdefA",
                                           "gap": 6,
                                           "alignItems": "center",
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "H7aA6",
-                                              "name": "Notes Edit Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#0E6ECC1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "Obl6C",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "Qeq8w",
-                                                  "name": "Notes Edit",
+                                                  "id": "toZQp",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "pencil",
                                                   "library": "lucide",
-                                                  "fill": "$systemBlue"
+                                                  "fill": "$system-blue"
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "frame",
-                                              "id": "Qer84",
-                                              "name": "Notes Delete Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#CC2B0E1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "qiFVq",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "fyGEz",
-                                                  "name": "Notes Delete",
+                                                  "id": "I27F8",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "trash-2",
@@ -1479,14 +1483,14 @@
                             },
                             {
                               "type": "frame",
-                              "id": "bwiow",
+                              "id": "X7lmS",
                               "name": "Add Field Slot",
                               "context": "Opens Configurator — Add Field Modal (U2kuG4) with field create settings: label, key, type, required.",
                               "width": "fill_container",
-                              "height": 44,
-                              "fill": "#8510f214",
+                              "height": 40,
+                              "fill": "#00000000",
                               "cornerRadius": "$radius",
-                              "stroke": "$primary",
+                              "stroke": "$border",
                               "strokeWidth": 1,
                               "gap": 8,
                               "justifyContent": "center",
@@ -1494,8 +1498,7 @@
                               "children": [
                                 {
                                   "type": "icon",
-                                  "id": "o3JrB",
-                                  "name": "Add Icon",
+                                  "id": "E7PXc",
                                   "width": 14,
                                   "height": 14,
                                   "icon": "plus",
@@ -1504,8 +1507,7 @@
                                 },
                                 {
                                   "type": "text",
-                                  "id": "Tie3A",
-                                  "name": "Add Label",
+                                  "id": "NxVjC",
                                   "fill": "$primary",
                                   "content": "Add field",
                                   "fontFamily": "$font-family",
@@ -1554,7 +1556,8 @@
                   "fill": "$border",
                   "content": "Live form preview placeholder",
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -2719,7 +2722,8 @@
                   "fill": "$border",
                   "content": "Live form preview placeholder",
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -3055,7 +3059,7 @@
                           "children": [
                             {
                               "type": "text",
-                              "id": "IiDZj",
+                              "id": "e3tvB",
                               "name": "Fields Hint",
                               "fill": "$text-secondary",
                               "content": "Drag to reorder · red dot = required",
@@ -3065,96 +3069,92 @@
                             },
                             {
                               "type": "frame",
-                              "id": "gQshx",
-                              "name": "Fields Stack",
-                              "clip": true,
+                              "id": "lPqmD",
+                              "name": "Fields List",
                               "width": "fill_container",
-                              "fill": "$bg-main",
-                              "cornerRadius": "$radius",
-                              "stroke": "$border",
-                              "strokeWidth": 1,
                               "layout": "vertical",
+                              "gap": 6,
                               "children": [
                                 {
-                                  "type": "rectangle",
-                                  "id": "nH59Z",
-                                  "name": "Stack Rail",
-                                  "fill": "$primary",
-                                  "width": "fill_container",
-                                  "height": 3
-                                },
-                                {
                                   "type": "frame",
-                                  "id": "ZYN4H",
-                                  "name": "Fields List",
+                                  "id": "pAdYC",
+                                  "name": "Full name Zone",
+                                  "clip": true,
                                   "width": "fill_container",
-                                  "layout": "vertical",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
                                   "children": [
                                     {
                                       "type": "frame",
-                                      "id": "BcFkq",
-                                      "name": "Full name Row",
+                                      "id": "gbMxP",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "lDH9U",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "YQji3",
                                       "width": "fill_container",
-                                      "stroke": "$border",
-                                      "strokeWidth": {
-                                        "bottom": 1
-                                      },
                                       "gap": 10,
-                                      "padding": 12,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
                                       "alignItems": "center",
                                       "children": [
                                         {
                                           "type": "frame",
-                                          "id": "dtYWH",
-                                          "name": "Full name Index Col",
-                                          "width": 28,
-                                          "layout": "vertical",
-                                          "gap": 4,
+                                          "id": "dQYZR",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#8510f218",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
                                           "alignItems": "center",
                                           "children": [
                                             {
-                                              "type": "text",
-                                              "id": "Pp3d2",
-                                              "name": "Full name Index",
-                                              "fill": "$text-main",
-                                              "content": "01",
-                                              "fontFamily": "$font-family",
-                                              "fontSize": 11,
-                                              "fontWeight": "800",
-                                              "letterSpacing": 0.5
-                                            },
-                                            {
                                               "type": "icon",
-                                              "id": "awEmC",
-                                              "name": "Full name Grip",
-                                              "width": 12,
-                                              "height": 12,
-                                              "icon": "grip-vertical",
+                                              "id": "VtUiP",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "type",
                                               "library": "lucide",
-                                              "fill": "$border"
+                                              "fill": "$primary"
                                             }
                                           ]
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "R55rF",
-                                          "name": "Full name Info",
+                                          "id": "ZXsdj",
                                           "width": "fill_container",
                                           "layout": "vertical",
-                                          "gap": 4,
+                                          "gap": 2,
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "MZzmK",
-                                              "name": "Full name Title Row",
-                                              "width": "fill_container",
+                                              "id": "mu3DC",
                                               "gap": 6,
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "text",
-                                                  "id": "nsA4k",
-                                                  "name": "Full name Name",
+                                                  "id": "j97Dga",
                                                   "fill": "$text-main",
                                                   "content": "Full name",
                                                   "fontFamily": "$font-family",
@@ -3162,23 +3162,19 @@
                                                   "fontWeight": "700"
                                                 },
                                                 {
-                                                  "type": "text",
-                                                  "id": "wNAdN",
-                                                  "name": "Full name Name",
-                                                  "fill": "#e00d0dff",
-                                                  "content": "*",
-                                                  "fontFamily": "$font-family",
-                                                  "fontSize": 13,
-                                                  "fontWeight": "700"
+                                                  "type": "ellipse",
+                                                  "id": "RgEQW",
+                                                  "fill": "$system-red",
+                                                  "width": 6,
+                                                  "height": 6
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "text",
-                                              "id": "gDYEm",
-                                              "name": "Full name Type Key",
+                                              "id": "XyCPU",
                                               "fill": "$text-secondary",
-                                              "content": "key · text",
+                                              "content": "key",
                                               "fontFamily": "$font-family",
                                               "fontSize": 11,
                                               "fontWeight": "500"
@@ -3187,49 +3183,44 @@
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "FrAhD",
-                                          "name": "Full name Actions",
+                                          "id": "XHK6U",
                                           "gap": 6,
                                           "alignItems": "center",
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "KwfGe",
-                                              "name": "Full name Edit Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#0E6ECC1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "WhGd5",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "QqU9X",
-                                                  "name": "Full name Edit",
+                                                  "id": "zBxvV",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "pencil",
                                                   "library": "lucide",
-                                                  "fill": "$systemBlue"
+                                                  "fill": "$system-blue"
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "frame",
-                                              "id": "y6Xwr",
-                                              "name": "Full name Delete Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#CC2B0E1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "Jh70Q",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "CPiMA",
-                                                  "name": "Full name Delete",
+                                                  "id": "baz6Z",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "trash-2",
@@ -3241,72 +3232,89 @@
                                           ]
                                         }
                                       ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "NpLZc",
+                                  "name": "Email Zone",
+                                  "clip": true,
+                                  "width": "fill_container",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "Oqge0",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "C7FDGN",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
                                     },
                                     {
                                       "type": "frame",
-                                      "id": "N52MKR",
-                                      "name": "Email Row",
+                                      "id": "GviWV",
                                       "width": "fill_container",
-                                      "stroke": "$border",
-                                      "strokeWidth": {
-                                        "bottom": 1
-                                      },
                                       "gap": 10,
-                                      "padding": 12,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
                                       "alignItems": "center",
                                       "children": [
                                         {
                                           "type": "frame",
-                                          "id": "mV2CY",
-                                          "name": "Email Index Col",
-                                          "width": 28,
-                                          "layout": "vertical",
-                                          "gap": 4,
+                                          "id": "wgMMK",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#0E6ECC18",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
                                           "alignItems": "center",
                                           "children": [
                                             {
-                                              "type": "text",
-                                              "id": "z442n",
-                                              "name": "Email Index",
-                                              "fill": "$text-main",
-                                              "content": "02",
-                                              "fontFamily": "$font-family",
-                                              "fontSize": 11,
-                                              "fontWeight": "800",
-                                              "letterSpacing": 0.5
-                                            },
-                                            {
                                               "type": "icon",
-                                              "id": "D11sy",
-                                              "name": "Email Grip",
-                                              "width": 12,
-                                              "height": 12,
-                                              "icon": "grip-vertical",
+                                              "id": "goFuO",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "mail",
                                               "library": "lucide",
-                                              "fill": "$border"
+                                              "fill": "$system-blue"
                                             }
                                           ]
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "fJpPO",
-                                          "name": "Email Info",
+                                          "id": "LufpX",
                                           "width": "fill_container",
                                           "layout": "vertical",
-                                          "gap": 4,
+                                          "gap": 2,
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "vV3Bh",
-                                              "name": "Email Title Row",
-                                              "width": "fill_container",
+                                              "id": "B164Bi",
                                               "gap": 6,
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "text",
-                                                  "id": "i8aKH",
-                                                  "name": "Email Name",
+                                                  "id": "YIOn7",
                                                   "fill": "$text-main",
                                                   "content": "Email",
                                                   "fontFamily": "$font-family",
@@ -3314,23 +3322,19 @@
                                                   "fontWeight": "700"
                                                 },
                                                 {
-                                                  "type": "text",
-                                                  "id": "lmRnM",
-                                                  "name": "Email Name",
+                                                  "type": "ellipse",
+                                                  "id": "YxlwB",
                                                   "fill": "$system-red",
-                                                  "content": "*",
-                                                  "fontFamily": "$font-family",
-                                                  "fontSize": 13,
-                                                  "fontWeight": "700"
+                                                  "width": 6,
+                                                  "height": 6
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "text",
-                                              "id": "bIiJq",
-                                              "name": "Email Type Key",
+                                              "id": "M4ykO",
                                               "fill": "$text-secondary",
-                                              "content": "key · email",
+                                              "content": "key",
                                               "fontFamily": "$font-family",
                                               "fontSize": 11,
                                               "fontWeight": "500"
@@ -3339,49 +3343,44 @@
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "l3ysyK",
-                                          "name": "Email Actions",
+                                          "id": "wORM9",
                                           "gap": 6,
                                           "alignItems": "center",
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "XV8aC",
-                                              "name": "Email Edit Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#0E6ECC1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "XriiV",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "sGTHK",
-                                                  "name": "Email Edit",
+                                                  "id": "PjUDP",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "pencil",
                                                   "library": "lucide",
-                                                  "fill": "$systemBlue"
+                                                  "fill": "$system-blue"
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "frame",
-                                              "id": "R4AhaS",
-                                              "name": "Email Delete Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#CC2B0E1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "pKZPp",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "DxUHC",
-                                                  "name": "Email Delete",
+                                                  "id": "QJg1j",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "trash-2",
@@ -3393,86 +3392,94 @@
                                           ]
                                         }
                                       ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "vaqni",
+                                  "name": "Phone Zone",
+                                  "clip": true,
+                                  "width": "fill_container",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "Y7E5jG",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "DDVTC",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
                                     },
                                     {
                                       "type": "frame",
-                                      "id": "Q00i6v",
-                                      "name": "Phone Row",
+                                      "id": "nprsx",
                                       "width": "fill_container",
-                                      "stroke": "$border",
-                                      "strokeWidth": {
-                                        "bottom": 1
-                                      },
                                       "gap": 10,
-                                      "padding": 12,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
                                       "alignItems": "center",
                                       "children": [
                                         {
                                           "type": "frame",
-                                          "id": "yDz8R",
-                                          "name": "Phone Index Col",
-                                          "width": 28,
-                                          "layout": "vertical",
-                                          "gap": 4,
+                                          "id": "LRuKx",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#1ECC0E18",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
                                           "alignItems": "center",
                                           "children": [
                                             {
-                                              "type": "text",
-                                              "id": "c9ZHI",
-                                              "name": "Phone Index",
-                                              "fill": "$text-main",
-                                              "content": "03",
-                                              "fontFamily": "$font-family",
-                                              "fontSize": 11,
-                                              "fontWeight": "800",
-                                              "letterSpacing": 0.5
-                                            },
-                                            {
                                               "type": "icon",
-                                              "id": "i9Bijy",
-                                              "name": "Phone Grip",
-                                              "width": 12,
-                                              "height": 12,
-                                              "icon": "grip-vertical",
+                                              "id": "v3rxvD",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "phone",
                                               "library": "lucide",
-                                              "fill": "$border"
+                                              "fill": "$system-green"
                                             }
                                           ]
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "Li8Oi",
-                                          "name": "Phone Info",
+                                          "id": "Nzuza",
                                           "width": "fill_container",
                                           "layout": "vertical",
-                                          "gap": 4,
+                                          "gap": 2,
                                           "children": [
                                             {
-                                              "type": "frame",
-                                              "id": "Is0QH",
-                                              "name": "Phone Title Row",
-                                              "width": "fill_container",
-                                              "gap": 6,
-                                              "alignItems": "center",
-                                              "children": [
-                                                {
-                                                  "type": "text",
-                                                  "id": "ejNGk",
-                                                  "name": "Phone Name",
-                                                  "fill": "$text-main",
-                                                  "content": "Phone",
-                                                  "fontFamily": "$font-family",
-                                                  "fontSize": 13,
-                                                  "fontWeight": "700"
-                                                }
-                                              ]
+                                              "type": "text",
+                                              "id": "Mv32G",
+                                              "fill": "$text-main",
+                                              "content": "Phone",
+                                              "fontFamily": "$font-family",
+                                              "fontSize": 13,
+                                              "fontWeight": "700"
                                             },
                                             {
                                               "type": "text",
-                                              "id": "nlGHF",
-                                              "name": "Phone Type Key",
+                                              "id": "lPJbm",
                                               "fill": "$text-secondary",
-                                              "content": "key · phone",
+                                              "content": "key",
                                               "fontFamily": "$font-family",
                                               "fontSize": 11,
                                               "fontWeight": "500"
@@ -3481,49 +3488,44 @@
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "Iljum",
-                                          "name": "Phone Actions",
+                                          "id": "ziNil",
                                           "gap": 6,
                                           "alignItems": "center",
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "xp2qf",
-                                              "name": "Phone Edit Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#0E6ECC1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "TWojz",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "nEqUD",
-                                                  "name": "Phone Edit",
+                                                  "id": "vzFik",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "pencil",
                                                   "library": "lucide",
-                                                  "fill": "$systemBlue"
+                                                  "fill": "$system-blue"
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "frame",
-                                              "id": "Y5Mvq",
-                                              "name": "Phone Delete Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#CC2B0E1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "dP0Lv",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "zRdyd",
-                                                  "name": "Phone Delete",
+                                                  "id": "ADujm",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "trash-2",
@@ -3535,87 +3537,94 @@
                                           ]
                                         }
                                       ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "ofO0g",
+                                  "name": "Notes Zone",
+                                  "clip": true,
+                                  "width": "fill_container",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "omuIS",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "kLa8x",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
                                     },
                                     {
                                       "type": "frame",
-                                      "id": "l4N3o",
-                                      "name": "Notes Row",
+                                      "id": "i6FIb",
                                       "width": "fill_container",
-                                      "stroke": {
-                                        "type": "color",
-                                        "color": "$border",
-                                        "enabled": false
-                                      },
                                       "gap": 10,
-                                      "padding": 12,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
                                       "alignItems": "center",
                                       "children": [
                                         {
                                           "type": "frame",
-                                          "id": "QKwBN",
-                                          "name": "Notes Index Col",
-                                          "width": 28,
-                                          "layout": "vertical",
-                                          "gap": 4,
+                                          "id": "bTw4K",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#544d4d30",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
                                           "alignItems": "center",
                                           "children": [
                                             {
-                                              "type": "text",
-                                              "id": "iDicc",
-                                              "name": "Notes Index",
-                                              "fill": "$text-main",
-                                              "content": "04",
-                                              "fontFamily": "$font-family",
-                                              "fontSize": 11,
-                                              "fontWeight": "800",
-                                              "letterSpacing": 0.5
-                                            },
-                                            {
                                               "type": "icon",
-                                              "id": "G1OAn",
-                                              "name": "Notes Grip",
-                                              "width": 12,
-                                              "height": 12,
-                                              "icon": "grip-vertical",
+                                              "id": "E7pJFg",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "file-text",
                                               "library": "lucide",
-                                              "fill": "$border"
+                                              "fill": "$text-secondary"
                                             }
                                           ]
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "UTnqQ",
-                                          "name": "Notes Info",
+                                          "id": "zuCH2",
                                           "width": "fill_container",
                                           "layout": "vertical",
-                                          "gap": 4,
+                                          "gap": 2,
                                           "children": [
                                             {
-                                              "type": "frame",
-                                              "id": "WHvMT",
-                                              "name": "Notes Title Row",
-                                              "width": "fill_container",
-                                              "gap": 6,
-                                              "alignItems": "center",
-                                              "children": [
-                                                {
-                                                  "type": "text",
-                                                  "id": "G8sq1E",
-                                                  "name": "Notes Name",
-                                                  "fill": "$text-main",
-                                                  "content": "Notes",
-                                                  "fontFamily": "$font-family",
-                                                  "fontSize": 13,
-                                                  "fontWeight": "700"
-                                                }
-                                              ]
+                                              "type": "text",
+                                              "id": "T3zCPp",
+                                              "fill": "$text-main",
+                                              "content": "Notes",
+                                              "fontFamily": "$font-family",
+                                              "fontSize": 13,
+                                              "fontWeight": "700"
                                             },
                                             {
                                               "type": "text",
-                                              "id": "c7gnc9",
-                                              "name": "Notes Type Key",
+                                              "id": "jwAqH",
                                               "fill": "$text-secondary",
-                                              "content": "key · textarea",
+                                              "content": "key",
                                               "fontFamily": "$font-family",
                                               "fontSize": 11,
                                               "fontWeight": "500"
@@ -3624,49 +3633,44 @@
                                         },
                                         {
                                           "type": "frame",
-                                          "id": "Y64tD",
-                                          "name": "Notes Actions",
+                                          "id": "YEASu",
                                           "gap": 6,
                                           "alignItems": "center",
                                           "children": [
                                             {
                                               "type": "frame",
-                                              "id": "ezVyX",
-                                              "name": "Notes Edit Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#0E6ECC1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "uikrp",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "SYqv1",
-                                                  "name": "Notes Edit",
+                                                  "id": "kwt7c",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "pencil",
                                                   "library": "lucide",
-                                                  "fill": "$systemBlue"
+                                                  "fill": "$system-blue"
                                                 }
                                               ]
                                             },
                                             {
                                               "type": "frame",
-                                              "id": "Xj177",
-                                              "name": "Notes Delete Button",
-                                              "width": 28,
-                                              "height": 28,
-                                              "fill": "#CC2B0E1A",
-                                              "cornerRadius": "$radius-sm",
+                                              "id": "M6isj",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
                                               "justifyContent": "center",
                                               "alignItems": "center",
                                               "children": [
                                                 {
                                                   "type": "icon",
-                                                  "id": "TbAJY",
-                                                  "name": "Notes Delete",
+                                                  "id": "U6lXTb",
                                                   "width": 14,
                                                   "height": 14,
                                                   "icon": "trash-2",
@@ -3685,13 +3689,14 @@
                             },
                             {
                               "type": "frame",
-                              "id": "EGkbV",
+                              "id": "A661ke",
                               "name": "Add Field Slot",
+                              "context": "Opens Configurator — Add Field Modal (U2kuG4) with field create settings: label, key, type, required.",
                               "width": "fill_container",
-                              "height": 44,
-                              "fill": "#8510f214",
+                              "height": 40,
+                              "fill": "#00000000",
                               "cornerRadius": "$radius",
-                              "stroke": "$primary",
+                              "stroke": "$border",
                               "strokeWidth": 1,
                               "gap": 8,
                               "justifyContent": "center",
@@ -3699,8 +3704,7 @@
                               "children": [
                                 {
                                   "type": "icon",
-                                  "id": "UICeY",
-                                  "name": "Add Icon",
+                                  "id": "aCzlx",
                                   "width": 14,
                                   "height": 14,
                                   "icon": "plus",
@@ -3709,8 +3713,7 @@
                                 },
                                 {
                                   "type": "text",
-                                  "id": "N6Pe5",
-                                  "name": "Add Label",
+                                  "id": "OTGT6",
                                   "fill": "$primary",
                                   "content": "Add field",
                                   "fontFamily": "$font-family",
@@ -3759,7 +3762,8 @@
                   "fill": "$border",
                   "content": "Live form preview placeholder",
                   "fontFamily": "$font-family",
-                  "fontSize": 13
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             }
@@ -3842,30 +3846,6 @@
                           "fontFamily": "$font-family",
                           "fontSize": 13,
                           "fontWeight": "500"
-                        }
-                      ]
-                    },
-                    {
-                      "type": "frame",
-                      "id": "hqWpt",
-                      "name": "Close Button",
-                      "width": 32,
-                      "height": 32,
-                      "cornerRadius": "$radius-sm",
-                      "stroke": "$border",
-                      "strokeWidth": 1,
-                      "justifyContent": "center",
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "icon",
-                          "id": "H6XTv9",
-                          "name": "Close Icon",
-                          "width": 16,
-                          "height": 16,
-                          "icon": "x",
-                          "library": "lucide",
-                          "fill": "$text-secondary"
                         }
                       ]
                     }
@@ -4762,6 +4742,1216 @@
                       ]
                     }
                   ]
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "type": "frame",
+      "id": "v1Axz",
+      "x": -1520,
+      "y": 980,
+      "name": "Configurator — Fields (Group)",
+      "clip": true,
+      "width": 1440,
+      "height": 900,
+      "fill": "$bg-main",
+      "layout": "vertical",
+      "gap": 16,
+      "padding": 16,
+      "children": [
+        {
+          "type": "frame",
+          "id": "EWVhQ",
+          "name": "App Header",
+          "width": "fill_container",
+          "height": 50,
+          "justifyContent": "space_between",
+          "alignItems": "center",
+          "children": [
+            {
+              "type": "text",
+              "id": "TkQBF",
+              "name": "Logo",
+              "fill": "$text-main",
+              "content": "bookio",
+              "fontFamily": "$font-family",
+              "fontSize": 22,
+              "fontWeight": "800",
+              "letterSpacing": 1
+            },
+            {
+              "type": "frame",
+              "id": "DwGlz",
+              "name": "Org Menu",
+              "fill": "$bg-ui",
+              "cornerRadius": "$radius-sm",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "gap": 10,
+              "padding": [
+                6,
+                10
+              ],
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "rectangle",
+                  "cornerRadius": 6,
+                  "id": "A8GJK",
+                  "name": "Org Avatar",
+                  "fill": "#2a2a28",
+                  "width": 30,
+                  "height": 30
+                },
+                {
+                  "type": "text",
+                  "id": "mOKSz",
+                  "name": "Org Name",
+                  "fill": "$text-main",
+                  "content": "Acme Studio",
+                  "fontFamily": "$font-family",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "icon",
+                  "id": "TTCpX",
+                  "name": "Org Chevron",
+                  "width": 16,
+                  "height": 16,
+                  "icon": "chevron-down",
+                  "library": "lucide",
+                  "fill": "$text-main"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "type": "frame",
+          "id": "q3Sz6",
+          "name": "Body",
+          "width": "fill_container",
+          "height": "fill_container",
+          "gap": 32,
+          "children": [
+            {
+              "type": "frame",
+              "id": "h5sjd",
+              "name": "Aside Bar",
+              "clip": true,
+              "width": 380,
+              "height": "fill_container",
+              "fill": "$bg-ui",
+              "cornerRadius": "$radius",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "children": [
+                {
+                  "type": "frame",
+                  "id": "PPxz9",
+                  "name": "Section Tabs",
+                  "width": "fill_container",
+                  "gap": 6,
+                  "padding": [
+                    12,
+                    12,
+                    0,
+                    12
+                  ],
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "Y8jRp",
+                      "name": "Basic Tab",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "#151514",
+                      "cornerRadius": "$radius-sm",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        4,
+                        2
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "ebwsh",
+                          "name": "Basic Tab Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "sliders-horizontal",
+                          "library": "lucide",
+                          "fill": "$text-secondary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "sQ1Et",
+                          "name": "Basic Tab Label",
+                          "fill": "$text-secondary",
+                          "content": "Settings",
+                          "fontFamily": "$font-family",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "UuOrB",
+                      "name": "Fields Tab",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "$primary",
+                      "cornerRadius": "$radius-sm",
+                      "stroke": "$primary",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        4,
+                        2
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "LmNTG",
+                          "name": "Fields Tab Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "list-checks",
+                          "library": "lucide",
+                          "fill": "#ffffff"
+                        },
+                        {
+                          "type": "text",
+                          "id": "HgEko",
+                          "name": "Fields Tab Label",
+                          "fill": "#ffffff",
+                          "content": "Fields",
+                          "fontFamily": "$font-family",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    },
+                    {
+                      "type": "frame",
+                      "id": "NNP5a",
+                      "name": "Styles Tab",
+                      "width": "fill_container",
+                      "height": 40,
+                      "fill": "#151514",
+                      "cornerRadius": "$radius-sm",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 2,
+                      "padding": [
+                        4,
+                        2
+                      ],
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "NZIwy",
+                          "name": "Styles Tab Icon",
+                          "width": 14,
+                          "height": 14,
+                          "icon": "palette",
+                          "library": "lucide",
+                          "fill": "$text-secondary"
+                        },
+                        {
+                          "type": "text",
+                          "id": "r7HpAM",
+                          "name": "Styles Tab Label",
+                          "fill": "$text-secondary",
+                          "content": "Styles",
+                          "fontFamily": "$font-family",
+                          "fontSize": 10,
+                          "fontWeight": "700"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "BY4D4",
+                  "name": "Aside Header",
+                  "width": "fill_container",
+                  "stroke": "$border",
+                  "strokeWidth": {
+                    "bottom": 1
+                  },
+                  "padding": 16,
+                  "justifyContent": "space_between",
+                  "alignItems": "center",
+                  "children": [
+                    {
+                      "type": "text",
+                      "id": "qKM1D",
+                      "name": "Aside Title",
+                      "fill": "$text-main",
+                      "content": "Fields",
+                      "fontFamily": "$font-family",
+                      "fontSize": 18,
+                      "fontWeight": "700"
+                    },
+                    {
+                      "type": "frame",
+                      "id": "E4R7tN",
+                      "name": "Collapse Button",
+                      "width": 32,
+                      "height": 32,
+                      "cornerRadius": "$radius-sm",
+                      "stroke": "$border",
+                      "strokeWidth": 1,
+                      "justifyContent": "center",
+                      "alignItems": "center",
+                      "children": [
+                        {
+                          "type": "icon",
+                          "id": "EUGaX",
+                          "name": "Collapse Icon",
+                          "width": 16,
+                          "height": 16,
+                          "icon": "panel-left-close",
+                          "library": "lucide",
+                          "fill": "$text-secondary"
+                        }
+                      ]
+                    }
+                  ]
+                },
+                {
+                  "type": "frame",
+                  "id": "R0qLKm",
+                  "name": "Aside Content",
+                  "clip": true,
+                  "width": "fill_container",
+                  "height": "fill_container",
+                  "layout": "vertical",
+                  "gap": 8,
+                  "padding": 12,
+                  "children": [
+                    {
+                      "type": "frame",
+                      "id": "RiZLV",
+                      "name": "Active Section",
+                      "width": "fill_container",
+                      "fill": "#00000000",
+                      "cornerRadius": "$radius-sm",
+                      "stroke": {
+                        "type": "color",
+                        "color": "$border",
+                        "enabled": false
+                      },
+                      "strokeWidth": 1,
+                      "layout": "vertical",
+                      "gap": 12,
+                      "children": [
+                        {
+                          "type": "frame",
+                          "id": "O31uX",
+                          "name": "Fields Body",
+                          "width": "fill_container",
+                          "layout": "vertical",
+                          "gap": 12,
+                          "children": [
+                            {
+                              "type": "text",
+                              "id": "LlWzK",
+                              "name": "Fields Hint",
+                              "fill": "$text-secondary",
+                              "content": "Drag to reorder · red dot = required · nested fields belong to group",
+                              "fontFamily": "$font-family",
+                              "fontSize": 11,
+                              "fontWeight": "500"
+                            },
+                            {
+                              "type": "frame",
+                              "id": "Cghwr",
+                              "name": "Fields List",
+                              "width": "fill_container",
+                              "layout": "vertical",
+                              "gap": 6,
+                              "children": [
+                                {
+                                  "type": "frame",
+                                  "id": "pGrZ3",
+                                  "name": "Full name Zone",
+                                  "clip": true,
+                                  "width": "fill_container",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "wBba0",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "HJheN",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "Jtxk8",
+                                      "width": "fill_container",
+                                      "gap": 10,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "aKrZP",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#8510f218",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "icon",
+                                              "id": "YUlEj",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "type",
+                                              "library": "lucide",
+                                              "fill": "$primary"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "frame",
+                                          "id": "BJvQi",
+                                          "width": "fill_container",
+                                          "layout": "vertical",
+                                          "gap": 2,
+                                          "children": [
+                                            {
+                                              "type": "frame",
+                                              "id": "yHj4b",
+                                              "gap": 6,
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "text",
+                                                  "id": "Sku5A",
+                                                  "fill": "$text-main",
+                                                  "content": "Full name",
+                                                  "fontFamily": "$font-family",
+                                                  "fontSize": 13,
+                                                  "fontWeight": "700"
+                                                },
+                                                {
+                                                  "type": "ellipse",
+                                                  "id": "fstrL",
+                                                  "fill": "$system-red",
+                                                  "width": 6,
+                                                  "height": 6
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "text",
+                                              "id": "M3uL8a",
+                                              "fill": "$text-secondary",
+                                              "content": "key",
+                                              "fontFamily": "$font-family",
+                                              "fontSize": 11,
+                                              "fontWeight": "500"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "frame",
+                                          "id": "T8dCQ",
+                                          "gap": 6,
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "frame",
+                                              "id": "Ee9Mj",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
+                                              "justifyContent": "center",
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "icon",
+                                                  "id": "m2Ud2k",
+                                                  "width": 14,
+                                                  "height": 14,
+                                                  "icon": "pencil",
+                                                  "library": "lucide",
+                                                  "fill": "$system-blue"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "frame",
+                                              "id": "uRC98",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
+                                              "justifyContent": "center",
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "icon",
+                                                  "id": "jNsmA",
+                                                  "width": 14,
+                                                  "height": 14,
+                                                  "icon": "trash-2",
+                                                  "library": "lucide",
+                                                  "fill": "$system-red"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Iv5p4",
+                                  "name": "Contact Group Zone",
+                                  "context": "Group field (type=group). Children are nested one level deep; drag reorder works at top level and within group.",
+                                  "clip": true,
+                                  "width": "fill_container",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$primary",
+                                  "strokeWidth": 1,
+                                  "layout": "vertical",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "iUfgA",
+                                      "width": "fill_container",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "OkowY",
+                                          "width": 36,
+                                          "fill": "#ffffff0a",
+                                          "layout": "vertical",
+                                          "justifyContent": "center",
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "icon",
+                                              "id": "RBUKA",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "grip-vertical",
+                                              "library": "lucide",
+                                              "fill": "$text-secondary"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "frame",
+                                          "id": "SrTIB",
+                                          "width": "fill_container",
+                                          "gap": 10,
+                                          "padding": [
+                                            10,
+                                            12
+                                          ],
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "frame",
+                                              "id": "Rriwo",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#8510f218",
+                                              "cornerRadius": "$radius-sm",
+                                              "justifyContent": "center",
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "icon",
+                                                  "id": "pC5G3",
+                                                  "width": 14,
+                                                  "height": 14,
+                                                  "icon": "folder",
+                                                  "library": "lucide",
+                                                  "fill": "$primary"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "frame",
+                                              "id": "lVXt2",
+                                              "width": "fill_container",
+                                              "layout": "vertical",
+                                              "gap": 2,
+                                              "children": [
+                                                {
+                                                  "type": "text",
+                                                  "id": "kND4m",
+                                                  "fill": "$text-main",
+                                                  "content": "Contact details",
+                                                  "fontFamily": "$font-family",
+                                                  "fontSize": 13,
+                                                  "fontWeight": "700"
+                                                },
+                                                {
+                                                  "type": "text",
+                                                  "id": "O6t2pw",
+                                                  "fill": "$text-secondary",
+                                                  "content": "group · 2 fields",
+                                                  "fontFamily": "$font-family",
+                                                  "fontSize": 11,
+                                                  "fontWeight": "500"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "frame",
+                                              "id": "c0fKr",
+                                              "gap": 6,
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "frame",
+                                                  "id": "o8jIfE",
+                                                  "width": 30,
+                                                  "height": 30,
+                                                  "fill": "#0E6ECC15",
+                                                  "cornerRadius": 15,
+                                                  "justifyContent": "center",
+                                                  "alignItems": "center",
+                                                  "children": [
+                                                    {
+                                                      "type": "icon",
+                                                      "id": "R9Cof",
+                                                      "width": 14,
+                                                      "height": 14,
+                                                      "icon": "pencil",
+                                                      "library": "lucide",
+                                                      "fill": "$system-blue"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "frame",
+                                                  "id": "mfvnM",
+                                                  "width": 30,
+                                                  "height": 30,
+                                                  "fill": "#CC2B0E15",
+                                                  "cornerRadius": 15,
+                                                  "justifyContent": "center",
+                                                  "alignItems": "center",
+                                                  "children": [
+                                                    {
+                                                      "type": "icon",
+                                                      "id": "ooqZt",
+                                                      "width": 14,
+                                                      "height": 14,
+                                                      "icon": "trash-2",
+                                                      "library": "lucide",
+                                                      "fill": "$system-red"
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "LgpvH",
+                                      "name": "Group Children",
+                                      "width": "fill_container",
+                                      "layout": "vertical",
+                                      "gap": 6,
+                                      "padding": [
+                                        0,
+                                        10,
+                                        10,
+                                        46
+                                      ],
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "U8I3q5",
+                                          "name": "Email Child",
+                                          "clip": true,
+                                          "width": 322,
+                                          "fill": "#00000035",
+                                          "cornerRadius": "$radius-sm",
+                                          "stroke": "$border",
+                                          "strokeWidth": 1,
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "frame",
+                                              "id": "J5sm3",
+                                              "width": 28,
+                                              "fill": "#ffffff08",
+                                              "layout": "vertical",
+                                              "justifyContent": "center",
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "icon",
+                                                  "id": "bFPaX",
+                                                  "width": 12,
+                                                  "height": 12,
+                                                  "icon": "grip-vertical",
+                                                  "library": "lucide",
+                                                  "fill": "$text-secondary"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "frame",
+                                              "id": "s2kR5",
+                                              "width": "fill_container",
+                                              "gap": 8,
+                                              "padding": [
+                                                8,
+                                                10
+                                              ],
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "frame",
+                                                  "id": "x8D6JL",
+                                                  "width": 26,
+                                                  "height": 26,
+                                                  "fill": "#0E6ECC18",
+                                                  "cornerRadius": "$radius-sm",
+                                                  "justifyContent": "center",
+                                                  "alignItems": "center",
+                                                  "children": [
+                                                    {
+                                                      "type": "icon",
+                                                      "id": "wFGof",
+                                                      "width": 12,
+                                                      "height": 12,
+                                                      "icon": "mail",
+                                                      "library": "lucide",
+                                                      "fill": "$system-blue"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "frame",
+                                                  "id": "W9VUu",
+                                                  "width": "fill_container",
+                                                  "layout": "vertical",
+                                                  "gap": 2,
+                                                  "children": [
+                                                    {
+                                                      "type": "frame",
+                                                      "id": "hDGF2",
+                                                      "gap": 6,
+                                                      "alignItems": "center",
+                                                      "children": [
+                                                        {
+                                                          "type": "text",
+                                                          "id": "uuIZl",
+                                                          "fill": "$text-main",
+                                                          "content": "Email",
+                                                          "fontFamily": "$font-family",
+                                                          "fontSize": 12,
+                                                          "fontWeight": "700"
+                                                        },
+                                                        {
+                                                          "type": "ellipse",
+                                                          "id": "GJdiR",
+                                                          "fill": "$system-red",
+                                                          "width": 6,
+                                                          "height": 6
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "type": "text",
+                                                      "id": "y85Jl",
+                                                      "fill": "$text-secondary",
+                                                      "content": "key",
+                                                      "fontFamily": "$font-family",
+                                                      "fontSize": 10,
+                                                      "fontWeight": "500"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "frame",
+                                                  "id": "W9Qtoh",
+                                                  "gap": 4,
+                                                  "alignItems": "center",
+                                                  "children": [
+                                                    {
+                                                      "type": "frame",
+                                                      "id": "GmSgc",
+                                                      "width": 26,
+                                                      "height": 26,
+                                                      "fill": "#0E6ECC15",
+                                                      "cornerRadius": 13,
+                                                      "justifyContent": "center",
+                                                      "alignItems": "center",
+                                                      "children": [
+                                                        {
+                                                          "type": "icon",
+                                                          "id": "V2PpU",
+                                                          "width": 12,
+                                                          "height": 12,
+                                                          "icon": "pencil",
+                                                          "library": "lucide",
+                                                          "fill": "$system-blue"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "type": "frame",
+                                                      "id": "pWKck",
+                                                      "width": 26,
+                                                      "height": 26,
+                                                      "fill": "#CC2B0E15",
+                                                      "cornerRadius": 13,
+                                                      "justifyContent": "center",
+                                                      "alignItems": "center",
+                                                      "children": [
+                                                        {
+                                                          "type": "icon",
+                                                          "id": "tdhKD",
+                                                          "width": 12,
+                                                          "height": 12,
+                                                          "icon": "trash-2",
+                                                          "library": "lucide",
+                                                          "fill": "$system-red"
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "frame",
+                                          "id": "Hyagt",
+                                          "name": "Phone Child",
+                                          "clip": true,
+                                          "width": 322,
+                                          "fill": "#00000035",
+                                          "cornerRadius": "$radius-sm",
+                                          "stroke": "$border",
+                                          "strokeWidth": 1,
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "frame",
+                                              "id": "XXNGj",
+                                              "width": 28,
+                                              "fill": "#ffffff08",
+                                              "layout": "vertical",
+                                              "justifyContent": "center",
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "icon",
+                                                  "id": "AvZfI",
+                                                  "width": 12,
+                                                  "height": 12,
+                                                  "icon": "grip-vertical",
+                                                  "library": "lucide",
+                                                  "fill": "$text-secondary"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "frame",
+                                              "id": "NW6gH",
+                                              "width": "fill_container",
+                                              "gap": 8,
+                                              "padding": [
+                                                8,
+                                                10
+                                              ],
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "frame",
+                                                  "id": "viMZo",
+                                                  "width": 26,
+                                                  "height": 26,
+                                                  "fill": "#1ECC0E18",
+                                                  "cornerRadius": "$radius-sm",
+                                                  "justifyContent": "center",
+                                                  "alignItems": "center",
+                                                  "children": [
+                                                    {
+                                                      "type": "icon",
+                                                      "id": "AAOLk",
+                                                      "width": 12,
+                                                      "height": 12,
+                                                      "icon": "phone",
+                                                      "library": "lucide",
+                                                      "fill": "$system-green"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "frame",
+                                                  "id": "BE2eF",
+                                                  "width": "fill_container",
+                                                  "layout": "vertical",
+                                                  "gap": 2,
+                                                  "children": [
+                                                    {
+                                                      "type": "text",
+                                                      "id": "iwssr",
+                                                      "fill": "$text-main",
+                                                      "content": "Phone",
+                                                      "fontFamily": "$font-family",
+                                                      "fontSize": 12,
+                                                      "fontWeight": "700"
+                                                    },
+                                                    {
+                                                      "type": "text",
+                                                      "id": "bjRhq",
+                                                      "fill": "$text-secondary",
+                                                      "content": "key",
+                                                      "fontFamily": "$font-family",
+                                                      "fontSize": 10,
+                                                      "fontWeight": "500"
+                                                    }
+                                                  ]
+                                                },
+                                                {
+                                                  "type": "frame",
+                                                  "id": "qLEnq",
+                                                  "gap": 4,
+                                                  "alignItems": "center",
+                                                  "children": [
+                                                    {
+                                                      "type": "frame",
+                                                      "id": "eNiQq",
+                                                      "width": 26,
+                                                      "height": 26,
+                                                      "fill": "#0E6ECC15",
+                                                      "cornerRadius": 13,
+                                                      "justifyContent": "center",
+                                                      "alignItems": "center",
+                                                      "children": [
+                                                        {
+                                                          "type": "icon",
+                                                          "id": "K1Ejfq",
+                                                          "width": 12,
+                                                          "height": 12,
+                                                          "icon": "pencil",
+                                                          "library": "lucide",
+                                                          "fill": "$system-blue"
+                                                        }
+                                                      ]
+                                                    },
+                                                    {
+                                                      "type": "frame",
+                                                      "id": "jU9dT",
+                                                      "width": 26,
+                                                      "height": 26,
+                                                      "fill": "#CC2B0E15",
+                                                      "cornerRadius": 13,
+                                                      "justifyContent": "center",
+                                                      "alignItems": "center",
+                                                      "children": [
+                                                        {
+                                                          "type": "icon",
+                                                          "id": "ymLXn",
+                                                          "width": 12,
+                                                          "height": 12,
+                                                          "icon": "trash-2",
+                                                          "library": "lucide",
+                                                          "fill": "$system-red"
+                                                        }
+                                                      ]
+                                                    }
+                                                  ]
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                },
+                                {
+                                  "type": "frame",
+                                  "id": "Uv935",
+                                  "name": "Notes Zone",
+                                  "clip": true,
+                                  "width": "fill_container",
+                                  "fill": "$bg-ui",
+                                  "cornerRadius": "$radius-sm",
+                                  "stroke": "$border",
+                                  "strokeWidth": 1,
+                                  "alignItems": "center",
+                                  "children": [
+                                    {
+                                      "type": "frame",
+                                      "id": "Kc2fn",
+                                      "width": 36,
+                                      "layout": "vertical",
+                                      "gap": 2,
+                                      "justifyContent": "center",
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "icon",
+                                          "id": "dA6mC",
+                                          "width": 14,
+                                          "height": 14,
+                                          "icon": "grip-vertical",
+                                          "library": "lucide",
+                                          "fill": "$text-secondary"
+                                        }
+                                      ]
+                                    },
+                                    {
+                                      "type": "frame",
+                                      "id": "MnEAl",
+                                      "width": "fill_container",
+                                      "gap": 10,
+                                      "padding": [
+                                        10,
+                                        12
+                                      ],
+                                      "alignItems": "center",
+                                      "children": [
+                                        {
+                                          "type": "frame",
+                                          "id": "AUqlW",
+                                          "width": 30,
+                                          "height": 30,
+                                          "fill": "#544d4d30",
+                                          "cornerRadius": "$radius-sm",
+                                          "justifyContent": "center",
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "icon",
+                                              "id": "IpohV",
+                                              "width": 14,
+                                              "height": 14,
+                                              "icon": "file-text",
+                                              "library": "lucide",
+                                              "fill": "$text-secondary"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "frame",
+                                          "id": "CC7oY",
+                                          "width": "fill_container",
+                                          "layout": "vertical",
+                                          "gap": 2,
+                                          "children": [
+                                            {
+                                              "type": "text",
+                                              "id": "wJcKJ",
+                                              "fill": "$text-main",
+                                              "content": "Notes",
+                                              "fontFamily": "$font-family",
+                                              "fontSize": 13,
+                                              "fontWeight": "700"
+                                            },
+                                            {
+                                              "type": "text",
+                                              "id": "x9C8vw",
+                                              "fill": "$text-secondary",
+                                              "content": "key",
+                                              "fontFamily": "$font-family",
+                                              "fontSize": 11,
+                                              "fontWeight": "500"
+                                            }
+                                          ]
+                                        },
+                                        {
+                                          "type": "frame",
+                                          "id": "K8y41g",
+                                          "gap": 6,
+                                          "alignItems": "center",
+                                          "children": [
+                                            {
+                                              "type": "frame",
+                                              "id": "n0d9o",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#0E6ECC15",
+                                              "cornerRadius": 15,
+                                              "justifyContent": "center",
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "icon",
+                                                  "id": "K1rX4",
+                                                  "width": 14,
+                                                  "height": 14,
+                                                  "icon": "pencil",
+                                                  "library": "lucide",
+                                                  "fill": "$system-blue"
+                                                }
+                                              ]
+                                            },
+                                            {
+                                              "type": "frame",
+                                              "id": "vzFZ4",
+                                              "width": 30,
+                                              "height": 30,
+                                              "fill": "#CC2B0E15",
+                                              "cornerRadius": 15,
+                                              "justifyContent": "center",
+                                              "alignItems": "center",
+                                              "children": [
+                                                {
+                                                  "type": "icon",
+                                                  "id": "QFCpr",
+                                                  "width": 14,
+                                                  "height": 14,
+                                                  "icon": "trash-2",
+                                                  "library": "lucide",
+                                                  "fill": "$system-red"
+                                                }
+                                              ]
+                                            }
+                                          ]
+                                        }
+                                      ]
+                                    }
+                                  ]
+                                }
+                              ]
+                            },
+                            {
+                              "type": "frame",
+                              "id": "TgDjf",
+                              "name": "Add Field Slot",
+                              "context": "Opens Configurator — Add Field Modal (U2kuG4) with field create settings: label, key, type, required.",
+                              "width": "fill_container",
+                              "height": 40,
+                              "fill": "#00000000",
+                              "cornerRadius": "$radius",
+                              "stroke": "$border",
+                              "strokeWidth": 1,
+                              "gap": 8,
+                              "justifyContent": "center",
+                              "alignItems": "center",
+                              "children": [
+                                {
+                                  "type": "icon",
+                                  "id": "mMb80",
+                                  "width": 14,
+                                  "height": 14,
+                                  "icon": "plus",
+                                  "library": "lucide",
+                                  "fill": "$primary"
+                                },
+                                {
+                                  "type": "text",
+                                  "id": "TkcHL",
+                                  "fill": "$primary",
+                                  "content": "Add field",
+                                  "fontFamily": "$font-family",
+                                  "fontSize": 13,
+                                  "fontWeight": "700"
+                                }
+                              ]
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  ]
+                }
+              ]
+            },
+            {
+              "type": "frame",
+              "id": "cagpv",
+              "name": "Preview Panel",
+              "width": "fill_container",
+              "height": "fill_container",
+              "fill": "$bg-ui",
+              "cornerRadius": "$radius",
+              "stroke": "$border",
+              "strokeWidth": 1,
+              "layout": "vertical",
+              "gap": 8,
+              "justifyContent": "center",
+              "alignItems": "center",
+              "children": [
+                {
+                  "type": "text",
+                  "id": "v2MF9o",
+                  "name": "Preview Label",
+                  "fill": "$text-secondary",
+                  "content": "Preview",
+                  "fontFamily": "$font-family",
+                  "fontSize": 16,
+                  "fontWeight": "600"
+                },
+                {
+                  "type": "text",
+                  "id": "b1luc",
+                  "name": "Preview Hint",
+                  "fill": "$border",
+                  "content": "Example: Contact details group with 2 nested fields",
+                  "fontFamily": "$font-family",
+                  "fontSize": 13,
+                  "fontWeight": "normal"
                 }
               ]
             }

@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react';
-import hono from '@lib/hono-client';
+import hono from '#lib/hono-client';
 import { useDebounce } from 'use-debounce';
 import type { InferRequestType, InferResponseType } from 'hono/client';
-import { validateError } from '@utils/validateError';
+import { validateError } from '#utils/validateError';
+import { toExistsIsValid } from '#utils/existsValidity';
 
 const isExistsClient = hono['booking-forms']['is-exists'];
 
@@ -27,12 +28,14 @@ type UseIsBookingFormExistsParams = {
     organizationId: string;
     name?: string;
     slug?: string;
+    unchangedValue?: string;
 };
 
 export const useIsBookingFormExists = ({
     organizationId,
     name,
     slug,
+    unchangedValue,
 }: UseIsBookingFormExistsParams) => {
     const value = name ?? slug ?? '';
     const field = name !== undefined ? 'name' : 'slug';
@@ -85,5 +88,7 @@ export const useIsBookingFormExists = ({
             ? checkResult.exists
             : undefined;
 
-    return { exists };
+    const isValid = toExistsIsValid(exists, { currentValue: value, unchangedValue });
+
+    return { isValid };
 };

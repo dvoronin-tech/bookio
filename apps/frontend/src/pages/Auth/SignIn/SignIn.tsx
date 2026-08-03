@@ -1,12 +1,12 @@
 import { Input, Button } from '@bookio/ui';
 import { type FC } from 'react';
 import styles from './SignIn.module.scss';
-import { useSignIn } from '@api/auth';
+import { useSignIn } from '#api/auth';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { getFirstFieldError } from '@utils/formErrors';
+import { getFirstFieldError } from '#utils/formErrors';
 
 const signInSchema = z.object({
     email: z.email(),

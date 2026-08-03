@@ -1,0 +1,144 @@
+.optionsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+.optionsHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.optionsLabel {
+    font-size: 1.4rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.optionsCount {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.4rem;
+    height: 2.4rem;
+    padding: 0 0.6rem;
+    border-radius: 999px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 12%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 35%, var(--color-border));
+}
+
+.optionsPanel {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.8rem;
+    background: var(--color-bg-main);
+}
+
+.optionsEmpty {
+    margin: 0;
+    padding: 1.6rem 1rem;
+    text-align: center;
+    font-size: 1.4rem;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+}
+
+.optionsList {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.option {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.2rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.8rem;
+    background-color: var(--color-bg-ui);
+    transition: border-color 0.2s ease;
+
+    &:focus-within {
+        border-color: color-mix(in srgb, var(--color-primary) 45%, var(--color-border));
+    }
+}
+
+.optionHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+}
+
+.optionIndex {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 2.4rem;
+    height: 2.4rem;
+    padding: 0 0.6rem;
+    border-radius: 0.4rem;
+    font-size: 1.2rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    color: var(--color-primary);
+    background: color-mix(in srgb, var(--color-primary) 10%, transparent);
+    border: 1px solid color-mix(in srgb, var(--color-primary) 40%, var(--color-border));
+}
+
+.optionFields {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+.addOptionButton {
+    width: 100%;
+    gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+
+    svg {
+        width: 1.4rem;
+        height: 1.4rem;
+    }
+}
+
+.removeOptionButton {
+    flex-shrink: 0;
+    gap: 0.6rem;
+    padding: 0.6rem 0.8rem;
+    font-size: 1.3rem;
+
+    svg {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+
+    span {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 600px) {
+    .optionFields {
+        grid-template-columns: 1fr;
+    }
+
+    .removeOptionButton {
+        span {
+            display: inline;
+        }
+    }
+}
