@@ -10,7 +10,7 @@
 }
 
 .themeCardSelected {
-    border: 1.5px solid var(--color-primary);
+    border: 1px solid var(--color-primary);
 }
 
 .preview {
@@ -48,6 +48,30 @@
     .line2 {
         background-color: #d4d4d4;
     }
+}
+
+.preview_custom {
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    padding: 0;
+    border-color: var(--color-border);
+    background: linear-gradient(145deg, #101010 50%, #f5f5f4 50%);
+}
+
+.customMark {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    border-radius: 50%;
+    border: 1px solid #d4d4d4;
+    background-color: #ffffff;
+    font-size: 1.4rem;
+    font-weight: 700;
+    line-height: 1;
+    color: #2f2e2d;
 }
 
 .bar {
