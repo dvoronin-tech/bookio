@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import { memo, useCallback, useState } from 'react';
 import Input from '../Input/Input.js';
 import { CopyIcon } from './icons/CopyIcon.js';
@@ -25,7 +26,7 @@ function HiddenField({ value, className, onCopy }: HiddenFieldProps) {
         setIsVisible((prev) => !prev);
     }, []);
 
-    const wrapperClasses = [styles.wrapper, className].filter(Boolean).join(' ');
+    const wrapperClasses = clsx(styles.wrapper, className);
 
     return (
         <div className={wrapperClasses}>

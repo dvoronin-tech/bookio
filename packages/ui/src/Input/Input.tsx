@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import {
     memo,
     useId,
@@ -70,7 +71,7 @@ function InputField({ label, htmlFor, className, children }: InputFieldProps) {
         return <>{children}</>;
     }
 
-    const classes = [styles.field, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.field, className);
 
     return (
         <div className={classes}>
@@ -83,19 +84,17 @@ function InputField({ label, htmlFor, className, children }: InputFieldProps) {
 }
 
 function InputRoot({ className, children }: InputRootProps) {
-    const classes = [styles.root, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.root, className);
 
     return <div className={classes}>{children}</div>;
 }
 
 function InputIcon({ children, className, position = 'start' }: InputIconProps) {
-    const classes = [
+    const classes = clsx(
         styles.icon,
         position === 'end' ? styles.iconEnd : styles.iconStart,
         className,
-    ]
-        .filter(Boolean)
-        .join(' ');
+    );
 
     return (
         <span className={classes} aria-hidden>
@@ -121,9 +120,7 @@ function InputControl(props: InputProps): React.JSX.Element {
             ...rest
         } = props as TextareaProps;
         const inputId = id ?? (label !== undefined ? generatedId : undefined);
-        const classes = [styles.input, readOnly && styles.readOnly, className]
-            .filter(Boolean)
-            .join(' ');
+        const classes = clsx(styles.input, readOnly && styles.readOnly, className);
         const readOnlyHandlers = getReadOnlyHandlers(readOnly, onFocus, onMouseDown);
 
         return (
@@ -150,9 +147,7 @@ function InputControl(props: InputProps): React.JSX.Element {
         ...rest
     } = props as NativeInputProps;
     const inputId = id ?? (label !== undefined ? generatedId : undefined);
-    const classes = [styles.input, readOnly && styles.readOnly, className]
-        .filter(Boolean)
-        .join(' ');
+    const classes = clsx(styles.input, readOnly && styles.readOnly, className);
     const readOnlyHandlers = getReadOnlyHandlers(readOnly, onFocus, onMouseDown);
 
     return (

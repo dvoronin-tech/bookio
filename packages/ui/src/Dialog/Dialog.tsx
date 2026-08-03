@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import {
     createContext,
     memo,
@@ -126,11 +127,9 @@ function DialogRoot({
 
     if (!isRendered) return null;
 
-    const overlayClasses = [styles.overlay, isClosing && styles.closing, className]
-        .filter(Boolean)
-        .join(' ');
+    const overlayClasses = clsx(styles.overlay, isClosing && styles.closing, className);
 
-    const contentClasses = [styles.content, contentClassName].filter(Boolean).join(' ');
+    const contentClasses = clsx(styles.content, contentClassName);
 
     const contextValue: DialogContextValue = {
         isClosing,
@@ -169,7 +168,7 @@ export type DialogTitleProps = {
 function DialogTitle({ children, className }: DialogTitleProps) {
     const { titleId } = useDialogContext();
 
-    const classes = [styles.title, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.title, className);
 
     return (
         <h2 id={titleId} className={classes}>
@@ -194,7 +193,7 @@ function DialogDescription({ children, className }: DialogDescriptionProps) {
         };
     }, [setHasDescription]);
 
-    const classes = [styles.description, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.description, className);
 
     return (
         <p id={descriptionId} className={classes}>
@@ -209,15 +208,15 @@ export type DialogActionsProps = {
 };
 
 function DialogActions({ children, className }: DialogActionsProps) {
-    const classes = [styles.actions, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.actions, className);
 
     return <div className={classes}>{children}</div>;
 }
 
 function DialogButton({ className, ...props }: ButtonProps) {
-    const classes = [className].filter(Boolean).join(' ');
+    const classes = clsx(className) || undefined;
 
-    return <Button className={classes || undefined} {...props} />;
+    return <Button className={classes} {...props} />;
 }
 
 type DialogTextareaInputProps = Extract<InputProps, { type: 'textarea' }>;
@@ -229,7 +228,7 @@ const DialogNativeInputComponent = Input as React.FC<DialogNativeInputProps>;
 function DialogInput(props: DialogTextareaInputProps): React.JSX.Element;
 function DialogInput(props: DialogNativeInputProps): React.JSX.Element;
 function DialogInput(props: InputProps): React.JSX.Element {
-    const classes = [props.className].filter(Boolean).join(' ') || undefined;
+    const classes = clsx(props.className) || undefined;
 
     if (props.type === 'textarea') {
         return (

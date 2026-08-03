@@ -1,3 +1,4 @@
+import { clsx } from 'clsx';
 import {
     autoUpdate,
     flip,
@@ -138,7 +139,7 @@ export type DropdownTriggerProps = {
 function DropdownTrigger({ children, className, ...props }: DropdownTriggerProps) {
     const { refs, getReferenceProps } = useDropdownContext();
 
-    const classes = [styles.trigger, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.trigger, className);
 
     return (
         <button
@@ -162,7 +163,7 @@ function DropdownContent({ children, className }: DropdownContentProps) {
 
     if (!open) return null;
 
-    const classes = [styles.content, className].filter(Boolean).join(' ');
+    const classes = clsx(styles.content, className);
 
     return (
         <FloatingPortal>
@@ -194,7 +195,7 @@ function DropdownItem({
 }: DropdownItemProps) {
     const { onOpenChange, getItemProps } = useDropdownContext();
 
-    const classes = [styles.item, className].filter(Boolean).join(' ') || undefined;
+    const classes = clsx(styles.item, className) || undefined;
 
     const handleClick = useCallback(
         (event: MouseEvent<HTMLButtonElement>) => {
