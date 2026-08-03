@@ -7,6 +7,7 @@ import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { navigateBack } from '#navigation';
 import styles from './Step1NameDescription.module.scss';
 
 export const Step1NameDescription: FC = () => {
@@ -43,7 +44,7 @@ export const Step1NameDescription: FC = () => {
     }, [data.name, goToNextStep]);
 
     const handleClose = useCallback(() => {
-        navigate(-1);
+        navigateBack(navigate);
     }, [navigate]);
 
     return (

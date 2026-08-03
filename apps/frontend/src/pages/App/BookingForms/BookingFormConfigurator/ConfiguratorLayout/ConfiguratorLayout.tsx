@@ -9,6 +9,7 @@ import { configuratorTabs } from '../configuratorTabs';
 import styles from './ConfiguratorLayout.module.scss';
 import { ConfiguratorTabs } from './ConfiguratorTabs';
 import { useNavigate, useParams } from 'react-router-dom';
+import { navigateToBookingForms } from '#navigation';
 import { useGetEntireBookingFormById } from '#api/bookingForms/getEntireBookingFormById';
 import isEqual from 'fast-deep-equal';
 import { useUpdateBookingForm } from '#api/bookingForms/updateBookingForm';
@@ -164,12 +165,8 @@ const ConfiguratorFooter: FC = memo(() => {
         updateBookingFormStyles,
     ]);
 
-    const navigateToBookingForms = useCallback(() => {
-        if (id) {
-            navigate(`/${id}/booking-forms`);
-        } else {
-            navigate('/organizations/list');
-        }
+    const handleNavigateToBookingForms = useCallback(() => {
+        navigateToBookingForms(navigate, id);
     }, [id, navigate]);
 
     const handleSave = useCallback(() => {
@@ -178,12 +175,12 @@ const ConfiguratorFooter: FC = memo(() => {
         toast.promise(Promise.all(saveRequestThunks.map((request) => request())), {
             loading: 'Saving booking form...',
             success: () => {
-                navigateToBookingForms();
+                handleNavigateToBookingForms();
                 return 'Booking form saved successfully';
             },
             error: 'Failed to save booking form',
         });
-    }, [saveRequestThunks, navigateToBookingForms, isSaving]);
+    }, [saveRequestThunks, handleNavigateToBookingForms, isSaving]);
 
     const hasSomethingToSave = useMemo(
         () => isDirtyBookingForm || isDirtyBookingFormFields || isDirtyBookingFormStyles,
@@ -192,7 +189,7 @@ const ConfiguratorFooter: FC = memo(() => {
 
     return (
         <div className={styles.footer}>
-            <Button type="button" variant="simple-clean" onClick={navigateToBookingForms}>
+            <Button type="button" variant="simple-clean" onClick={handleNavigateToBookingForms}>
                 Back
             </Button>
             <Button

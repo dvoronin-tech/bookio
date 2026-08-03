@@ -2,6 +2,11 @@ import { useState, type FC } from 'react';
 import styles from './AppHeader.module.scss';
 import Logo from '#assets/logo.svg?react';
 import { useNavigate, useParams } from 'react-router-dom';
+import {
+    navigateToBookingForms,
+    navigateToOrganization,
+    navigateToOrganizations,
+} from '#navigation';
 import { Dropdown } from '@bookio/ui';
 
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
@@ -25,7 +30,10 @@ export const AppHeader: FC = () => {
 
     return (
         <div className={styles.appHeader}>
-            <button className={styles.logoButton} onClick={() => navigate(`/${id}`)}>
+            <button
+                className={styles.logoButton}
+                onClick={() => id && navigateToOrganization(navigate, id)}
+            >
                 <Logo className={styles.logo} />
             </button>
             <div className={styles.dropdown}>
@@ -57,14 +65,14 @@ export const AppHeader: FC = () => {
                         </Dropdown.Item>
                         <Dropdown.Item
                             className={styles.menuItem}
-                            onClick={() => navigate(`/${id}/booking-forms`)}
+                            onClick={() => navigateToBookingForms(navigate, id)}
                         >
                             <FormIcon className={styles.menuItemIcon} />
                             Booking forms
                         </Dropdown.Item>
                         <Dropdown.Item
                             className={styles.menuItem}
-                            onClick={() => navigate('/organizations')}
+                            onClick={() => navigateToOrganizations(navigate)}
                         >
                             <OrganizationIcon className={styles.menuItemIcon} />
                             Organizations

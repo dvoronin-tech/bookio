@@ -8,6 +8,7 @@ import ConnectIcon from '#assets/icons/connect.svg?react';
 import PlusIcon from '#assets/icons/plus.svg?react';
 import SearchIcon from '#assets/icons/search.svg?react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { navigateToOrganizationsList } from '#navigation';
 import { useOrganizationListStore } from '#store/useOrganizationListStore';
 
 export const OrganizationHeader: FC = memo(() => {
@@ -17,7 +18,7 @@ export const OrganizationHeader: FC = memo(() => {
     const setIsOpen = useOrganizationListStore((state) => state.setIsOpen);
 
     const onClickHeader = () => {
-        navigate('/organizations/list');
+        navigateToOrganizationsList(navigate);
     };
 
     const onClickSearch = useCallback(() => {

@@ -15,6 +15,7 @@ import { Controller, useForm, useWatch, type FieldErrors } from 'react-hook-form
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { useNavigate } from 'react-router-dom';
+import { navigateBack } from '#navigation';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
 
@@ -82,7 +83,7 @@ export const CreateOrganization: FC = () => {
     }, [handleSubmit, onSubmit, onInvalid]);
 
     const handleClose = useCallback(() => {
-        navigate(-1);
+        navigateBack(navigate);
     }, [navigate]);
 
     const isDisabled = isPending || isSubmitting;

@@ -1,4 +1,5 @@
 import { useNavigate, useParams } from 'react-router-dom';
+import { guardConfiguratorRoute } from '#navigation';
 import { useGetEntireBookingFormById } from '#api/bookingForms/getEntireBookingFormById';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 import { StylesTabForm } from '#components/BookingFormStyles/StylesTabForm/StylesTabForm';
@@ -26,13 +27,9 @@ export const StylesTab = () => {
         refetch: refetchBookingForm,
     } = useGetEntireBookingFormById(bookingFormId);
 
-    if (!id) {
-        navigate('/organizations/list');
-        return null;
-    }
+    const routeParams = guardConfiguratorRoute(navigate, id, bookingFormId);
 
-    if (!bookingFormId) {
-        navigate(`/${id}/booking-forms`);
+    if (!routeParams) {
         return null;
     }
 
@@ -75,5 +72,10 @@ export const StylesTab = () => {
         );
     }
 
-    return <StylesTabForm bookingFormId={bookingFormId} formStyles={bookingForm.styles} />;
+    return (
+        <StylesTabForm
+            bookingFormId={routeParams.bookingFormId}
+            formStyles={bookingForm.styles}
+        />
+    );
 };

@@ -8,6 +8,7 @@ import {
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
+import { navigateBack, navigateToOrganizationsList } from '#navigation';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
@@ -50,11 +51,11 @@ export const ConnectOrganization: FC = () => {
     }, [handleSubmit, onSubmit, onInvalid]);
 
     const handleClose = useCallback(() => {
-        navigate(-1);
+        navigateBack(navigate);
     }, [navigate]);
 
     if (isSuccess) {
-        navigate('/organizations/list', { replace: true });
+        navigateToOrganizationsList(navigate, { replace: true });
     }
 
     const isDisabled = isPending || isSubmitting;

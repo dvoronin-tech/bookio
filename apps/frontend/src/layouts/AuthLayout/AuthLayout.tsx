@@ -1,5 +1,6 @@
 import { type FC, useEffect, Suspense } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
+import { navigateToOrganizations } from '#navigation';
 import { useSession } from '#api/auth';
 import { PageLoader } from '#components/PageLoader/PageLoader';
 import styles from './AuthLayout.module.scss';
@@ -10,7 +11,7 @@ export const AuthLayout: FC = () => {
 
     useEffect(() => {
         if (!isPending && session) {
-            navigate('/organizations', { replace: true });
+            navigateToOrganizations(navigate, { replace: true });
         }
     }, [session, isPending, navigate]);
 

@@ -13,6 +13,7 @@ import {
 } from '#api/organizations/getOrganizationsByUserId';
 import { OrganizationItem } from '#components/OrganizationItem/OrganizationItem';
 import { useNavigate } from 'react-router-dom';
+import { navigateToOrganization } from '#navigation';
 import { toast } from 'react-hot-toast';
 import SearchIcon from '#assets/icons/search.svg?react';
 
@@ -134,7 +135,7 @@ interface OrganizationSearchWrapperProps {
 const OrganizationSearchWrapper = ({ data, ref }: OrganizationSearchWrapperProps) => {
     const navigate = useNavigate();
     const handleClickOnOrganization = useCallback((id: string) => {
-        navigate(`/${id}`);
+        navigateToOrganization(navigate, id);
     }, [navigate]);
 
     return (

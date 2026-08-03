@@ -8,6 +8,7 @@ import { Spinner } from '#components/Spinner/Spinner';
 import { toast } from 'react-hot-toast';
 import { Button } from '@bookio/ui';
 import { useNavigate } from 'react-router-dom';
+import { navigateToOrganization } from '#navigation';
 
 export const OrganizationList: FC = () => {
     const { data, isPending, refetch, error } = useGetOrganizationsByUserId();
@@ -18,7 +19,7 @@ export const OrganizationList: FC = () => {
 
     const handleClickOnOrganization = useCallback(
         (id: string) => {
-            navigate(`/${id}`);
+            navigateToOrganization(navigate, id);
         },
         [navigate],
     );
