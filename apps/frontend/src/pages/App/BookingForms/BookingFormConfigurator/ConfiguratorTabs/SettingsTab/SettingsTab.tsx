@@ -2,6 +2,7 @@ import { useEffect, type FC } from 'react';
 import type { EntireBookingFormType } from '#api/bookingForms/getEntireBookingFormById';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
 import { useNavigate, useParams } from 'react-router-dom';
+import { guardConfiguratorRoute } from '#navigation';
 import { Button, Checkbox, Input } from '@bookio/ui';
 import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
@@ -116,13 +117,9 @@ export const SettingsTab = () => {
         refetch: refetchBookingForm,
     } = useGetEntireBookingFormById(bookingFormId);
 
-    if (!id) {
-        navigate('/organizations/list');
-        return null;
-    }
+    const routeParams = guardConfiguratorRoute(navigate, id, bookingFormId);
 
-    if (!bookingFormId) {
-        navigate(`/${id}/booking-forms`);
+    if (!routeParams) {
         return null;
     }
 

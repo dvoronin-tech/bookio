@@ -1,0 +1,33 @@
+.stylesTabForm {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    width: 100%;
+}
+
+.themesSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+.themesLabel,
+.colorsLabel {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+.themesRow {
+    display: flex;
+    gap: 0.8rem;
+    width: 100%;
+}
+
+.colorsSection {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    width: 100%;
+}

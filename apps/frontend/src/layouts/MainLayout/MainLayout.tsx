@@ -1,6 +1,7 @@
 import { useEffect, type FC } from "react";
 import styles from './MainLayout.module.scss';
 import { Outlet, useNavigate } from "react-router-dom";
+import { navigateToAuthSignIn } from '#navigation';
 import { useSession } from "#api/auth";
 import { toast } from 'react-hot-toast';
 
@@ -14,7 +15,7 @@ export const MainLayout: FC = () => {
         }
 
         if (!session) {
-            navigate('/auth/sign-in');
+            navigateToAuthSignIn(navigate);
             toast('You are not authorized to access this page', {
                 icon: '❌',
                 duration: 3000,

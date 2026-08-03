@@ -1,5 +1,9 @@
 import { useCallback, type FC } from 'react';
 import { useNavigate } from 'react-router-dom';
+import {
+    navigateToBookingFormConfigurator,
+    navigateToBookingForms,
+} from '#navigation';
 import { useShallow } from 'zustand/shallow';
 import { Button } from '@bookio/ui';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
@@ -20,13 +24,13 @@ export const Step6Success: FC = () => {
     const handleContinueToConfigurator = useCallback(() => {
         if (!organizationId || !createdBookingFormId) return;
 
-        navigate(`/${organizationId}/booking-forms/${createdBookingFormId}/configurator`);
+        navigateToBookingFormConfigurator(navigate, organizationId, createdBookingFormId);
     }, [navigate, organizationId, createdBookingFormId]);
 
     const handleFinish = useCallback(() => {
         if (!organizationId) return;
 
-        navigate(`/${organizationId}/booking-forms/`);
+        navigateToBookingForms(navigate, organizationId);
     }, [navigate, organizationId]);
 
     return (

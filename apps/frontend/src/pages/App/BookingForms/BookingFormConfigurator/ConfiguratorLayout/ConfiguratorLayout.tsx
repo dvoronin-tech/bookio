@@ -9,6 +9,7 @@ import { configuratorTabs } from '../configuratorTabs';
 import styles from './ConfiguratorLayout.module.scss';
 import { ConfiguratorTabs } from './ConfiguratorTabs';
 import { useNavigate, useParams } from 'react-router-dom';
+import { navigateToBookingForms } from '#navigation';
 import { useGetEntireBookingFormById } from '#api/bookingForms/getEntireBookingFormById';
 import isEqual from 'fast-deep-equal';
 import { useUpdateBookingForm } from '#api/bookingForms/updateBookingForm';
@@ -16,9 +17,11 @@ import toast from 'react-hot-toast';
 import { useSyncBookingFormField } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 import {
     toComparableBookingForm,
+    toComparableBookingFormStyles,
     toSaveFieldsPayload,
     toSyncBookingFormFieldsRequest,
 } from '#utils/dataPreparers/bookingFormPreparers';
+import { useUpdateBookingFormStyles } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles';
 
 export const ConfiguratorLayout = memo(function ConfiguratorLayout({
     children,
@@ -76,10 +79,11 @@ const ConfiguratorHeader: FC = memo(() => {
 const ConfiguratorFooter: FC = memo(() => {
     const { bookingFormId, id } = useParams<{ id: string; bookingFormId: string }>();
     const { data: baseLine } = useGetEntireBookingFormById(bookingFormId);
-    const { bookingForm, bookingFormFields } = useBookingFormConfiguratorStore(
-        useShallow(({ bookingForm, bookingFormFields }) => ({
+    const { bookingForm, bookingFormFields, bookingFormStyles } = useBookingFormConfiguratorStore(
+        useShallow(({ bookingForm, bookingFormFields, bookingFormStyles }) => ({
             bookingForm,
             bookingFormFields,
+            bookingFormStyles,
         })),
     );
 
@@ -89,8 +93,10 @@ const ConfiguratorFooter: FC = memo(() => {
         useUpdateBookingForm(bookingFormId);
     const { mutateAsync: syncBookingFormField, isPending: isSyncPending } =
         useSyncBookingFormField(bookingFormId);
+    const { mutateAsync: updateBookingFormStyles, isPending: isUpdateStylesPending } =
+        useUpdateBookingFormStyles(bookingFormId);
 
-    const isSaving = isUpdatePending || isSyncPending;
+    const isSaving = isUpdatePending || isSyncPending || isUpdateStylesPending;
 
     const isDirtyBookingForm = useMemo(() => {
         if (!baseLine || !bookingForm) return false;
@@ -119,6 +125,13 @@ const ConfiguratorFooter: FC = memo(() => {
         return !isEqual(baselineSyncFields, bookingFormFields.fields);
     }, [baselineSyncFields, bookingFormFields, baseLine?.id]);
 
+    const isDirtyBookingFormStyles = useMemo(() => {
+        if (!baseLine || !bookingFormStyles) return false;
+        if (bookingFormStyles.bookingFormId !== baseLine.id) return false;
+
+        return !isEqual(bookingFormStyles, toComparableBookingFormStyles(baseLine.styles));
+    }, [baseLine, bookingFormStyles]);
+
     const saveRequestThunks = useMemo(() => {
         if (!bookingFormId) return [];
 
@@ -132,24 +145,28 @@ const ConfiguratorFooter: FC = memo(() => {
                 syncBookingFormField(toSaveFieldsPayload(bookingFormId, bookingFormFields)),
             );
         }
+        if (isDirtyBookingFormStyles && bookingFormStyles) {
+            thunks.push(() =>
+                updateBookingFormStyles(toComparableBookingFormStyles(bookingFormStyles)),
+            );
+        }
 
         return thunks;
     }, [
         bookingFormId,
         isDirtyBookingForm,
         isDirtyBookingFormFields,
+        isDirtyBookingFormStyles,
         bookingForm,
         bookingFormFields,
+        bookingFormStyles,
         updateBookingForm,
         syncBookingFormField,
+        updateBookingFormStyles,
     ]);
 
-    const navigateToBookingForms = useCallback(() => {
-        if (id) {
-            navigate(`/${id}/booking-forms`);
-        } else {
-            navigate('/organizations/list');
-        }
+    const handleNavigateToBookingForms = useCallback(() => {
+        navigateToBookingForms(navigate, id);
     }, [id, navigate]);
 
     const handleSave = useCallback(() => {
@@ -158,21 +175,21 @@ const ConfiguratorFooter: FC = memo(() => {
         toast.promise(Promise.all(saveRequestThunks.map((request) => request())), {
             loading: 'Saving booking form...',
             success: () => {
-                navigateToBookingForms();
+                handleNavigateToBookingForms();
                 return 'Booking form saved successfully';
             },
             error: 'Failed to save booking form',
         });
-    }, [saveRequestThunks, navigateToBookingForms, isSaving]);
+    }, [saveRequestThunks, handleNavigateToBookingForms, isSaving]);
 
     const hasSomethingToSave = useMemo(
-        () => isDirtyBookingForm || isDirtyBookingFormFields,
-        [isDirtyBookingForm, isDirtyBookingFormFields],
+        () => isDirtyBookingForm || isDirtyBookingFormFields || isDirtyBookingFormStyles,
+        [isDirtyBookingForm, isDirtyBookingFormFields, isDirtyBookingFormStyles],
     );
 
     return (
         <div className={styles.footer}>
-            <Button type="button" variant="simple-clean" onClick={navigateToBookingForms}>
+            <Button type="button" variant="simple-clean" onClick={handleNavigateToBookingForms}>
                 Back
             </Button>
             <Button

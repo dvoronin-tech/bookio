@@ -3,7 +3,7 @@ import { useShallow } from 'zustand/shallow';
 import { Button, ColorPicker, Input } from '@bookio/ui';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
-import { DEFAULT_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyles';
+import { DEFAULT_DARK_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyles';
 import { step3Schema } from '../../schemas/createBookingFormDraft.schema';
 import toast from 'react-hot-toast';
 import styles from './Step3Styles.module.scss';
@@ -12,32 +12,32 @@ const COLOR_FIELDS = [
     {
         key: 'primary',
         label: 'Primary',
-        placeholder: `Primary* (${DEFAULT_BOOKING_FORM_STYLES.primary})`,
+        placeholder: `Primary* (${DEFAULT_DARK_BOOKING_FORM_STYLES.primary})`,
     },
     {
         key: 'bgMain',
         label: 'Background main',
-        placeholder: `Background main* (${DEFAULT_BOOKING_FORM_STYLES.bgMain})`,
+        placeholder: `Background main* (${DEFAULT_DARK_BOOKING_FORM_STYLES.bgMain})`,
     },
     {
         key: 'bgSecondary',
         label: 'Background secondary',
-        placeholder: `Background secondary* (${DEFAULT_BOOKING_FORM_STYLES.bgSecondary})`,
+        placeholder: `Background secondary* (${DEFAULT_DARK_BOOKING_FORM_STYLES.bgSecondary})`,
     },
     {
         key: 'borderColor',
         label: 'Border',
-        placeholder: `Border* (${DEFAULT_BOOKING_FORM_STYLES.borderColor})`,
+        placeholder: `Border* (${DEFAULT_DARK_BOOKING_FORM_STYLES.borderColor})`,
     },
     {
         key: 'textMain',
         label: 'Text main',
-        placeholder: `Text main* (${DEFAULT_BOOKING_FORM_STYLES.textMain})`,
+        placeholder: `Text main* (${DEFAULT_DARK_BOOKING_FORM_STYLES.textMain})`,
     },
     {
         key: 'textSecondary',
         label: 'Text secondary',
-        placeholder: `Text secondary* (${DEFAULT_BOOKING_FORM_STYLES.textSecondary})`,
+        placeholder: `Text secondary* (${DEFAULT_DARK_BOOKING_FORM_STYLES.textSecondary})`,
     },
 ] as const;
 
@@ -74,12 +74,12 @@ export const Step3Styles: FC = () => {
         };
 
     const handleUseDefaults = useCallback(() => {
-        setField('primary', DEFAULT_BOOKING_FORM_STYLES.primary);
-        setField('bgMain', DEFAULT_BOOKING_FORM_STYLES.bgMain);
-        setField('bgSecondary', DEFAULT_BOOKING_FORM_STYLES.bgSecondary);
-        setField('borderColor', DEFAULT_BOOKING_FORM_STYLES.borderColor);
-        setField('textMain', DEFAULT_BOOKING_FORM_STYLES.textMain);
-        setField('textSecondary', DEFAULT_BOOKING_FORM_STYLES.textSecondary);
+        setField('primary', DEFAULT_DARK_BOOKING_FORM_STYLES.primary);
+        setField('bgMain', DEFAULT_DARK_BOOKING_FORM_STYLES.bgMain);
+        setField('bgSecondary', DEFAULT_DARK_BOOKING_FORM_STYLES.bgSecondary);
+        setField('borderColor', DEFAULT_DARK_BOOKING_FORM_STYLES.borderColor);
+        setField('textMain', DEFAULT_DARK_BOOKING_FORM_STYLES.textMain);
+        setField('textSecondary', DEFAULT_DARK_BOOKING_FORM_STYLES.textSecondary);
     }, [setField]);
 
     const handleClickNext = useCallback(() => {

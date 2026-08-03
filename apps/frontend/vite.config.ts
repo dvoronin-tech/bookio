@@ -28,6 +28,7 @@ export default defineConfig({
             { find: '#utils', replacement: path.resolve(__dirname, 'src/utils') },
             { find: '#api', replacement: path.resolve(__dirname, 'src/api') },
             { find: '#store', replacement: path.resolve(__dirname, 'src/store') },
+            { find: '#navigation', replacement: path.resolve(__dirname, 'src/navigation') },
         ],
     },
     build: {

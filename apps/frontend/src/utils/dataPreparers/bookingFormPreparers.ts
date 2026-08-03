@@ -1,6 +1,7 @@
 import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 import type { SyncBookingFormFieldRequest } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
+import type { UpdateBookingFormStylesRequest } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles';
 
 export type SyncBookingFormFieldItem = SyncBookingFormFieldRequest['fields'][number];
 export type SyncBookingFormGroupFieldItem = Extract<SyncBookingFormFieldItem, { type: 'group' }>;
@@ -102,3 +103,26 @@ export const toSaveFieldsPayload = (
     bookingFormId,
     fields: bookingFormFields.fields,
 });
+
+type ComparableBookingFormStylesSource = Pick<
+    UpdateBookingFormStylesRequest,
+    | 'bookingFormId'
+    | 'primary'
+    | 'bgMain'
+    | 'bgSecondary'
+    | 'borderColor'
+    | 'textMain'
+    | 'textSecondary'
+>;
+
+export const toComparableBookingFormStyles = (
+    data: ComparableBookingFormStylesSource,
+): UpdateBookingFormStylesRequest => ({
+    bookingFormId: data.bookingFormId,
+    primary: data.primary,
+    bgMain: data.bgMain,
+    bgSecondary: data.bgSecondary,
+    borderColor: data.borderColor,
+    textMain: data.textMain,
+    textSecondary: data.textSecondary,
+})
