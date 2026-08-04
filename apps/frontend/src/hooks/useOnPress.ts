@@ -104,6 +104,7 @@ export const useOnPress = (key: KeyboardKey, callback: () => void, enabled = tru
 
         const handleKeyDown = (event: KeyboardEvent) => {
             if (event.key === key) {
+                event.preventDefault();
                 callback();
             }
         };

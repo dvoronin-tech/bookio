@@ -1,4 +1,12 @@
-import { memo, useCallback, type FC, type MouseEvent } from 'react';
+import {
+    memo,
+    useCallback,
+    useEffect,
+    useRef,
+    type FC,
+    type SubmitEvent,
+    type MouseEvent,
+} from 'react';
 import { FormProvider, useWatch } from 'react-hook-form';
 import { Dialog } from '@bookio/ui';
 import { FieldBasicFields } from './FieldBasicFields';
@@ -58,11 +66,40 @@ export const FieldModal: FC<FieldModalProps> = memo(
             [reset, onOpenChange],
         );
 
-        const submit = useCallback(() => {
-            void handleSubmit(onSave)();
-        }, [handleSubmit, onSave]);
+        const isSubmittingRef = useRef(false);
 
-        useOnPress('Enter', submit);
+        useEffect(() => {
+            if (!open) {
+                isSubmittingRef.current = false;
+            }
+        }, [open]);
+
+        const submit = useCallback(() => {
+            if (!open || isSubmittingRef.current) return;
+
+            isSubmittingRef.current = true;
+            void handleSubmit(
+                (formData) => {
+                    const success = onSave(formData);
+                    if (!success) {
+                        isSubmittingRef.current = false;
+                    }
+                },
+                () => {
+                    isSubmittingRef.current = false;
+                },
+            )();
+        }, [handleSubmit, onSave, open]);
+
+        useOnPress('Enter', submit, open);
+
+        const handleFormSubmit = useCallback(
+            (event: SubmitEvent) => {
+                event.preventDefault();
+                submit();
+            },
+            [submit],
+        );
 
         return (
             <Dialog
@@ -73,11 +110,8 @@ export const FieldModal: FC<FieldModalProps> = memo(
             >
                 <FieldModalHeader isEditMode={isEditMode} />
                 <FormProvider {...methods}>
-                    <form
-                        className={styles.form}
-                        onSubmit={handleSubmit(onSave)}
-                    >
-                        <FieldBasicFields />
+                    <form className={styles.form} onSubmit={handleFormSubmit}>
+                        <FieldBasicFields fieldId={fieldId} />
                         <FieldTypeSelector />
                         {type && type !== 'group' && <FieldRequiredToggle />}
                         <ParamFields />
