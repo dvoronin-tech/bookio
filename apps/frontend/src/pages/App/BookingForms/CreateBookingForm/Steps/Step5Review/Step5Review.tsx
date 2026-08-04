@@ -155,11 +155,11 @@ export const Step5Review: FC = () => {
                             <h3 className={styles.sectionTitle}>{section.title}</h3>
                         </header>
 
-                        <div className={styles.grid}>
+                        <div className={styles.elements}>
                             {section.cells.map((cell, cellIndex) => (
                                 <div
                                     key={`${section.id}-${cellIndex}`}
-                                    className={styles.cell}
+                                    className={styles.element}
                                 >
                                     <span className={styles.label}>{cell.label}</span>
                                     <span

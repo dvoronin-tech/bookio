@@ -55,14 +55,14 @@
     color: var(--color-text-main);
 }
 
-.grid {
-    display: grid;
-    grid-template-columns:  repeat(auto-fill, minmax(20rem, 1fr));
+.elements {
+    display: flex;
+    flex-direction: column;
     gap: 1.2rem;
     width: 100%;
 }
 
-.cell {
+.element {
     display: flex;
     flex-direction: column;
     gap: 0.4rem;
@@ -109,10 +109,6 @@
 }
 
 @media (max-width: 560px) {
-    // .grid {
-    //     grid-template-columns: 1fr;
-    // }
-
     .section {
         padding: 1.2rem;
     }
