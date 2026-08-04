@@ -79,12 +79,7 @@ function ErrorHint({ message }: { message?: string }) {
     const focus = useFocus(context);
     const dismiss = useDismiss(context);
     const role = useRole(context, { role: 'tooltip' });
-    const { getReferenceProps, getFloatingProps } = useInteractions([
-        hover,
-        focus,
-        dismiss,
-        role,
-    ]);
+    const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, dismiss, role]);
 
     return (
         <>
@@ -126,7 +121,7 @@ function ValidatableTextareaInput(props: TextareaValidatableInputProps) {
         <InputField label={label} htmlFor={inputId}>
             <div className={rootClasses}>
                 <BaseInput {...inputProps} id={inputId} className={classes || undefined} />
-                {(showError && errorMessage) && <ErrorHint message={errorMessage} />}
+                {showError && errorMessage && <ErrorHint message={errorMessage} />}
             </div>
         </InputField>
     );
@@ -145,7 +140,7 @@ function ValidatableNativeInput(props: NativeValidatableInputProps) {
         <InputField label={label} htmlFor={inputId}>
             <div className={rootClasses}>
                 <BaseInput {...inputProps} id={inputId} className={classes || undefined} />
-                {(showError && errorMessage) && <ErrorHint message={errorMessage} />}
+                {showError && errorMessage && <ErrorHint message={errorMessage} />}
             </div>
         </InputField>
     );
