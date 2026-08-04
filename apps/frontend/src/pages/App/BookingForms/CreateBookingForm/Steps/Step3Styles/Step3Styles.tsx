@@ -7,6 +7,7 @@ import { DEFAULT_DARK_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyle
 import { step3Schema } from '../../schemas/createBookingFormDraft.schema';
 import toast from 'react-hot-toast';
 import styles from './Step3Styles.module.scss';
+import { trimObj } from '#utils/trimObj';
 
 const COLOR_FIELDS = [
     {
@@ -83,14 +84,14 @@ export const Step3Styles: FC = () => {
     }, [setField]);
 
     const handleClickNext = useCallback(() => {
-        const trimmed = {
-            primary: primary.trim(),
-            bgMain: bgMain.trim(),
-            bgSecondary: bgSecondary.trim(),
-            borderColor: borderColor.trim(),
-            textMain: textMain.trim(),
-            textSecondary: textSecondary.trim(),
-        };
+        const trimmed = trimObj({
+            primary,
+            bgMain,
+            bgSecondary,
+            borderColor,
+            textMain,
+            textSecondary,
+        });
 
         const parsed = step3Schema.safeParse(trimmed);
         if (!parsed.success) {
@@ -146,6 +147,7 @@ export const Step3Styles: FC = () => {
                         value={values[key]}
                         onChange={handleChange(key)}
                         placeholder={placeholder}
+                        autoFocus={key === 'primary'}
                     />
                     <ColorPicker
                         className={styles.colorPicker}
