@@ -1,4 +1,4 @@
-import { useState, type FC } from 'react';
+import { useState, type FC, useCallback } from 'react';
 import styles from './AppHeader.module.scss';
 import Logo from '#assets/logo.svg?react';
 import { useNavigate, useParams } from 'react-router-dom';
@@ -27,6 +27,15 @@ export const AppHeader: FC = () => {
     if (error) {
         toast.error(error.message)
     }
+
+    const handleNavigateToBookingForms = useCallback(() => {
+        if (!id) return;
+        navigateToBookingForms(navigate, id);
+    }, [navigate, id]);
+
+    const handleNavigateToOrganizations = useCallback(() => {
+        navigateToOrganizations(navigate);
+    }, [navigate]);
 
     return (
         <div className={styles.appHeader}>
@@ -65,14 +74,14 @@ export const AppHeader: FC = () => {
                         </Dropdown.Item>
                         <Dropdown.Item
                             className={styles.menuItem}
-                            onClick={() => navigateToBookingForms(navigate, id)}
+                            onClick={handleNavigateToBookingForms}
                         >
                             <FormIcon className={styles.menuItemIcon} />
                             Booking forms
                         </Dropdown.Item>
                         <Dropdown.Item
                             className={styles.menuItem}
-                            onClick={() => navigateToOrganizations(navigate)}
+                            onClick={handleNavigateToOrganizations}
                         >
                             <OrganizationIcon className={styles.menuItemIcon} />
                             Organizations
