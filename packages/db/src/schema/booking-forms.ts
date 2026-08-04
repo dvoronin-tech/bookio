@@ -43,7 +43,10 @@ export const bookingFormMetaData = pgTable('booking_form_meta_data', {
     }).notNull(),
     title: text('title').notNull(),
     description: text('description').notNull(),
-    additionalMetaData: jsonb('additional_meta_data').notNull().default({}),
+    additionalMetaData: jsonb('additional_meta_data')
+        .$type<Record<string, string>>()
+        .notNull()
+        .default({}),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
         .notNull()
