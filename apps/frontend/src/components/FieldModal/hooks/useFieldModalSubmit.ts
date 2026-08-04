@@ -24,7 +24,7 @@ export const useFieldModalSubmit = ({
         })),
     );
 
-    return (formData: FieldModalFormValues) => {
+    return (formData: FieldModalFormValues): boolean => {
         const currentFields = bookingFormFields?.fields ?? [];
         const existingField = fieldId
             ? currentFields.find((field) => field.id === fieldId)
@@ -32,7 +32,27 @@ export const useFieldModalSubmit = ({
 
         if (fieldId && !existingField) {
             onSuccess();
-            return;
+            return true;
+        }
+
+        const isUniqueKey = (() => {
+            if (!formData.key?.trim()) return { success: false, message: 'Key is required' };
+
+            const conflictingField = currentFields.find(
+                (field) => field.key === formData.key && field.id !== existingField?.id,
+            );
+
+            if (conflictingField) return { success: false, message: 'Key must be unique yes' };
+
+            return { success: true };
+        })();
+
+        if (!isUniqueKey.success) {
+            toast.error(isUniqueKey.message ?? 'Unknown error', {
+                position: 'top-right',
+                duration: 4000,
+            });
+            return false;
         }
 
         const parentId = (() => {
@@ -45,7 +65,7 @@ export const useFieldModalSubmit = ({
             if (existingField?.parentId === parentId) return existingField?.order;
 
             return getNextSiblingFieldOrder(currentFields, parentId);
-        })()
+        })();
 
         const result = createModalFieldSchema.safeParse({
             ...formData,
@@ -63,7 +83,7 @@ export const useFieldModalSubmit = ({
                     duration: 4000,
                 });
             });
-            return;
+            return false;
         }
 
         const nextFields = existingField
@@ -76,5 +96,6 @@ export const useFieldModalSubmit = ({
         });
 
         onSuccess();
+        return true;
     };
 };
