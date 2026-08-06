@@ -1,6 +1,7 @@
-import { memo, type FC, type ReactNode, useMemo, useCallback, useEffect } from 'react';
+import { memo, type FC, type ReactNode, useMemo, useCallback, useEffect, useRef } from 'react';
 
 import PanelLeftCloseIcon from '#assets/icons/panel-left-close.svg?react';
+import ArrowIcon from '#assets/icons/short-arrow.svg?react';
 import { Button } from '@bookio/ui';
 
 import { useShallow } from 'zustand/shallow';
@@ -22,6 +23,8 @@ import {
     toSyncBookingFormFieldsRequest,
 } from '#utils/dataPreparers/bookingFormPreparers';
 import { useUpdateBookingFormStyles } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles';
+import { useScrollTabs } from './hooks/useScrollTabs';
+import clsx from 'clsx';
 
 export const ConfiguratorLayout = memo(function ConfiguratorLayout({
     children,
@@ -51,13 +54,46 @@ const ConfiguratorTabsSection: FC = memo(() => {
         useShallow(({ activeTab, setActiveTab }) => ({ activeTab, setActiveTab })),
     );
 
+    const containerRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+
+    const { onScrollLeft, onScrollRight, canScrollLeft, canScrollRight } = useScrollTabs({
+        containerRef,
+        trackRef,
+    });
+
     return (
-        <div className={styles.tabs}>
-            <ConfiguratorTabs
-                tabs={configuratorTabs}
-                activeTab={activeTab}
-                onActiveTabChange={setActiveTab}
-            />
+        <div className={styles.tabsContainer}>
+            <div className={styles.tabs}>
+                <button
+                    type="button"
+                    className={clsx(styles.scrollButtonLeft, { [styles.disabled]: !canScrollLeft })}
+                    onClick={onScrollLeft}
+                    disabled={!canScrollLeft}
+                    aria-label="Scroll tabs left"
+                >
+                    <ArrowIcon className={styles.scrollArrowLeft} />
+                </button>
+                <div className={styles.tabsScroll} ref={containerRef}>
+                    <ConfiguratorTabs
+                        tabs={configuratorTabs}
+                        activeTab={activeTab}
+                        onActiveTabChange={setActiveTab}
+                        ref={trackRef}
+                    />
+                </div>
+                <button
+                    type="button"
+                    className={clsx(styles.scrollButtonRight, {
+                        [styles.disabled]: !canScrollRight,
+                    })}
+                    onClick={onScrollRight}
+                    disabled={!canScrollRight}
+                    aria-label="Scroll tabs right"
+                >
+                    <ArrowIcon className={styles.scrollArrowRight} />
+                </button>
+            </div>
         </div>
     );
 });
