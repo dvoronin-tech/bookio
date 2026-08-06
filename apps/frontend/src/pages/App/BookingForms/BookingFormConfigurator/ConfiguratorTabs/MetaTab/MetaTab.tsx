@@ -1,46 +1,12 @@
-import { useEffect, type FC } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { guardConfiguratorRoute } from '#navigation';
-import {
-    useGetEntireBookingFormById,
-    type EntireBookingFormType,
-} from '#api/bookingForms/getEntireBookingFormById';
+import { useGetEntireBookingFormById } from '#api/bookingForms/getEntireBookingFormById';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 import { Spinner } from '#components/Spinner/Spinner';
 import { Button } from '@bookio/ui';
-import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
+import { MetaDataForm } from '#components/MetaDataForm/MetaDataForm';
 
 import styles from './MetaTab.module.scss';
-
-type MetaTabFormProps = {
-    bookingFormId: string;
-    formMeta: EntireBookingFormType['metaData'];
-};
-
-const MetaTabForm: FC<MetaTabFormProps> = ({ bookingFormId, formMeta }) => {
-    const bookingFormMeta = useBookingFormConfiguratorStore((state) => state.bookingFormMeta);
-    const setBookingFormMeta = useBookingFormConfiguratorStore((state) => state.setBookingFormMeta);
-
-    // Seed from server once per form. Do not overwrite local drafts on tab remount / refetch.
-    useEffect(() => {
-        if (bookingFormMeta?.bookingFormId === bookingFormId) return;
-        if (!formMeta) return;
-
-        setBookingFormMeta({
-            bookingFormId,
-            title: formMeta.title,
-            description: formMeta.description,
-            additionalMetaData: formMeta.additionalMetaData ?? {},
-        });
-    }, [bookingFormId, formMeta, bookingFormMeta, setBookingFormMeta]);
-
-    if (!bookingFormId) {
-        return null;
-    }
-
-    // UI for meta editing will be added later
-    return null;
-};
 
 export const MetaTab = () => {
     const { bookingFormId, id } = useParams();
@@ -107,6 +73,6 @@ export const MetaTab = () => {
     }
 
     return (
-        <MetaTabForm bookingFormId={routeParams.bookingFormId} formMeta={bookingForm.metaData} />
+        <MetaDataForm bookingFormId={routeParams.bookingFormId} metaData={bookingForm.metaData} />
     );
 };
