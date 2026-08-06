@@ -1,7 +1,7 @@
 import type { EntireBookingFormType } from '#api/bookingForms/getEntireBookingFormById';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { Button, Input } from '@bookio/ui';
-import { memo, type FC, useEffect, type ChangeEvent, useCallback, useState } from 'react';
+import { memo, type FC, useEffect, type ChangeEvent, useCallback, useState, useMemo } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { AdditionalMetaField } from './AdditionalMetaField/AdditionalMetaField';
 import { META_PROPERTIES } from './metaProperties';
@@ -117,6 +117,12 @@ export const MetaDataForm: FC<MetaDataFormProps> = memo(({ bookingFormId, metaDa
         [syncAdditionalMetaData],
     );
 
+    const optionsToRender = useMemo(() => {
+        return META_PROPERTIES.filter(
+            (option) => !additionalMetaRows.some((row) => row.property === option.value),
+        );
+    }, [additionalMetaRows]);
+
     if (!bookingFormId || !bookingFormMeta) {
         return null;
     }
@@ -146,7 +152,7 @@ export const MetaDataForm: FC<MetaDataFormProps> = memo(({ bookingFormId, metaDa
                         id={row.id}
                         property={row.property}
                         value={row.value}
-                        options={META_PROPERTIES}
+                        options={optionsToRender}
                         onPropertyChange={handlePropertyChange}
                         onValueChange={handleValueChange}
                         onRemove={handleRemoveAdditionalMetaField}
