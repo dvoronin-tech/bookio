@@ -29,7 +29,6 @@ export const fieldOptionValueSchema = z
     });
 
 export const fieldOptionSchema = z.object({
-    id: z.string().min(1),
     value: fieldOptionValueSchema,
     label: z.string().min(1),
 }) satisfies z.ZodType<FieldOption>;

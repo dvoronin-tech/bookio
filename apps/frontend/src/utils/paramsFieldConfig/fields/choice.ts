@@ -16,7 +16,6 @@ export const choiceFieldsConfig: Record<ChoiceParamKey, BaseUIFieldConfig | Opti
         required: true,
         itemFields: {
             label: { label: 'Label', type: 'text' },
-            value: { label: 'Value', type: 'text' },
         },
     },
 };

@@ -3,7 +3,7 @@ import type { z } from 'zod';
 
 import type { AcceptOptions } from './imageAcceptOptions';
 
-export type FieldOptionKey = Exclude<keyof z.infer<typeof fieldOptionSchema>, 'id'>;
+export type FieldOptionKey = keyof z.infer<typeof fieldOptionSchema>;
 
 export type BaseUIFieldConfig = {
     label: string;
@@ -25,7 +25,7 @@ export interface OptionsUIField {
     label: string;
     type: 'options';
     required?: boolean;
-    itemFields: Record<FieldOptionKey, BaseUIFieldConfig>;
+    itemFields: Partial<Record<FieldOptionKey, BaseUIFieldConfig>>;
 }
 
 // export interface FileUiField {

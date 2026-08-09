@@ -1,14 +1,12 @@
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 
 export interface OptionItem {
-    id: string;
     value: string;
     label: string;
 }
 
 export const createEmptyOption = (): OptionItem => ({
-    id: crypto.randomUUID(),
-    value: '',
+    value: crypto.randomUUID(),
     label: '',
 });
 
