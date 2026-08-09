@@ -17,4 +17,14 @@ export const updateBookingFormMetaSchema = z
         {
             message: 'At least one field must be provided',
         },
-    );
+    )
+    .refine((data) => {
+        if (!data.additionalMetaData) return true;
+
+        return Object.entries(data.additionalMetaData).every(([key, value]) => {
+            return key.trim().length > 0 && value.trim().length > 0;
+        });
+    }, {
+        message: 'All additional meta data fields must have a key and value, and neither can be empty',
+        path: ['additionalMetaData'],
+    })
