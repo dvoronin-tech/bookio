@@ -41,7 +41,6 @@ export type TextAreaFieldParams = InputFieldParams & {
 };
 
 export type FieldOption = {
-    id: string;
     value: string;
     label: string;
 };

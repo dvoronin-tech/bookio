@@ -17,22 +17,10 @@ export const OptionItem: FC<OptionItemProps> = ({ index, onRemove }) => {
     const options = useMemo(() => watchedOptions ?? [], [watchedOptions]);
     const option = options[index];
 
-    const { isLabelUnique, isValueUnique } = useMemo(() => {
-        if (!option) {
-            return { isLabelUnique: undefined, isValueUnique: undefined };
-        }
+    const isLabelUnique = useMemo(() => {
+        if (!option || option.label === '') return undefined;
 
-        const isValueUnique: boolean | undefined =
-            option.value === ''
-                ? undefined
-                : options.filter((o) => o.value === option.value).length === 1;
-
-        const isLabelUnique: boolean | undefined =
-            option.label === ''
-                ? undefined
-                : options.filter((o) => o.label === option.label).length === 1;
-
-        return { isValueUnique, isLabelUnique };
+        return options.filter((o) => o.label === option.label).length === 1;
     }, [options, option]);
 
     const handleRemoveOption = useCallback(() => {
@@ -43,8 +31,6 @@ export const OptionItem: FC<OptionItemProps> = ({ index, onRemove }) => {
 
     return (
         <div className={styles.option}>
-            <input type="hidden" {...register(`params.options.${index}.id`)} />
-
             <div className={styles.optionHeader}>
                 <span className={styles.optionIndex}>{index + 1}</span>
                 <Button
@@ -58,20 +44,12 @@ export const OptionItem: FC<OptionItemProps> = ({ index, onRemove }) => {
                 </Button>
             </div>
 
-            <div className={styles.optionFields}>
-                <ValidatableInput
-                    isValid={isValueUnique}
-                    label="Value"
-                    type="text"
-                    {...register(`params.options.${index}.value`)}
-                />
-                <ValidatableInput
-                    isValid={isLabelUnique}
-                    label="Label"
-                    type="text"
-                    {...register(`params.options.${index}.label`)}
-                />
-            </div>
+            <ValidatableInput
+                isValid={isLabelUnique}
+                label="Label"
+                type="text"
+                {...register(`params.options.${index}.label`)}
+            />
         </div>
     );
 };

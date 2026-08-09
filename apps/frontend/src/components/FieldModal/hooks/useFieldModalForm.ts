@@ -1,8 +1,7 @@
 import { useLayoutEffect } from 'react';
-import { useForm, useWatch, type UseFormReturn } from 'react-hook-form';
+import { useForm, type UseFormReturn } from 'react-hook-form';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
-import { getChoiceOptionsFromParams } from '../utils/fieldModalParams';
 
 interface UseFieldModalFormParams {
     open: boolean;
@@ -21,9 +20,7 @@ export const useFieldModalForm = ({
         defaultValues: {},
     });
 
-    const { reset, setValue, control } = methods;
-    const type = useWatch({ control, name: 'type' });
-    const params = useWatch({ control, name: 'params' });
+    const { reset } = methods;
 
     useLayoutEffect(() => {
         if (!open) return;
@@ -50,13 +47,6 @@ export const useFieldModalForm = ({
             params: existingField.params,
         });
     }, [open, fieldId, bookingFormFields, onOpenChange, reset]);
-
-    useLayoutEffect(() => {
-        const options = getChoiceOptionsFromParams(type, params);
-        if (options.length === 0 || options.every((option) => option.id)) return;
-
-        setValue('params.options', options);
-    }, [type, params, setValue]);
 
     return methods;
 };
