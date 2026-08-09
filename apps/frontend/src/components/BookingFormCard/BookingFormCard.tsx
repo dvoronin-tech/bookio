@@ -2,7 +2,6 @@ import { useCallback, type FC, useState } from 'react';
 import styles from './BookingFormCard.module.scss';
 import type { BookingFormType } from '#api/bookingForms/getBookingForms';
 import { Button } from '@bookio/ui';
-import { useUpdateBookingForm } from '#api/bookingForms/updateBookingForm';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { DeleteBookingFormDialog } from './DeleteBookingFormDialog';
@@ -16,28 +15,11 @@ import { useParams } from 'react-router-dom';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
 export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingForm }) => {
-    const { mutateAsync: updateBookingForm } = useUpdateBookingForm(bookingForm.id);
     const { id } = useParams<{ id: string }>();
     const { data: organization } = useGetOrganization(id);
     const [isDeleting, setIsDeleting] = useState(false);
 
     const bookingFormUrl = `${BOOKING_FORM_URL}/${organization?.slug}/${bookingForm.slug}`;
-
-    const handleToggleIsActive = useCallback(async () => {
-        const nextValue = !bookingForm.isActive;
-
-        toast.promise(
-            updateBookingForm({
-                bookingFormId: bookingForm.id,
-                isActive: nextValue,
-            }),
-            {
-                loading: `Updating ${bookingForm.name}`,
-                success: `Updated ${bookingForm.name}`,
-                error: `Failed to update ${bookingForm.name}`,
-            },
-        );
-    }, [updateBookingForm, bookingForm.name, bookingForm.id, bookingForm.isActive]);
 
     const handleOpenDeleteDialog = useCallback(() => {
         setIsDeleting(true);
@@ -55,18 +37,15 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
                     <div className={styles.cardHeader}>
                         <div className={styles.titleRow}>
                             <h3 className={styles.formName}>{bookingForm.name}</h3>
-                            <button
-                                type="button"
+                            <span
                                 className={clsx(styles.statusBadge, {
                                     [styles.statusBadgeActive]: bookingForm.isActive,
                                     [styles.statusBadgeInactive]: !bookingForm.isActive,
                                 })}
-                                onClick={handleToggleIsActive}
-                                aria-pressed={bookingForm.isActive}
                             >
                                 <span className={styles.statusDot} />
                                 <span>{bookingForm.isActive ? 'Active' : 'Inactive'}</span>
-                            </button>
+                            </span>
                         </div>
                         <p className={styles.formDescription}>
                             {bookingForm.description || '\u00A0'}
