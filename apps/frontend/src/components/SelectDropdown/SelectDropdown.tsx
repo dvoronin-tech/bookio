@@ -21,9 +21,19 @@ interface SelectDropdownProps {
     emptyOptionsText?: string;
     formatSelectedCount?: (count: number) => string;
     placement?: Placement;
+    triggerClassName?: string;
+    allowInjection?: boolean;
 }
 
 const defaultFormatSelectedCount = (count: number) => `${count} selected`;
+
+function renderContent(content: string, allowInjection: boolean) {
+    if (allowInjection) {
+        return <div dangerouslySetInnerHTML={{ __html: content }} />;
+    }
+
+    return content;
+}
 
 export const SelectDropdown: FC<SelectDropdownProps> = ({
     label,
@@ -35,6 +45,8 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
     emptyOptionsText = 'No options found',
     formatSelectedCount = defaultFormatSelectedCount,
     placement,
+    triggerClassName,
+    allowInjection = false,
 }) => {
     const [isOpen, setIsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
@@ -87,16 +99,14 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
                 matchTriggerWidth
                 placement={placement}
             >
-                <Dropdown.Trigger className={styles.selectTrigger}>
-                    <span
-                        className={
-                            selectedCount === 0
-                                ? styles.selectTriggerTextPlaceholder
-                                : styles.selectTriggerText
-                        }
-                    >
-                        {triggerText}
-                    </span>
+                <Dropdown.Trigger
+                    className={clsx(
+                        styles.selectTrigger,
+                        selectedCount === 0 && styles.selectTriggerPlaceholder,
+                        triggerClassName,
+                    )}
+                >
+                    {renderContent(triggerText, allowInjection)}
                     <ArrowIcon
                         className={clsx(
                             styles.selectTriggerIcon,
@@ -130,15 +140,18 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
                                         autoClose={false}
                                     >
                                         <Checkbox
-                                            label={option.label}
+                                            label={renderContent(option.label, allowInjection)}
                                             checked={selected.includes(option.value)}
                                             readOnly
                                             className={styles.optionCheckbox}
                                         />
                                     </Dropdown.Item>
                                 ) : (
-                                    <Dropdown.Item key={option.value} onClick={handleOptionClick}>
-                                        {option.label}
+                                    <Dropdown.Item
+                                        key={option.value}
+                                        onClick={handleOptionClick}
+                                    >
+                                        {renderContent(option.label, allowInjection)}
                                     </Dropdown.Item>
                                 );
                             })

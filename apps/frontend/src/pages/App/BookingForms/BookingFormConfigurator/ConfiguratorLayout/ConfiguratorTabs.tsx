@@ -1,4 +1,4 @@
-import type { FC, ReactNode } from 'react';
+import type { FC, ReactNode, RefObject } from 'react';
 import { memo } from 'react';
 import Tabs from '#components/Tabs/Tabs';
 
@@ -14,9 +14,10 @@ export const ConfiguratorTabs: FC<{
     tabs: ConfiguratorTab[];
     activeTab: string;
     onActiveTabChange: (tab: ConfiguratorTabValue) => void;
-}> = memo(({ tabs, activeTab, onActiveTabChange }) => {
+    ref?: RefObject<HTMLDivElement | null>;
+}> = memo(({ tabs, activeTab, onActiveTabChange, ref }) => {
     return (
-        <Tabs value={activeTab} onValueChange={onActiveTabChange as (value: string) => void}>
+        <Tabs value={activeTab} onValueChange={onActiveTabChange as (value: string) => void} ref={ref}>
             {tabs.map((tab) => (
                 <Tabs.Item key={tab.value} value={tab.value}>
                     <Tabs.Icon>{tab.icon}</Tabs.Icon>

@@ -1,6 +1,7 @@
-import { memo, type FC, type ReactNode, useMemo, useCallback, useEffect } from 'react';
+import { memo, type FC, type ReactNode, useMemo, useCallback, useEffect, useRef } from 'react';
 
 import PanelLeftCloseIcon from '#assets/icons/panel-left-close.svg?react';
+import ArrowIcon from '#assets/icons/short-arrow.svg?react';
 import { Button } from '@bookio/ui';
 
 import { useShallow } from 'zustand/shallow';
@@ -17,11 +18,15 @@ import toast from 'react-hot-toast';
 import { useSyncBookingFormField } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 import {
     toComparableBookingForm,
+    toComparableBookingFormMeta,
     toComparableBookingFormStyles,
     toSaveFieldsPayload,
     toSyncBookingFormFieldsRequest,
 } from '#utils/dataPreparers/bookingFormPreparers';
 import { useUpdateBookingFormStyles } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles';
+import { useScrollTabs } from './hooks/useScrollTabs';
+import clsx from 'clsx';
+import { useUpdateBookingFormMeta } from '#api/bookingForms/bookingFormMeta/updateBookingFormMeta';
 
 export const ConfiguratorLayout = memo(function ConfiguratorLayout({
     children,
@@ -51,13 +56,46 @@ const ConfiguratorTabsSection: FC = memo(() => {
         useShallow(({ activeTab, setActiveTab }) => ({ activeTab, setActiveTab })),
     );
 
+    const containerRef = useRef<HTMLDivElement>(null);
+    const trackRef = useRef<HTMLDivElement>(null);
+
+    const { onScrollLeft, onScrollRight, canScrollLeft, canScrollRight } = useScrollTabs({
+        containerRef,
+        trackRef,
+    });
+
     return (
-        <div className={styles.tabs}>
-            <ConfiguratorTabs
-                tabs={configuratorTabs}
-                activeTab={activeTab}
-                onActiveTabChange={setActiveTab}
-            />
+        <div className={styles.tabsContainer}>
+            <div className={styles.tabs}>
+                <button
+                    type="button"
+                    className={clsx(styles.scrollButtonLeft, { [styles.disabled]: !canScrollLeft })}
+                    onClick={onScrollLeft}
+                    disabled={!canScrollLeft}
+                    aria-label="Scroll tabs left"
+                >
+                    <ArrowIcon className={styles.scrollArrowLeft} />
+                </button>
+                <div className={styles.tabsScroll} ref={containerRef}>
+                    <ConfiguratorTabs
+                        tabs={configuratorTabs}
+                        activeTab={activeTab}
+                        onActiveTabChange={setActiveTab}
+                        ref={trackRef}
+                    />
+                </div>
+                <button
+                    type="button"
+                    className={clsx(styles.scrollButtonRight, {
+                        [styles.disabled]: !canScrollRight,
+                    })}
+                    onClick={onScrollRight}
+                    disabled={!canScrollRight}
+                    aria-label="Scroll tabs right"
+                >
+                    <ArrowIcon className={styles.scrollArrowRight} />
+                </button>
+            </div>
         </div>
     );
 });
@@ -79,13 +117,17 @@ const ConfiguratorHeader: FC = memo(() => {
 const ConfiguratorFooter: FC = memo(() => {
     const { bookingFormId, id } = useParams<{ id: string; bookingFormId: string }>();
     const { data: baseLine } = useGetEntireBookingFormById(bookingFormId);
-    const { bookingForm, bookingFormFields, bookingFormStyles } = useBookingFormConfiguratorStore(
-        useShallow(({ bookingForm, bookingFormFields, bookingFormStyles }) => ({
-            bookingForm,
-            bookingFormFields,
-            bookingFormStyles,
-        })),
-    );
+    const { bookingForm, bookingFormFields, bookingFormStyles, bookingFormMeta } =
+        useBookingFormConfiguratorStore(
+            useShallow(
+                ({ bookingForm, bookingFormFields, bookingFormStyles, bookingFormMeta }) => ({
+                    bookingForm,
+                    bookingFormFields,
+                    bookingFormStyles,
+                    bookingFormMeta,
+                }),
+            ),
+        );
 
     const navigate = useNavigate();
 
@@ -95,8 +137,11 @@ const ConfiguratorFooter: FC = memo(() => {
         useSyncBookingFormField(bookingFormId);
     const { mutateAsync: updateBookingFormStyles, isPending: isUpdateStylesPending } =
         useUpdateBookingFormStyles(bookingFormId);
+    const { mutateAsync: updateBookingFormMeta, isPending: isUpdateMetaPending } =
+        useUpdateBookingFormMeta(bookingFormId);
 
-    const isSaving = isUpdatePending || isSyncPending || isUpdateStylesPending;
+    const isSaving =
+        isUpdatePending || isSyncPending || isUpdateStylesPending || isUpdateMetaPending;
 
     const isDirtyBookingForm = useMemo(() => {
         if (!baseLine || !bookingForm) return false;
@@ -132,6 +177,13 @@ const ConfiguratorFooter: FC = memo(() => {
         return !isEqual(bookingFormStyles, toComparableBookingFormStyles(baseLine.styles));
     }, [baseLine, bookingFormStyles]);
 
+    const isDirtyBookingFormMeta = useMemo(() => {
+        if (!baseLine || !bookingFormMeta || !baseLine.metaData) return false;
+        if (bookingFormMeta.bookingFormId !== baseLine.id) return false;
+
+        return !isEqual(bookingFormMeta, toComparableBookingFormMeta(baseLine.metaData));
+    }, [baseLine, bookingFormMeta]);
+
     const saveRequestThunks = useMemo(() => {
         if (!bookingFormId) return [];
 
@@ -150,6 +202,11 @@ const ConfiguratorFooter: FC = memo(() => {
                 updateBookingFormStyles(toComparableBookingFormStyles(bookingFormStyles)),
             );
         }
+        if (isDirtyBookingFormMeta && bookingFormMeta) {
+            thunks.push(() =>
+                updateBookingFormMeta(toComparableBookingFormMeta(bookingFormMeta)),
+            );
+        }
 
         return thunks;
     }, [
@@ -157,12 +214,15 @@ const ConfiguratorFooter: FC = memo(() => {
         isDirtyBookingForm,
         isDirtyBookingFormFields,
         isDirtyBookingFormStyles,
+        isDirtyBookingFormMeta,
         bookingForm,
         bookingFormFields,
         bookingFormStyles,
+        bookingFormMeta,
         updateBookingForm,
         syncBookingFormField,
         updateBookingFormStyles,
+        updateBookingFormMeta,
     ]);
 
     const handleNavigateToBookingForms = useCallback(() => {
@@ -178,13 +238,22 @@ const ConfiguratorFooter: FC = memo(() => {
                 handleNavigateToBookingForms();
                 return 'Booking form saved successfully';
             },
-            error: 'Failed to save booking form',
+            error: (err) => (err instanceof Error ? err.message : 'Failed to save booking form'),
         });
     }, [saveRequestThunks, handleNavigateToBookingForms, isSaving]);
 
     const hasSomethingToSave = useMemo(
-        () => isDirtyBookingForm || isDirtyBookingFormFields || isDirtyBookingFormStyles,
-        [isDirtyBookingForm, isDirtyBookingFormFields, isDirtyBookingFormStyles],
+        () =>
+            isDirtyBookingForm ||
+            isDirtyBookingFormFields ||
+            isDirtyBookingFormStyles ||
+            isDirtyBookingFormMeta,
+        [
+            isDirtyBookingForm,
+            isDirtyBookingFormFields,
+            isDirtyBookingFormStyles,
+            isDirtyBookingFormMeta,
+        ],
     );
 
     return (

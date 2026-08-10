@@ -7,6 +7,7 @@ import {
     type ComponentProps,
     type MouseEvent,
     type ReactNode,
+    type RefObject,
 } from 'react';
 import styles from './Tabs.module.scss';
 
@@ -32,14 +33,15 @@ export type TabsProps = {
     onValueChange: (value: string) => void;
     children: ReactNode;
     className?: string;
+    ref?: RefObject<HTMLDivElement | null>;
 };
 
-function TabsRoot({ value, onValueChange, children, className }: TabsProps) {
+function TabsRoot({ value, onValueChange, children, className, ref }: TabsProps) {
     const classes = clsx(styles.root, className);
 
     return (
         <TabsContext.Provider value={{ value, onValueChange }}>
-            <div className={classes} role="tablist">
+            <div className={classes} role="tablist" ref={ref}>
                 {children}
             </div>
         </TabsContext.Provider>

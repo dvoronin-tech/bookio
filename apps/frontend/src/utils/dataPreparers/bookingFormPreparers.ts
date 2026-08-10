@@ -1,6 +1,7 @@
 import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 import type { SyncBookingFormFieldRequest } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
+import type { UpdateBookingFormMetaRequest } from '#api/bookingForms/bookingFormMeta/updateBookingFormMeta';
 import type { UpdateBookingFormStylesRequest } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles';
 
 export type SyncBookingFormFieldItem = SyncBookingFormFieldRequest['fields'][number];
@@ -125,4 +126,18 @@ export const toComparableBookingFormStyles = (
     borderColor: data.borderColor,
     textMain: data.textMain,
     textSecondary: data.textSecondary,
-})
+});
+
+type ComparableBookingFormMetaSource = Pick<
+    UpdateBookingFormMetaRequest,
+    'bookingFormId' | 'title' | 'description' | 'additionalMetaData'
+>;
+
+export const toComparableBookingFormMeta = (
+    data: ComparableBookingFormMetaSource,
+): UpdateBookingFormMetaRequest => ({
+    bookingFormId: data.bookingFormId,
+    title: data.title?.trim() ?? '',
+    description: data.description?.trim() ?? '',
+    additionalMetaData: data.additionalMetaData ?? {},
+});

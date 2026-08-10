@@ -1,4 +1,4 @@
-import { parseError } from './parseError';
+import { parseError, parseZodErrorBody } from './parseError';
 
 type ApiErrorBody = {
     success: false;
@@ -24,11 +24,16 @@ export function validateError<TBody>(
     body: TBody,
     fallbackMessage: string,
 ): asserts body is Extract<TBody, ApiSuccessBody> {
-    if (!response.ok && !hasFailedSuccess(body)) {
-        throw new Error(fallbackMessage);
-    }
-
     if (hasFailedSuccess(body)) {
         throw new Error(parseError(body));
+    }
+
+    if (!response.ok) {
+        const zodMessage = parseZodErrorBody(body);
+        if (zodMessage) {
+            throw new Error(zodMessage);
+        }
+
+        throw new Error(fallbackMessage);
     }
 }

@@ -205,7 +205,7 @@ function DropdownItem({
                 onOpenChange(false);
             }
         },
-        [disabled, onClick, onOpenChange],
+        [disabled, onClick, onOpenChange, autoClose],
     );
 
     return (

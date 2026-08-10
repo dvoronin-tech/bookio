@@ -53,6 +53,7 @@
 .selectTrigger {
     width: 100%;
     justify-content: space-between;
+    align-items: center;
     padding: 1rem 1.2rem;
     border-radius: 0.8rem;
     font-size: 1.6rem;
@@ -61,6 +62,7 @@
     background-color: var(--color-bg-main);
     border: 1px solid var(--color-border);
     transition: border-color 0.2s ease;
+    text-align: left;
 
     &:hover {
         background-color: var(--color-bg-main);
@@ -71,19 +73,18 @@
         background-color: var(--color-bg-main);
         outline: none;
     }
+
+    > div:first-child {
+        flex: 1;
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        text-align: left;
+    }
 }
 
-.selectTriggerText,
-.selectTriggerTextPlaceholder {
-    flex: 1;
-    min-width: 0;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    text-align: left;
-}
-
-.selectTriggerTextPlaceholder {
+.selectTriggerPlaceholder {
     color: var(--color-text-secondary);
 }
 
