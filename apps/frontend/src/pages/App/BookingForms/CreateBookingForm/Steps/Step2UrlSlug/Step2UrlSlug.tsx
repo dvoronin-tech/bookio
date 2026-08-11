@@ -7,7 +7,7 @@ import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
-import { step2Schema } from '../../schemas/createBookingFormDraft.schema';
+import { slugSchema } from '@bookio/backend/schemas';
 import toast from 'react-hot-toast';
 import styles from './Step2UrlSlug.module.scss';
 
@@ -26,8 +26,7 @@ export const Step2UrlSlug: FC = () => {
     const { data: organization } = useGetOrganization(organizationId || undefined);
 
     const trimmedSlug = slug.trim();
-    const formatResult =
-        trimmedSlug.length > 0 ? step2Schema.safeParse({ slug: trimmedSlug }) : null;
+    const formatResult = trimmedSlug.length > 0 ? slugSchema.safeParse(trimmedSlug) : null;
     const isFormatValid = formatResult?.success === true;
 
     const { isValid: slugExistsIsValid } = useIsBookingFormExists({
@@ -54,7 +53,7 @@ export const Step2UrlSlug: FC = () => {
     };
 
     const handleClickNext = useCallback(() => {
-        const parsed = step2Schema.safeParse({ slug: trimmedSlug });
+        const parsed = slugSchema.safeParse(trimmedSlug);
         if (!parsed.success) {
             return toast.error(parsed.error.issues[0]?.message ?? 'Invalid slug');
         }

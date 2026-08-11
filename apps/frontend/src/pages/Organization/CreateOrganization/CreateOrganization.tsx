@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react';
+import { type FC, useCallback, useMemo } from 'react';
 import styles from './CreateOrganization.module.scss';
 import { Button, Input, HiddenField } from '@bookio/ui';
 import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
@@ -7,6 +7,7 @@ import {
     type CreateOrganizationResponse,
 } from '#api/organizations/createOrganization';
 import { useSession } from '#api/auth';
+import { slugSchema } from '@bookio/backend/schemas';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
 import { type CreateOrganizationRequest } from '#api/organizations/createOrganization';
@@ -18,16 +19,12 @@ import { useNavigate } from 'react-router-dom';
 import { navigateBack } from '#navigation';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
+import { useDebouncedValidation } from '#utils/useDebouncedValidation';
+import { formatZodError } from '#utils/parseError';
 
 const formSchema = z.object({
     name: z.string().min(3).max(255),
-    slug: z
-        .string()
-        .min(1)
-        .max(255)
-        .regex(/^[a-zA-Z0-9]/, {
-            message: 'Slug must start with a letter or number',
-        }),
+    slug: slugSchema,
     password: z
         .string()
         .min(6)
@@ -57,6 +54,14 @@ export const CreateOrganization: FC = () => {
 
     const slug = useWatch({ control, name: 'slug', defaultValue: '' });
     const { isValid: slugIsValid } = useIsOrganizationExists({ slug });
+
+    const slugFormatError = useDebouncedValidation(
+        slug,
+        (value) => {
+            return formatZodError(slugSchema.safeParse(value).error) ?? undefined;
+        },
+        500,
+    );
 
     const onSubmit = useCallback(
         async (data: FormData) => {
@@ -127,8 +132,12 @@ export const CreateOrganization: FC = () => {
                             <ValidatableInput
                                 {...field}
                                 placeholder="Unique organization slug"
-                                isValid={slugIsValid}
-                                errorMessage="Organization slug is already taken"
+                                isValid={slugIsValid && !slugFormatError}
+                                errorMessage={
+                                    !slugIsValid
+                                        ? 'Organization slug is already taken'
+                                        : slugFormatError
+                                }
                                 disabled={isDisabled}
                             />
                         )}

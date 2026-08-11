@@ -6,17 +6,6 @@ export const step1Schema = z.object({
     organizationId: z.uuid(),
 });
 
-export const step2Schema = z.object({
-    slug: z
-        .string()
-        .min(1)
-        .max(60)
-        .regex(/^[a-z0-9][a-z0-9-_]*$/, {
-            message:
-                'Slug must use only lowercase English letters, numbers, hyphens, and underscores (no spaces)',
-        }),
-});
-
 const hexColorSchema = z.string().regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, {
     message: 'Color must be a hex value (#RGB or #RRGGBB)',
 });

@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { slugSchema } from '@/schemas/shared/slug.schema.js';
 
 export const organizationSchema = z.object({
     name: z.string().min(3).max(255),
@@ -10,6 +11,6 @@ export const organizationSchema = z.object({
             /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/,
             'Password must contain at least 8 characters, one uppercase letter, one lowercase letter, one number and one special character',
         ),
-    slug: z.string().min(3).max(255),
+    slug: slugSchema,
     userId: z.string(),
 });

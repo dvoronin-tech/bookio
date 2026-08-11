@@ -58,7 +58,12 @@ const extractIssues = (error: unknown): ZodIssue[] | null => {
     return null;
 };
 
-const formatZodError = (error: unknown): string | null => {
+/**
+ * 
+ * @param error - Zod error
+ * @returns Formatted error message
+ */
+export const formatZodError = (error: unknown): string | null => {
     const issues = extractIssues(error);
     if (!issues) {
         return null;

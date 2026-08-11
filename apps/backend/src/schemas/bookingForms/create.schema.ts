@@ -1,10 +1,11 @@
 import { z } from 'zod';
+import { slugSchema } from '@/schemas/shared/slug.schema.js';
 
 export const createBookingFormSchema = z.object({
     organizationId: z.uuid(),
     name: z.string().min(1).max(255),
     description: z.string().optional().nullable(),
-    slug: z.string().min(1).max(60),
+    slug: slugSchema,
     primary: z.string().min(1),
     bgMain: z.string().min(1),
     bgSecondary: z.string().min(1),
