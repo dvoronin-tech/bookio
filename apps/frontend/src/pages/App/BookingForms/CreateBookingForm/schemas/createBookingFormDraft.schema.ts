@@ -22,10 +22,4 @@ export const step3Schema = z.object({
 export const step4Schema = z.object({
     metaTitle: z.string().min(1, 'Title is required').max(255),
     metaDescription: z.string().min(1, 'Description is required').max(255),
-    additionalMeta: z.array(
-        z.object({
-            key: z.string().min(1, 'Meta property name is required').max(255),
-            value: z.string().min(1, 'Meta property value is required').max(255),
-        }),
-    ),
 });

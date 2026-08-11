@@ -4,25 +4,3 @@
     flex-direction: column;
     gap: 0.8rem;
 }
-
-.metaRow {
-    display: flex;
-    align-items: flex-end;
-    gap: 0.8rem;
-    width: 100%;
-
-    > *:not(.removeButton) {
-        flex: 1;
-        min-width: 0;
-    }
-}
-
-.metaRowInput {
-    width: 100%;
-    min-width: 0;
-}
-
-.removeButton {
-    flex: 0 0 auto;
-    padding-inline: 1rem;
-}

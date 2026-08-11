@@ -1,7 +1,6 @@
 import { useCallback, type ChangeEvent, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, Input } from '@bookio/ui';
-import TrashIcon from '#assets/icons/trash.svg?react';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { step4Schema } from '../../schemas/createBookingFormDraft.schema';
@@ -9,12 +8,11 @@ import toast from 'react-hot-toast';
 import styles from './Step4Metadata.module.scss';
 
 export const Step4Metadata: FC = () => {
-    const { metaTitle, metaDescription, additionalMeta, setField, goToNextStep, goToPreviousStep } =
+    const { metaTitle, metaDescription, setField, goToNextStep, goToPreviousStep } =
         useCreateBookingFormStore(
             useShallow((s) => ({
                 metaTitle: s.data.metaTitle,
                 metaDescription: s.data.metaDescription,
-                additionalMeta: s.data.additionalMeta,
                 setField: s.setField,
                 goToNextStep: s.goToNextStep,
                 goToPreviousStep: s.goToPreviousStep,
@@ -35,38 +33,10 @@ export const Step4Metadata: FC = () => {
         [setField],
     );
 
-    const handleAdditionalMetaChange = useCallback(
-        (index: number, field: 'key' | 'value') => (event: ChangeEvent<HTMLInputElement>) => {
-            const next = additionalMeta.map((item, itemIndex) =>
-                itemIndex === index ? { ...item, [field]: event.target.value } : item,
-            );
-            setField('additionalMeta', next);
-        },
-        [additionalMeta, setField],
-    );
-
-    const handleAddMore = useCallback(() => {
-        setField('additionalMeta', [...additionalMeta, { key: '', value: '' }]);
-    }, [additionalMeta, setField]);
-
-    const handleRemoveAdditionalMeta = useCallback(
-        (index: number) => {
-            setField(
-                'additionalMeta',
-                additionalMeta.filter((_, itemIndex) => itemIndex !== index),
-            );
-        },
-        [additionalMeta, setField],
-    );
-
     const handleClickNext = useCallback(() => {
         const trimmed = {
             metaTitle: metaTitle.trim(),
             metaDescription: metaDescription.trim(),
-            additionalMeta: additionalMeta.map((item) => ({
-                key: item.key.trim(),
-                value: item.value.trim(),
-            })),
         };
 
         const parsed = step4Schema.safeParse(trimmed);
@@ -76,15 +46,14 @@ export const Step4Metadata: FC = () => {
 
         setField('metaTitle', trimmed.metaTitle);
         setField('metaDescription', trimmed.metaDescription);
-        setField('additionalMeta', trimmed.additionalMeta);
         goToNextStep();
-    }, [metaTitle, metaDescription, additionalMeta, setField, goToNextStep]);
+    }, [metaTitle, metaDescription, setField, goToNextStep]);
 
     return (
         <FormWizardLayout
             stepNumber={4}
             title="Set page metadata"
-            description="Title and description are required for SEO and social previews. Use Add more to define extra meta properties as name/value pairs."
+            description="Title and description are required for SEO and social previews."
             onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
@@ -110,38 +79,6 @@ export const Step4Metadata: FC = () => {
                 onChange={handleMetaDescriptionChange}
                 placeholder="Description*"
             />
-
-            {additionalMeta.map((item, index) => (
-                <div key={index} className={styles.metaRow}>
-                    <Input
-                        label="Meta property name"
-                        className={styles.metaRowInput}
-                        value={item.key}
-                        onChange={handleAdditionalMetaChange(index, 'key')}
-                        placeholder="Meta property name*"
-                    />
-                    <Input
-                        label="Meta property value"
-                        className={styles.metaRowInput}
-                        value={item.value}
-                        onChange={handleAdditionalMetaChange(index, 'value')}
-                        placeholder="Meta property value*"
-                    />
-                    <Button
-                        type="button"
-                        variant="red-clean"
-                        className={styles.removeButton}
-                        onClick={() => handleRemoveAdditionalMeta(index)}
-                        aria-label="Remove meta property"
-                    >
-                        <TrashIcon />
-                    </Button>
-                </div>
-            ))}
-
-            <Button type="button" variant="simple-clean" onClick={handleAddMore}>
-                Add more
-            </Button>
         </FormWizardLayout>
     );
 };
