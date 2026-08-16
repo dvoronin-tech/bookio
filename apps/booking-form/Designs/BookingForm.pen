@@ -1,5 +1,5 @@
 {
-  "version": "2.14",
+  "version": "2.17",
   "children": [
     {
       "type": "frame",
@@ -45,7 +45,8 @@
               "fill": "$textSecondary",
               "content": "Enter your name",
               "fontFamily": "$fontFamily",
-              "fontSize": 16
+              "fontSize": 16,
+              "fontWeight": "normal"
             }
           ]
         }
@@ -94,7 +95,8 @@
               "width": "fill_container",
               "content": "Anything we should know?",
               "fontFamily": "$fontFamily",
-              "fontSize": 16
+              "fontSize": 16,
+              "fontWeight": "normal"
             }
           ]
         }
@@ -261,7 +263,8 @@
               "lineHeight": 1.45,
               "textAlign": "center",
               "fontFamily": "$fontFamily",
-              "fontSize": 15
+              "fontSize": 15,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -389,214 +392,6 @@
                   "content": "Done"
                 }
               }
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "N8LkOx",
-      "x": 1378,
-      "y": 358,
-      "name": "Mobile — Inactive",
-      "clip": true,
-      "width": 390,
-      "height": 844,
-      "fill": "$bgMain",
-      "layout": "vertical",
-      "children": [
-        {
-          "type": "frame",
-          "id": "O5Apjx",
-          "name": "Status Bar",
-          "width": "fill_container",
-          "height": 54,
-          "padding": [
-            0,
-            24,
-            10,
-            24
-          ],
-          "justifyContent": "space_between",
-          "alignItems": "end",
-          "children": [
-            {
-              "type": "text",
-              "id": "yD0Ft",
-              "name": "Time",
-              "fill": "$textMain",
-              "content": "9:41",
-              "fontFamily": "$fontFamily",
-              "fontSize": 15,
-              "fontWeight": "600"
-            },
-            {
-              "type": "frame",
-              "id": "QI8Qt",
-              "name": "Status Icons",
-              "gap": 6,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "gZ8a7",
-                  "name": "Signal",
-                  "width": 16,
-                  "height": 16,
-                  "icon": "signal",
-                  "library": "lucide",
-                  "fill": "$textMain"
-                },
-                {
-                  "type": "icon",
-                  "id": "nSPTR",
-                  "name": "Wifi",
-                  "width": 16,
-                  "height": 16,
-                  "icon": "wifi",
-                  "library": "lucide",
-                  "fill": "$textMain"
-                },
-                {
-                  "type": "icon",
-                  "id": "fFOlT",
-                  "name": "Battery",
-                  "width": 20,
-                  "height": 16,
-                  "icon": "battery-full",
-                  "library": "lucide",
-                  "fill": "$textMain"
-                }
-              ]
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "V4ki8",
-          "name": "Inactive Content",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 20,
-          "padding": 32,
-          "justifyContent": "center",
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "frame",
-              "id": "iPri9",
-              "name": "Inactive Icon Wrap",
-              "width": 72,
-              "height": 72,
-              "fill": "#544D4D33",
-              "cornerRadius": 36,
-              "justifyContent": "center",
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "icon",
-                  "id": "HfHm1",
-                  "name": "Pause Icon",
-                  "width": 32,
-                  "height": 32,
-                  "icon": "circle-pause",
-                  "library": "lucide",
-                  "fill": "$textSecondary"
-                }
-              ]
-            },
-            {
-              "type": "text",
-              "id": "dXg9t",
-              "name": "Inactive Title",
-              "fill": "$textMain",
-              "content": "Form unavailable",
-              "textAlign": "center",
-              "fontFamily": "$fontFamily",
-              "fontSize": 28,
-              "fontWeight": "700"
-            },
-            {
-              "type": "text",
-              "id": "eZwRB",
-              "name": "Inactive Description",
-              "fill": "$textSecondary",
-              "textGrowth": "fixed-width",
-              "width": "fill_container",
-              "content": "This booking form is temporarily turned off by the business. Please check back later or contact them directly.",
-              "lineHeight": 1.45,
-              "textAlign": "center",
-              "fontFamily": "$fontFamily",
-              "fontSize": 15
-            },
-            {
-              "type": "frame",
-              "id": "o9EwHN",
-              "name": "Inactive Card",
-              "width": "fill_container",
-              "fill": "$bgUi",
-              "cornerRadius": "$radiusPanel",
-              "stroke": "$border",
-              "strokeWidth": 1,
-              "layout": "vertical",
-              "gap": 8,
-              "padding": 16,
-              "children": [
-                {
-                  "type": "text",
-                  "id": "i5yKNZ",
-                  "name": "Form Name",
-                  "fill": "$textMain",
-                  "content": "Sales consultation",
-                  "fontFamily": "$fontFamily",
-                  "fontSize": 16,
-                  "fontWeight": "700"
-                },
-                {
-                  "type": "frame",
-                  "id": "G5GxCD",
-                  "name": "Badge Row",
-                  "gap": 8,
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "frame",
-                      "id": "KWVcl",
-                      "name": "Inactive Badge",
-                      "fill": "#CC2B0E22",
-                      "cornerRadius": 999,
-                      "gap": 6,
-                      "padding": [
-                        4,
-                        10
-                      ],
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "ellipse",
-                          "id": "nD1eQ",
-                          "name": "Inactive Dot",
-                          "fill": "$systemRed",
-                          "width": 6,
-                          "height": 6
-                        },
-                        {
-                          "type": "text",
-                          "id": "ucbSM",
-                          "name": "Inactive Label",
-                          "fill": "$systemRed",
-                          "content": "Inactive",
-                          "fontFamily": "$fontFamily",
-                          "fontSize": 12,
-                          "fontWeight": "700"
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
             }
           ]
         }
@@ -736,7 +531,8 @@
               "content": "Book a call anytime. No account — just send your details.",
               "lineHeight": 1.45,
               "fontFamily": "$fontFamily",
-              "fontSize": 14
+              "fontSize": 14,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -875,7 +671,8 @@
               "width": "fill_container",
               "content": "We only ask what the business needs to book you in.",
               "fontFamily": "$fontFamily",
-              "fontSize": 13
+              "fontSize": 13,
+              "fontWeight": "normal"
             },
             {
               "type": "frame",
@@ -3393,278 +3190,6 @@
               "fontFamily": "$fontFamily",
               "fontSize": 13,
               "fontWeight": "500"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "type": "frame",
-      "id": "yCN5U",
-      "x": 4460,
-      "y": 1885,
-      "name": "Desktop — Inactive",
-      "clip": true,
-      "width": 1440,
-      "height": 900,
-      "fill": "$bgMain",
-      "layout": "vertical",
-      "children": [
-        {
-          "type": "frame",
-          "id": "J4KZf",
-          "layoutPosition": "absolute",
-          "x": 0,
-          "y": 0,
-          "name": "Glow Layer",
-          "width": "fill_container(0)",
-          "height": "fill_container(0)",
-          "layout": "none",
-          "children": [
-            {
-              "type": "ellipse",
-              "id": "Wv2ks",
-              "x": 1040,
-              "y": -140,
-              "name": "Orb Top Right",
-              "fill": {
-                "type": "gradient",
-                "gradientType": "radial",
-                "enabled": true,
-                "rotation": 0,
-                "size": {
-                  "width": 1,
-                  "height": 1
-                },
-                "colors": [
-                  {
-                    "color": "#6B5E6B44",
-                    "position": 0
-                  },
-                  {
-                    "color": "#6B5E6B00",
-                    "position": 1
-                  }
-                ]
-              },
-              "width": 480,
-              "height": 480,
-              "effect": {
-                "type": "blur",
-                "radius": 110
-              }
-            },
-            {
-              "type": "ellipse",
-              "id": "r4Cxdj",
-              "x": -120,
-              "y": 280,
-              "name": "Orb Center Left",
-              "fill": {
-                "type": "gradient",
-                "gradientType": "radial",
-                "enabled": true,
-                "rotation": 0,
-                "size": {
-                  "width": 1,
-                  "height": 1
-                },
-                "colors": [
-                  {
-                    "color": "#4A0A8A33",
-                    "position": 0
-                  },
-                  {
-                    "color": "#4A0A8A00",
-                    "position": 1
-                  }
-                ]
-              },
-              "width": 400,
-              "height": 400,
-              "effect": {
-                "type": "blur",
-                "radius": 100
-              }
-            },
-            {
-              "type": "ellipse",
-              "id": "UB5hB",
-              "x": 500,
-              "y": 600,
-              "name": "Orb Bottom",
-              "fill": {
-                "type": "gradient",
-                "gradientType": "radial",
-                "enabled": true,
-                "rotation": 0,
-                "size": {
-                  "width": 1,
-                  "height": 1
-                },
-                "colors": [
-                  {
-                    "color": "#544D4D40",
-                    "position": 0
-                  },
-                  {
-                    "color": "#544D4D00",
-                    "position": 1
-                  }
-                ]
-              },
-              "width": 440,
-              "height": 360,
-              "effect": {
-                "type": "blur",
-                "radius": 120
-              }
-            }
-          ]
-        },
-        {
-          "type": "frame",
-          "id": "AKUQH",
-          "name": "Main Content",
-          "width": "fill_container",
-          "height": "fill_container",
-          "layout": "vertical",
-          "gap": 24,
-          "padding": 40,
-          "justifyContent": "center",
-          "alignItems": "center",
-          "children": [
-            {
-              "type": "frame",
-              "id": "jIsNv",
-              "name": "Inactive Card",
-              "width": 500,
-              "fill": "$bgUi",
-              "cornerRadius": 24,
-              "stroke": "$border",
-              "strokeWidth": 1,
-              "layout": "vertical",
-              "gap": 24,
-              "padding": 40,
-              "alignItems": "center",
-              "children": [
-                {
-                  "type": "frame",
-                  "id": "AhpsF",
-                  "name": "Inactive Icon Wrap",
-                  "width": 80,
-                  "height": 80,
-                  "fill": "#544D4D33",
-                  "cornerRadius": 40,
-                  "layout": "vertical",
-                  "justifyContent": "center",
-                  "alignItems": "center",
-                  "children": [
-                    {
-                      "type": "icon",
-                      "id": "YLFdv",
-                      "name": "Pause Icon",
-                      "width": 36,
-                      "height": 36,
-                      "icon": "circle-pause",
-                      "library": "lucide",
-                      "fill": "$textSecondary"
-                    }
-                  ]
-                },
-                {
-                  "type": "text",
-                  "id": "FM53v",
-                  "name": "Inactive Title",
-                  "fill": "$textMain",
-                  "content": "Form unavailable",
-                  "textAlign": "center",
-                  "fontFamily": "$fontFamily",
-                  "fontSize": 38,
-                  "fontWeight": "700"
-                },
-                {
-                  "type": "text",
-                  "id": "i8f53X",
-                  "name": "Inactive Description",
-                  "fill": "$textSecondary",
-                  "textGrowth": "fixed-width",
-                  "width": "fill_container",
-                  "content": "This booking form is temporarily turned off by the business. Please check back later or contact them directly.",
-                  "lineHeight": 1.45,
-                  "textAlign": "center",
-                  "fontFamily": "$fontFamily",
-                  "fontSize": 15,
-                  "fontWeight": "normal"
-                },
-                {
-                  "type": "frame",
-                  "id": "PWQIC",
-                  "name": "Form Info Card",
-                  "width": "fill_container",
-                  "fill": "$bgElevated",
-                  "cornerRadius": 12,
-                  "stroke": "$border",
-                  "strokeWidth": 1,
-                  "layout": "vertical",
-                  "gap": 8,
-                  "padding": 16,
-                  "children": [
-                    {
-                      "type": "text",
-                      "id": "MR5KL",
-                      "name": "Form Name",
-                      "fill": "$textMain",
-                      "content": "Sales consultation",
-                      "fontFamily": "$fontFamily",
-                      "fontSize": 16,
-                      "fontWeight": "700"
-                    },
-                    {
-                      "type": "frame",
-                      "id": "SeK9w",
-                      "name": "Badge Row",
-                      "gap": 8,
-                      "alignItems": "center",
-                      "children": [
-                        {
-                          "type": "frame",
-                          "id": "DUEUF",
-                          "name": "Inactive Badge",
-                          "fill": "#CC2B0E22",
-                          "cornerRadius": 999,
-                          "gap": 6,
-                          "padding": [
-                            4,
-                            10
-                          ],
-                          "alignItems": "center",
-                          "children": [
-                            {
-                              "type": "ellipse",
-                              "id": "ctHwS",
-                              "name": "Inactive Dot",
-                              "fill": "$systemRed",
-                              "width": 6,
-                              "height": 6
-                            },
-                            {
-                              "type": "text",
-                              "id": "ZOOr3",
-                              "name": "Inactive Label",
-                              "fill": "$systemRed",
-                              "content": "Inactive",
-                              "fontFamily": "$fontFamily",
-                              "fontSize": 12,
-                              "fontWeight": "700"
-                            }
-                          ]
-                        }
-                      ]
-                    }
-                  ]
-                }
-              ]
             }
           ]
         }
