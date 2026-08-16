@@ -1,8 +1,9 @@
 import { parseError } from './parseError';
+import type { ZodError } from 'zod';
 
 type ApiErrorBody = {
     success: false;
-    error: string | import('zod').ZodError;
+    error: string | ZodError;
 };
 
 type ApiSuccessBody = {
