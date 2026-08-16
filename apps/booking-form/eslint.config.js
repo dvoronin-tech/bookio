@@ -6,6 +6,7 @@ export default [
     ...tanstackConfig,
     {
         rules: {
+            'import/consistent-type-specifier-style': 'off',
             'import/no-cycle': 'off',
             'import/order': 'off',
             'sort-imports': 'off',
