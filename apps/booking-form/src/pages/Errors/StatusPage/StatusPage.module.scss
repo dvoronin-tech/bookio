@@ -1,0 +1,325 @@
+.statusPage {
+    &[data-tone='error'] {
+        --color-primary: var(--color-system-red);
+    }
+
+    width: 100%;
+    min-height: 100svh;
+    height: 100svh;
+    min-height: 100dvh;
+    height: 100dvh;
+    padding: 1rem;
+    padding-top: max(1rem, env(safe-area-inset-top));
+    padding-right: max(1rem, env(safe-area-inset-right));
+    padding-bottom: max(1rem, env(safe-area-inset-bottom));
+    padding-left: max(1rem, env(safe-area-inset-left));
+    overflow: hidden;
+    background-color: var(--color-bg-main);
+    color: var(--color-text-main);
+}
+
+.content {
+    position: relative;
+    overflow: hidden;
+    width: 100%;
+    height: 100%;
+    background-color: var(--color-bg-ui);
+    border-radius: 1rem;
+    padding: 2rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 42%;
+        left: 50%;
+        width: 42rem;
+        height: 42rem;
+        border-radius: 50%;
+        background: color-mix(in srgb, var(--color-primary) 22%, transparent);
+        filter: blur(10rem);
+        transform: translate(-50%, -50%);
+        pointer-events: none;
+    }
+}
+
+.hero {
+    position: relative;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.6rem;
+    max-width: 48rem;
+    text-align: center;
+}
+
+.accent {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    animation: progressIn 0.45s ease-out both;
+}
+
+.accentLine {
+    width: 5.6rem;
+    height: 1.5px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        color-mix(in srgb, var(--color-primary) 70%, transparent)
+    );
+    opacity: 0.7;
+}
+
+.accentLine:last-child {
+    background: linear-gradient(
+        90deg,
+        color-mix(in srgb, var(--color-primary) 70%, transparent),
+        transparent
+    );
+}
+
+.accentOrb {
+    position: relative;
+    width: 1rem;
+    height: 1rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    background-color: var(--color-primary);
+}
+
+.accentOrb::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    pointer-events: none;
+    box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 65%, transparent);
+    animation: pulseDot 2.2s ease-out infinite;
+}
+
+.code {
+    font-size: clamp(8rem, 16vw, 12rem);
+    font-weight: 800;
+    line-height: 0.9;
+    letter-spacing: -0.04em;
+    color: var(--color-primary);
+    text-shadow: 0 0 4.8rem color-mix(in srgb, var(--color-primary) 55%, transparent);
+    animation: successPop 0.5s ease-out 0.08s both;
+}
+
+.text {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+    min-width: 0;
+    animation: stageIn 0.5s ease-out 0.16s both;
+}
+
+.title {
+    font-size: clamp(2.4rem, 4vw, 3.2rem);
+    font-weight: 700;
+    line-height: 1.2;
+    text-wrap: balance;
+}
+
+.description {
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    max-width: 44rem;
+    text-wrap: pretty;
+}
+
+@keyframes pulseDot {
+    0% {
+        box-shadow: 0 0 0 0 color-mix(in srgb, var(--color-primary) 65%, transparent);
+    }
+
+    70% {
+        box-shadow: 0 0 0 1.3rem transparent;
+    }
+
+    100% {
+        box-shadow: 0 0 0 0 transparent;
+    }
+}
+
+@keyframes progressIn {
+    from {
+        opacity: 0;
+        transform: translateY(-0.8rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes stageIn {
+    from {
+        opacity: 0;
+        transform: translateY(1.2rem);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes successPop {
+    from {
+        opacity: 0;
+        transform: scale(0.88);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .accent,
+    .code,
+    .text {
+        animation: none;
+    }
+
+    .accentOrb::after {
+        animation: none;
+        box-shadow: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .content {
+        padding: 1.6rem;
+    }
+
+    .content::before {
+        width: 28rem;
+        height: 28rem;
+        filter: blur(6rem);
+    }
+
+    .hero {
+        gap: 1.2rem;
+    }
+
+    .accent {
+        gap: 1rem;
+    }
+
+    .accentLine {
+        width: 4.4rem;
+    }
+
+    .code {
+        font-size: clamp(6.4rem, 22vw, 8.8rem);
+        text-shadow: 0 0 2.4rem color-mix(in srgb, var(--color-primary) 50%, transparent);
+    }
+
+    .title {
+        font-size: 2.4rem;
+    }
+
+    .description {
+        font-size: 1.5rem;
+        padding-inline: 0.8rem;
+    }
+}
+
+@media screen and (max-width: 440px) {
+    .statusPage {
+        padding: env(safe-area-inset-top) env(safe-area-inset-right)
+            env(safe-area-inset-bottom) env(safe-area-inset-left);
+    }
+
+    .content {
+        border-radius: 0;
+        padding: 1.2rem 1rem 1.6rem;
+    }
+
+    .content::before {
+        width: 22rem;
+        height: 22rem;
+        filter: blur(5rem);
+    }
+
+    .hero {
+        gap: 1rem;
+    }
+
+    .accent {
+        gap: 0.8rem;
+    }
+
+    .accentLine {
+        width: 2.8rem;
+    }
+
+    .accentOrb {
+        width: 0.8rem;
+        height: 0.8rem;
+    }
+
+    .code {
+        font-size: clamp(5.6rem, 26vw, 7.2rem);
+    }
+
+    .text {
+        gap: 0.4rem;
+    }
+
+    .title {
+        font-size: 2.2rem;
+        padding-inline: 0.4rem;
+    }
+
+    .description {
+        font-size: 1.4rem;
+        padding-inline: 0.4rem;
+    }
+}
+
+@media (max-height: 500px) {
+    .content {
+        padding-block: 1.2rem;
+    }
+
+    .content::before {
+        width: 18rem;
+        height: 18rem;
+        filter: blur(4rem);
+    }
+
+    .hero {
+        gap: 0.8rem;
+    }
+
+    .code {
+        font-size: 5.2rem;
+    }
+
+    .title {
+        font-size: 2rem;
+    }
+
+    .description {
+        font-size: 1.4rem;
+    }
+}

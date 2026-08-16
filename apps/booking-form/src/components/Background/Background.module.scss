@@ -1,0 +1,85 @@
+.background {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    pointer-events: none;
+    z-index: 0;
+    background-color: var(--color-bg-main);
+}
+
+.orb {
+    position: absolute;
+
+    &::after {
+        content: '';
+        display: block;
+        width: 100%;
+        height: 100%;
+        border-radius: 50%;
+        background-color: var(--orb-color);
+        filter: blur(var(--orb-blur));
+    }
+}
+
+.orbTopRight {
+    top: -12rem;
+    right: -8rem;
+    width: 50rem;
+    height: 50rem;
+    --orb-color: color-mix(in srgb, var(--color-primary) 40%, transparent);
+    --orb-blur: 10rem;
+}
+
+.orbCenterLeft {
+    top: 29%;
+    left: -10rem;
+    width: 42rem;
+    height: 42rem;
+    --orb-color: color-mix(
+        in srgb,
+        color-mix(in srgb, var(--color-primary) 55%, #000) 33%,
+        transparent
+    );
+    --orb-blur: 10rem;
+}
+
+.orbBottom {
+    left: 50%;
+    bottom: -8rem;
+    width: 48rem;
+    height: 40rem;
+    margin-left: -24rem;
+    --orb-color: color-mix(in srgb, var(--color-primary) 27%, transparent);
+    --orb-blur: 11rem;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .orb {
+        will-change: transform;
+    }
+}
+
+@media (max-width: 768px) {
+    .orbTopRight {
+        top: -8rem;
+        right: -5rem;
+        width: 32rem;
+        height: 32rem;
+        --orb-blur: 8rem;
+    }
+
+    .orbCenterLeft {
+        top: 33%;
+        width: 28rem;
+        height: 28rem;
+        --orb-blur: 7rem;
+    }
+
+    .orbBottom {
+        bottom: -1.6rem;
+        width: 36rem;
+        height: 24rem;
+        margin-left: -18rem;
+        --orb-blur: 9rem;
+    }
+}
