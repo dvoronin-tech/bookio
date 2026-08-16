@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { slugSchema } from '../shared/slug.schema.js';
 
 export const getBookingFormsSchema = z.object({
     organizationId: z.uuid(),
@@ -8,11 +9,7 @@ export const getBookingFormSchema = z.object({
     bookingFormId: z.uuid(),
 });
 
-export const getActiveBookingFormsByOrganizationSlugSchema = z.object({
-    organizationSlug: z.string().min(1),
-});
-
 export const getBookingFormBySlugsSchema = z.object({
-    organizationSlug: z.string().min(1),
-    bookingFormSlug: z.string().min(1),
+    organizationSlug: slugSchema,
+    bookingFormSlug: slugSchema,
 });
