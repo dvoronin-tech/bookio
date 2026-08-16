@@ -2,6 +2,8 @@ import { pgTable, text, timestamp, uuid } from 'drizzle-orm/pg-core';
 import { v7 as uuidv7 } from 'uuid';
 
 import { users } from './auth.js';
+import { bookingForms } from './booking-forms.js';
+import { relations } from 'drizzle-orm';
 
 export const organizations = pgTable('organizations', {
     id: uuid('id')
@@ -35,6 +37,12 @@ export const members = pgTable('members', {
         .notNull()
         .$onUpdateFn(() => new Date()),
 });
+
+export const organizationRelations = relations(organizations, ({ many }) => {
+    return {
+        bookingForms: many(bookingForms)
+    }
+})
 
 export type Organization = typeof organizations.$inferSelect;
 export type NewOrganization = typeof organizations.$inferInsert;
