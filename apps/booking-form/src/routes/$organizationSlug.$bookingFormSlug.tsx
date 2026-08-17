@@ -3,6 +3,7 @@ import { ErrorPage } from '#/pages/Errors/ErrorPage/ErrorPage';
 import { InactiveBookingFormPage } from '#/pages/Errors/InactiveBookingFormPage/InactiveBookingFormPage';
 import { NotFoundPage } from '#/pages/Errors/NotFoundPage/NotFoundPage';
 import { MainPage } from '#/pages/MainPage/MainPage';
+import { BookingFormDataContext } from '#/store/BookingFormData/BookingFormDataContext';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
@@ -45,5 +46,9 @@ function RouteComponent() {
         return <ErrorPage />;
     }
 
-    return <MainPage bookingFormData={bookingForm} />;
+    return (
+        <BookingFormDataContext.Provider value={bookingForm}>
+            <MainPage />
+        </BookingFormDataContext.Provider>
+    );
 }

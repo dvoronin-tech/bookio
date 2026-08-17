@@ -7,17 +7,16 @@ import { useSteps } from '#/store/Steps/StepsContext';
 import { stepsManager } from '#/store/Steps/stepsManager';
 import { useShallow } from 'zustand/shallow';
 import clsx from 'clsx';
+import { useBookingFormData } from '#/store/BookingFormData/BookingFormDataContext';
 
-interface GreetingLayoutProps extends GreetingHeroProps {}
-
-export const GreetingLayout: FC<GreetingLayoutProps> = ({ name, description }) => {
+export const GreetingLayout: FC = () => {
     const step = useSteps((s) => s.step);
     const backgroundClass = step !== 'Greeting' ? styles.hiddenBackground : '';
 
     return (
         <div className={styles.layout}>
             <div className={styles.content}>
-                <GreetingHero name={name} description={description} />
+                <GreetingHero />
                 <GreetingButton />
                 <GreetingFooter />
             </div>
@@ -46,14 +45,12 @@ const GreetingButton: FC = memo(() => {
         </button>
     );
 });
-interface GreetingHeroProps {
-    name: string;
-    description: string | null;
-}
 
-const GreetingHero: FC<GreetingHeroProps> = memo(({ name, description }) => {
+const GreetingHero: FC = memo(() => {
     const step = useSteps((s) => s.step);
     const isGreetingStep = step === 'Greeting';
+
+    const { name, description } = useBookingFormData();
 
     return (
         <div className={clsx(styles.hero, { [styles.hiddenHero]: !isGreetingStep })}>
