@@ -1,34 +1,62 @@
-import { memo, type FC } from 'react';
+import { memo, type FC, useCallback } from 'react';
 import { Background } from '#/components/Background/Background';
 import ArrowIcon from '#/assets/icons/short-arrow.svg?react';
 import styles from './GreetingLayout.module.scss';
 
+import { useSteps } from '#/store/Steps/StepsContext';
+import { stepsManager } from '#/store/Steps/stepsManager';
+import { useShallow } from 'zustand/shallow';
+import clsx from 'clsx';
+
 interface GreetingLayoutProps extends GreetingHeroProps {}
 
 export const GreetingLayout: FC<GreetingLayoutProps> = ({ name, description }) => {
+    const step = useSteps((s) => s.step);
+    const backgroundClass = step !== 'Greeting' ? styles.hiddenBackground : '';
+
     return (
         <div className={styles.layout}>
             <div className={styles.content}>
                 <GreetingHero name={name} description={description} />
-                <button type="button" className={styles.cta}>
-                    Book now
-                    <ArrowIcon className={styles.ctaIcon} aria-hidden />
-                </button>
+                <GreetingButton />
                 <GreetingFooter />
             </div>
-            <Background />
+            <Background className={backgroundClass} />
         </div>
     );
 };
 
+const GreetingButton: FC = memo(() => {
+    const { step, setStep } = useSteps(useShallow(({ step, setStep }) => ({ step, setStep })));
+
+    const handleGoToNextStep = useCallback(() => {
+        const next = stepsManager[step].next;
+        if (!next) return;
+        setStep(next());
+    }, [setStep]);
+
+    return (
+        <button
+            type="button"
+            className={clsx(styles.cta, { [styles.hiddenCta]: step !== 'Greeting' })}
+            onClick={handleGoToNextStep}
+        >
+            Book now
+            <ArrowIcon className={styles.ctaIcon} aria-hidden />
+        </button>
+    );
+});
 interface GreetingHeroProps {
     name: string;
     description: string | null;
 }
 
 const GreetingHero: FC<GreetingHeroProps> = memo(({ name, description }) => {
+    const step = useSteps((s) => s.step);
+    const isGreetingStep = step === 'Greeting';
+
     return (
-        <div className={styles.hero}>
+        <div className={clsx(styles.hero, { [styles.hiddenHero]: !isGreetingStep })}>
             <h1 className={styles.title}>{name}</h1>
             <p className={styles.description}>{description}</p>
         </div>
@@ -36,8 +64,11 @@ const GreetingHero: FC<GreetingHeroProps> = memo(({ name, description }) => {
 });
 
 const GreetingFooter: FC = memo(() => {
+    const step = useSteps((s) => s.step);
+    const isGreetingStep = step === 'Greeting';
+
     return (
-        <div className={styles.credit}>
+        <div className={clsx(styles.credit, { [styles.hiddenCredit]: !isGreetingStep })}>
             <span className={styles.creditMark} aria-hidden>
                 B
             </span>

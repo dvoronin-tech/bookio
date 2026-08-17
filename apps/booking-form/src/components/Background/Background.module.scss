@@ -9,16 +9,15 @@
 
 .orb {
     position: absolute;
+}
 
-    &::after {
-        content: '';
-        display: block;
-        width: 100%;
-        height: 100%;
-        border-radius: 50%;
-        background-color: var(--orb-color);
-        filter: blur(var(--orb-blur));
-    }
+.orbBlob {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    background-color: var(--orb-color);
+    filter: blur(var(--orb-blur));
 }
 
 .orbTopRight {
@@ -54,7 +53,8 @@
 }
 
 @media (hover: hover) and (pointer: fine) {
-    .orb {
+    .orb,
+    .orbBlob {
         will-change: transform;
     }
 }
