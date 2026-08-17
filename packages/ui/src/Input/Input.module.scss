@@ -22,11 +22,13 @@
         padding-left: 4rem;
     }
 
-    &:has(.iconEnd) .input {
+    &:has(.iconEnd) .input,
+    &:has(.helpTrigger) .input {
         padding-right: 4rem;
     }
 
-    &:has(.input:disabled) .icon {
+    &:has(.input:disabled) .icon,
+    &:has(.input:disabled) .helpTrigger {
         opacity: 0.5;
     }
 }
@@ -59,6 +61,59 @@
 
 .iconEnd {
     right: 1.2rem;
+}
+
+.helpTrigger {
+    position: absolute;
+    top: 50%;
+    right: 1.2rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.4rem;
+    height: 2.4rem;
+    padding: 0;
+    border: none;
+    background: transparent;
+    color: color-mix(in srgb, var(--color-text-secondary) 50%, var(--color-border));
+    transform: translateY(-50%);
+    cursor: help;
+    outline: none;
+    z-index: 1;
+
+    &:hover {
+        color: var(--color-text-secondary);
+    }
+
+    &:focus-visible {
+        border-radius: 50%;
+        box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 45%, transparent);
+    }
+}
+
+.helpIcon {
+    width: 2rem;
+    height: 2rem;
+    display: block;
+
+    path {
+        fill: none;
+        stroke: currentColor;
+    }
+}
+
+.tooltip {
+    z-index: 1000;
+    max-width: 24rem;
+    padding: 0.6rem 0.9rem;
+    border-radius: 0.6rem;
+    border: 1px solid var(--color-border);
+    background-color: var(--color-bg-ui);
+    color: var(--color-text-main);
+    font-size: 1.2rem;
+    line-height: 1.4;
+    box-shadow: 0 0.4rem 1.2rem rgb(0 0 0 / 28%);
+    pointer-events: none;
 }
 
 .input {

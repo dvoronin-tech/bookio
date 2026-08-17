@@ -1,16 +1,32 @@
 import { clsx } from 'clsx';
 import {
+    autoUpdate,
+    flip,
+    FloatingPortal,
+    offset,
+    shift,
+    useDismiss,
+    useFloating,
+    useFocus,
+    useHover,
+    useInteractions,
+    useRole,
+} from '@floating-ui/react';
+import {
     memo,
     useId,
+    useState,
     type ComponentProps,
     type FocusEvent,
     type MouseEvent,
     type ReactNode,
 } from 'react';
+import HelpIcon from './icons/help.svg?react';
 import styles from './Input.module.scss';
 
 type LabelProps = {
     label?: ReactNode;
+    helpText?: string;
 };
 
 type TextareaProps = {
@@ -66,6 +82,63 @@ function getReadOnlyHandlers<T extends HTMLInputElement | HTMLTextAreaElement>(
     };
 }
 
+function HelpHint({ message }: { message: string }) {
+    const [open, setOpen] = useState(false);
+
+    const { refs, floatingStyles, context } = useFloating({
+        open,
+        onOpenChange: setOpen,
+        placement: 'top',
+        middleware: [offset(8), flip(), shift({ padding: 8 })],
+        whileElementsMounted: autoUpdate,
+    });
+
+    const hover = useHover(context, { move: false });
+    const focus = useFocus(context);
+    const dismiss = useDismiss(context);
+    const role = useRole(context, { role: 'tooltip' });
+    const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, dismiss, role]);
+
+    return (
+        <>
+            <span
+                ref={refs.setReference}
+                className={styles.helpTrigger}
+                tabIndex={0}
+                aria-label={message}
+                {...getReferenceProps()}
+            >
+                <HelpIcon className={styles.helpIcon} aria-hidden />
+            </span>
+            {open && (
+                <FloatingPortal>
+                    <div
+                        ref={refs.setFloating}
+                        style={floatingStyles}
+                        className={styles.tooltip}
+                        {...getFloatingProps()}
+                    >
+                        {message}
+                    </div>
+                </FloatingPortal>
+            )}
+        </>
+    );
+}
+
+function withHelpText(control: ReactNode, helpText?: string) {
+    if (!helpText) {
+        return control;
+    }
+
+    return (
+        <InputRoot>
+            {control}
+            <HelpHint message={helpText} />
+        </InputRoot>
+    );
+}
+
 function InputField({ label, htmlFor, className, children }: InputFieldProps) {
     if (label === undefined) {
         return <>{children}</>;
@@ -116,6 +189,7 @@ function InputControl(props: InputProps): React.JSX.Element {
             onFocus,
             onMouseDown,
             label,
+            helpText,
             id,
             ...rest
         } = props as TextareaProps;
@@ -125,13 +199,16 @@ function InputControl(props: InputProps): React.JSX.Element {
 
         return (
             <InputField label={label} htmlFor={inputId}>
-                <textarea
-                    id={inputId}
-                    className={classes}
-                    readOnly={readOnly}
-                    {...rest}
-                    {...readOnlyHandlers}
-                />
+                {withHelpText(
+                    <textarea
+                        id={inputId}
+                        className={classes}
+                        readOnly={readOnly}
+                        {...rest}
+                        {...readOnlyHandlers}
+                    />,
+                    helpText,
+                )}
             </InputField>
         );
     }
@@ -143,6 +220,7 @@ function InputControl(props: InputProps): React.JSX.Element {
         onFocus,
         onMouseDown,
         label,
+        helpText,
         id,
         ...rest
     } = props as NativeInputProps;
@@ -152,14 +230,17 @@ function InputControl(props: InputProps): React.JSX.Element {
 
     return (
         <InputField label={label} htmlFor={inputId}>
-            <input
-                type={type}
-                id={inputId}
-                className={classes}
-                readOnly={readOnly}
-                {...rest}
-                {...readOnlyHandlers}
-            />
+            {withHelpText(
+                <input
+                    type={type}
+                    id={inputId}
+                    className={classes}
+                    readOnly={readOnly}
+                    {...rest}
+                    {...readOnlyHandlers}
+                />,
+                helpText,
+            )}
         </InputField>
     );
 }
