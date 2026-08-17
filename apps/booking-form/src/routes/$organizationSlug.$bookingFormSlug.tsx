@@ -1,8 +1,8 @@
 import { fetchBookingFormBySlugs } from '#/api/bookingForms/getBookingFormBySlugs';
-import { GreetingLayout } from '#/layouts/GreetingLayout/GreetingLayout';
 import { ErrorPage } from '#/pages/Errors/ErrorPage/ErrorPage';
 import { InactiveBookingFormPage } from '#/pages/Errors/InactiveBookingFormPage/InactiveBookingFormPage';
 import { NotFoundPage } from '#/pages/Errors/NotFoundPage/NotFoundPage';
+import { MainPage } from '#/pages/MainPage/MainPage';
 import { createFileRoute } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
@@ -29,7 +29,7 @@ export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
 });
 
 function RouteComponent() {
-    const { code } = Route.useLoaderData();
+    const { code, bookingForm } = Route.useLoaderData();
 
     switch (code) {
         case 'ORGANIZATION_NOT_FOUND':
@@ -41,5 +41,9 @@ function RouteComponent() {
             return <ErrorPage />;
     }
 
-    return <GreetingLayout />;
+    if (!bookingForm) {
+        return <ErrorPage />;
+    }
+
+    return <MainPage bookingFormData={bookingForm} />;
 }
