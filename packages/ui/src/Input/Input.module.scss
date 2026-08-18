@@ -49,7 +49,7 @@
         height: 1.6rem;
         display: block;
 
-        path {
+        &:not([class]) path {
             fill: currentColor;
         }
     }
@@ -96,7 +96,8 @@
     height: 2rem;
     display: block;
 
-    path {
+    path[fill='none'],
+    circle[fill='none'] {
         fill: none;
         stroke: currentColor;
     }
