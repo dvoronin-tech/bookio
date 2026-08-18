@@ -1,28 +1,21 @@
-import type { ChangeEvent, FC } from 'react';
+import type { FC } from 'react';
 import { Input } from '@bookio/ui';
+import type { FieldControlProps } from '#/components/Fields/field.types';
+import styles from '../Fields.module.scss';
 
-interface TextInputFieldProps {
-    placeholder: string;
-    label: string;
-    value: string;
-    onChange: (e: ChangeEvent<HTMLInputElement>) => void;
-    helpText: string | undefined;
-}
+export const TextInputField: FC<FieldControlProps<'text'>> = ({ field, register }) => {
+    const placeholder = 'placeholder' in field.params ? field.params.placeholder : undefined;
+    const helpText = 'helpText' in field.params ? field.params.helpText : undefined;
 
-export const TextInputField: FC<TextInputFieldProps> = ({
-    placeholder,
-    label,
-    value,
-    onChange,
-    helpText,
-}) => {
     return (
         <Input
+            className={styles.default}
             placeholder={placeholder}
-            label={label}
-            value={value}
-            onChange={onChange}
+            label={field.name}
             helpText={helpText}
+            required={field.required}
+            type="text"
+            {...register(field.key)}
         />
     );
 };

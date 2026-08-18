@@ -70,9 +70,13 @@
     padding: 0;
 }
 
-svg {
+svg:not([data-multicolor]) {
     path {
         fill: currentColor;
+    }
+
+    path[fill='none'] {
+        fill: none;
     }
 }
 
