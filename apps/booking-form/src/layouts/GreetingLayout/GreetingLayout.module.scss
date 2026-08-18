@@ -2,24 +2,19 @@
     --animation-duration: 0.8s;
 
     position: relative;
-    overflow: hidden;
-    width: 100%;
-    min-height: 100svh;
-    min-height: 100dvh;
-    color: var(--color-text-main);
-}
-
-.content {
-    position: relative;
     z-index: 1;
     display: flex;
     flex-direction: column;
     align-items: center;
+    overflow: hidden;
     width: 100%;
     max-width: 56rem;
     height: 100svh;
+    min-height: 100svh;
+    min-height: 100dvh;
     margin-inline: auto;
     padding: 1.6rem 1.6rem 1.2rem;
+    color: var(--color-text-main);
     text-align: center;
 }
 
@@ -132,11 +127,6 @@
     color: color-mix(in srgb, var(--color-text-main) 40%, transparent);
 }
 
-.hiddenBackground {
-    opacity: 0;
-    animation: BgFadeOut var(--animation-duration) ease forwards;
-}
-
 .hiddenHero {
     .title {
         animation: HeroFadeOut var(--animation-duration) ease forwards;
@@ -156,7 +146,7 @@
 }
 
 @media (min-width: 769px) {
-    .content {
+    .layout {
         justify-content: center;
         padding: 0;
         gap: 2.4rem;
@@ -224,15 +214,6 @@
         transform: translateY(-5rem);
         opacity: 0;
         scale: 0.95;
-    }
-}
-
-@keyframes BgFadeOut {
-    from {
-        opacity: 1;
-    }
-    to {
-        opacity: 0;
     }
 }
 

@@ -10,17 +10,11 @@ import clsx from 'clsx';
 import { useBookingFormData } from '#/store/BookingFormData/BookingFormDataContext';
 
 export const GreetingLayout: FC = () => {
-    const step = useSteps((s) => s.step);
-    const backgroundClass = step !== 'Greeting' ? styles.hiddenBackground : '';
-
     return (
         <div className={styles.layout}>
-            <div className={styles.content}>
-                <GreetingHero />
-                <GreetingButton />
-                <GreetingFooter />
-            </div>
-            <Background className={backgroundClass} />
+            <GreetingHero />
+            <GreetingButton />
+            <GreetingFooter />
         </div>
     );
 };
