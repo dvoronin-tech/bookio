@@ -5,7 +5,7 @@ import styles from './BookingForm.module.scss';
 import { isGroupField, type BookingFormField } from '#/components/Fields/field.types';
 import { RenderField } from '#/components/Fields/FieldsMap';
 import type { BookingFormBySlugsType } from '#/api/bookingForms/getBookingFormBySlugs';
-import { useForm, type FieldValues, type UseFormRegister } from 'react-hook-form';
+import { useForm, type Control, type FieldValues, type UseFormRegister } from 'react-hook-form';
 
 const DEFAULT_PHONE = '+375';
 
@@ -30,7 +30,7 @@ export const BookingForm: FC<BookingFormProps> = ({ bookingForm }) => {
         [fields],
     );
 
-    const { register, handleSubmit } = useForm({ defaultValues });
+    const { register, control } = useForm({ defaultValues });
 
     return (
         <div className={styles.bookingForm}>
@@ -42,9 +42,19 @@ export const BookingForm: FC<BookingFormProps> = ({ bookingForm }) => {
             <div className={styles.fields}>
                 {rootFields.map((field) =>
                     isGroupField(field) ? (
-                        <GroupField key={field.id} field={field} register={register}/>
+                        <GroupField
+                            key={field.id}
+                            field={field}
+                            register={register}
+                            control={control}
+                        />
                     ) : (
-                        <RenderField key={field.id} field={field} register={register} />
+                        <RenderField
+                            key={field.id}
+                            field={field}
+                            register={register}
+                            control={control}
+                        />
                     ),
                 )}
             </div>
@@ -58,17 +68,18 @@ export const BookingForm: FC<BookingFormProps> = ({ bookingForm }) => {
 
 interface GroupFieldProps {
     register: UseFormRegister<FieldValues>;
-    field: BookingFormField & { type: 'group' };
+    control: Control<FieldValues>;
+    field: Extract<BookingFormField, { type: 'group' }>;
 }
 
-const GroupField: FC<GroupFieldProps> = ({ field, register }) => {
+const GroupField: FC<GroupFieldProps> = ({ field, register, control }) => {
     const { fields } = useBookingFormData();
 
     const groupFields = useMemo(() => {
         return fields.filter((f) => f.parentId === field.id).sort((a, b) => a.order - b.order);
     }, [fields, field.id]);
 
-    const groupHint = 'description' in field.params ? field.params.description : undefined;
+    const groupHint = field.params.description;
 
     return (
         <div className={styles.groupField}>
@@ -80,7 +91,7 @@ const GroupField: FC<GroupFieldProps> = ({ field, register }) => {
                 </div>
             </div>
             {groupFields.map((child) => (
-                <RenderField key={child.id} field={child} register={register} />
+                <RenderField key={child.id} field={child} register={register} control={control} />
             ))}
         </div>
     );
