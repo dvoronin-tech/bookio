@@ -6,8 +6,9 @@ import type { BaseUIFieldConfig, OptionsUIField } from '../paramsFieldConfig.typ
 type ChoiceParamKey = keyof z.infer<typeof choiceParamsSchema>;
 
 export const choiceFieldsConfig: Record<ChoiceParamKey, BaseUIFieldConfig | OptionsUIField> = {
-    placeholder: {
-        label: 'Placeholder',
+    defaultValue: {
+        label: 'Default Value',
+        required: true,
         type: 'text',
     },
     options: {

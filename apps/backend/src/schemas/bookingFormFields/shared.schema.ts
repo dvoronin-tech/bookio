@@ -9,6 +9,8 @@ import type {
 } from '@bookio/db';
 import { z } from 'zod';
 
+export type { BookingFormFieldRowUnion } from '@bookio/db';
+
 export const fieldKeySchema = z
     .string()
     .min(1)
@@ -45,7 +47,7 @@ export const textAreaParamsSchema = z.object({
 
 export const choiceParamsSchema = z.object({
     options: z.array(fieldOptionSchema).min(1, 'At least one option is required'),
-    placeholder: z.string().optional(),
+    defaultValue: z.string().min(1, 'Default value is required'),
 }) satisfies z.ZodType<ChoiceFieldParams>;
 
 export const groupParamsSchema = z.object({

@@ -47,7 +47,7 @@ export type FieldOption = {
 
 export type ChoiceFieldParams = {
     options: FieldOption[];
-    placeholder?: string;
+    defaultValue: string;
 };
 
 export type GroupFieldParams = {
