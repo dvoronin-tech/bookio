@@ -1,29 +1,42 @@
 import type { Placement } from '@floating-ui/react';
 import { clsx } from 'clsx';
-import { useCallback, useMemo, useState, type ChangeEvent, type FC } from 'react';
-import { Checkbox, Dropdown, Input } from '@bookio/ui';
-import ArrowIcon from '#assets/icons/short-arrow.svg?react';
+import { memo, useCallback, useMemo, useState, type ChangeEvent } from 'react';
+import Checkbox from '../Checkbox/Checkbox.js';
+import Dropdown from '../Dropdown/Dropdown.js';
+import Input from '../Input/Input.js';
+import { ArrowIcon } from './icons/ArrowIcon.js';
 import styles from './SelectDropdown.module.scss';
 
-export interface SelectDropdownOption {
+export type SelectDropdownOption = {
     label: string;
     value: string;
-}
+};
 
-interface SelectDropdownProps {
+type SelectDropdownBaseProps = {
     label?: string;
     options: SelectDropdownOption[];
-    /** `string[]` enables multi-select with checkboxes, `string` — single-select. */
-    selected: string[] | string | undefined;
     onOptionClick: (value: string) => void;
     placeholder?: string;
     searchPlaceholder?: string;
     emptyOptionsText?: string;
-    formatSelectedCount?: (count: number) => string;
     placement?: Placement;
     triggerClassName?: string;
     allowInjection?: boolean;
-}
+    withSearch?: boolean;
+};
+
+type SelectDropdownSingleProps = SelectDropdownBaseProps & {
+    multiple?: false;
+    selected: string | undefined;
+};
+
+type SelectDropdownMultipleProps = SelectDropdownBaseProps & {
+    multiple: true;
+    selected: string[];
+    formatSelectedCount?: (count: number) => string;
+};
+
+export type SelectDropdownProps = SelectDropdownSingleProps | SelectDropdownMultipleProps;
 
 const defaultFormatSelectedCount = (count: number) => `${count} selected`;
 
@@ -35,19 +48,20 @@ function renderContent(content: string, allowInjection: boolean) {
     return content;
 }
 
-export const SelectDropdown: FC<SelectDropdownProps> = ({
-    label,
-    options,
-    selected,
-    onOptionClick,
-    placeholder = 'Select...',
-    searchPlaceholder = 'Search...',
-    emptyOptionsText = 'No options found',
-    formatSelectedCount = defaultFormatSelectedCount,
-    placement,
-    triggerClassName,
-    allowInjection = false,
-}) => {
+function SelectDropdown(props: SelectDropdownProps) {
+    const {
+        label,
+        options,
+        onOptionClick,
+        placeholder = 'Select...',
+        searchPlaceholder = 'Search...',
+        emptyOptionsText = 'No options found',
+        placement,
+        triggerClassName,
+        allowInjection = false,
+        withSearch = false,
+    } = props;
+
     const [isOpen, setIsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
@@ -56,19 +70,23 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
         [options],
     );
 
-    const selectedCount = Array.isArray(selected) ? selected.length : selected ? 1 : 0;
+    const selectedCount =
+        props.multiple === true ? props.selected.length : props.selected ? 1 : 0;
 
     const triggerText = useMemo(() => {
-        if (Array.isArray(selected)) {
+        if (props.multiple === true) {
+            const selected = props.selected;
             if (selected.length === 0) return placeholder;
             if (selected.length === 1) return getOptionLabel(selected[0]);
-            return formatSelectedCount(selected.length);
+            return (props.formatSelectedCount ?? defaultFormatSelectedCount)(selected.length);
         }
 
-        return selected ? getOptionLabel(selected) : placeholder;
-    }, [selected, placeholder, getOptionLabel, formatSelectedCount]);
+        return props.selected ? getOptionLabel(props.selected) : placeholder;
+    }, [props, placeholder, getOptionLabel]);
 
     const filteredOptions = useMemo(() => {
+        if (!withSearch) return options;
+
         const query = searchQuery.trim().toLowerCase();
         if (!query) return options;
 
@@ -77,7 +95,7 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
                 option.label.toLowerCase().includes(query) ||
                 option.value.toLowerCase().includes(query),
         );
-    }, [options, searchQuery]);
+    }, [options, searchQuery, withSearch]);
 
     const handleOpenChange = useCallback((open: boolean) => {
         setIsOpen(open);
@@ -115,15 +133,17 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
                     />
                 </Dropdown.Trigger>
                 <Dropdown.Content className={styles.dropdownContent}>
-                    <div className={styles.dropdownSearch}>
-                        <Input
-                            placeholder={searchPlaceholder}
-                            value={searchQuery}
-                            onChange={handleSearchChange}
-                            className={styles.dropdownSearchInput}
-                            autoFocus
-                        />
-                    </div>
+                    {withSearch && (
+                        <div className={styles.dropdownSearch}>
+                            <Input
+                                placeholder={searchPlaceholder}
+                                value={searchQuery}
+                                onChange={handleSearchChange}
+                                className={styles.dropdownSearchInput}
+                                autoFocus
+                            />
+                        </div>
+                    )}
                     <div className={styles.dropdownOptions}>
                         {filteredOptions.length === 0 ? (
                             <p className={styles.dropdownEmpty}>{emptyOptionsText}</p>
@@ -133,20 +153,24 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
                                     onOptionClick(option.value);
                                 };
 
-                                return Array.isArray(selected) ? (
-                                    <Dropdown.Item
-                                        key={option.value}
-                                        onClick={handleOptionClick}
-                                        autoClose={false}
-                                    >
-                                        <Checkbox
-                                            label={renderContent(option.label, allowInjection)}
-                                            checked={selected.includes(option.value)}
-                                            readOnly
-                                            className={styles.optionCheckbox}
-                                        />
-                                    </Dropdown.Item>
-                                ) : (
+                                if (props.multiple === true) {
+                                    return (
+                                        <Dropdown.Item
+                                            key={option.value}
+                                            onClick={handleOptionClick}
+                                            autoClose={false}
+                                        >
+                                            <Checkbox
+                                                label={renderContent(option.label, allowInjection)}
+                                                checked={props.selected.includes(option.value)}
+                                                readOnly
+                                                className={styles.optionCheckbox}
+                                            />
+                                        </Dropdown.Item>
+                                    );
+                                }
+
+                                return (
                                     <Dropdown.Item
                                         key={option.value}
                                         onClick={handleOptionClick}
@@ -161,4 +185,6 @@ export const SelectDropdown: FC<SelectDropdownProps> = ({
             </Dropdown>
         </div>
     );
-};
+}
+
+export default memo(SelectDropdown);

@@ -41,6 +41,12 @@ export type { CheckboxProps } from './Checkbox/Checkbox.js';
 export { default as ColorPicker } from './ColorPicker/ColorPicker.js';
 export type { ColorPickerProps } from './ColorPicker/ColorPicker.js';
 
+export { default as SelectDropdown } from './SelectDropdown/SelectDropdown.js';
+export type {
+    SelectDropdownOption,
+    SelectDropdownProps,
+} from './SelectDropdown/SelectDropdown.js';
+
 export { Reorder } from './DragAndDrop/DragAndDrop.js';
 export { useReorderContext } from './DragAndDrop/ExternalReorderContext.js';
 export type { ItemId } from './DragAndDrop/InternalReorderContext.js';

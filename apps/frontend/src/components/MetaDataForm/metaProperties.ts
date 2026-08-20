@@ -1,4 +1,4 @@
-import type { SelectDropdownOption } from '#components/SelectDropdown/SelectDropdown';
+import type { SelectDropdownOption } from '@bookio/ui';
 
 export const META_PROPERTIES: SelectDropdownOption[] = [
     // --- Standard HTML meta (name=) ---

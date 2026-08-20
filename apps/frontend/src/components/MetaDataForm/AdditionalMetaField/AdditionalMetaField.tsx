@@ -1,9 +1,5 @@
 import { useCallback, type ChangeEvent, type FC, useMemo } from 'react';
-import { Button, Input } from '@bookio/ui';
-import {
-    SelectDropdown,
-    type SelectDropdownOption,
-} from '#components/SelectDropdown/SelectDropdown';
+import { Button, Input, SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 import TrashIcon from '#assets/icons/trash.svg?react';
 
 import styles from './AdditionalMetaField.module.scss';
@@ -62,6 +58,7 @@ export const AdditionalMetaField: FC<AdditionalMetaFieldProps> = ({
                 emptyOptionsText="No properties found"
                 triggerClassName={styles.propertyTrigger}
                 allowInjection
+                withSearch
             />
             <Input
                 label="Content"

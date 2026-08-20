@@ -1,8 +1,5 @@
-import { memo, type FC, useCallback } from 'react';
-import {
-    SelectDropdown,
-    type SelectDropdownOption,
-} from '#components/SelectDropdown/SelectDropdown';
+import { memo, type FC } from 'react';
+import { SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 
 interface ChooseParentDropdownProps {
     options: SelectDropdownOption[];
@@ -12,8 +9,6 @@ interface ChooseParentDropdownProps {
 
 export const ChooseParentDropdown: FC<ChooseParentDropdownProps> = memo(
     ({ options, selected, onOptionClick }) => {
-        const formatSelectedCount = useCallback((count: number) => `${count} groups selected`, []);
-
         return (
             <SelectDropdown
                 options={options}
@@ -22,8 +17,8 @@ export const ChooseParentDropdown: FC<ChooseParentDropdownProps> = memo(
                 searchPlaceholder="Search group"
                 placeholder='No group selected'
                 emptyOptionsText='No groups found'
-                formatSelectedCount={formatSelectedCount}
                 label='Group'
+                withSearch
             />
         );
     },

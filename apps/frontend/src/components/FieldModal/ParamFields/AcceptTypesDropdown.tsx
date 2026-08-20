@@ -1,8 +1,5 @@
 import { useMemo, type FC, useCallback } from 'react';
-import {
-    SelectDropdown,
-    type SelectDropdownOption,
-} from '#components/SelectDropdown/SelectDropdown';
+import { SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 import type { AcceptOptions } from '#utils/paramsFieldConfig';
 import { imageAcceptOptions } from '#utils/paramsFieldConfig/imageAcceptOptions';
 
@@ -90,6 +87,8 @@ export const AcceptTypesDropdown: FC<AcceptTypesDropdownProps> = ({
             emptyOptionsText="No types found"
             formatSelectedCount={formatSelectedCount}
             placement="top"
+            withSearch
+            multiple
         />
     );
 };

@@ -1,10 +1,9 @@
 import { useCallback, type FC, useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { Input } from '@bookio/ui';
+import { Input, type SelectDropdownOption } from '@bookio/ui';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { ChooseParentDropdown } from './ParamFields/ChooseParentDropdown';
-import type { SelectDropdownOption } from '#components/SelectDropdown/SelectDropdown';
 import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 
 interface FieldBasicFieldsProps {
