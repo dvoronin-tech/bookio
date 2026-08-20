@@ -127,14 +127,12 @@ function HelpHint({ message }: { message: string }) {
 }
 
 function withHelpText(control: ReactNode, helpText?: string) {
-    if (!helpText) {
-        return control;
-    }
-
+    // Always wrap: mounting the wrapper only when helpText exists would remount
+    // the control whenever the hint toggles, dropping focus (e.g. ValidatableInput).
     return (
         <InputRoot>
             {control}
-            <HelpHint message={helpText} />
+            {helpText ? <HelpHint message={helpText} /> : null}
         </InputRoot>
     );
 }

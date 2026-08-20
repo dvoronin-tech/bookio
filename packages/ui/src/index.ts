@@ -50,6 +50,9 @@ export type {
     SelectDropdownProps,
 } from './SelectDropdown/SelectDropdown.js';
 
+export { default as ValidatableInput } from './ValidatableInput/ValidatableInput.js';
+export type { ValidatableInputProps } from './ValidatableInput/ValidatableInput.js';
+
 export { Reorder } from './DragAndDrop/DragAndDrop.js';
 export { useReorderContext } from './DragAndDrop/ExternalReorderContext.js';
 export type { ItemId } from './DragAndDrop/InternalReorderContext.js';
