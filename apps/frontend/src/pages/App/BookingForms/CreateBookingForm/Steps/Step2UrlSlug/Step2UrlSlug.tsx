@@ -1,8 +1,7 @@
 import { useCallback, type ChangeEvent, type FC } from 'react';
 import { useShallow } from 'zustand/shallow';
-import { Button } from '@bookio/ui';
+import { Button, ValidatableInput } from '@bookio/ui';
 import { BookingFormUrlPreview } from '#components/BookingFormUrlPreview/BookingFormUrlPreview';
-import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore';

@@ -1,8 +1,7 @@
 import { useCallback, useMemo, type FC } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
-import { Button } from '@bookio/ui';
-import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
+import { Button, ValidatableInput } from '@bookio/ui';
 import TrashIcon from '#assets/icons/trash.svg?react';
 import styles from './ParamFields.module.scss';
 

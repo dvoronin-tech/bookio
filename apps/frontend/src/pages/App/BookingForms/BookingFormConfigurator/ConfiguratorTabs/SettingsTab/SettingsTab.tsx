@@ -3,8 +3,7 @@ import type { EntireBookingFormType } from '#api/bookingForms/getEntireBookingFo
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
 import { useNavigate, useParams } from 'react-router-dom';
 import { guardConfiguratorRoute } from '#navigation';
-import { Button, Checkbox, Input } from '@bookio/ui';
-import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
+import { Button, Checkbox, Input, ValidatableInput } from '@bookio/ui';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
 
 import styles from './SettingsTab.module.scss';

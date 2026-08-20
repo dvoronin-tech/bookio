@@ -1,10 +1,9 @@
 import { useCallback, type FC, useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { Input, type SelectDropdownOption } from '@bookio/ui';
+import { Input, ValidatableInput, type SelectDropdownOption } from '@bookio/ui';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { ChooseParentDropdown } from './ParamFields/ChooseParentDropdown';
-import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
 
 interface FieldBasicFieldsProps {
     fieldId?: string | null;
@@ -55,7 +54,7 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
     return (
         <>
             <Input label="Label*" {...register('name')} />
-            <ValidatableInput label="Key*" {...register('key')} isValid={isKeyValid} errorMessage='Key must be unique' />
+            <ValidatableInput label="Key*" {...register('key')} isValid={isKeyValid} errorMessage='Key must be unique' helpText='The key is used to identify the field in the booking form. It must be unique within the booking form.' />
             {watchedType !== 'group' && (
                 <ChooseParentDropdown
                     options={[noGroupOption, ...groupFields]}

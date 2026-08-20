@@ -1,7 +1,6 @@
-import { type FC, useCallback, useMemo } from 'react';
+import { type FC, useCallback } from 'react';
 import styles from './CreateOrganization.module.scss';
-import { Button, Input, HiddenField } from '@bookio/ui';
-import { ValidatableInput } from '#components/ValidatableInput/ValidatableInput';
+import { Button, Input, HiddenField, ValidatableInput } from '@bookio/ui';
 import {
     useCreateOrganization,
     type CreateOrganizationResponse,
