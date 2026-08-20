@@ -1,6 +1,12 @@
 import { clsx } from 'clsx';
-import { memo, type ComponentProps } from 'react';
-import { Link } from 'react-router-dom';
+import {
+    createContext,
+    memo,
+    useContext,
+    type ComponentProps,
+    type ComponentType,
+    type ReactNode,
+} from 'react';
 import styles from './Button.module.scss';
 
 export type ButtonColor = 'simple' | 'red' | 'green' | 'blue' | 'primary';
@@ -18,9 +24,45 @@ export type ButtonAsButtonProps = ButtonBaseProps & {
 
 export type ButtonAsLinkProps = ButtonBaseProps & {
     type: 'link';
-} & Omit<ComponentProps<typeof Link>, 'className' | 'type'>;
+    to: string;
+} & Omit<ComponentProps<'a'>, 'className' | 'type' | 'href'>;
 
 export type ButtonProps = ButtonAsButtonProps | ButtonAsLinkProps;
+
+export type ButtonLinkComponent = ComponentType<{
+    to: string;
+    className?: string;
+    children?: ReactNode;
+}>;
+
+function NativeLink({
+    to,
+    className,
+    children,
+    ...rest
+}: {
+    to: string;
+    className?: string;
+    children?: ReactNode;
+} & Omit<ComponentProps<'a'>, 'className' | 'href'>) {
+    return (
+        <a href={to} className={className} {...rest}>
+            {children}
+        </a>
+    );
+}
+
+const ButtonLinkContext = createContext<ButtonLinkComponent>(NativeLink);
+
+export function ButtonLinkProvider({
+    component,
+    children,
+}: {
+    component: ButtonLinkComponent;
+    children: ReactNode;
+}) {
+    return <ButtonLinkContext.Provider value={component}>{children}</ButtonLinkContext.Provider>;
+}
 
 const VARIANT_CLASS: Record<Exclude<ButtonVariant, 'plain'>, string> = {
     'simple-clean': styles.simpleClean,
@@ -41,20 +83,17 @@ const VARIANT_CLASS: Record<Exclude<ButtonVariant, 'plain'>, string> = {
 };
 
 function getClasses(variant: ButtonVariant, className?: string) {
-    return clsx(
-        styles.button,
-        variant !== 'plain' && VARIANT_CLASS[variant],
-        className,
-    );
+    return clsx(styles.button, variant !== 'plain' && VARIANT_CLASS[variant], className);
 }
 
 function Button(props: ButtonProps) {
     const { variant = 'plain', className } = props;
     const classes = getClasses(variant, className);
+    const LinkComponent = useContext(ButtonLinkContext);
 
     if (props.type === 'link') {
         const { variant: _variant, className: _className, type: _type, ...linkProps } = props;
-        return <Link className={classes} {...linkProps} />;
+        return <LinkComponent className={classes} {...linkProps} />;
     }
 
     const { variant: _variant, className: _className, type = 'button', ...buttonProps } = props;
