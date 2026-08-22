@@ -5,6 +5,7 @@ import type {
     FileFieldParams,
     GroupFieldParams,
     InputFieldParams,
+    SelectFieldParams,
     TextAreaFieldParams,
 } from '@bookio/db';
 import { z } from 'zod';
@@ -47,8 +48,11 @@ export const textAreaParamsSchema = z.object({
 
 export const choiceParamsSchema = z.object({
     options: z.array(fieldOptionSchema).min(1, 'At least one option is required'),
-    defaultValue: z.string().min(1, 'Default value is required'),
 }) satisfies z.ZodType<ChoiceFieldParams>;
+
+export const selectParamsSchema = choiceParamsSchema.extend({
+    defaultValue: z.string().min(1, 'Default value is required'),
+}) satisfies z.ZodType<SelectFieldParams>;
 
 export const groupParamsSchema = z.object({
     description: z.string().optional(),
@@ -70,7 +74,8 @@ type BuildFieldVariantsOptions<
     TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
     TTextAreaParams extends z.ZodType,
-    TChoiceParams extends z.ZodType,
+    TSelectParams extends z.ZodType,
+    TRadioParams extends z.ZodType,
     TCheckboxParams extends z.ZodType,
     TFileParams extends z.ZodType,
     TGroupParams extends z.ZodType,
@@ -82,7 +87,8 @@ type BuildFieldVariantsOptions<
     leafParentId: z.ZodNullable<z.ZodUUID>;
     inputParams: TInputParams;
     textAreaParams: TTextAreaParams;
-    choiceParams: TChoiceParams;
+    selectParams: TSelectParams;
+    radioParams: TRadioParams;
     checkboxParams: TCheckboxParams;
     fileParams: TFileParams;
     groupParams: TGroupParams;
@@ -99,7 +105,8 @@ export const buildBookingFormFieldVariants = <
     TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
     TTextAreaParams extends z.ZodType,
-    TChoiceParams extends z.ZodType,
+    TSelectParams extends z.ZodType,
+    TRadioParams extends z.ZodType,
     TCheckboxParams extends z.ZodType,
     TFileParams extends z.ZodType,
     TGroupParams extends z.ZodType,
@@ -111,7 +118,8 @@ export const buildBookingFormFieldVariants = <
     leafParentId,
     inputParams,
     textAreaParams,
-    choiceParams,
+    selectParams,
+    radioParams,
     checkboxParams,
     fileParams,
     groupParams,
@@ -122,7 +130,8 @@ export const buildBookingFormFieldVariants = <
     TGroupParentId,
     TInputParams,
     TTextAreaParams,
-    TChoiceParams,
+    TSelectParams,
+    TRadioParams,
     TCheckboxParams,
     TFileParams,
     TGroupParams
@@ -145,8 +154,8 @@ export const buildBookingFormFieldVariants = <
         leafField('date', inputParams),
         leafField('time', inputParams),
         leafField('textarea', textAreaParams),
-        leafField('select', choiceParams),
-        leafField('radio', choiceParams),
+        leafField('select', selectParams),
+        leafField('radio', radioParams),
         leafField('checkbox', checkboxParams),
         leafField('file', fileParams),
         leafField('image', fileParams),
@@ -173,7 +182,8 @@ const createInputFieldVariants = buildBookingFormFieldVariants({
     leafParentId: z.uuid().nullable(),
     inputParams: inputParamsSchema.default({}),
     textAreaParams: textAreaParamsSchema.default({}),
-    choiceParams: choiceParamsSchema,
+    selectParams: selectParamsSchema,
+    radioParams: choiceParamsSchema,
     checkboxParams: checkboxParamsSchema.default({}),
     fileParams: fileParamsSchema.default({}),
     groupParams: groupParamsSchema.default({}),

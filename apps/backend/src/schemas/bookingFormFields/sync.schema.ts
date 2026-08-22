@@ -9,6 +9,7 @@ import {
     fileParamsSchema,
     groupParamsSchema,
     inputParamsSchema,
+    selectParamsSchema,
     textAreaParamsSchema,
 } from './shared.schema.js';
 
@@ -27,7 +28,8 @@ export const syncBookingFormFieldItemSchema = z.discriminatedUnion(
         leafParentId: z.uuid().nullable(),
         inputParams: inputParamsSchema.default({}),
         textAreaParams: textAreaParamsSchema.default({}),
-        choiceParams: choiceParamsSchema,
+        selectParams: selectParamsSchema,
+        radioParams: choiceParamsSchema,
         checkboxParams: checkboxParamsSchema.default({}),
         fileParams: fileParamsSchema.default({}),
         groupParams: groupParamsSchema.default({}),

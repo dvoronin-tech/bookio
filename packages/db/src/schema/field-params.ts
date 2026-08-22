@@ -47,6 +47,9 @@ export type FieldOption = {
 
 export type ChoiceFieldParams = {
     options: FieldOption[];
+};
+
+export type SelectFieldParams = ChoiceFieldParams & {
     defaultValue: string;
 };
 
@@ -63,19 +66,24 @@ export type FileFieldParams = {
     maxSizeMb?: number;
 };
 
-export type FieldParamsByType<T extends FieldType> = T extends 'textarea'
-    ? TextAreaFieldParams
-    : T extends InputFieldType
-      ? InputFieldParams
-      : T extends ChoiceFieldType
-      ? ChoiceFieldParams
-      : T extends 'group'
-        ? GroupFieldParams
-        : T extends BooleanFieldType
-          ? CheckboxFieldParams
-          : T extends FileFieldType
-            ? FileFieldParams
-            : never;
+type FieldParamsMap = {
+    text: InputFieldParams;
+    number: InputFieldParams;
+    file: FileFieldParams;
+    image: FileFieldParams;
+    url: InputFieldParams;
+    phone: InputFieldParams;
+    date: InputFieldParams;
+    time: InputFieldParams;
+    email: InputFieldParams;
+    checkbox: CheckboxFieldParams;
+    select: SelectFieldParams;
+    radio: ChoiceFieldParams;
+    textarea: TextAreaFieldParams;
+    group: GroupFieldParams;
+};
+
+export type FieldParamsByType<T extends FieldType> = FieldParamsMap[T];
 
 /** Union of all possible params shapes (used for Drizzle jsonb.$type) */
 export type FieldParams = FieldParamsByType<FieldType>;
