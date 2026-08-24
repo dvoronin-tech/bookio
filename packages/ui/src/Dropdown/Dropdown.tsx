@@ -191,6 +191,7 @@ function DropdownItem({
     disabled = false,
     onClick,
     autoClose = true,
+    ref,
     ...props
 }: DropdownItemProps) {
     const { onOpenChange, getItemProps } = useDropdownContext();
@@ -213,7 +214,7 @@ function DropdownItem({
             variant={variant}
             className={classes}
             disabled={disabled}
-            {...getItemProps({ onClick: handleClick, role: 'menuitem', ...props })}
+            {...getItemProps({ ref, onClick: handleClick, role: 'menuitem', ...props })}
         >
             {children}
         </Button>

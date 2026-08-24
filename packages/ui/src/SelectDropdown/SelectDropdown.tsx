@@ -23,6 +23,7 @@ type SelectDropdownBaseProps = {
     triggerClassName?: string;
     allowInjection?: boolean;
     withSearch?: boolean;
+    highlightSelected?: boolean;
 };
 
 type SelectDropdownSingleProps = SelectDropdownBaseProps & {
@@ -60,6 +61,7 @@ function SelectDropdown(props: SelectDropdownProps) {
         triggerClassName,
         allowInjection = false,
         withSearch = false,
+        highlightSelected = false,
     } = props;
 
     const [isOpen, setIsOpen] = useState(false);
@@ -70,8 +72,7 @@ function SelectDropdown(props: SelectDropdownProps) {
         [options],
     );
 
-    const selectedCount =
-        props.multiple === true ? props.selected.length : props.selected ? 1 : 0;
+    const selectedCount = props.multiple === true ? props.selected.length : props.selected ? 1 : 0;
 
     const triggerText = useMemo(() => {
         if (props.multiple === true) {
@@ -106,6 +107,10 @@ function SelectDropdown(props: SelectDropdownProps) {
 
     const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
+    }, []);
+
+    const scrollSelectedIntoView = useCallback((node: HTMLButtonElement | null) => {
+        node?.scrollIntoView({ block: 'center' });
     }, []);
 
     return (
@@ -153,16 +158,26 @@ function SelectDropdown(props: SelectDropdownProps) {
                                     onOptionClick(option.value);
                                 };
 
+                                const isSelected =
+                                    props.multiple === true
+                                        ? props.selected.includes(option.value)
+                                        : props.selected === option.value;
+                                const itemClassName = clsx(
+                                    highlightSelected && isSelected && styles.optionSelected,
+                                );
+
                                 if (props.multiple === true) {
                                     return (
                                         <Dropdown.Item
                                             key={option.value}
+                                            ref={isSelected ? scrollSelectedIntoView : undefined}
+                                            className={itemClassName}
                                             onClick={handleOptionClick}
                                             autoClose={false}
                                         >
                                             <Checkbox
                                                 label={renderContent(option.label, allowInjection)}
-                                                checked={props.selected.includes(option.value)}
+                                                checked={isSelected}
                                                 readOnly
                                                 className={styles.optionCheckbox}
                                             />
@@ -173,6 +188,8 @@ function SelectDropdown(props: SelectDropdownProps) {
                                 return (
                                     <Dropdown.Item
                                         key={option.value}
+                                        ref={isSelected ? scrollSelectedIntoView : undefined}
+                                        className={itemClassName}
                                         onClick={handleOptionClick}
                                     >
                                         {renderContent(option.label, allowInjection)}

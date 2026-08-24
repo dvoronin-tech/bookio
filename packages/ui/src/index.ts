@@ -45,6 +45,9 @@ export type { RadioItemProps, RadioLabelProps, RadioProps } from './Radio/Radio.
 export { default as ColorPicker } from './ColorPicker/ColorPicker.js';
 export type { ColorPickerProps } from './ColorPicker/ColorPicker.js';
 
+export { default as DatePicker } from './DatePicker/DatePicker.js';
+export type { DatePickerProps } from './DatePicker/DatePicker.js';
+
 export { default as SelectDropdown } from './SelectDropdown/SelectDropdown.js';
 export type {
     SelectDropdownOption,

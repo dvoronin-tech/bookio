@@ -104,3 +104,12 @@
 .optionCheckbox {
     pointer-events: none;
 }
+
+.dropdownOptions .optionSelected {
+    background-color: color-mix(in srgb, var(--color-primary) 30%, transparent);
+    font-weight: 600;
+
+    &:hover:not(:disabled) {
+        background-color: color-mix(in srgb, var(--color-primary) 18%, transparent);
+    }
+}
