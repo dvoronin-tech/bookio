@@ -7,6 +7,7 @@ import {
     type LeafFieldType,
 } from '#/components/Fields/field.types';
 import { CheckboxField } from '#/components/Fields/CheckboxField/CheckboxField';
+import { DateInputField } from '#/components/Fields/DateInputField/DateInputField';
 import { EmailInputField } from '#/components/Fields/EmailInputField/EmailInputField';
 import { FieldPlaceholder } from '#/components/Fields/FieldPlaceholder/FieldPlaceholder';
 import { NumberInputField } from '#/components/Fields/NumberInputField/NumberInputField';
@@ -28,7 +29,7 @@ export const fieldsMap: FieldsMap = {
     image: FieldPlaceholder,
     url: UrlInputField,
     phone: PhoneInputField,
-    date: FieldPlaceholder,
+    date: DateInputField,
     time: FieldPlaceholder,
     email: EmailInputField,
     checkbox: CheckboxField,

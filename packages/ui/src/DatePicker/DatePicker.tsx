@@ -25,6 +25,7 @@ export type DatePickerProps = {
     onChange: (isoDate: string) => void;
     label?: string;
     className?: string;
+    triggerClassName?: string;
     disabled?: boolean;
     id?: string;
     placeholder?: string;
@@ -36,6 +37,7 @@ function DatePicker({
     onChange,
     label,
     className,
+    triggerClassName,
     disabled = false,
     id,
     placeholder = DATE_PLACEHOLDER,
@@ -86,6 +88,7 @@ function DatePicker({
                     styles.trigger,
                     open && styles.triggerOpen,
                     disabled && styles.triggerDisabled,
+                    triggerClassName,
                 )}
                 disabled={disabled}
                 aria-label={label ? undefined : ariaLabel}

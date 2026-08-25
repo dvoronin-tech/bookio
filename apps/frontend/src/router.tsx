@@ -8,13 +8,6 @@ export const router = createBrowserRouter([
         hydrateFallbackElement: <PageLoader />,
         children: [
             {
-                path: '/date-picker',
-                lazy: lazyRoute(
-                    () => import('#pages/DatePickerPreview/DatePickerPreview'),
-                    'DatePickerPreview',
-                ),
-            },
-            {
                 path: '/auth',
                 lazy: lazyRoute(() => import('#layouts/AuthLayout/AuthLayout'), 'AuthLayout'),
                 children: [
