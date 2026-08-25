@@ -1,5 +1,6 @@
 import { checkboxFieldsConfig } from './fields/checkbox';
 import { choiceFieldsConfig, selectFieldsConfig } from './fields/choice';
+import { dateFieldsConfig } from './fields/date';
 import { groupFieldsConfig } from './fields/group';
 import { imageFieldsConfig } from './fields/image';
 import { inputFieldsConfig } from './fields/input';
@@ -13,7 +14,7 @@ export const paramsFieldConfig: ParamsFieldConfig = {
     phone: namedParamFields(inputFieldsConfig),
     url: namedParamFields(inputFieldsConfig),
     number: namedParamFields(inputFieldsConfig),
-    date: namedParamFields(inputFieldsConfig),
+    date: namedParamFields(dateFieldsConfig),
     time: namedParamFields(inputFieldsConfig),
     textarea: namedParamFields(textAreaFieldsConfig),
     select: namedParamFields(selectFieldsConfig, 'options'),

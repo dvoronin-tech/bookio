@@ -1,6 +1,7 @@
 import type {
     CheckboxFieldParams,
     ChoiceFieldParams,
+    DateFieldParams,
     FieldOption,
     FileFieldParams,
     GroupFieldParams,
@@ -41,6 +42,10 @@ export const inputParamsSchema = z.object({
     helpText: z.string().optional(),
 }) satisfies z.ZodType<InputFieldParams>;
 
+export const dateParamsSchema = z.object({
+    placeholder: z.string().optional(),
+}) satisfies z.ZodType<DateFieldParams>;
+
 export const textAreaParamsSchema = z.object({
     ...inputParamsSchema.shape,
     rows: z.number().positive().optional(),
@@ -73,6 +78,7 @@ type BuildFieldVariantsOptions<
     TGroupRequired extends z.ZodType,
     TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
+    TDateParams extends z.ZodType,
     TTextAreaParams extends z.ZodType,
     TSelectParams extends z.ZodType,
     TRadioParams extends z.ZodType,
@@ -86,6 +92,7 @@ type BuildFieldVariantsOptions<
     groupParentId: TGroupParentId;
     leafParentId: z.ZodNullable<z.ZodUUID>;
     inputParams: TInputParams;
+    dateParams: TDateParams;
     textAreaParams: TTextAreaParams;
     selectParams: TSelectParams;
     radioParams: TRadioParams;
@@ -104,6 +111,7 @@ export const buildBookingFormFieldVariants = <
     TGroupRequired extends z.ZodType,
     TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
+    TDateParams extends z.ZodType,
     TTextAreaParams extends z.ZodType,
     TSelectParams extends z.ZodType,
     TRadioParams extends z.ZodType,
@@ -117,6 +125,7 @@ export const buildBookingFormFieldVariants = <
     groupParentId,
     leafParentId,
     inputParams,
+    dateParams,
     textAreaParams,
     selectParams,
     radioParams,
@@ -129,6 +138,7 @@ export const buildBookingFormFieldVariants = <
     TGroupRequired,
     TGroupParentId,
     TInputParams,
+    TDateParams,
     TTextAreaParams,
     TSelectParams,
     TRadioParams,
@@ -151,7 +161,7 @@ export const buildBookingFormFieldVariants = <
         leafField('phone', inputParams),
         leafField('url', inputParams),
         leafField('number', inputParams),
-        leafField('date', inputParams),
+        leafField('date', dateParams),
         leafField('time', inputParams),
         leafField('textarea', textAreaParams),
         leafField('select', selectParams),
@@ -181,6 +191,7 @@ const createInputFieldVariants = buildBookingFormFieldVariants({
     groupParentId: z.null(),
     leafParentId: z.uuid().nullable(),
     inputParams: inputParamsSchema.default({}),
+    dateParams: dateParamsSchema.default({}),
     textAreaParams: textAreaParamsSchema.default({}),
     selectParams: selectParamsSchema,
     radioParams: choiceParamsSchema,

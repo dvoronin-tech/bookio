@@ -36,6 +36,10 @@ export type InputFieldParams = {
     helpText?: string;
 };
 
+export type DateFieldParams = {
+    placeholder?: string;
+};
+
 export type TextAreaFieldParams = InputFieldParams & {
     rows?: number;
 };
@@ -73,7 +77,7 @@ type FieldParamsMap = {
     image: FileFieldParams;
     url: InputFieldParams;
     phone: InputFieldParams;
-    date: InputFieldParams;
+    date: DateFieldParams;
     time: InputFieldParams;
     email: InputFieldParams;
     checkbox: CheckboxFieldParams;
