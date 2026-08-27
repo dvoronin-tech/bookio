@@ -16,6 +16,7 @@ import { RadioField } from '#/components/Fields/RadioField/RadioField';
 import { SelectField } from '#/components/Fields/SelectField/SelectField';
 import { TextAreaField } from '#/components/Fields/TextAreaField/TextAreaField';
 import { TextInputField } from '#/components/Fields/TextInputField/TextInputField';
+import { TimeInputField } from '#/components/Fields/TimeInputField/TimeInputField';
 import { UrlInputField } from '#/components/Fields/UrlInputField/UrlInputField';
 
 type FieldsMap = {
@@ -30,7 +31,7 @@ export const fieldsMap: FieldsMap = {
     url: UrlInputField,
     phone: PhoneInputField,
     date: DateInputField,
-    time: FieldPlaceholder,
+    time: TimeInputField,
     email: EmailInputField,
     checkbox: CheckboxField,
     select: SelectField,

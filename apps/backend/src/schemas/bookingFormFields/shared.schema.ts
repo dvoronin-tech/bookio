@@ -8,6 +8,7 @@ import type {
     InputFieldParams,
     SelectFieldParams,
     TextAreaFieldParams,
+    TimeFieldParams,
 } from '@bookio/db';
 import { z } from 'zod';
 
@@ -46,6 +47,29 @@ export const dateParamsSchema = z.object({
     placeholder: z.string().optional(),
 }) satisfies z.ZodType<DateFieldParams>;
 
+export const timeStringSchema = z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/, { message: 'Time must be in HH:mm format' });
+
+const emptyToUndefined = (value: unknown) => {
+    if (value === '' || value === null) {
+        return undefined;
+    }
+
+    if (typeof value === 'number' && Number.isNaN(value)) {
+        return undefined;
+    }
+
+    return value;
+};
+
+export const timeParamsSchema = z.object({
+    ...inputParamsSchema.shape,
+    min: z.preprocess(emptyToUndefined, timeStringSchema.optional()),
+    max: z.preprocess(emptyToUndefined, timeStringSchema.optional()),
+    step: z.preprocess(emptyToUndefined, z.number().int().positive().optional()),
+}) satisfies z.ZodType<TimeFieldParams>;
+
 export const textAreaParamsSchema = z.object({
     ...inputParamsSchema.shape,
     rows: z.number().positive().optional(),
@@ -79,6 +103,7 @@ type BuildFieldVariantsOptions<
     TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
     TDateParams extends z.ZodType,
+    TTimeParams extends z.ZodType,
     TTextAreaParams extends z.ZodType,
     TSelectParams extends z.ZodType,
     TRadioParams extends z.ZodType,
@@ -93,6 +118,7 @@ type BuildFieldVariantsOptions<
     leafParentId: z.ZodNullable<z.ZodUUID>;
     inputParams: TInputParams;
     dateParams: TDateParams;
+    timeParams: TTimeParams;
     textAreaParams: TTextAreaParams;
     selectParams: TSelectParams;
     radioParams: TRadioParams;
@@ -112,6 +138,7 @@ export const buildBookingFormFieldVariants = <
     TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
     TDateParams extends z.ZodType,
+    TTimeParams extends z.ZodType,
     TTextAreaParams extends z.ZodType,
     TSelectParams extends z.ZodType,
     TRadioParams extends z.ZodType,
@@ -126,6 +153,7 @@ export const buildBookingFormFieldVariants = <
     leafParentId,
     inputParams,
     dateParams,
+    timeParams,
     textAreaParams,
     selectParams,
     radioParams,
@@ -139,6 +167,7 @@ export const buildBookingFormFieldVariants = <
     TGroupParentId,
     TInputParams,
     TDateParams,
+    TTimeParams,
     TTextAreaParams,
     TSelectParams,
     TRadioParams,
@@ -162,7 +191,7 @@ export const buildBookingFormFieldVariants = <
         leafField('url', inputParams),
         leafField('number', inputParams),
         leafField('date', dateParams),
-        leafField('time', inputParams),
+        leafField('time', timeParams),
         leafField('textarea', textAreaParams),
         leafField('select', selectParams),
         leafField('radio', radioParams),
@@ -192,6 +221,7 @@ const createInputFieldVariants = buildBookingFormFieldVariants({
     leafParentId: z.uuid().nullable(),
     inputParams: inputParamsSchema.default({}),
     dateParams: dateParamsSchema.default({}),
+    timeParams: timeParamsSchema.default({}),
     textAreaParams: textAreaParamsSchema.default({}),
     selectParams: selectParamsSchema,
     radioParams: choiceParamsSchema,

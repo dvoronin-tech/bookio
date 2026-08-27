@@ -21,6 +21,10 @@ export type NumberUIField = ParamUIFieldBase & {
     max?: number;
 };
 
+export type TimeUIField = ParamUIFieldBase & {
+    type: 'time';
+};
+
 export type OptionsUIField = ParamUIFieldBase & {
     type: 'options';
     itemFields: Partial<Record<FieldOptionKey, BaseUIFieldConfig>>;
@@ -42,21 +46,14 @@ export type SelectUIField = ParamUIFieldBase & {
 
 export type ChoiceUIField = BaseUIFieldType | OptionsUIField;
 export type TextAreaUIField = BaseUIFieldType | NumberUIField;
+export type TimeParamUIField = BaseUIFieldType | NumberUIField | TimeUIField | SelectUIField;
 // export type FileUIField = BaseUIFieldType | FileUiField;
 export type ImageUIField = BaseUIFieldType | NumberUIField | SelectUIField;
 
-type SimpleFieldKind =
-    | 'text'
-    | 'email'
-    | 'phone'
-    | 'url'
-    | 'number'
-    | 'date'
-    | 'time'
-    | 'checkbox'
-    | 'group';
+type SimpleFieldKind = 'text' | 'email' | 'phone' | 'url' | 'number' | 'date' | 'checkbox' | 'group';
 
 export type ParamsFieldConfig = Record<SimpleFieldKind, BaseUIFieldType[]> & {
+    time: TimeParamUIField[];
     textarea: TextAreaUIField[];
     select: ChoiceUIField[];
     radio: ChoiceUIField[];

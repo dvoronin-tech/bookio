@@ -5,6 +5,7 @@ import { groupFieldsConfig } from './fields/group';
 import { imageFieldsConfig } from './fields/image';
 import { inputFieldsConfig } from './fields/input';
 import { textAreaFieldsConfig } from './fields/textarea';
+import { timeFieldsConfig } from './fields/time';
 import type { ParamsFieldConfig } from './paramsFieldConfig.types';
 
 export const paramsFieldConfig: ParamsFieldConfig = {
@@ -14,7 +15,7 @@ export const paramsFieldConfig: ParamsFieldConfig = {
     url: Object.values(inputFieldsConfig),
     number: Object.values(inputFieldsConfig),
     date: Object.values(dateFieldsConfig),
-    time: Object.values(inputFieldsConfig),
+    time: Object.values(timeFieldsConfig),
     textarea: Object.values(textAreaFieldsConfig),
     select: Object.values(selectFieldsConfig),
     radio: Object.values(choiceFieldsConfig),

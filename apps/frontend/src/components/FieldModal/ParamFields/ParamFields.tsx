@@ -6,6 +6,7 @@ import { formatParamFieldLabel } from '#utils/paramsFieldConfig/formatParamField
 import { AcceptTypesField } from './Fields/SelectField/AcceptTypesField';
 import { ChoiceOptionsField } from './Fields/ChoiceOptionField/ChoiceOptionsField';
 import { SimpleParamInput } from './Fields/SimpleParamInput/SimpleParamInput';
+import { TimeParamInput } from './Fields/TimeParamInput/TimeParamInput';
 import { SelectField } from './Fields/SelectField/SelectField';
 
 export const ParamFields: FC = () => {
@@ -32,6 +33,10 @@ export const ParamFields: FC = () => {
                     max={field.max}
                 />
             );
+        }
+
+        if (field.type === 'time') {
+            return <TimeParamInput key={field.formName} name={field.formName} label={label} />;
         }
 
         if (field.type === 'options') {

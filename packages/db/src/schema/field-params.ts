@@ -40,6 +40,16 @@ export type DateFieldParams = {
     placeholder?: string;
 };
 
+export type TimeFieldParams = {
+    placeholder?: string;
+    /** Earliest selectable time, "HH:mm" */
+    min?: string;
+    /** Latest selectable time, "HH:mm" */
+    max?: string;
+    /** Minutes step in the picker dropdown */
+    step?: number;
+};
+
 export type TextAreaFieldParams = InputFieldParams & {
     rows?: number;
 };
@@ -78,7 +88,7 @@ type FieldParamsMap = {
     url: InputFieldParams;
     phone: InputFieldParams;
     date: DateFieldParams;
-    time: InputFieldParams;
+    time: TimeFieldParams;
     email: InputFieldParams;
     checkbox: CheckboxFieldParams;
     select: SelectFieldParams;

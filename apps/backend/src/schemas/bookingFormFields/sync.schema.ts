@@ -12,6 +12,7 @@ import {
     inputParamsSchema,
     selectParamsSchema,
     textAreaParamsSchema,
+    timeParamsSchema,
 } from './shared.schema.js';
 
 export const syncBookingFormFieldItemSchema = z.discriminatedUnion(
@@ -29,6 +30,7 @@ export const syncBookingFormFieldItemSchema = z.discriminatedUnion(
         leafParentId: z.uuid().nullable(),
         inputParams: inputParamsSchema.default({}),
         dateParams: dateParamsSchema.default({}),
+        timeParams: timeParamsSchema.default({}),
         textAreaParams: textAreaParamsSchema.default({}),
         selectParams: selectParamsSchema,
         radioParams: choiceParamsSchema,
