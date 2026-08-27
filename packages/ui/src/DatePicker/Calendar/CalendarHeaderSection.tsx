@@ -1,15 +1,17 @@
 import { memo } from 'react';
 import Button from '../../Button/Button.js';
-import SelectDropdown from '../../SelectDropdown/SelectDropdown.js';
+import SelectDropdown, {
+    type SelectDropdownOption,
+} from '../../SelectDropdown/SelectDropdown.js';
 import ChevronIcon from '../icons/chevron.svg?react';
 import styles from './Calendar.module.scss';
 
 export type CalendarHeaderSectionProps = {
     onPrev: () => void;
     onNext: () => void;
-    selected: string;
-    options: Array<{ value: string; label: string }>;
-    onChange: (value: string) => void;
+    selected: SelectDropdownOption;
+    options: SelectDropdownOption[];
+    onChange: (option: SelectDropdownOption) => void;
     prevLabel: string;
     nextLabel: string;
 };

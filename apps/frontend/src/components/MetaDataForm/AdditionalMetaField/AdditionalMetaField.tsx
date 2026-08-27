@@ -1,4 +1,4 @@
-import { useCallback, type ChangeEvent, type FC, useMemo } from 'react';
+import { useCallback, type ChangeEvent, type FC } from 'react';
 import { Button, Input, SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 import TrashIcon from '#assets/icons/trash.svg?react';
 
@@ -8,7 +8,7 @@ export interface AdditionalMetaFieldProps {
     id: string;
     property: string;
     value: string;
-    options: SelectDropdownOption[];
+    options: string[];
     onPropertyChange: (id: string, property: string) => void;
     onValueChange: (id: string, value: string) => void;
     onRemove: (id: string) => void;
@@ -31,8 +31,8 @@ export const AdditionalMetaField: FC<AdditionalMetaFieldProps> = ({
     );
 
     const handlePropertyChange = useCallback(
-        (property: string) => {
-            onPropertyChange(id, property);
+        (option: SelectDropdownOption) => {
+            onPropertyChange(id, String(option));
         },
         [id, onPropertyChange],
     );
@@ -41,23 +41,17 @@ export const AdditionalMetaField: FC<AdditionalMetaFieldProps> = ({
         onRemove(id);
     }, [id, onRemove]);
 
-    const preparedOptions = useMemo(
-        () => options.map((option) => ({ ...option, label: `${option.label} <i class=${styles.propertyValue}>(${option.value})</i>` })),
-        [options],
-    );
-
     return (
         <div className={styles.additionalMetaField}>
             <SelectDropdown
                 label="Property"
-                options={preparedOptions}
+                options={options}
                 selected={property || undefined}
                 onOptionClick={handlePropertyChange}
                 placeholder="Select property"
                 searchPlaceholder="Search properties..."
                 emptyOptionsText="No properties found"
                 triggerClassName={styles.propertyTrigger}
-                allowInjection
                 withSearch
             />
             <Input

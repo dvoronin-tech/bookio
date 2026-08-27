@@ -1,9 +1,10 @@
-import { useMemo, type FC, useCallback } from 'react';
+import { useCallback, useMemo, type FC } from 'react';
+import { useFormContext, useWatch } from 'react-hook-form';
+import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
-import type { AcceptOptions } from '#utils/paramsFieldConfig';
 import { imageAcceptOptions } from '#utils/paramsFieldConfig/imageAcceptOptions';
 
-export const ALL_IMAGES_MIME_TYPE = imageAcceptOptions['All images'];
+const ALL_IMAGES_MIME_TYPE = imageAcceptOptions['All images'];
 
 const ALL_SPECIFIC_IMAGE_MIME_TYPES = Object.values(imageAcceptOptions).filter(
     (mimeType) => mimeType !== ALL_IMAGES_MIME_TYPE,
@@ -22,19 +23,18 @@ const normalizeAcceptTypes = (accept: string[]): string[] | undefined => {
     return specificTypes.length > 0 ? specificTypes : undefined;
 };
 
-export const getDisplayedAcceptTypes = (stored: string[] | undefined): string[] => {
+const getDisplayedAcceptTypes = (stored: string[] | undefined): string[] => {
     const accept = stored ?? [];
 
     return accept.length === 0 ? [ALL_IMAGES_MIME_TYPE] : accept;
 };
 
-export const toggleAcceptType = (
+const toggleAcceptType = (
     stored: string[] | undefined,
     acceptType: string,
 ): string[] | undefined => {
     const accept = stored ?? [];
-    const isAllImagesSelected =
-        accept.length === 0 || accept.includes(ALL_IMAGES_MIME_TYPE);
+    const isAllImagesSelected = accept.length === 0 || accept.includes(ALL_IMAGES_MIME_TYPE);
 
     if (acceptType === ALL_IMAGES_MIME_TYPE) {
         return undefined;
@@ -52,26 +52,33 @@ export const toggleAcceptType = (
     return normalizeAcceptTypes(nextAccept);
 };
 
-interface AcceptTypesDropdownProps {
+interface AcceptTypesFieldProps {
     label: string;
-    options: AcceptOptions;
-    selected: string[];
-    onToggleOption: (mimeType: string) => void;
+    options: SelectDropdownOption[];
+    searchPlaceholder?: string;
+    emptyOptionsText?: string;
+    withSearch?: boolean;
 }
 
-export const AcceptTypesDropdown: FC<AcceptTypesDropdownProps> = ({
+export const AcceptTypesField: FC<AcceptTypesFieldProps> = ({
     label,
     options,
-    selected,
-    onToggleOption,
+    searchPlaceholder,
+    emptyOptionsText,
+    withSearch,
 }) => {
-    const dropdownOptions = useMemo<SelectDropdownOption[]>(
-        () =>
-            Object.entries(options).map(([extension, mimeType]) => ({
-                label: extension,
-                value: mimeType,
-            })),
-        [options],
+    const { control, setValue } = useFormContext<FieldModalFormValues>();
+    const watchedAccept = useWatch({ control, name: 'params.accept' });
+    const displayedSelected = useMemo(
+        () => getDisplayedAcceptTypes(watchedAccept),
+        [watchedAccept],
+    );
+
+    const handleToggleAcceptType = useCallback(
+        (option: SelectDropdownOption) => {
+            setValue('params.accept', toggleAcceptType(watchedAccept, String(option)));
+        },
+        [watchedAccept, setValue],
     );
 
     const formatSelectedCount = useCallback((count: number) => `${count} types selected`, []);
@@ -79,15 +86,15 @@ export const AcceptTypesDropdown: FC<AcceptTypesDropdownProps> = ({
     return (
         <SelectDropdown
             label={label}
-            options={dropdownOptions}
-            selected={selected}
-            onOptionClick={onToggleOption}
+            options={options}
+            selected={displayedSelected}
+            onOptionClick={handleToggleAcceptType}
             placeholder="Select allowed types"
-            searchPlaceholder="Search types..."
-            emptyOptionsText="No types found"
+            searchPlaceholder={searchPlaceholder}
+            emptyOptionsText={emptyOptionsText}
             formatSelectedCount={formatSelectedCount}
             placement="top"
-            withSearch
+            withSearch={withSearch}
             multiple
         />
     );

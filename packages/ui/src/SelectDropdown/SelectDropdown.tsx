@@ -7,33 +7,29 @@ import Input from '../Input/Input.js';
 import { ArrowIcon } from './icons/ArrowIcon.js';
 import styles from './SelectDropdown.module.scss';
 
-export type SelectDropdownOption = {
-    label: string;
-    value: string;
-};
+export type SelectDropdownOption = string | number;
 
 type SelectDropdownBaseProps = {
     label?: string;
     options: SelectDropdownOption[];
-    onOptionClick: (value: string) => void;
+    onOptionClick: (option: SelectDropdownOption) => void;
     placeholder?: string;
     searchPlaceholder?: string;
     emptyOptionsText?: string;
     placement?: Placement;
     triggerClassName?: string;
-    allowInjection?: boolean;
     withSearch?: boolean;
     highlightSelected?: boolean;
 };
 
 type SelectDropdownSingleProps = SelectDropdownBaseProps & {
     multiple?: false;
-    selected: string | undefined;
+    selected: SelectDropdownOption | undefined;
 };
 
 type SelectDropdownMultipleProps = SelectDropdownBaseProps & {
     multiple: true;
-    selected: string[];
+    selected: SelectDropdownOption[];
     formatSelectedCount?: (count: number) => string;
 };
 
@@ -41,12 +37,16 @@ export type SelectDropdownProps = SelectDropdownSingleProps | SelectDropdownMult
 
 const defaultFormatSelectedCount = (count: number) => `${count} selected`;
 
-function renderContent(content: string, allowInjection: boolean) {
-    if (allowInjection) {
-        return <div dangerouslySetInnerHTML={{ __html: content }} />;
-    }
+function assertUniqueOptions(options: SelectDropdownOption[]) {
+    const seen = new Set<string>();
 
-    return content;
+    for (const option of options) {
+        const key = String(option);
+        if (seen.has(key)) {
+            throw new Error(`SelectDropdown: duplicate option "${key}". Options must be unique.`);
+        }
+        seen.add(key);
+    }
 }
 
 function SelectDropdown(props: SelectDropdownProps) {
@@ -59,31 +59,32 @@ function SelectDropdown(props: SelectDropdownProps) {
         emptyOptionsText = 'No options found',
         placement,
         triggerClassName,
-        allowInjection = false,
         withSearch = false,
         highlightSelected = false,
     } = props;
 
+    assertUniqueOptions(options);
+
     const [isOpen, setIsOpen] = useState(false);
     const [searchQuery, setSearchQuery] = useState('');
 
-    const getOptionLabel = useCallback(
-        (value: string) => options.find((option) => option.value === value)?.label ?? value,
-        [options],
-    );
-
-    const selectedCount = props.multiple === true ? props.selected.length : props.selected ? 1 : 0;
+    const selectedKeys = useMemo(() => {
+        const selected = props.multiple === true ? props.selected : [props.selected];
+        return new Set(selected.filter((value) => value !== undefined && value !== '').map(String));
+    }, [props.multiple, props.selected]);
 
     const triggerText = useMemo(() => {
-        if (props.multiple === true) {
-            const selected = props.selected;
-            if (selected.length === 0) return placeholder;
-            if (selected.length === 1) return getOptionLabel(selected[0]);
-            return (props.formatSelectedCount ?? defaultFormatSelectedCount)(selected.length);
+        if (selectedKeys.size === 0) return placeholder;
+        if (selectedKeys.size === 1) {
+            const [onlySelected] = selectedKeys;
+            return onlySelected;
         }
 
-        return props.selected ? getOptionLabel(props.selected) : placeholder;
-    }, [props, placeholder, getOptionLabel]);
+        const formatSelectedCount =
+            props.multiple === true ? props.formatSelectedCount : undefined;
+
+        return (formatSelectedCount ?? defaultFormatSelectedCount)(selectedKeys.size);
+    }, [selectedKeys, placeholder, props]);
 
     const filteredOptions = useMemo(() => {
         if (!withSearch) return options;
@@ -91,11 +92,7 @@ function SelectDropdown(props: SelectDropdownProps) {
         const query = searchQuery.trim().toLowerCase();
         if (!query) return options;
 
-        return options.filter(
-            (option) =>
-                option.label.toLowerCase().includes(query) ||
-                option.value.toLowerCase().includes(query),
-        );
+        return options.filter((option) => String(option).toLowerCase().includes(query));
     }, [options, searchQuery, withSearch]);
 
     const handleOpenChange = useCallback((open: boolean) => {
@@ -125,11 +122,11 @@ function SelectDropdown(props: SelectDropdownProps) {
                 <Dropdown.Trigger
                     className={clsx(
                         styles.selectTrigger,
-                        selectedCount === 0 && styles.selectTriggerPlaceholder,
+                        selectedKeys.size === 0 && styles.selectTriggerPlaceholder,
                         triggerClassName,
                     )}
                 >
-                    {renderContent(triggerText, allowInjection)}
+                    {triggerText}
                     <ArrowIcon
                         className={clsx(
                             styles.selectTriggerIcon,
@@ -154,14 +151,12 @@ function SelectDropdown(props: SelectDropdownProps) {
                             <p className={styles.dropdownEmpty}>{emptyOptionsText}</p>
                         ) : (
                             filteredOptions.map((option) => {
+                                const optionKey = String(option);
                                 const handleOptionClick = () => {
-                                    onOptionClick(option.value);
+                                    onOptionClick(option);
                                 };
 
-                                const isSelected =
-                                    props.multiple === true
-                                        ? props.selected.includes(option.value)
-                                        : props.selected === option.value;
+                                const isSelected = selectedKeys.has(optionKey);
                                 const itemClassName = clsx(
                                     highlightSelected && isSelected && styles.optionSelected,
                                 );
@@ -169,14 +164,14 @@ function SelectDropdown(props: SelectDropdownProps) {
                                 if (props.multiple === true) {
                                     return (
                                         <Dropdown.Item
-                                            key={option.value}
+                                            key={optionKey}
                                             ref={isSelected ? scrollSelectedIntoView : undefined}
                                             className={itemClassName}
                                             onClick={handleOptionClick}
                                             autoClose={false}
                                         >
                                             <Checkbox
-                                                label={renderContent(option.label, allowInjection)}
+                                                label={optionKey}
                                                 checked={isSelected}
                                                 readOnly
                                                 className={styles.optionCheckbox}
@@ -187,12 +182,12 @@ function SelectDropdown(props: SelectDropdownProps) {
 
                                 return (
                                     <Dropdown.Item
-                                        key={option.value}
+                                        key={optionKey}
                                         ref={isSelected ? scrollSelectedIntoView : undefined}
                                         className={itemClassName}
                                         onClick={handleOptionClick}
                                     >
-                                        {renderContent(option.label, allowInjection)}
+                                        {optionKey}
                                     </Dropdown.Item>
                                 );
                             })

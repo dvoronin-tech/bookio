@@ -1,65 +1,65 @@
 import { fieldOptionSchema } from '@bookio/backend/schemas';
 import type { z } from 'zod';
 
-import type { AcceptOptions } from './imageAcceptOptions';
-
 export type FieldOptionKey = keyof z.infer<typeof fieldOptionSchema>;
 
-export type BaseUIFieldConfig = {
+type ParamUIFieldBase = {
+    formName: string;
     label: string;
-    type: 'text' | 'checkbox';
     required?: boolean;
 };
 
-export interface BaseUIFieldType extends BaseUIFieldConfig {
-    name: string;
-}
+export type BaseUIFieldType = ParamUIFieldBase & {
+    type: 'text' | 'checkbox';
+};
 
-export type NumberUIField = Omit<BaseUIFieldConfig, 'type'> & {
+export type BaseUIFieldConfig = Omit<BaseUIFieldType, 'formName'>;
+
+export type NumberUIField = ParamUIFieldBase & {
     type: 'number';
     min?: number;
     max?: number;
 };
 
-export interface OptionsUIField {
-    label: string;
+export type OptionsUIField = ParamUIFieldBase & {
     type: 'options';
-    required?: boolean;
     itemFields: Partial<Record<FieldOptionKey, BaseUIFieldConfig>>;
-}
+};
 
-// export interface FileUiField {
-//     label: string;
+// export type FileUiField = ParamUIFieldBase & {
 //     type: 'select';
 //     options: typeof fileAcceptOptions;
-// }
+// };
 
-export interface ImageUiField {
-    label: string;
+export type SelectUIField = ParamUIFieldBase & {
     type: 'select';
-    required?: boolean;
-    options: AcceptOptions;
-}
+    multiple?: boolean;
+    options: (string | number)[];
+    searchPlaceholder?: string;
+    emptyOptionsText?: string;
+    withSearch?: boolean;
+};
 
 export type ChoiceUIField = BaseUIFieldType | OptionsUIField;
-export type NumberUIFieldType = NumberUIField & { name: string };
-export type TextAreaUIField = BaseUIFieldType | NumberUIFieldType;
+export type TextAreaUIField = BaseUIFieldType | NumberUIField;
 // export type FileUIField = BaseUIFieldType | FileUiField;
-export type ImageUIField = BaseUIFieldType | NumberUIFieldType | ImageUiField;
+export type ImageUIField = BaseUIFieldType | NumberUIField | SelectUIField;
 
-export type ParamsFieldConfig = {
-    text: BaseUIFieldType[];
-    email: BaseUIFieldType[];
-    phone: BaseUIFieldType[];
-    url: BaseUIFieldType[];
-    number: BaseUIFieldType[];
-    date: BaseUIFieldType[];
-    time: BaseUIFieldType[];
+type SimpleFieldKind =
+    | 'text'
+    | 'email'
+    | 'phone'
+    | 'url'
+    | 'number'
+    | 'date'
+    | 'time'
+    | 'checkbox'
+    | 'group';
+
+export type ParamsFieldConfig = Record<SimpleFieldKind, BaseUIFieldType[]> & {
     textarea: TextAreaUIField[];
     select: ChoiceUIField[];
     radio: ChoiceUIField[];
-    checkbox: BaseUIFieldType[];
     // file: FileUIField[];
     image: ImageUIField[];
-    group: BaseUIFieldType[];
 };

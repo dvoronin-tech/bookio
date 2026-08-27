@@ -5,24 +5,23 @@ import { groupFieldsConfig } from './fields/group';
 import { imageFieldsConfig } from './fields/image';
 import { inputFieldsConfig } from './fields/input';
 import { textAreaFieldsConfig } from './fields/textarea';
-import { namedParamFields } from './namedParamFields';
 import type { ParamsFieldConfig } from './paramsFieldConfig.types';
 
 export const paramsFieldConfig: ParamsFieldConfig = {
-    text: namedParamFields(inputFieldsConfig),
-    email: namedParamFields(inputFieldsConfig),
-    phone: namedParamFields(inputFieldsConfig),
-    url: namedParamFields(inputFieldsConfig),
-    number: namedParamFields(inputFieldsConfig),
-    date: namedParamFields(dateFieldsConfig),
-    time: namedParamFields(inputFieldsConfig),
-    textarea: namedParamFields(textAreaFieldsConfig),
-    select: namedParamFields(selectFieldsConfig, 'options'),
-    radio: namedParamFields(choiceFieldsConfig, 'options'),
-    checkbox: namedParamFields(checkboxFieldsConfig),
-    // file: namedParamFields(fileFieldsConfig, 'select'),
-    image: namedParamFields(imageFieldsConfig, 'select'),
-    group: namedParamFields(groupFieldsConfig),
+    text: Object.values(inputFieldsConfig),
+    email: Object.values(inputFieldsConfig),
+    phone: Object.values(inputFieldsConfig),
+    url: Object.values(inputFieldsConfig),
+    number: Object.values(inputFieldsConfig),
+    date: Object.values(dateFieldsConfig),
+    time: Object.values(inputFieldsConfig),
+    textarea: Object.values(textAreaFieldsConfig),
+    select: Object.values(selectFieldsConfig),
+    radio: Object.values(choiceFieldsConfig),
+    checkbox: Object.values(checkboxFieldsConfig),
+    // file: Object.values(fileFieldsConfig),
+    image: Object.values(imageFieldsConfig),
+    group: Object.values(groupFieldsConfig),
 };
 
 export type UIFields = (typeof paramsFieldConfig)[keyof typeof paramsFieldConfig];

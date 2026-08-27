@@ -3,9 +3,9 @@ import { useFieldArray, useFormContext } from 'react-hook-form';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { Button } from '@bookio/ui';
 import PlusIcon from '#assets/icons/plus.svg?react';
-import { createEmptyOption } from '../utils/fieldModalParams';
+import { createEmptyOption } from '../../../utils/fieldModalParams';
 import { OptionItem } from './OptionItem';
-import styles from './ParamFields.module.scss';
+import styles from '../../ParamFields.module.scss';
 
 interface ChoiceOptionsFieldProps {
     label: string;
@@ -35,9 +35,7 @@ export const ChoiceOptionsField: FC<ChoiceOptionsFieldProps> = ({ label }) => {
         <div className={styles.optionsContainer}>
             <div className={styles.optionsHeader}>
                 <span className={styles.optionsLabel}>{label}</span>
-                {fields.length > 0 && (
-                    <span className={styles.optionsCount}>{fields.length}</span>
-                )}
+                {fields.length > 0 && <span className={styles.optionsCount}>{fields.length}</span>}
             </div>
 
             <div className={styles.optionsPanel}>

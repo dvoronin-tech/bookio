@@ -2,27 +2,36 @@ import { fileParamsSchema } from '@bookio/backend/schemas';
 import type { z } from 'zod';
 
 import { imageAcceptOptions } from '../imageAcceptOptions';
-import type { BaseUIFieldConfig, ImageUiField, NumberUIField } from '../paramsFieldConfig.types';
+import type { BaseUIFieldType, SelectUIField, NumberUIField } from '../paramsFieldConfig.types';
 
 type FileParamKey = keyof z.infer<typeof fileParamsSchema>;
 
-export const imageFieldsConfig: Record<FileParamKey, BaseUIFieldConfig | ImageUiField | NumberUIField> =
-    {
-        accept: {
-            label: 'Accepted image types (default: All types)',
-            type: 'select',
-            options: imageAcceptOptions,
-        },
-        maxSizeMb: {
-            label: 'Maximum image size (default: 5mb)',
-            type: 'number',
-            min: 1,
-        },
-    };
+export const imageFieldsConfig: Record<
+    FileParamKey,
+    BaseUIFieldType | SelectUIField | NumberUIField
+> = {
+    accept: {
+        formName: 'accept',
+        label: 'Accepted image types (default: All types)',
+        type: 'select',
+        multiple: true,
+        withSearch: true,
+        searchPlaceholder: 'Search types...',
+        emptyOptionsText: 'No types found',
+        options: Object.values(imageAcceptOptions),
+    },
+    maxSizeMb: {
+        formName: 'maxSizeMb',
+        label: 'Maximum image size (default: 5mb)',
+        type: 'number',
+        min: 1,
+    },
+};
 
 // const fileFieldsConfig: Record<FileParamKey, BaseUIFieldConfig | FileUiField> = {
 //     accept: {
 //         label: 'Accepted file types',
+//         multiple: true,
 //         type: 'select',
 //         options: fileAcceptOptions,
 //     },

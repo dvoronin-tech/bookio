@@ -119,7 +119,7 @@ export const MetaDataForm: FC<MetaDataFormProps> = memo(({ bookingFormId, metaDa
 
     const optionsToRender = useMemo(() => {
         return META_PROPERTIES.filter(
-            (option) => !additionalMetaRows.some((row) => row.property === option.value),
+            (property) => !additionalMetaRows.some((row) => row.property === property),
         );
     }, [additionalMetaRows]);
 

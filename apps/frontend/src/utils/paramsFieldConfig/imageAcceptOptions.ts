@@ -13,8 +13,6 @@ export const imageAcceptOptions = {
     '.ico': 'image/x-icon',
 } as const;
 
-export type AcceptOptions = typeof imageAcceptOptions;
-
 // const fileAcceptOptions = {
 //     'All files': '*/*',
 //     ...imageAcceptOptions,

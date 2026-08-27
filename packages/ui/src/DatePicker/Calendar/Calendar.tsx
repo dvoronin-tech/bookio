@@ -5,13 +5,13 @@ import {
     clampYear,
     getDateGrid,
     getDaysNames,
-    getMaxYear,
     getMonthNames,
     getYearsArray,
     MIN_YEAR,
     parsePickerValue,
     toIsoDateString,
 } from '../dateUtils.js';
+import type { SelectDropdownOption } from '../../SelectDropdown/SelectDropdown.js';
 import { CalendarDay } from './CalendarDay.js';
 import { CalendarHeaderSection } from './CalendarHeaderSection.js';
 import styles from './Calendar.module.scss';
@@ -28,18 +28,8 @@ export function Calendar({ value, onChange }: CalendarProps) {
 
     const calendarDays = useMemo(() => getDateGrid(currentDate), [currentDate]);
     const daysOfWeek = useMemo(() => getDaysNames(), []);
-    const monthOptions = useMemo(
-        () =>
-            getMonthNames().map((label, index) => ({
-                value: String(index),
-                label,
-            })),
-        [],
-    );
-    const yearOptions = useMemo(
-        () => getYearsArray(MIN_YEAR, maxYear).map((year) => ({ value: year, label: year })),
-        [maxYear],
-    );
+    const monthOptions = useMemo(() => getMonthNames(), []);
+    const yearOptions = useMemo(() => getYearsArray(MIN_YEAR, maxYear), [maxYear]);
 
     const setViewDate = useCallback(
         (next: Date) => {
@@ -57,10 +47,12 @@ export function Calendar({ value, onChange }: CalendarProps) {
     }, [currentDate, setViewDate]);
 
     const handleChangeMonth = useCallback(
-        (month: string) => {
-            setViewDate(new Date(currentDate.getFullYear(), Number(month), 1));
+        (month: SelectDropdownOption) => {
+            const monthIndex = monthOptions.indexOf(String(month));
+            if (monthIndex === -1) return;
+            setViewDate(new Date(currentDate.getFullYear(), monthIndex, 1));
         },
-        [currentDate, setViewDate],
+        [currentDate, setViewDate, monthOptions],
     );
 
     const handlePreviousYear = useCallback(() => {
@@ -72,7 +64,7 @@ export function Calendar({ value, onChange }: CalendarProps) {
     }, [currentDate, setViewDate]);
 
     const handleChangeYear = useCallback(
-        (year: string) => {
+        (year: SelectDropdownOption) => {
             setViewDate(new Date(Number(year), currentDate.getMonth(), 1));
         },
         [currentDate, setViewDate],
@@ -91,7 +83,7 @@ export function Calendar({ value, onChange }: CalendarProps) {
                 <CalendarHeaderSection
                     onPrev={handlePreviousMonth}
                     onNext={handleNextMonth}
-                    selected={String(currentDate.getMonth())}
+                    selected={monthOptions[currentDate.getMonth()]}
                     options={monthOptions}
                     onChange={handleChangeMonth}
                     prevLabel="Previous month"

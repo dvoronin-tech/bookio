@@ -1,13 +1,14 @@
 import { useCallback, type FC, useMemo } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
-import { Input, ValidatableInput, type SelectDropdownOption } from '@bookio/ui';
+import { Input, ValidatableInput, type SelectDropdownOption, SelectDropdown } from '@bookio/ui';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
-import { ChooseParentDropdown } from './ParamFields/ChooseParentDropdown';
-
 interface FieldBasicFieldsProps {
     fieldId?: string | null;
 }
+
+// Field keys can't contain spaces (fieldKeySchema), so this sentinel never collides
+const NO_GROUP_OPTION = 'No group';
 
 export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
     const { register, setValue, control } = useFormContext<FieldModalFormValues>();
@@ -16,21 +17,36 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
     const watchedKey = useWatch({ control, name: 'key' });
     const bookingFormFields = useBookingFormConfiguratorStore((s) => s.bookingFormFields);
 
-    const noGroupOption: SelectDropdownOption = { label: 'No group', value: '' };
+    const groupOptions = useMemo(
+        () => [
+            NO_GROUP_OPTION,
+            ...(bookingFormFields?.fields
+                .filter((field) => field.type === 'group')
+                .map((field) => field.key) ?? []),
+        ],
+        [bookingFormFields],
+    );
 
-    const groupFields: SelectDropdownOption[] =
-        bookingFormFields?.fields
-            .filter((field) => field.type === 'group')
-            .map((field) => ({
-                label: field.key,
-                value: field.id,
-            })) ?? [];
+    const selectedGroup = useMemo(() => {
+        if (!watchedParentId) return NO_GROUP_OPTION;
+
+        return (
+            bookingFormFields?.fields.find((field) => field.id === watchedParentId)?.key ??
+            NO_GROUP_OPTION
+        );
+    }, [bookingFormFields, watchedParentId]);
 
     const onSelectGroup = useCallback(
-        (value: string) => {
-            setValue('parentId', value);
+        (option: SelectDropdownOption) => {
+            if (option === NO_GROUP_OPTION) {
+                setValue('parentId', '');
+                return;
+            }
+
+            const group = bookingFormFields?.fields.find((field) => field.key === option);
+            setValue('parentId', group?.id ?? '');
         },
-        [setValue],
+        [bookingFormFields, setValue],
     );
 
     const isKeyValid = useMemo(() => {
@@ -54,12 +70,23 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
     return (
         <>
             <Input label="Label*" {...register('name')} />
-            <ValidatableInput label="Key*" {...register('key')} isValid={isKeyValid} errorMessage='Key must be unique' helpText='The key is used to identify the field in the booking form. It must be unique within the booking form.' />
+            <ValidatableInput
+                label="Key*"
+                {...register('key')}
+                isValid={isKeyValid}
+                errorMessage="Key must be unique"
+                helpText="The key is used to identify the field in the booking form. It must be unique within the booking form."
+            />
             {watchedType !== 'group' && (
-                <ChooseParentDropdown
-                    options={[noGroupOption, ...groupFields]}
-                    selected={watchedParentId ?? undefined}
+                <SelectDropdown
+                    options={groupOptions}
+                    selected={selectedGroup}
                     onOptionClick={onSelectGroup}
+                    searchPlaceholder="Search group"
+                    placeholder="No group selected"
+                    emptyOptionsText="No groups found"
+                    label="Group"
+                    withSearch
                 />
             )}
         </>

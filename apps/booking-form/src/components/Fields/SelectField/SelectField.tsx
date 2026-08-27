@@ -9,10 +9,11 @@ export const SelectField: FC<FieldControlProps<'select'>> = ({ field, control })
     const { defaultValue, options } = field.params;
 
     const selectOptions = useMemo(() => {
-        if (!required && !options.some((o) => o.value === '')) {
-            return [{ value: 'DEFAULT', label: defaultValue }, ...options];
+        const labels = options.map((option) => option.label);
+        if (!required && !labels.includes(defaultValue)) {
+            return [defaultValue, ...labels];
         }
-        return options;
+        return labels;
     }, [required, options, defaultValue]);
 
     return (
