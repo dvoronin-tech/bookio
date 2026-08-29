@@ -60,6 +60,9 @@ export type {
 export { default as ValidatableInput } from './ValidatableInput/ValidatableInput.js';
 export type { ValidatableInputProps } from './ValidatableInput/ValidatableInput.js';
 
+export { default as ProgressBar } from './ProgressBar/ProgressBar.js';
+export type { ProgressBarProps } from './ProgressBar/ProgressBar.js';
+
 export { Reorder } from './DragAndDrop/DragAndDrop.js';
 export { useReorderContext } from './DragAndDrop/ExternalReorderContext.js';
 export type { ItemId } from './DragAndDrop/InternalReorderContext.js';
