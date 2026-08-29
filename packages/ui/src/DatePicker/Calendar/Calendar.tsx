@@ -1,10 +1,11 @@
 import { clsx } from 'clsx';
-import { addMonths, addYears, isSameDay, subMonths, subYears } from 'date-fns';
-import { useCallback, useMemo, useState } from 'react';
+import { addMonths, addYears, isSameDay, parseISO, subMonths, subYears } from 'date-fns';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
     clampYear,
     getDateGrid,
     getDaysNames,
+    getMaxYear,
     getMonthNames,
     getYearsArray,
     MIN_YEAR,
@@ -23,8 +24,24 @@ export type CalendarProps = {
 
 export function Calendar({ value, onChange }: CalendarProps) {
     const selectedDate = useMemo(() => parsePickerValue(value), [value]);
-    const maxYear = useMemo(() => new Date().getFullYear(), []);
+    const selectedIso = selectedDate ? toIsoDateString(selectedDate) : null;
+    const maxYear = useMemo(() => getMaxYear(), []);
     const [currentDate, setCurrentDate] = useState(() => selectedDate ?? new Date());
+
+    useEffect(() => {
+        if (!selectedIso) {
+            return;
+        }
+
+        const date = parseISO(selectedIso);
+        setCurrentDate((prev) => {
+            if (prev.getFullYear() === date.getFullYear() && prev.getMonth() === date.getMonth()) {
+                return prev;
+            }
+
+            return clampYear(new Date(date.getFullYear(), date.getMonth(), 1), MIN_YEAR, maxYear);
+        });
+    }, [selectedIso, maxYear]);
 
     const calendarDays = useMemo(() => getDateGrid(currentDate), [currentDate]);
     const daysOfWeek = useMemo(() => getDaysNames(), []);

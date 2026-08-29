@@ -5,20 +5,46 @@ import {
     FloatingPortal,
     offset,
     shift,
-    useClick,
     useDismiss,
     useFloating,
     useInteractions,
     useRole,
 } from '@floating-ui/react';
 import { format } from 'date-fns';
-import { memo, useId, useMemo, useState } from 'react';
+import { memo, useId, useMemo, useState, type FocusEvent } from 'react';
+import { IMask, IMaskInput } from 'react-imask';
 import { Calendar } from './Calendar/Calendar.js';
-import { DATE_DISPLAY_FORMAT, DATE_PLACEHOLDER, parsePickerValue } from './dateUtils.js';
+import {
+    DATE_DISPLAY_FORMAT,
+    DATE_PLACEHOLDER,
+    getMaxYear,
+    MIN_YEAR,
+    normalizeTypedDate,
+    parsePickerValue,
+    toIsoDateString,
+} from './dateUtils.js';
 import CalendarIcon from './icons/calendar.svg?react';
 import styles from './DatePicker.module.scss';
 
 const OUTSIDE_CLICK_IGNORE_ATTR = 'data-outside-click-ignore';
+
+const DATE_MASK_BLOCKS = {
+    dd: {
+        mask: IMask.MaskedRange,
+        from: 1,
+        to: 31,
+    },
+    MM: {
+        mask: IMask.MaskedRange,
+        from: 1,
+        to: 12,
+    },
+    yyyy: {
+        mask: IMask.MaskedRange,
+        from: MIN_YEAR,
+        to: getMaxYear(),
+    },
+};
 
 export type DatePickerProps = {
     value: string | Date;
@@ -40,37 +66,86 @@ function DatePicker({
     triggerClassName,
     disabled = false,
     id,
-    placeholder = DATE_PLACEHOLDER,
+    placeholder: placeholderProp,
     'aria-label': ariaLabel = 'Choose date',
 }: DatePickerProps) {
     const generatedId = useId();
     const inputId = id ?? generatedId;
+    const placeholder = placeholderProp || DATE_PLACEHOLDER;
     const [open, setOpen] = useState(false);
+    const [draft, setDraft] = useState<string | null>(null);
+    const [focused, setFocused] = useState(false);
 
     const { refs, floatingStyles, context } = useFloating({
         open,
         onOpenChange: setOpen,
-        placement: 'bottom',
+        placement: 'bottom-end',
         middleware: [offset(4), flip(), shift({ padding: 8 })],
         whileElementsMounted: autoUpdate,
     });
 
-    const click = useClick(context, { enabled: !disabled });
     const dismiss = useDismiss(context, {
         outsidePress(event) {
             const target = event.target;
-            return !(target instanceof Element && target.closest('[data-outside-click-ignore]'));
+            return !(target instanceof Element && target.closest(`[${OUTSIDE_CLICK_IGNORE_ATTR}]`));
         },
     });
     const role = useRole(context, { role: 'dialog' });
-    const { getReferenceProps, getFloatingProps } = useInteractions([click, dismiss, role]);
+    const { getFloatingProps } = useInteractions([dismiss, role]);
 
     const selectedDate = useMemo(() => parsePickerValue(value), [value]);
-    const inputValue = selectedDate ? format(selectedDate, DATE_DISPLAY_FORMAT) : '';
+    const committedIso = selectedDate ? toIsoDateString(selectedDate) : '';
+    const displayValue = draft ?? (selectedDate ? format(selectedDate, DATE_DISPLAY_FORMAT) : '');
+    const showMask = focused || displayValue !== '';
+
+    const calendarValue = useMemo(() => {
+        if (draft !== null) {
+            const normalized = normalizeTypedDate(draft);
+
+            if (normalized) {
+                return normalized;
+            }
+        }
+
+        return value;
+    }, [draft, value]);
+
+    const commitDraft = () => {
+        if (draft === null) {
+            return;
+        }
+
+        const normalized = normalizeTypedDate(draft);
+        setDraft(null);
+
+        if (normalized !== null && normalized !== committedIso) {
+            onChange(normalized);
+        }
+    };
+
+    const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+        setFocused(false);
+        const next = event.relatedTarget;
+
+        if (next instanceof Node && refs.floating.current?.contains(next)) {
+            return;
+        }
+
+        commitDraft();
+    };
 
     const handleSelectDate = (isoDate: string) => {
-        onChange(isoDate);
+        const selected = parsePickerValue(isoDate);
+        setDraft(selected ? format(selected, DATE_DISPLAY_FORMAT) : null);
         setOpen(false);
+
+        if (isoDate !== committedIso) {
+            onChange(isoDate);
+        }
+    };
+
+    const handleTogglePopover = () => {
+        setOpen((prev) => !prev);
     };
 
     return (
@@ -80,27 +155,65 @@ function DatePicker({
                     {label}
                 </label>
             )}
-            <button
+            <div
                 ref={refs.setReference}
-                type="button"
-                id={inputId}
                 className={clsx(
                     styles.trigger,
                     open && styles.triggerOpen,
                     disabled && styles.triggerDisabled,
                     triggerClassName,
                 )}
-                disabled={disabled}
-                aria-label={label ? undefined : ariaLabel}
-                aria-haspopup="dialog"
-                aria-expanded={open}
-                {...getReferenceProps()}
+                {...{ [OUTSIDE_CLICK_IGNORE_ATTR]: '' }}
             >
-                <span className={clsx(styles.triggerValue, !inputValue && styles.triggerPlaceholder)}>
-                    {inputValue || placeholder}
-                </span>
-                <CalendarIcon className={styles.icon} aria-hidden />
-            </button>
+                {showMask ? (
+                    <IMaskInput
+                        mask="dd.MM.yyyy"
+                        blocks={DATE_MASK_BLOCKS}
+                        lazy={false}
+                        placeholderChar="_"
+                        overwrite
+                        autofix
+                        type="text"
+                        id={inputId}
+                        className={styles.input}
+                        value={displayValue}
+                        placeholder={DATE_PLACEHOLDER}
+                        disabled={disabled}
+                        inputMode="numeric"
+                        autoComplete="off"
+                        autoFocus={focused}
+                        aria-label={label ? undefined : ariaLabel}
+                        onAccept={setDraft}
+                        onFocus={() => setFocused(true)}
+                        onBlur={handleBlur}
+                    />
+                ) : (
+                    <input
+                        type="text"
+                        id={inputId}
+                        className={styles.input}
+                        value=""
+                        readOnly
+                        placeholder={placeholder}
+                        disabled={disabled}
+                        inputMode="numeric"
+                        autoComplete="off"
+                        aria-label={label ? undefined : ariaLabel}
+                        onFocus={() => setFocused(true)}
+                    />
+                )}
+                <button
+                    type="button"
+                    className={styles.iconButton}
+                    disabled={disabled}
+                    aria-label={open ? 'Close date picker' : 'Open date picker'}
+                    aria-haspopup="dialog"
+                    aria-expanded={open}
+                    onClick={handleTogglePopover}
+                >
+                    <CalendarIcon className={styles.icon} aria-hidden />
+                </button>
+            </div>
 
             {open && (
                 <FloatingPortal>
@@ -111,7 +224,7 @@ function DatePicker({
                         {...getFloatingProps()}
                         {...{ [OUTSIDE_CLICK_IGNORE_ATTR]: '' }}
                     >
-                        <Calendar value={value} onChange={handleSelectDate} />
+                        <Calendar value={calendarValue} onChange={handleSelectDate} />
                     </div>
                 </FloatingPortal>
             )}

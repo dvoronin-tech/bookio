@@ -22,20 +22,16 @@
     border: 1px solid var(--color-border);
     border-radius: 0.8rem;
     background-color: var(--color-bg-main);
-    font: inherit;
     font-size: 1.6rem;
     font-family: var(--font-family);
     color: var(--color-text-main);
-    cursor: pointer;
-    text-align: left;
     transition: border-color 0.2s ease;
 
-    &:hover:not(:disabled) {
+    &:hover:not(:has(:disabled)) {
         border-color: color-mix(in srgb, var(--color-text-main) 35%, var(--color-border));
     }
 
-    &:focus-visible {
-        outline: none;
+    &:focus-within {
         border-color: var(--color-primary);
     }
 }
@@ -49,22 +45,69 @@
     cursor: not-allowed;
 }
 
-.triggerValue {
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+.input {
+    flex: 1;
+    min-width: 0;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    font: inherit;
+    color: inherit;
+
+    &::placeholder {
+        color: var(--color-text-secondary);
+    }
+
+    &:focus-visible {
+        outline: none;
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
 }
 
-.triggerPlaceholder {
+.iconButton {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 1.6rem;
+    height: 1.6rem;
+    padding: 0;
+    margin: 0;
+    border: none;
+    background: none;
+    cursor: pointer;
     color: var(--color-text-secondary);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: -0.6rem;
+        border-radius: 0.6rem;
+        background-color: transparent;
+        transition: background-color 0.15s ease;
+    }
+
+    &:hover:not(:disabled)::before {
+        background-color: rgb(255 255 255 / 20%);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+    }
 }
 
 .icon {
+    position: relative;
+    z-index: 1;
     flex: 0 0 1.6rem;
     width: 1.6rem;
     height: 1.6rem;
     display: block;
-    color: var(--color-text-secondary);
 
     path {
         fill: currentColor;
@@ -72,6 +115,8 @@
 }
 
 .popover {
+    /* Must not exceed Dropdown content z-index (1000): the calendar header
+       contains nested SelectDropdowns that render in a later body portal. */
     z-index: 1000;
     width: 38rem;
     max-width: calc(100vw - 1.6rem);

@@ -72,6 +72,7 @@ function TimePicker({
     const placeholder = placeholderProp || TIME_PLACEHOLDER;
     const [open, setOpen] = useState(false);
     const [draft, setDraft] = useState<string | null>(null);
+    const [focused, setFocused] = useState(false);
 
     const { refs, floatingStyles, context } = useFloating({
         open,
@@ -91,6 +92,7 @@ function TimePicker({
     const { getFloatingProps } = useInteractions([dismiss, role]);
 
     const displayValue = draft ?? value;
+    const showMask = focused || displayValue !== '';
     const selectedTime = useMemo(
         () => parseTime(displayValue) ?? parseTime(normalizeTypedTime(displayValue) || ''),
         [displayValue],
@@ -116,6 +118,7 @@ function TimePicker({
     };
 
     const handleBlur = (event: FocusEvent<HTMLInputElement>) => {
+        setFocused(false);
         const next = event.relatedTarget;
 
         if (next instanceof Node && refs.floating.current?.contains(next)) {
@@ -165,25 +168,43 @@ function TimePicker({
                 )}
                 {...{ [OUTSIDE_CLICK_IGNORE_ATTR]: '' }}
             >
-                <IMaskInput
-                    mask="HH:mm"
-                    blocks={TIME_MASK_BLOCKS}
-                    lazy={false}
-                    placeholderChar="-"
-                    overwrite
-                    autofix
-                    type="text"
-                    id={inputId}
-                    className={styles.input}
-                    value={displayValue}
-                    placeholder={placeholder}
-                    disabled={disabled}
-                    inputMode="numeric"
-                    autoComplete="off"
-                    aria-label={label ? undefined : ariaLabel}
-                    onAccept={(next: string) => setDraft(next)}
-                    onBlur={handleBlur}
-                />
+                {showMask ? (
+                    <IMaskInput
+                        mask="HH:mm"
+                        blocks={TIME_MASK_BLOCKS}
+                        lazy={false}
+                        placeholderChar="-"
+                        overwrite
+                        autofix
+                        type="text"
+                        id={inputId}
+                        className={styles.input}
+                        value={displayValue}
+                        placeholder={TIME_PLACEHOLDER}
+                        disabled={disabled}
+                        inputMode="numeric"
+                        autoComplete="off"
+                        autoFocus={focused}
+                        aria-label={label ? undefined : ariaLabel}
+                        onAccept={(next: string) => setDraft(next)}
+                        onFocus={() => setFocused(true)}
+                        onBlur={handleBlur}
+                    />
+                ) : (
+                    <input
+                        type="text"
+                        id={inputId}
+                        className={styles.input}
+                        value=""
+                        readOnly
+                        placeholder={placeholder}
+                        disabled={disabled}
+                        inputMode="numeric"
+                        autoComplete="off"
+                        aria-label={label ? undefined : ariaLabel}
+                        onFocus={() => setFocused(true)}
+                    />
+                )}
                 <button
                     type="button"
                     className={styles.iconButton}
