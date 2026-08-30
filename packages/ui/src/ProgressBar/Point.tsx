@@ -159,6 +159,8 @@ const Tooltip: FC<TooltipProps> = memo(
 
             const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
                 if (event.key === 'Enter') {
+                    event.preventDefault();
+                    event.stopPropagation();
                     commitValue(index, Number(newValue));
                     setEditingIndex(null);
                 }
