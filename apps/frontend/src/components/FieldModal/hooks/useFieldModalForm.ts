@@ -1,4 +1,4 @@
-import { useLayoutEffect } from 'react';
+import { useLayoutEffect, useRef } from 'react';
 import { useForm, type UseFormReturn } from 'react-hook-form';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
@@ -15,6 +15,7 @@ export const useFieldModalForm = ({
     onOpenChange,
 }: UseFieldModalFormParams): UseFormReturn<FieldModalFormValues> => {
     const bookingFormFields = useBookingFormConfiguratorStore((state) => state.bookingFormFields);
+    const wasOpenRef = useRef(false);
 
     const methods = useForm<FieldModalFormValues>({
         defaultValues: {},
@@ -23,7 +24,10 @@ export const useFieldModalForm = ({
     const { reset } = methods;
 
     useLayoutEffect(() => {
-        if (!open) return;
+        const justOpened = open && !wasOpenRef.current;
+        wasOpenRef.current = open;
+
+        if (!justOpened) return;
 
         if (!fieldId) {
             reset({});

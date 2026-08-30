@@ -37,12 +37,11 @@ export const FieldModal: FC<FieldModalProps> = memo(
             onOpenChange,
         });
 
-        const { reset, handleSubmit, control } = methods;
+        const { handleSubmit, control } = methods;
 
         const handleSuccess = useCallback(() => {
-            reset();
             onOpenChange(false);
-        }, [reset, onOpenChange]);
+        }, [onOpenChange]);
 
         const onSave = useFieldModalSubmit({
             fieldId,
@@ -61,9 +60,8 @@ export const FieldModal: FC<FieldModalProps> = memo(
                     value.stopPropagation();
                     onOpenChange(false);
                 }
-                reset();
             },
-            [reset, onOpenChange],
+            [onOpenChange],
         );
 
         const isSubmittingRef = useRef(false);

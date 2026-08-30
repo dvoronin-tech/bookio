@@ -57,7 +57,6 @@ const FieldsTabForm: FC<FieldsTabFormProps> = ({ bookingFormId, fields }) => {
 
     const handleModalOpenChange = useCallback((open: boolean) => {
         setIsOpenModal(open);
-        if (!open) setEditingFieldId(null);
     }, []);
 
     const handleRootReorder = useCallback(
