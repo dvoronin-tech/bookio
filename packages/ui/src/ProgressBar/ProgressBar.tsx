@@ -20,7 +20,6 @@ export type ProgressBarProps = {
     step?: number;
     disabled?: boolean;
     className?: string;
-    autoUpdate?: boolean;
     'aria-label'?: string;
 };
 
@@ -44,13 +43,19 @@ function ProgressBar({
     step = 1,
     disabled = false,
     className,
-    autoUpdate = true,
     'aria-label': ariaLabel = 'Progress bar',
 }: ProgressBarProps) {
     const trackRef = useRef<HTMLDivElement>(null);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [activeDragIndex, setActiveDragIndex] = useState<number | null>(null);
     const [values, setValues] = useState<number[]>(controlledValues);
+    const controlledSignature = controlledValues.join(',');
+
+    useEffect(() => {
+        if (activeDragIndex !== null) return;
+
+        setValues((prev) => (prev.join(',') === controlledSignature ? prev : [...controlledValues]));
+    }, [activeDragIndex, controlledSignature, controlledValues]);
 
     const points = useMemo<ProgressBarPoint[]>(() => {
         return values.map((value) => ({
@@ -115,17 +120,15 @@ function ProgressBar({
     );
 
     const updatePointValue = useCallback(
-        (index: number, nextVal: number, commit = autoUpdate) => {
+        (index: number, nextVal: number) => {
             if (values[index] === nextVal) return;
 
             const nextValues = [...values];
             nextValues[index] = clamp(nextVal, minValue, maxValue);
             setValues(nextValues);
-            if (commit) {
-                onChange(nextValues);
-            }
+            onChange(nextValues);
         },
-        [onChange, values],
+        [minValue, maxValue, onChange, values],
     );
 
     // Global pointer move and pointer up listeners during active dragging
@@ -138,7 +141,6 @@ function ProgressBar({
         };
 
         const handlePointerUp = () => {
-            onChange(values);
             setActiveDragIndex(null);
         };
 
@@ -151,7 +153,7 @@ function ProgressBar({
             window.removeEventListener('pointerup', handlePointerUp);
             window.removeEventListener('pointercancel', handlePointerUp);
         };
-    }, [activeDragIndex, getValueFromClientX, onChange, updatePointValue, values]);
+    }, [activeDragIndex, getValueFromClientX, updatePointValue, values]);
 
     const handleTrackPointerDown = (event: ReactPointerEvent<HTMLDivElement>) => {
         if (disabled || values.length === 0 || maxValue <= minValue) return;

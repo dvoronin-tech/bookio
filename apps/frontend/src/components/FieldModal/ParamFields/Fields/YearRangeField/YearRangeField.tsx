@@ -1,4 +1,4 @@
-import { useEffect, useMemo, type FC, useCallback } from 'react';
+import { useMemo, type FC, useCallback } from 'react';
 import { useFormContext, useWatch } from 'react-hook-form';
 import {
     DATE_YEAR_DEFAULT_MIN,
