@@ -8,6 +8,7 @@ import { ChoiceOptionsField } from './Fields/ChoiceOptionField/ChoiceOptionsFiel
 import { SimpleParamInput } from './Fields/SimpleParamInput/SimpleParamInput';
 import { TimeParamInput } from './Fields/TimeParamInput/TimeParamInput';
 import { SelectField } from './Fields/SelectField/SelectField';
+import { YearRangeField } from './Fields/YearRangeField/YearRangeField';
 
 export const ParamFields: FC = () => {
     const { control } = useFormContext<FieldModalFormValues>();
@@ -33,6 +34,14 @@ export const ParamFields: FC = () => {
                     max={field.max}
                 />
             );
+        }
+
+        if (field.type === 'range') {
+            if (field.formName !== 'minYear') {
+                return null;
+            }
+
+            return <YearRangeField key={field.formName} label={label} />;
         }
 
         if (field.type === 'time') {

@@ -1,5 +1,4 @@
 import { memo, type FC, useCallback } from 'react';
-import { Background } from '#/components/Background/Background';
 import ArrowIcon from '#/assets/icons/short-arrow.svg?react';
 import styles from './GreetingLayout.module.scss';
 

@@ -15,14 +15,10 @@ import { enUS } from 'date-fns/locale';
 const WEEK_OPTIONS = { weekStartsOn: 1 as const, locale: enUS };
 export const DATE_DISPLAY_FORMAT = 'dd.MM.yyyy';
 export const DATE_PLACEHOLDER = '__.__.____';
-export const MIN_YEAR = 1900;
-export const MAX_YEAR_OFFSET = 10;
+/** Widest 4-digit year the `dd.MM.yyyy` mask can represent. */
+export const YEAR_MASK_MAX = 9999;
 
 const MASK_DIGIT_SLOTS = [0, 1, 3, 4, 6, 7, 8, 9] as const;
-
-export function getMaxYear(now = new Date()) {
-    return now.getFullYear() + MAX_YEAR_OFFSET;
-}
 
 export function getDateGrid(currentDate: Date): Date[] {
     const start = startOfWeek(startOfMonth(currentDate), WEEK_OPTIONS);
@@ -85,7 +81,7 @@ export function toIsoDateString(date: Date): string {
  * Turns an IMask `dd.MM.yyyy` display value (`15.03.2024`, `1_.03.____`) into an ISO date.
  * Returns '' when no digits were entered, null for incomplete or impossible dates.
  */
-export function normalizeTypedDate(raw: string): string | null {
+export function normalizeTypedDate(raw: string, minYear?: number, maxYear?: number): string | null {
     const slots = MASK_DIGIT_SLOTS.map((pos) => {
         const char = raw[pos];
         return char && /\d/.test(char) ? char : '';
@@ -106,17 +102,22 @@ export function normalizeTypedDate(raw: string): string | null {
         return null;
     }
 
+    const year = parsed.getFullYear();
+    if ((minYear !== undefined && year < minYear) || (maxYear !== undefined && year > maxYear)) {
+        return null;
+    }
+
     return toIsoDateString(parsed);
 }
 
-export function clampYear(date: Date, minYear: number, maxYear: number): Date {
+export function clampYear(date: Date, minYear?: number, maxYear?: number): Date {
     const year = date.getFullYear();
 
-    if (year < minYear) {
+    if (minYear !== undefined && year < minYear) {
         return new Date(minYear, 0, 1);
     }
 
-    if (year > maxYear) {
+    if (maxYear !== undefined && year > maxYear) {
         return new Date(maxYear, 11, 1);
     }
 

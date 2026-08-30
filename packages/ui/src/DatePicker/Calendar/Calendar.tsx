@@ -5,10 +5,8 @@ import {
     clampYear,
     getDateGrid,
     getDaysNames,
-    getMaxYear,
     getMonthNames,
     getYearsArray,
-    MIN_YEAR,
     parsePickerValue,
     toIsoDateString,
 } from '../dateUtils.js';
@@ -20,39 +18,54 @@ import styles from './Calendar.module.scss';
 export type CalendarProps = {
     value: string | Date;
     onChange: (isoDate: string) => void;
+    minYear?: number;
+    maxYear?: number;
 };
 
-export function Calendar({ value, onChange }: CalendarProps) {
+export function Calendar({ value, onChange, minYear, maxYear }: CalendarProps) {
     const selectedDate = useMemo(() => parsePickerValue(value), [value]);
     const selectedIso = selectedDate ? toIsoDateString(selectedDate) : null;
-    const maxYear = useMemo(() => getMaxYear(), []);
-    const [currentDate, setCurrentDate] = useState(() => selectedDate ?? new Date());
+    const [currentDate, setCurrentDate] = useState(() =>
+        clampYear(selectedDate ?? new Date(), minYear, maxYear),
+    );
 
     useEffect(() => {
         if (!selectedIso) {
+            setCurrentDate((prev) => clampYear(prev, minYear, maxYear));
             return;
         }
 
         const date = parseISO(selectedIso);
         setCurrentDate((prev) => {
-            if (prev.getFullYear() === date.getFullYear() && prev.getMonth() === date.getMonth()) {
+            if (
+                prev.getFullYear() === date.getFullYear() &&
+                prev.getMonth() === date.getMonth() &&
+                (minYear === undefined || date.getFullYear() >= minYear) &&
+                (maxYear === undefined || date.getFullYear() <= maxYear)
+            ) {
                 return prev;
             }
 
-            return clampYear(new Date(date.getFullYear(), date.getMonth(), 1), MIN_YEAR, maxYear);
+            return clampYear(new Date(date.getFullYear(), date.getMonth(), 1), minYear, maxYear);
         });
-    }, [selectedIso, maxYear]);
+    }, [selectedIso, minYear, maxYear]);
 
     const calendarDays = useMemo(() => getDateGrid(currentDate), [currentDate]);
     const daysOfWeek = useMemo(() => getDaysNames(), []);
     const monthOptions = useMemo(() => getMonthNames(), []);
-    const yearOptions = useMemo(() => getYearsArray(MIN_YEAR, maxYear), [maxYear]);
+    const yearOptions = useMemo(() => {
+        const viewYear = currentDate.getFullYear();
+        const from = minYear ?? 0;
+        const to = maxYear ?? Math.max(viewYear, from);
+
+        return getYearsArray(from, to).reverse();
+    }, [currentDate, minYear, maxYear]);
 
     const setViewDate = useCallback(
         (next: Date) => {
-            setCurrentDate(clampYear(next, MIN_YEAR, maxYear));
+            setCurrentDate(clampYear(next, minYear, maxYear));
         },
-        [maxYear],
+        [minYear, maxYear],
     );
 
     const handlePreviousMonth = useCallback(() => {
@@ -89,9 +102,17 @@ export function Calendar({ value, onChange }: CalendarProps) {
 
     const handleChangeDate = useCallback(
         (date: Date) => {
+            const year = date.getFullYear();
+            if (minYear !== undefined && year < minYear) {
+                return;
+            }
+            if (maxYear !== undefined && year > maxYear) {
+                return;
+            }
+
             onChange(toIsoDateString(date));
         },
-        [onChange],
+        [onChange, minYear, maxYear],
     );
 
     return (

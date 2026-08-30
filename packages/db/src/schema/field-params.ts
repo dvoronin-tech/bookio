@@ -38,6 +38,8 @@ export type InputFieldParams = {
 
 export type DateFieldParams = {
     placeholder?: string;
+    minYear?: number;
+    maxYear?: number;
 };
 
 export type TimeFieldParams = {

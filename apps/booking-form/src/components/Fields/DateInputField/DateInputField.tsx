@@ -14,6 +14,8 @@ export const DateInputField: FC<FieldControlProps<'date'>> = ({ field, control }
                     triggerClassName={styles.default}
                     label={field.name}
                     placeholder={field.params.placeholder}
+                    minYear={field.params.minYear}
+                    maxYear={field.params.maxYear}
                     value={value ?? ''}
                     onChange={onChange}
                 />

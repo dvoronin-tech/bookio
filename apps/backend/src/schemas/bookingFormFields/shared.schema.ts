@@ -43,14 +43,6 @@ export const inputParamsSchema = z.object({
     helpText: z.string().optional(),
 }) satisfies z.ZodType<InputFieldParams>;
 
-export const dateParamsSchema = z.object({
-    placeholder: z.string().optional(),
-}) satisfies z.ZodType<DateFieldParams>;
-
-export const timeStringSchema = z
-    .string()
-    .regex(/^([01]\d|2[0-3]):[0-5]\d$/, { message: 'Time must be in HH:mm format' });
-
 const emptyToUndefined = (value: unknown) => {
     if (value === '' || value === null) {
         return undefined;
@@ -62,6 +54,28 @@ const emptyToUndefined = (value: unknown) => {
 
     return value;
 };
+
+export const DATE_YEAR_SLIDER_MIN = 1800;
+export const DATE_YEAR_SLIDER_MAX = 2100;
+export const DATE_YEAR_DEFAULT_MIN = 1900;
+
+export const getDateYearDefaultMax = () => new Date().getFullYear();
+
+export const dateParamsSchema = z.object({
+    placeholder: z.string().optional(),
+    minYear: z.preprocess(
+        emptyToUndefined,
+        z.number().int().min(DATE_YEAR_SLIDER_MIN).max(DATE_YEAR_SLIDER_MAX).default(DATE_YEAR_DEFAULT_MIN),
+    ),
+    maxYear: z.preprocess(
+        emptyToUndefined,
+        z.number().int().min(DATE_YEAR_SLIDER_MIN).max(DATE_YEAR_SLIDER_MAX).default(getDateYearDefaultMax()),
+    ),
+}) satisfies z.ZodType<DateFieldParams>;
+
+export const timeStringSchema = z
+    .string()
+    .regex(/^([01]\d|2[0-3]):[0-5]\d$/, { message: 'Time must be in HH:mm format' });
 
 export const timeParamsSchema = z.object({
     ...inputParamsSchema.shape,
