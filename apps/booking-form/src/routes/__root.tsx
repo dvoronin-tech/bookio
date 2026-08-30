@@ -3,7 +3,6 @@ import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@lib/query-client';
 
 import appCss from '../styles.css?url';
-import { StepsProvider } from '#/store/Steps/StepsContext';
 
 export const Route = createRootRoute({
     head: () => ({
@@ -36,9 +35,7 @@ function RootDocument({ children }: { children: React.ReactNode }) {
                 <HeadContent />
             </head>
             <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
-                <StepsProvider>
-                    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-                </StepsProvider>
+                <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
                 <Scripts />
             </body>
         </html>

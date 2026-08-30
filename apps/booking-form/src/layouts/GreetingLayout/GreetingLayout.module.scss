@@ -16,178 +16,176 @@
     padding: 1.6rem 1.6rem 1.2rem;
     color: var(--color-text-main);
     text-align: center;
-}
-
-.hero {
-    display: flex;
-    flex: 1;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    gap: 1.2rem;
-}
-
-.title {
-    width: 100%;
-    font-size: 3.4rem;
-    font-weight: 800;
-    line-height: 1.35;
-    color: var(--color-text-main);
-    text-wrap: balance;
-    animation: HeroFadeIn var(--animation-duration) ease backwards;
-}
-
-.description {
-    width: 100%;
-    font-size: 1.5rem;
-    font-weight: 400;
-    line-height: 1.45;
-    color: color-mix(in srgb, var(--color-text-main) 80%, transparent);
-    text-wrap: pretty;
-    animation: HeroFadeIn var(--animation-duration) ease backwards;
-}
-
-.cta {
-    --cta-ink: color-mix(in srgb, var(--color-primary) 55%, #000);
-
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.8rem;
-    width: 100%;
-    height: 5.2rem;
-    border-radius: 1.6rem;
-    background-color: var(--color-text-main);
-    color: var(--cta-ink);
-    font-size: 1.6rem;
-    font-weight: 700;
-    line-height: 1;
-    transition:
-        filter 0.2s ease,
-        transform 0.2s ease,
-        scale 0.2s ease;
-
-    @media screen and (hover: hover) {
-        &:hover {
-            scale: 1.02;
-            filter: brightness(0.96);
-        }
-    }
-
-    &:hover:not(:disabled) {
-        filter: brightness(0.96);
-    }
-
-    &:active:not(:disabled) {
-        transform: translateY(0.1rem);
-    }
-
-    &:focus-visible {
-        outline: 0.2rem solid var(--color-primary);
-        outline-offset: 0.3rem;
-    }
-
-    animation: HeroFadeIn var(--animation-duration) ease backwards;
-}
-
-.ctaIcon {
-    width: 2.4rem;
-    height: 1.2rem;
-    flex-shrink: 0;
-}
-
-.credit {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.6rem;
-    margin-top: 1.2rem;
-    flex-shrink: 0;
-    animation: CreditFadeIn var(--animation-duration) ease backwards;
-}
-
-.creditMark {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 1.4rem;
-    height: 1.4rem;
-    border-radius: 0.3rem;
-    background-color: color-mix(in srgb, var(--color-text-main) 16%, transparent);
-    color: color-mix(in srgb, var(--color-text-main) 40%, transparent);
-    font-size: 0.9rem;
-    font-weight: 800;
-    line-height: 1;
-}
-
-.creditText {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: color-mix(in srgb, var(--color-text-main) 40%, transparent);
-}
-
-.hiddenHero {
-    .title {
-        animation: HeroFadeOut var(--animation-duration) ease forwards;
-    }
-
-    .description {
-        animation: HeroFadeOut var(--animation-duration) ease 0.05s forwards;
-    }
-}
-
-.hiddenCta {
-    animation: HeroFadeOut var(--animation-duration) ease 0.1s forwards;
-}
-
-.hiddenCredit {
-    animation: CreditFadeOut var(--animation-duration) ease 0.15s forwards;
-}
-
-@media (min-width: 769px) {
-    .layout {
-        justify-content: center;
-        padding: 0;
-        gap: 2.4rem;
-    }
 
     .hero {
-        flex: none;
-        gap: 2.4rem;
+        display: flex;
+        flex: 1;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        gap: 1.2rem;
     }
 
     .title {
-        font-size: 5.2rem;
-        line-height: 1.37;
+        width: 100%;
+        font-size: 3.4rem;
+        font-weight: 800;
+        line-height: 1.35;
+        color: var(--color-text-main);
+        text-wrap: balance;
+        animation: HeroFadeIn var(--animation-duration) ease backwards;
     }
 
     .description {
-        font-size: 1.8rem;
+        width: 100%;
+        font-size: 1.5rem;
+        font-weight: 400;
+        line-height: 1.45;
+        color: color-mix(in srgb, var(--color-text-main) 80%, transparent);
+        text-wrap: pretty;
+        animation: HeroFadeIn var(--animation-duration) ease backwards;
     }
 
     .cta {
-        width: 28rem;
-        height: 5.6rem;
-        font-size: 1.7rem;
+        --cta-ink: color-mix(in srgb, var(--color-primary) 55%, #000);
+
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.8rem;
+        width: 100%;
+        height: 5.2rem;
+        border-radius: 1.6rem;
+        background-color: var(--color-text-main);
+        color: var(--cta-ink);
+        font-size: 1.6rem;
+        font-weight: 700;
+        line-height: 1;
+        transition:
+            filter 0.2s ease,
+            transform 0.2s ease,
+            scale 0.2s ease;
+
+        @media screen and (hover: hover) {
+            &:hover {
+                scale: 1.02;
+                filter: brightness(0.96);
+            }
+        }
+
+        &:hover:not(:disabled) {
+            filter: brightness(0.96);
+        }
+
+        &:active:not(:disabled) {
+            transform: translateY(0.1rem);
+        }
+
+        &:focus-visible {
+            outline: 0.2rem solid var(--color-primary);
+            outline-offset: 0.3rem;
+        }
+
+        animation: HeroFadeIn var(--animation-duration) ease backwards;
+    }
+
+    .ctaIcon {
+        width: 2.4rem;
+        height: 1.2rem;
+        flex-shrink: 0;
     }
 
     .credit {
-        position: absolute;
-        bottom: 4rem;
-        left: 0;
-        right: 0;
-        margin-top: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.6rem;
+        margin-top: 1.2rem;
+        flex-shrink: 0;
+        animation: CreditFadeIn var(--animation-duration) ease backwards;
+    }
+
+    .creditMark {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 1.4rem;
+        height: 1.4rem;
+        border-radius: 0.3rem;
+        background-color: color-mix(in srgb, var(--color-text-main) 16%, transparent);
+        color: color-mix(in srgb, var(--color-text-main) 40%, transparent);
+        font-size: 0.9rem;
+        font-weight: 800;
+        line-height: 1;
     }
 
     .creditText {
-        font-size: 1.2rem;
+        font-size: 1.1rem;
+        font-weight: 600;
+        color: color-mix(in srgb, var(--color-text-main) 40%, transparent);
     }
-}
 
-@media screen and (max-width: 768px) {
-    .ctaIcon {
-        display: none;
+    &.hiddenLayout {
+        .title {
+            animation: HeroFadeOut var(--animation-duration) ease forwards;
+        }
+
+        .description {
+            animation: HeroFadeOut var(--animation-duration) ease 0.05s forwards;
+        }
+
+        .cta {
+            animation: HeroFadeOut var(--animation-duration) ease 0.1s forwards;
+        }
+
+        .credit {
+            animation: CreditFadeOut var(--animation-duration) ease 0.15s forwards;
+        }
+    }
+
+    @media (min-width: 769px) {
+        justify-content: center;
+        padding: 0;
+        gap: 2.4rem;
+
+        .hero {
+            flex: none;
+            gap: 2.4rem;
+        }
+
+        .title {
+            font-size: 5.2rem;
+            line-height: 1.37;
+        }
+
+        .description {
+            font-size: 1.8rem;
+        }
+
+        .cta {
+            width: 28rem;
+            height: 5.6rem;
+            font-size: 1.7rem;
+        }
+
+        .credit {
+            position: absolute;
+            bottom: 4rem;
+            left: 0;
+            right: 0;
+            margin-top: 0;
+        }
+
+        .creditText {
+            font-size: 1.2rem;
+        }
+    }
+
+    @media screen and (max-width: 768px) {
+        .ctaIcon {
+            display: none;
+        }
     }
 }
 
@@ -196,11 +194,13 @@
         transform: translateY(-5rem);
         opacity: 0;
         scale: 0.95;
+        filter: blur(20px)
     }
     to {
         transform: translateY(0);
         opacity: 1;
         scale: 1;
+        filter: blur(0);
     }
 }
 
@@ -209,11 +209,13 @@
         transform: translateY(0);
         opacity: 1;
         scale: 1;
+        filter: blur(0)
     }
     to {
         transform: translateY(-5rem);
         opacity: 0;
         scale: 0.95;
+        filter: blur(10px);
     }
 }
 
@@ -221,10 +223,12 @@
     from {
         opacity: 0;
         scale: 0.95;
+        filter: blur(20px);
     }
     to {
         opacity: 1;
         scale: 1;
+        filter: blur(0);
     }
 }
 
@@ -232,9 +236,11 @@
     from {
         opacity: 1;
         scale: 1;
+        filter: blur(0);
     }
     to {
         opacity: 0;
         scale: 0.95;
+        filter: blur(10px);
     }
 }

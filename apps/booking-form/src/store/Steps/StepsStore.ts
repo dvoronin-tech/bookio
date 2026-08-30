@@ -5,6 +5,7 @@ export type Steps = 'Greeting' | 'BookingForm';
 
 export interface StepsState {
     step: Steps;
+    prevStep: Steps;
 
     setStep: (step: Steps) => void;
 }
@@ -14,8 +15,15 @@ export const createStepsStore = () =>
         devtools(
             (set) => ({
                 step: 'Greeting',
+                prevStep: 'Greeting',
                 setStep: (step) => {
-                    set({ step }, false, 'setStep');
+                    set(
+                        (prevState) => {
+                            return { step, prevStep: prevState.step };
+                        },
+                        false,
+                        'setStep',
+                    );
                 },
             }),
             { name: 'StepsStore' },
