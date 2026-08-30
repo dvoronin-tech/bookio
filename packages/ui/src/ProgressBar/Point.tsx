@@ -126,20 +126,29 @@ interface TooltipProps {
     index: number;
     editingIndex: number | null;
     setEditingIndex: (index: number | null) => void;
-    commitValue: (index: number, value: number, commit: boolean) => void;
+    commitValue: (index: number, value: number) => void;
 }
 
 const Tooltip: FC<TooltipProps> = memo(
     ({ value, index, editingIndex, setEditingIndex, commitValue }) => {
         const [newValue, setNewValue] = useState(String(value));
+        const [wasEditing, setWasEditing] = useState(false);
         const inputRef = useRef<HTMLInputElement>(null);
+        const isEditing = editingIndex === index;
+
+        if (isEditing && !wasEditing) {
+            setWasEditing(true);
+            setNewValue(String(value));
+        } else if (!isEditing && wasEditing) {
+            setWasEditing(false);
+        }
 
         useOutsideClick(inputRef, () => {
-            commitValue(index, Number(newValue), true);
+            commitValue(index, Number(newValue));
             setEditingIndex(null);
         });
 
-        if (editingIndex === index) {
+        if (isEditing) {
             const handleChange = (event: ChangeEvent<HTMLInputElement>) => {
                 setNewValue(event.target.value);
             };
@@ -150,7 +159,7 @@ const Tooltip: FC<TooltipProps> = memo(
 
             const handleKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
                 if (event.key === 'Enter') {
-                    commitValue(index, Number(newValue), true);
+                    commitValue(index, Number(newValue));
                     setEditingIndex(null);
                 }
             };
