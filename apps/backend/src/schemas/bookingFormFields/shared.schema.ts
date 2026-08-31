@@ -61,6 +61,11 @@ export const DATE_YEAR_DEFAULT_MIN = 1900;
 
 export const getDateYearDefaultMax = () => new Date().getFullYear();
 
+export const getDefaultDateParams = () => ({
+    minYear: DATE_YEAR_DEFAULT_MIN,
+    maxYear: getDateYearDefaultMax(),
+});
+
 export const dateParamsSchema = z.object({
     placeholder: z.string().optional(),
     minYear: z.preprocess(
@@ -234,7 +239,7 @@ const createInputFieldVariants = buildBookingFormFieldVariants({
     groupParentId: z.null(),
     leafParentId: z.uuid().nullable(),
     inputParams: inputParamsSchema.default({}),
-    dateParams: dateParamsSchema.default({}),
+    dateParams: dateParamsSchema.default(getDefaultDateParams),
     timeParams: timeParamsSchema.default({}),
     textAreaParams: textAreaParamsSchema.default({}),
     selectParams: selectParamsSchema,
