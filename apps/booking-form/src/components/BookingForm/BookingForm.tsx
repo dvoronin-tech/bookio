@@ -1,4 +1,4 @@
-import { useMemo, type FC } from 'react';
+import { useMemo, type FC, type ReactNode } from 'react';
 import { Button } from '@bookio/ui';
 import { useBookingFormData } from '#/store/BookingFormData/BookingFormDataContext';
 import styles from './BookingForm.module.scss';
@@ -8,6 +8,16 @@ import type { BookingFormBySlugsType } from '#/api/bookingForms/getBookingFormBy
 import { useForm, type Control, type FieldValues, type UseFormRegister } from 'react-hook-form';
 
 const DEFAULT_PHONE = '+375';
+const FIELD_APPEAR_START_MS = 300;
+const FIELD_APPEAR_STEP_MS = 100;
+
+const getAppearDelayMs = (index: number) => FIELD_APPEAR_START_MS + index * FIELD_APPEAR_STEP_MS;
+
+const Appear: FC<{ delayMs: number; children: ReactNode }> = ({ delayMs, children }) => (
+    <div className={styles.appear} style={{ animationDelay: `${delayMs}ms` }}>
+        {children}
+    </div>
+);
 
 interface BookingFormProps {
     bookingForm: BookingFormBySlugsType;
@@ -40,28 +50,22 @@ export const BookingForm: FC<BookingFormProps> = ({ bookingForm }) => {
             </div>
 
             <div className={styles.fields}>
-                {rootFields.map((field) =>
-                    isGroupField(field) ? (
-                        <GroupField
-                            key={field.id}
-                            field={field}
-                            register={register}
-                            control={control}
-                        />
-                    ) : (
-                        <RenderField
-                            key={field.id}
-                            field={field}
-                            register={register}
-                            control={control}
-                        />
-                    ),
-                )}
+                {rootFields.map((field, index) => (
+                    <Appear key={field.id} delayMs={getAppearDelayMs(index)}>
+                        {isGroupField(field) ? (
+                            <GroupField field={field} register={register} control={control} />
+                        ) : (
+                            <RenderField field={field} register={register} control={control} />
+                        )}
+                    </Appear>
+                ))}
             </div>
 
-            <Button type="button" variant="primary-filled" className={styles.cta}>
-                Submit booking
-            </Button>
+            <Appear delayMs={getAppearDelayMs(rootFields.length)}>
+                <Button type="button" variant="primary-filled" className={styles.cta}>
+                    Submit booking
+                </Button>
+            </Appear>
         </div>
     );
 };

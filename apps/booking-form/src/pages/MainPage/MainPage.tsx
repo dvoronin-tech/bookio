@@ -10,7 +10,7 @@ export const MainPage: FC = () => {
     return (
         <>
             {step === 'Greeting' && <GreetingLayout />};
-            <BookingFormLayout />
+            {step === 'BookingForm' && <BookingFormLayout />}
             <Background />
         </>
     );
