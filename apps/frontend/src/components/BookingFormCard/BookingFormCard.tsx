@@ -1,4 +1,4 @@
-import { useCallback, type FC, useState } from 'react';
+import { useCallback, type FC, useState, type MouseEvent } from 'react';
 import styles from './BookingFormCard.module.scss';
 import type { BookingFormType } from '#api/bookingForms/getBookingForms';
 import { Button } from '@bookio/ui';
@@ -25,9 +25,15 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
         setIsDeleting(true);
     }, []);
 
-    const handleCopyBookingFormUrl = useCallback(() => {
+    const handleCopyBookingFormUrl = useCallback((e: MouseEvent<HTMLButtonElement>) => {
+        e.preventDefault();
+        e.stopPropagation();
         navigator.clipboard.writeText(bookingFormUrl);
         toast.success('Booking form URL copied to clipboard');
+    }, [bookingFormUrl]);
+
+    const handleNavigateToBookingForm = useCallback(() => {
+        window.open(bookingFormUrl, '_blank');
     }, [bookingFormUrl]);
 
     return (
@@ -58,12 +64,14 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
                                 <CalendarIcon className={styles.metricIcon} />
                                 <span>Bookings this month</span>
                             </div>
-                            <span className={styles.bookingsCount}>{bookingForm.totalBookings}</span>
+                            <span className={styles.bookingsCount}>
+                                {bookingForm.totalBookings}
+                            </span>
                         </div>
 
                         <div className={styles.urlBlock}>
                             <span className={styles.urlLabel}>Booking form URL</span>
-                            <div className={styles.urlRow}>
+                            <button className={styles.urlRow} onClick={handleNavigateToBookingForm}>
                                 <span className={styles.urlText}>{bookingFormUrl}</span>
                                 <button
                                     type="button"
@@ -73,7 +81,7 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
                                 >
                                     <CopyIcon />
                                 </button>
-                            </div>
+                            </button>
                         </div>
                     </div>
                 </div>
