@@ -1,7 +1,7 @@
 import { useEffect, type FC } from "react";
 import styles from './MainLayout.module.scss';
 import { Outlet, useNavigate } from "react-router-dom";
-import { navigateToAuthSignIn } from '#navigation';
+import { navigateToAuthSignIn, navigateToOrganizations } from '#navigation';
 import { useSession } from "#api/auth";
 import { toast } from 'react-hot-toast';
 
@@ -20,7 +20,10 @@ export const MainLayout: FC = () => {
                 icon: '❌',
                 duration: 3000,
             });
+            return;
         }
+
+        navigateToOrganizations(navigate);
     }, [session, isPending, navigate]);
 
     return (
