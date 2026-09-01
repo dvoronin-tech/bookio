@@ -1,6 +1,7 @@
 import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@lib/query-client';
+import { NotFoundPage } from '#/pages/Errors/NotFoundPage/NotFoundPage';
 
 import appCss from '../styles.css?url';
 
@@ -30,6 +31,7 @@ export const Route = createRootRoute({
         ],
     }),
     shellComponent: RootDocument,
+    notFoundComponent: NotFoundPage,
 });
 
 function RootDocument({ children }: { children: React.ReactNode }) {
