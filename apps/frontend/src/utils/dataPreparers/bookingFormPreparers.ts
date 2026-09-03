@@ -1,8 +1,12 @@
-import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
+import type {
+    EntireBookingFormField,
+    EntireBookingFormType,
+} from '#api/bookingForms/getEntireBookingFormById';
 import type { SyncBookingFormFieldRequest } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
 import type { UpdateBookingFormMetaRequest } from '#api/bookingForms/bookingFormMeta/updateBookingFormMeta';
 import type { UpdateBookingFormStylesRequest } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles';
+import { DEFAULT_DARK_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyles';
 
 export type SyncBookingFormFieldItem = SyncBookingFormFieldRequest['fields'][number];
 export type SyncBookingFormGroupFieldItem = Extract<SyncBookingFormFieldItem, { type: 'group' }>;
@@ -141,3 +145,33 @@ export const toComparableBookingFormMeta = (
     description: data.description?.trim() ?? '',
     additionalMetaData: data.additionalMetaData ?? {},
 });
+
+export const toDefaultBookingFormData = (bookingForm: EntireBookingFormType) => {
+    const styleSource = bookingForm.styles ?? DEFAULT_DARK_BOOKING_FORM_STYLES;
+
+    return {
+        bookingForm: {
+            bookingFormId: bookingForm.id,
+            name: bookingForm.name ?? '',
+            description: bookingForm.description ?? '',
+            slug: bookingForm.slug ?? '',
+            isActive: bookingForm.isActive ?? false,
+        },
+        bookingFormFields: toSyncBookingFormFieldsRequest(bookingForm.id, bookingForm.fields),
+        bookingFormStyles: toComparableBookingFormStyles({
+            bookingFormId: bookingForm.id,
+            primary: styleSource.primary,
+            bgMain: styleSource.bgMain,
+            bgSecondary: styleSource.bgSecondary,
+            borderColor: styleSource.borderColor,
+            textMain: styleSource.textMain,
+            textSecondary: styleSource.textSecondary,
+        }),
+        bookingFormMeta: {
+            bookingFormId: bookingForm.id,
+            title: bookingForm.metaData?.title ?? '',
+            description: bookingForm.metaData?.description ?? '',
+            additionalMetaData: bookingForm.metaData?.additionalMetaData ?? {},
+        },
+    };
+};

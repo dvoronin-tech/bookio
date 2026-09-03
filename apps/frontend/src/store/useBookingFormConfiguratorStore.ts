@@ -10,6 +10,13 @@ import {
 } from '#pages/App/BookingForms/BookingFormConfigurator/configuratorTabs';
 import type { SyncBookingFormFieldRequest } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 
+export interface BookingFormConfiguratorDefaults {
+    bookingForm: UpdateBookingFormRequest;
+    bookingFormStyles: UpdateBookingFormStylesRequest;
+    bookingFormMeta: UpdateBookingFormMetaRequest;
+    bookingFormFields: SyncBookingFormFieldRequest;
+}
+
 interface BookingFormConfiguratorForm {
     bookingForm: UpdateBookingFormRequest | null;
     bookingFormStyles: UpdateBookingFormStylesRequest | null;
@@ -29,6 +36,7 @@ interface BookingFormConfiguratorState extends BookingFormConfiguratorForm {
     isCollapsed: boolean;
     setActiveTab: (tab: ConfiguratorTabValue) => void;
     setIsCollapsed: (collapsed: boolean) => void;
+    setDefaultBookingFormData: (data: BookingFormConfiguratorDefaults) => void;
     setBookingForm: (bookingForm: UpdateBookingFormRequest) => void;
     setBookingFormStyles: (bookingFormStyles: UpdateBookingFormStylesRequest) => void;
     setBookingFormMeta: (bookingFormMeta: UpdateBookingFormMetaRequest) => void;
@@ -45,6 +53,18 @@ export const useBookingFormConfiguratorStore = create<BookingFormConfiguratorSta
             ...initialFormState,
             setActiveTab: (activeTab) => set({ activeTab }, false, 'setActiveTab'),
             setIsCollapsed: (isCollapsed) => set({ isCollapsed }, false, 'setIsCollapsed'),
+            setDefaultBookingFormData: (data) =>
+                set(
+                    (state) => {
+                        if (state.bookingForm?.bookingFormId === data.bookingForm.bookingFormId) {
+                            return {};
+                        }
+
+                        return data;
+                    },
+                    false,
+                    'setDefaultBookingFormData',
+                ),
             setBookingForm: (bookingForm) => set({ bookingForm }, false, 'setBookingForm'),
             setBookingFormStyles: (bookingFormStyles) =>
                 set({ bookingFormStyles }, false, 'setBookingFormStyles'),

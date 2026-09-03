@@ -1,6 +1,5 @@
-import { useCallback, useEffect, useMemo, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
 import { useShallow } from 'zustand/shallow';
-import type { EntireBookingFormType } from '#api/bookingForms/getEntireBookingFormById';
 import type { UpdateBookingFormStylesRequest } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles';
 import type { ThemeVariant } from '#components/BookingFormStyles/ThemeCard/ThemeCard';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
@@ -13,7 +12,6 @@ import { THEMES } from '../bookingFormStyles.constants';
 
 type UseBookingFormStylesParams = {
     bookingFormId: string;
-    formStyles: EntireBookingFormType['styles'];
 };
 
 const resolveColors = (
@@ -35,7 +33,7 @@ const resolveColors = (
     };
 };
 
-export const useBookingFormStyles = ({ bookingFormId, formStyles }: UseBookingFormStylesParams) => {
+export const useBookingFormStyles = ({ bookingFormId }: UseBookingFormStylesParams) => {
     const { bookingFormStyles, setBookingFormStyles } = useBookingFormConfiguratorStore(
         useShallow(({ bookingFormStyles, setBookingFormStyles }) => ({
             bookingFormStyles,
@@ -44,22 +42,6 @@ export const useBookingFormStyles = ({ bookingFormId, formStyles }: UseBookingFo
     );
 
     const [theme, setTheme] = useState<ThemeVariant>('dark');
-
-    useEffect(() => {
-        if (bookingFormStyles?.bookingFormId === bookingFormId) return;
-
-        const source = formStyles ?? DEFAULT_DARK_BOOKING_FORM_STYLES;
-
-        setBookingFormStyles({
-            bookingFormId,
-            primary: source.primary,
-            bgMain: source.bgMain,
-            bgSecondary: source.bgSecondary,
-            borderColor: source.borderColor,
-            textMain: source.textMain,
-            textSecondary: source.textSecondary,
-        });
-    }, [bookingFormId, formStyles, bookingFormStyles, setBookingFormStyles]);
 
     const colors = useMemo(
         () => resolveColors(bookingFormId, bookingFormStyles),
