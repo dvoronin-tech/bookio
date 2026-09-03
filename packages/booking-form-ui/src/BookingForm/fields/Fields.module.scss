@@ -7,10 +7,11 @@
     }
 }
 
-.flag svg.countryFlag {
+.flag .countryFlag {
     width: 2.2rem;
     height: 1.47rem;
     border-radius: 0.2rem;
+    object-fit: cover;
 }
 
 .checkboxField {

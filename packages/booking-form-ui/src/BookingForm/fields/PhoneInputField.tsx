@@ -1,6 +1,6 @@
 import { useCallback, useState, type ChangeEvent, type FC } from 'react';
-import * as Flags from 'country-flag-icons/react/3x2';
 import { hasFlag } from 'country-flag-icons';
+import * as FlagSvgs from 'country-flag-icons/string/3x2';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { Input, ValidatableInput } from '@bookio/ui';
 import type { FieldControlProps } from './field.types.js';
@@ -9,20 +9,25 @@ import styles from './Fields.module.scss';
 
 const DEFAULT_COUNTRY = 'BY';
 
-function getCountryFlag(country: string | undefined) {
+function getCountryFlagSrc(country: string | undefined) {
     if (!country || !hasFlag(country)) {
         return null;
     }
 
-    const Flag = Flags[country as keyof typeof Flags];
-    return typeof Flag === 'function' ? Flag : null;
+    const svg = FlagSvgs[country as keyof typeof FlagSvgs];
+
+    if (typeof svg !== 'string') {
+        return null;
+    }
+
+    return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
 export const PhoneInputField: FC<FieldControlProps<'phone'>> = ({ field, register }) => {
     const { placeholder, helpText } = field.params;
 
     const [country, setCountry] = useState(DEFAULT_COUNTRY);
-    const Flag = getCountryFlag(country);
+    const flagSrc = getCountryFlagSrc(country);
 
     const {
         onChange: registerOnChange,
@@ -58,9 +63,9 @@ export const PhoneInputField: FC<FieldControlProps<'phone'>> = ({ field, registe
 
     return (
         <Input.Root>
-            {Flag && (
+            {flagSrc && (
                 <Input.Icon className={styles.flag} position="start">
-                    <Flag className={styles.countryFlag} data-multicolor />
+                    <img className={styles.countryFlag} src={flagSrc} alt="" draggable={false} />
                 </Input.Icon>
             )}
             <ValidatableInput
