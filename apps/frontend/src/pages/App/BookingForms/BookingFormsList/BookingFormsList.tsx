@@ -10,8 +10,8 @@ import PlusIcon from '#assets/icons/plus.svg?react';
 import SearchIcon from '#assets/icons/search.svg?react';
 
 export const BookingForms: FC = () => {
-    const { id } = useParams();
-    const { data: bookingForms, isPending, error, refetch } = useGetBookingForms(id);
+    const { organizationId } = useParams();
+    const { data: bookingForms, isPending, error, refetch } = useGetBookingForms(organizationId);
 
     const handleRetry = useCallback(() => {
         refetch();

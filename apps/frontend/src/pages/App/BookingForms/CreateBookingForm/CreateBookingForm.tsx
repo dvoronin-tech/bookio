@@ -23,7 +23,7 @@ const STEPS: Record<CreateBookingFormStep, FC> = {
 };
 
 export const CreateBookingForm: FC = () => {
-    const { id } = useParams();
+    const { organizationId } = useParams();
     const { step, setOrganizationId, reset } = useCreateBookingFormStore(
         useShallow((s) => ({
             step: s.step,
@@ -33,9 +33,9 @@ export const CreateBookingForm: FC = () => {
     );
 
     useEffect(() => {
-        if (id) setOrganizationId(id);
+        if (organizationId) setOrganizationId(organizationId);
         return () => reset();
-    }, [id, setOrganizationId, reset]);
+    }, [organizationId, setOrganizationId, reset]);
 
     const CurrentStep = STEPS[step];
 

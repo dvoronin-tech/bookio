@@ -20,8 +20,8 @@ import toast from 'react-hot-toast';
 
 export const AppHeader: FC = () => {
     const navigate = useNavigate();
-    const { id } = useParams<{ id: string }>();
-    const { data: organizationData, error } = useGetOrganization(id);
+    const { organizationId } = useParams<{ organizationId: string }>();
+    const { data: organizationData, error } = useGetOrganization(organizationId);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     if (error) {
@@ -29,9 +29,9 @@ export const AppHeader: FC = () => {
     }
 
     const handleNavigateToBookingForms = useCallback(() => {
-        if (!id) return;
-        navigateToBookingForms(navigate, id);
-    }, [navigate, id]);
+        if (!organizationId) return;
+        navigateToBookingForms(navigate, organizationId);
+    }, [navigate, organizationId]);
 
     const handleNavigateToOrganizations = useCallback(() => {
         navigateToOrganizations(navigate);
@@ -41,7 +41,7 @@ export const AppHeader: FC = () => {
         <div className={styles.appHeader}>
             <button
                 className={styles.logoButton}
-                onClick={() => id && navigateToOrganization(navigate, id)}
+                onClick={() => organizationId && navigateToOrganization(navigate, organizationId)}
             >
                 <Logo className={styles.logo} />
             </button>

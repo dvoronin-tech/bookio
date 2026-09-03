@@ -15,8 +15,8 @@ import { useParams } from 'react-router-dom';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
 export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingForm }) => {
-    const { id } = useParams<{ id: string }>();
-    const { data: organization } = useGetOrganization(id);
+    const { organizationId } = useParams();
+    const { data: organization } = useGetOrganization(organizationId);
     const [isDeleting, setIsDeleting] = useState(false);
 
     const bookingFormUrl = `${BOOKING_FORM_URL}/${organization?.slug}/${bookingForm.slug}`;

@@ -115,7 +115,7 @@ const ConfiguratorHeader: FC = memo(() => {
 });
 
 const ConfiguratorFooter: FC = memo(() => {
-    const { bookingFormId, id } = useParams<{ id: string; bookingFormId: string }>();
+    const { bookingFormId, organizationId } = useParams();
     const { data: baseLine } = useGetEntireBookingFormById(bookingFormId);
     const { bookingForm, bookingFormFields, bookingFormStyles, bookingFormMeta } =
         useBookingFormConfiguratorStore(
@@ -226,8 +226,8 @@ const ConfiguratorFooter: FC = memo(() => {
     ]);
 
     const handleNavigateToBookingForms = useCallback(() => {
-        navigateToBookingForms(navigate, id);
-    }, [id, navigate]);
+        navigateToBookingForms(navigate, organizationId);
+    }, [organizationId, navigate]);
 
     const handleSave = useCallback(() => {
         if (saveRequestThunks.length === 0 || isSaving) return;

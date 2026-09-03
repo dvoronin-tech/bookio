@@ -98,7 +98,7 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({ bookingForm, organization }
 };
 
 export const SettingsTab = () => {
-    const { bookingFormId, id } = useParams();
+    const { bookingFormId, organizationId } = useParams();
     const navigate = useNavigate();
 
     const {
@@ -107,7 +107,7 @@ export const SettingsTab = () => {
         isError: isOrganizationError,
         error: organizationError,
         refetch: refetchOrganization,
-    } = useGetOrganization(id);
+    } = useGetOrganization(organizationId);
     const {
         data: bookingForm,
         isLoading: isBookingFormLoading,
@@ -116,7 +116,7 @@ export const SettingsTab = () => {
         refetch: refetchBookingForm,
     } = useGetEntireBookingFormById(bookingFormId);
 
-    const routeParams = guardConfiguratorRoute(navigate, id, bookingFormId);
+    const routeParams = guardConfiguratorRoute(navigate, organizationId, bookingFormId);
 
     if (!routeParams) {
         return null;
