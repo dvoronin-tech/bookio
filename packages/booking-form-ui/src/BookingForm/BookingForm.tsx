@@ -1,11 +1,15 @@
-import { useMemo, type FC, type ReactNode } from 'react';
-import { Button } from '@bookio/ui';
-import { useBookingFormData } from '#/store/BookingFormData/BookingFormDataContext';
-import styles from './BookingForm.module.scss';
-import { isGroupField, type BookingFormField } from '#/components/Fields/field.types';
-import { RenderField } from '#/components/Fields/FieldsMap';
-import type { BookingFormBySlugsType } from '#/api/bookingForms/getBookingFormBySlugs';
+import { memo, useMemo, type ReactNode } from 'react';
 import { useForm, type Control, type FieldValues, type UseFormRegister } from 'react-hook-form';
+import { Button } from '@bookio/ui';
+import styles from './BookingForm.module.scss';
+import {
+    isGroupField,
+    type BookingFormField,
+    type BookingFormFieldInput,
+} from './fields/field.types.js';
+import { RenderField } from './fields/FieldsMap.js';
+
+export type { BookingFormFieldInput } from './fields/field.types.js';
 
 const DEFAULT_PHONE = '+375';
 const FIELD_APPEAR_START_MS = 300;
@@ -13,18 +17,39 @@ const FIELD_APPEAR_STEP_MS = 100;
 
 const getAppearDelayMs = (index: number) => FIELD_APPEAR_START_MS + index * FIELD_APPEAR_STEP_MS;
 
-const Appear: FC<{ delayMs: number; children: ReactNode }> = ({ delayMs, children }) => (
-    <div className={styles.appear} style={{ animationDelay: `${delayMs}ms` }}>
-        {children}
-    </div>
-);
-
-interface BookingFormProps {
-    bookingForm: BookingFormBySlugsType;
+function Appear({ delayMs, children }: { delayMs: number; children: ReactNode }) {
+    return (
+        <div className={styles.appear} style={{ animationDelay: `${delayMs}ms` }}>
+            {children}
+        </div>
+    );
 }
 
-export const BookingForm: FC<BookingFormProps> = ({ bookingForm }) => {
-    const { fields, name, description } = bookingForm;
+export type BookingFormData = {
+    name: string;
+    description?: string | null;
+    fields: BookingFormFieldInput[];
+};
+
+export type BookingFormProps = {
+    bookingForm: BookingFormData;
+};
+
+function normalizeField(field: BookingFormFieldInput): BookingFormFieldInput {
+    return {
+        ...field,
+        required: field.required ?? false,
+        params: field.params ?? {},
+    };
+}
+
+function BookingForm({ bookingForm }: BookingFormProps) {
+    const name = bookingForm.name;
+    const description = bookingForm.description;
+    const fields = useMemo(
+        () => bookingForm.fields.map(normalizeField),
+        [bookingForm.fields],
+    );
 
     const rootFields = useMemo(() => {
         return fields.filter((field) => field.parentId === null).sort((a, b) => a.order - b.order);
@@ -53,7 +78,12 @@ export const BookingForm: FC<BookingFormProps> = ({ bookingForm }) => {
                 {rootFields.map((field, index) => (
                     <Appear key={field.id} delayMs={getAppearDelayMs(index)}>
                         {isGroupField(field) ? (
-                            <GroupField field={field} register={register} control={control} />
+                            <GroupField
+                                field={field}
+                                fields={fields}
+                                register={register}
+                                control={control}
+                            />
                         ) : (
                             <RenderField field={field} register={register} control={control} />
                         )}
@@ -68,17 +98,16 @@ export const BookingForm: FC<BookingFormProps> = ({ bookingForm }) => {
             </Appear>
         </div>
     );
-};
+}
 
 interface GroupFieldProps {
     register: UseFormRegister<FieldValues>;
     control: Control<FieldValues>;
     field: Extract<BookingFormField, { type: 'group' }>;
+    fields: BookingFormFieldInput[];
 }
 
-const GroupField: FC<GroupFieldProps> = ({ field, register, control }) => {
-    const { fields } = useBookingFormData();
-
+function GroupField({ field, fields, register, control }: GroupFieldProps) {
     const groupFields = useMemo(() => {
         return fields.filter((f) => f.parentId === field.id).sort((a, b) => a.order - b.order);
     }, [fields, field.id]);
@@ -99,4 +128,6 @@ const GroupField: FC<GroupFieldProps> = ({ field, register, control }) => {
             ))}
         </div>
     );
-};
+}
+
+export default memo(BookingForm);

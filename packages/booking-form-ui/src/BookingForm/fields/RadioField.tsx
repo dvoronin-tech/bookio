@@ -1,6 +1,6 @@
 import type { FC } from 'react';
 import { Radio } from '@bookio/ui';
-import type { FieldControlProps } from '#/components/Fields/field.types';
+import type { FieldControlProps } from './field.types.js';
 
 export const RadioField: FC<FieldControlProps<'radio'>> = ({ field, register }) => {
     return (

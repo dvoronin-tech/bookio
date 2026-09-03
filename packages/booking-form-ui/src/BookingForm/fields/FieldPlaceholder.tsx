@@ -1,5 +1,5 @@
 import type { FC } from 'react';
-import type { FieldRendererProps } from '#/components/Fields/field.types';
+import type { FieldRendererProps } from './field.types.js';
 import styles from './FieldPlaceholder.module.scss';
 
 export const FieldPlaceholder: FC<FieldRendererProps> = ({ field }) => {

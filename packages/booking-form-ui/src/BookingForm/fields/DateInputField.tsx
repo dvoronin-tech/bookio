@@ -1,8 +1,8 @@
 import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
 import { DatePicker } from '@bookio/ui';
-import type { FieldControlProps } from '#/components/Fields/field.types';
-import styles from '#/components/Fields/Fields.module.scss';
+import type { FieldControlProps } from './field.types.js';
+import styles from './Fields.module.scss';
 
 export const DateInputField: FC<FieldControlProps<'date'>> = ({ field, control }) => {
     return (

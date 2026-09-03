@@ -1,11 +1,19 @@
 import type { Control, FieldValues, UseFormRegister } from 'react-hook-form';
-import type { BookingFormFieldRowUnion } from '@bookio/backend/schemas';
-import type { BookingFormBySlugsType } from '#/api/bookingForms/getBookingFormBySlugs';
+import type { BookingFormFieldRowUnion, FieldParams, FieldType } from '@bookio/db';
 
-export type ApiField = BookingFormBySlugsType['fields'][number];
+export type BookingFormFieldInput = {
+    id: string;
+    parentId: string | null;
+    order: number;
+    name: string;
+    key: string;
+    required?: boolean;
+    type: FieldType;
+    params?: FieldParams;
+};
 
-export type BookingFormField = Omit<ApiField, 'type' | 'params'> & BookingFormFieldRowUnion;
-export type FieldType = BookingFormField['type'];
+export type BookingFormField = Omit<BookingFormFieldInput, 'type' | 'params'> &
+    BookingFormFieldRowUnion;
 export type LeafFieldType = Exclude<FieldType, 'group'>;
 
 export type FieldRendererProps<T extends LeafFieldType = LeafFieldType> = {
@@ -18,13 +26,13 @@ export type FieldControlProps<T extends LeafFieldType = LeafFieldType> = FieldRe
 };
 
 export function isGroupField(
-    field: ApiField,
+    field: BookingFormFieldInput,
 ): field is Extract<BookingFormField, { type: 'group' }> {
     return field.type === 'group';
 }
 
 export function isLeafField(
-    field: ApiField,
+    field: BookingFormFieldInput,
 ): field is Extract<BookingFormField, { type: LeafFieldType }> {
     return field.type !== 'group';
 }

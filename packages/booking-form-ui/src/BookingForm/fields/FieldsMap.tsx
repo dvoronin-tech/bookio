@@ -2,28 +2,28 @@ import type { ComponentType, FC } from 'react';
 import type { Control, FieldValues, UseFormRegister } from 'react-hook-form';
 import {
     isLeafField,
-    type ApiField,
+    type BookingFormFieldInput,
     type FieldControlProps,
     type LeafFieldType,
-} from '#/components/Fields/field.types';
-import { CheckboxField } from '#/components/Fields/CheckboxField/CheckboxField';
-import { DateInputField } from '#/components/Fields/DateInputField/DateInputField';
-import { EmailInputField } from '#/components/Fields/EmailInputField/EmailInputField';
-import { FieldPlaceholder } from '#/components/Fields/FieldPlaceholder/FieldPlaceholder';
-import { NumberInputField } from '#/components/Fields/NumberInputField/NumberInputField';
-import { PhoneInputField } from '#/components/Fields/PhoneInputField/PhoneInputField';
-import { RadioField } from '#/components/Fields/RadioField/RadioField';
-import { SelectField } from '#/components/Fields/SelectField/SelectField';
-import { TextAreaField } from '#/components/Fields/TextAreaField/TextAreaField';
-import { TextInputField } from '#/components/Fields/TextInputField/TextInputField';
-import { TimeInputField } from '#/components/Fields/TimeInputField/TimeInputField';
-import { UrlInputField } from '#/components/Fields/UrlInputField/UrlInputField';
+} from './field.types.js';
+import { CheckboxField } from './CheckboxField.js';
+import { DateInputField } from './DateInputField.js';
+import { EmailInputField } from './EmailInputField.js';
+import { FieldPlaceholder } from './FieldPlaceholder.js';
+import { NumberInputField } from './NumberInputField.js';
+import { PhoneInputField } from './PhoneInputField.js';
+import { RadioField } from './RadioField.js';
+import { SelectField } from './SelectField.js';
+import { TextAreaField } from './TextAreaField.js';
+import { TextInputField } from './TextInputField.js';
+import { TimeInputField } from './TimeInputField.js';
+import { UrlInputField } from './UrlInputField.js';
 
 type FieldsMap = {
     [K in LeafFieldType]: ComponentType<FieldControlProps<K>>;
 };
 
-export const fieldsMap: FieldsMap = {
+const fieldsMap: FieldsMap = {
     text: TextInputField,
     number: NumberInputField,
     file: FieldPlaceholder,
@@ -44,7 +44,7 @@ function getFieldComponent<T extends LeafFieldType>(type: T): ComponentType<Fiel
 }
 
 type RenderFieldProps = {
-    field: ApiField;
+    field: BookingFormFieldInput;
     register: UseFormRegister<FieldValues>;
     control: Control<FieldValues>;
 };

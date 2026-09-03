@@ -3,9 +3,9 @@ import * as Flags from 'country-flag-icons/react/3x2';
 import { hasFlag } from 'country-flag-icons';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { Input, ValidatableInput } from '@bookio/ui';
-import type { FieldControlProps } from '#/components/Fields/field.types';
-import { useBlurValidation } from '#/components/Fields/useBlurValidation';
-import styles from '../Fields.module.scss';
+import type { FieldControlProps } from './field.types.js';
+import { useBlurValidation } from './useBlurValidation.js';
+import styles from './Fields.module.scss';
 
 const DEFAULT_COUNTRY = 'BY';
 
@@ -42,7 +42,6 @@ export const PhoneInputField: FC<FieldControlProps<'phone'>> = ({ field, registe
         (value: string) => {
             const phone = parsePhoneNumberFromString(value);
 
-            // Bare dial code (e.g. the prefilled "+375") counts as empty
             if (!phone || !phone.nationalNumber) {
                 return !field.required;
             }

@@ -1,6 +1,6 @@
 import { type FC } from 'react';
+import { BookingForm } from '@bookio/booking-form-ui';
 import styles from './BookingFormLayout.module.scss';
-import { BookingForm } from '#/components/BookingForm/BookingForm';
 import { useBookingFormData } from '#/store/BookingFormData/BookingFormDataContext';
 
 export const BookingFormLayout: FC = () => {

@@ -22,6 +22,7 @@
         "paths": {
             "@bookio/backend": ["../backend/src/routes/index.ts"],
             "@bookio/backend/schemas": ["../backend/src/schemas/index.ts"],
+            "@bookio/booking-form-ui": ["../../packages/booking-form-ui/src/index.ts"],
             "@handlers/*": ["../backend/src/handlers/*"],
             "@/*": ["../backend/src/*"],
             "#assets/*": ["./src/assets/*"],
