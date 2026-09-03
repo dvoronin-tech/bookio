@@ -5,6 +5,7 @@ import { useShallow } from 'zustand/shallow';
 import { ConfiguratorLayout } from './ConfiguratorLayout/ConfiguratorLayout';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { getConfiguratorTab } from './configuratorTabs';
+import { BookingFormPreview } from '#components/BookingFormPreview/BookingFormPreview';
 import { useGetEntireBookingFormById } from '#api/bookingForms/getEntireBookingFormById';
 import { guardConfiguratorRoute } from '#navigation';
 import { toDefaultBookingFormData } from '#utils/dataPreparers/bookingFormPreparers';
@@ -78,7 +79,9 @@ export const BookingFormConfigurator: FC = () => {
     return (
         <div className={styles.bookingFormConfigurator}>
             <ConfiguratorLayout>{Panel ? <Panel /> : null}</ConfiguratorLayout>
-            <div className={styles.configuratorPreview}></div>
+            <div className={styles.configuratorPreview}>
+                <BookingFormPreview />
+            </div>
         </div>
     );
 };
