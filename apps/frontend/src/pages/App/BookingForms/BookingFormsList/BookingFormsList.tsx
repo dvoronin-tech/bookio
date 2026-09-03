@@ -3,7 +3,7 @@ import styles from './BookingFormsList.module.scss';
 import { useGetBookingForms } from '#api/bookingForms/getBookingForms';
 import { useParams } from 'react-router-dom';
 import { Button, Input } from '@bookio/ui';
-import { Spinner } from '#components/Spinner/Spinner';
+import { Loader } from '#components/Loader/Loader';
 import { BookingFormCard } from '#components/BookingFormCard/BookingFormCard';
 
 import PlusIcon from '#assets/icons/plus.svg?react';
@@ -18,11 +18,7 @@ export const BookingForms: FC = () => {
     }, [refetch]);
 
     if (isPending) {
-        return (
-            <div className={styles.loadingContainer}>
-                <Spinner size={6} />
-            </div>
-        );
+        return <Loader size={6} />;
     }
 
     if (error) {
