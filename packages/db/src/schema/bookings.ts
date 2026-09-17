@@ -14,15 +14,17 @@ export const bookings = pgTable('bookings', {
     id: uuid('id')
         .primaryKey()
         .$default(() => uuidv7()),
-    bookingFormId: uuid('booking_form_id').references(() => bookingForms.id, {
-        onDelete: 'cascade',
-    }),
+    bookingFormId: uuid('booking_form_id')
+        .references(() => bookingForms.id, {
+            onDelete: 'cascade',
+        })
+        .notNull(),
     createdAt: timestamp('created_at', { withTimezone: true }).notNull().defaultNow(),
     updatedAt: timestamp('updated_at', { withTimezone: true })
         .notNull()
         .$onUpdateFn(() => new Date()),
     status: bookingStatusEnum('status').notNull().default('pending'),
-    data: jsonb('data').notNull(),
+    data: jsonb('data').notNull().notNull().default({}),
 });
 
 export const bookingsRelations = relations(bookings, ({ one }) => ({
@@ -31,3 +33,7 @@ export const bookingsRelations = relations(bookings, ({ one }) => ({
         references: [bookingForms.id],
     }),
 }));
+
+export type BookingSelect = typeof bookings.$inferSelect;
+export type BookingInsert = typeof bookings.$inferInsert;
+export type BookingUpdate = Partial<Omit<BookingInsert, 'id'>>;

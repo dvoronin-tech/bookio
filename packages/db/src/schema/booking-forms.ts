@@ -92,11 +92,7 @@ export const bookingFormsRelations = relations(bookingForms, ({ one, many }) => 
 }));
 
 export type BookingFormSelect = typeof bookingForms.$inferSelect;
-export type BookingSelect = typeof bookings.$inferSelect;
-
 export type BookingFormInsert = typeof bookingForms.$inferInsert;
-export type BookingInsert = typeof bookings.$inferInsert;
-
 export type BookingFormUpdate = Partial<Omit<BookingFormInsert, 'id'>>;
 
 export * from './fields.js';
