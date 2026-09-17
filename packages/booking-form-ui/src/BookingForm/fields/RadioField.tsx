@@ -7,7 +7,7 @@ export const RadioField: FC<FieldControlProps<'radio'>> = ({ field, register }) 
         <Radio {...register(field.key)}>
             <Radio.Label>{field.name}</Radio.Label>
             {field.params.options.map((option) => (
-                <Radio.Item key={option.value} value={option.value}>
+                <Radio.Item key={option.label} value={option.label}>
                     {option.label}
                 </Radio.Item>
             ))}

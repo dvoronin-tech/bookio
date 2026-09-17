@@ -25,17 +25,8 @@ export const fieldKeySchema = z
 
 export const fieldNameSchema = z.string().min(1).max(255);
 
-export const fieldOptionValueSchema = z
-    .string()
-    .min(1)
-    .regex(/^[a-zA-Z0-9_-]+$/, {
-        message:
-            'Value must use only letters, numbers, hyphens, and underscores (no spaces)',
-    });
-
 export const fieldOptionSchema = z.object({
-    value: fieldOptionValueSchema,
-    label: z.string().min(1),
+    label: z.string().trim().min(1, 'Option label is required'),
 }) satisfies z.ZodType<FieldOption>;
 
 export const inputParamsSchema = z.object({
@@ -95,7 +86,16 @@ export const textAreaParamsSchema = z.object({
 }) satisfies z.ZodType<TextAreaFieldParams>;
 
 export const choiceParamsSchema = z.object({
-    options: z.array(fieldOptionSchema).min(1, 'At least one option is required'),
+    options: z
+        .array(fieldOptionSchema)
+        .min(1, 'At least one option is required')
+        .refine(
+            (options) => {
+                const labels = options.map((opt) => opt.label.trim());
+                return new Set(labels).size === labels.length;
+            },
+            { message: 'Option labels must be unique' },
+        ),
 }) satisfies z.ZodType<ChoiceFieldParams>;
 
 export const selectParamsSchema = choiceParamsSchema.extend({

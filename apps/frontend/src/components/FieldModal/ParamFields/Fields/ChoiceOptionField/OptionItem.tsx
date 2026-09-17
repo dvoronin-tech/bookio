@@ -17,9 +17,10 @@ export const OptionItem: FC<OptionItemProps> = ({ index, onRemove }) => {
     const option = options[index];
 
     const isLabelUnique = useMemo(() => {
-        if (!option || option.label === '') return undefined;
+        if (!option || option.label?.trim() === '') return undefined;
 
-        return options.filter((o) => o.label === option.label).length === 1;
+        const trimmed = option.label.trim();
+        return options.filter((o) => o.label?.trim() === trimmed).length === 1;
     }, [options, option]);
 
     const handleRemoveOption = useCallback(() => {
@@ -27,6 +28,8 @@ export const OptionItem: FC<OptionItemProps> = ({ index, onRemove }) => {
     }, [index, onRemove]);
 
     if (!option) return null;
+
+    const errorMessage = isLabelUnique === false ? 'Option labels must be unique' : undefined;
 
     return (
         <div className={styles.option}>
@@ -45,6 +48,7 @@ export const OptionItem: FC<OptionItemProps> = ({ index, onRemove }) => {
 
             <ValidatableInput
                 isValid={isLabelUnique}
+                errorMessage={errorMessage}
                 label="Label"
                 type="text"
                 {...register(`params.options.${index}.label`)}
