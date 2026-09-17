@@ -1,0 +1,29 @@
+.default {
+    border-radius: 1.4rem !important;
+
+    &.textarea {
+        resize: none;
+        min-height: unset;
+    }
+}
+
+.flag .countryFlag {
+    width: 2.2rem;
+    height: 1.47rem;
+    border-radius: 0.2rem;
+    object-fit: cover;
+}
+
+.checkboxField {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.4rem;
+}
+
+.checkboxHelpText {
+    padding-left: 3rem;
+    font-size: 1.2rem;
+    line-height: 1.3;
+    color: var(--color-text-secondary);
+}

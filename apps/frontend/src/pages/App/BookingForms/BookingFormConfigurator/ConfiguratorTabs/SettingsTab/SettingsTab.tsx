@@ -1,70 +1,83 @@
 import { useEffect, type FC } from 'react';
-import type { EntireBookingFormType } from '#api/bookingForms/getEntireBookingFormById';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
-import { useNavigate, useParams } from 'react-router-dom';
-import { guardConfiguratorRoute } from '#navigation';
+import { useParams } from 'react-router-dom';
 import { Button, Checkbox, Input, ValidatableInput } from '@bookio/ui';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists';
 
 import styles from './SettingsTab.module.scss';
 import { BookingFormUrlPreview } from '#components/BookingFormUrlPreview/BookingFormUrlPreview';
-import { useGetOrganization, type OrganizationData } from '#api/organizations/getOrganizationData';
+import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
 import { useForm, useWatch } from 'react-hook-form';
+import { useShallow } from 'zustand/shallow';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
-import { useGetEntireBookingFormById } from '#api/bookingForms/getEntireBookingFormById';
-import { Spinner } from '#components/Spinner/Spinner';
+import { Loader } from '#components/Loader/Loader';
+import { trimObj } from '#utils/trimObj';
 
 type SettingsTabFormData = Omit<UpdateBookingFormRequest, 'bookingFormId'>;
 
 type SettingsTabFormProps = {
-    bookingForm: EntireBookingFormType;
-    organization: OrganizationData;
+    organizationId: string;
+    organizationSlug: string;
 };
 
-const SettingsTabForm: FC<SettingsTabFormProps> = ({ bookingForm, organization }) => {
-    const setBookingForm = useBookingFormConfiguratorStore((state) => state.setBookingForm);
+const SettingsTabForm: FC<SettingsTabFormProps> = ({ organizationId, organizationSlug }) => {
+    const { setBookingForm, bookingForm } = useBookingFormConfiguratorStore(
+        useShallow(({ setBookingForm, bookingForm }) => ({
+            setBookingForm,
+            bookingForm,
+        })),
+    );
 
     const { register, control } = useForm<SettingsTabFormData>({
         defaultValues: {
-            name: bookingForm.name ?? '',
-            description: bookingForm.description ?? '',
-            slug: bookingForm.slug ?? '',
-            isActive: bookingForm.isActive ?? false,
+            name: bookingForm?.name ?? '',
+            description: bookingForm?.description ?? '',
+            slug: bookingForm?.slug ?? '',
+            isActive: bookingForm?.isActive ?? false,
         },
     });
 
     const formValues = useWatch({ control });
+    const bookingFormId = bookingForm?.bookingFormId;
 
     useEffect(() => {
+        if (!bookingFormId) return;
+
         setBookingForm({
-            bookingFormId: bookingForm.id,
+            bookingFormId: bookingFormId,
             name: formValues?.name ?? '',
             description: formValues?.description ?? '',
             slug: formValues?.slug ?? '',
             isActive: formValues?.isActive ?? false,
         });
-    }, [formValues, bookingForm.id, setBookingForm]);
+    }, [formValues, bookingFormId, setBookingForm]);
 
-    const name = formValues?.name ?? '';
-    const slug = formValues?.slug ?? '';
+    const currentName = formValues?.name ?? '';
+    const currentSlug = formValues?.slug ?? '';
 
-    const trimmedName = name.trim();
-    const trimmedSlug = slug.trim();
-    const originalName = (bookingForm.name ?? '').trim();
-    const originalSlug = (bookingForm.slug ?? '').trim();
+    const originalName = bookingForm?.name;
+    const originalSlug = bookingForm?.slug;
 
-    const { isValid: nameIsValid } = useIsBookingFormExists({
-        organizationId: organization.id,
-        name: trimmedName,
-        unchangedValue: originalName,
-    });
-    const { isValid: slugIsValid } = useIsBookingFormExists({
-        organizationId: organization.id,
-        slug: trimmedSlug,
-        unchangedValue: originalSlug,
-    });
+    const { isValid: nameIsValid } = useIsBookingFormExists(
+        trimObj({
+            organizationId: organizationId,
+            name: currentName,
+            unchangedValue: originalName,
+        }),
+    );
+    const { isValid: slugIsValid } = useIsBookingFormExists(
+        trimObj({
+            organizationId: organizationId,
+            slug: currentSlug,
+            unchangedValue: originalSlug,
+        }),
+    );
+
+    if (!bookingForm) {
+        return null;
+    }
 
     return (
         <div className={styles.settingsTab}>
@@ -89,8 +102,8 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({ bookingForm, organization }
                 errorMessage="Booking form with this slug already exists"
             />
             <BookingFormUrlPreview
-                formSlug={trimmedSlug || originalSlug}
-                organizationSlug={organization.slug}
+                formSlug={currentSlug || originalSlug}
+                organizationSlug={organizationSlug}
             />
             <Checkbox label="Is active" {...register('isActive')} />
         </div>
@@ -98,8 +111,7 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({ bookingForm, organization }
 };
 
 export const SettingsTab = () => {
-    const { bookingFormId, id } = useParams();
-    const navigate = useNavigate();
+    const { organizationId } = useParams();
 
     const {
         data: organization,
@@ -107,59 +119,34 @@ export const SettingsTab = () => {
         isError: isOrganizationError,
         error: organizationError,
         refetch: refetchOrganization,
-    } = useGetOrganization(id);
-    const {
-        data: bookingForm,
-        isLoading: isBookingFormLoading,
-        isError: isBookingFormError,
-        error: bookingFormError,
-        refetch: refetchBookingForm,
-    } = useGetEntireBookingFormById(bookingFormId);
+    } = useGetOrganization(organizationId);
 
-    const routeParams = guardConfiguratorRoute(navigate, id, bookingFormId);
-
-    if (!routeParams) {
-        return null;
+    if (isOrganizationLoading) {
+        return <Loader />;
     }
 
-    if (isOrganizationLoading || isBookingFormLoading)
-        return (
-            <div className={styles.loadingContainer}>
-                <Spinner />
-            </div>
-        );
+    const handleRefetchOrganization = () => {
+        refetchOrganization();
+    };
 
-    if (!organization || !bookingForm) {
-        if (isOrganizationError || isBookingFormError) {
-            console.error({ organizationError }, { bookingFormError });
-            const refetchData = () => {
-                if (isOrganizationError) {
-                    void refetchOrganization();
-                }
-                if (isBookingFormError) {
-                    void refetchBookingForm();
-                }
-            };
-
+    if (!organization) {
+        if (isOrganizationError) {
             return (
                 <div className={styles.errorContainer}>
                     <h2>
-                        {organizationError?.message ||
-                            bookingFormError?.message ||
-                            'An error occurred while fetching the data'}
+                        {organizationError?.message || 'An error occurred while fetching the data'}
                     </h2>
-                    <Button variant="primary-outlined" onClick={refetchData}>
+                    <Button variant="primary-outlined" onClick={handleRefetchOrganization}>
                         Retry
                     </Button>
                 </div>
             );
         }
-        return (
-            <div className={styles.loadingContainer}>
-                <Spinner />
-            </div>
-        );
+
+        return <Loader />;
     }
 
-    return <SettingsTabForm bookingForm={bookingForm} organization={organization} />;
+    return (
+        <SettingsTabForm organizationId={organization.id} organizationSlug={organization.slug} />
+    );
 };

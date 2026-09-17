@@ -1,22 +1,17 @@
-import type { EntireBookingFormType } from '#api/bookingForms/getEntireBookingFormById';
 import { COLOR_SECTIONS } from '#components/BookingFormStyles/bookingFormStyles.constants';
 import { useBookingFormStyles } from '#components/BookingFormStyles/hooks/useBookingFormStyles';
 import { StyleColorField } from '#components/BookingFormStyles/StyleColorField/StyleColorField';
 import { StyleColorGroup } from '#components/BookingFormStyles/StyleColorGroup/StyleColorGroup';
 import { ThemeCard } from '#components/BookingFormStyles/ThemeCard/ThemeCard';
 import type { FC } from 'react';
+import { useParams } from 'react-router-dom';
 
 import styles from './StylesTabForm.module.scss';
 
-interface StylesTabFormProps {
-    bookingFormId: string;
-    formStyles: EntireBookingFormType['styles'];
-}
-
-export const StylesTabForm: FC<StylesTabFormProps> = ({ bookingFormId, formStyles }) => {
+export const StylesTabForm: FC = () => {
+    const { bookingFormId } = useParams();
     const { theme, colors, handleThemeChange, handleColorChange } = useBookingFormStyles({
-        bookingFormId,
-        formStyles,
+        bookingFormId: bookingFormId ?? '',
     });
 
     if (!bookingFormId) {

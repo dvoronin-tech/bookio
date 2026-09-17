@@ -1,17 +1,11 @@
-import type { EntireBookingFormType } from '#api/bookingForms/getEntireBookingFormById';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { Button, Input } from '@bookio/ui';
-import { memo, type FC, useEffect, type ChangeEvent, useCallback, useState, useMemo } from 'react';
+import { memo, type FC, type ChangeEvent, useCallback, useState, useMemo } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { AdditionalMetaField } from './AdditionalMetaField/AdditionalMetaField';
 import { META_PROPERTIES } from './metaProperties';
 
 import styles from './MetaDataForm.module.scss';
-
-interface MetaDataFormProps {
-    bookingFormId: string;
-    metaData: EntireBookingFormType['metaData'];
-}
 
 interface AdditionalMetaRow {
     id: string;
@@ -28,7 +22,7 @@ const createAdditionalMetaRow = (property = '', value = ''): AdditionalMetaRow =
 const rowsToAdditionalMetaData = (rows: AdditionalMetaRow[]): Record<string, string> =>
     Object.fromEntries(rows.filter((row) => row.property).map((row) => [row.property, row.value]));
 
-export const MetaDataForm: FC<MetaDataFormProps> = memo(({ bookingFormId, metaData }) => {
+export const MetaDataForm: FC = memo(() => {
     const { bookingFormMeta, setBookingFormMeta } = useBookingFormConfiguratorStore(
         useShallow(({ bookingFormMeta, setBookingFormMeta }) => ({
             bookingFormMeta,
@@ -36,24 +30,11 @@ export const MetaDataForm: FC<MetaDataFormProps> = memo(({ bookingFormId, metaDa
         })),
     );
 
-    const [additionalMetaRows, setAdditionalMetaRows] = useState<AdditionalMetaRow[]>([]);
-
-    useEffect(() => {
-        if (bookingFormMeta?.bookingFormId === bookingFormId) return;
-        if (!metaData) return;
-
-        const rows = Object.entries(metaData.additionalMetaData ?? {}).map(([property, value]) =>
+    const [additionalMetaRows, setAdditionalMetaRows] = useState<AdditionalMetaRow[]>(() =>
+        Object.entries(bookingFormMeta?.additionalMetaData ?? {}).map(([property, value]) =>
             createAdditionalMetaRow(property, value),
-        );
-
-        setAdditionalMetaRows(rows);
-        setBookingFormMeta({
-            bookingFormId,
-            title: metaData.title,
-            description: metaData.description,
-            additionalMetaData: metaData.additionalMetaData ?? {},
-        });
-    }, [bookingFormId, metaData, bookingFormMeta, setBookingFormMeta]);
+        ),
+    );
 
     const handleChange = useCallback(
         (e: ChangeEvent<HTMLInputElement>) => {
@@ -123,7 +104,7 @@ export const MetaDataForm: FC<MetaDataFormProps> = memo(({ bookingFormId, metaDa
         );
     }, [additionalMetaRows]);
 
-    if (!bookingFormId || !bookingFormMeta) {
+    if (!bookingFormMeta) {
         return null;
     }
 

@@ -12,6 +12,10 @@ export default defineConfig({
     resolve: {
         alias: [
             {
+                find: '@bookio/booking-form-ui',
+                replacement: path.resolve(__dirname, '../../packages/booking-form-ui/src/index.ts'),
+            },
+            {
                 find: '@bookio/backend/schemas',
                 replacement: path.resolve(__dirname, '../backend/src/schemas/index.ts'),
             },

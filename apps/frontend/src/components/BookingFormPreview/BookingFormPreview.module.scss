@@ -1,0 +1,12 @@
+.preview {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    align-items: flex-start;
+    min-width: 0;
+    height: 100%;
+    overflow: auto;
+    padding: 0 1.6rem;
+    border-radius: 1rem;
+    background-color: var(--color-bg-main);
+}
