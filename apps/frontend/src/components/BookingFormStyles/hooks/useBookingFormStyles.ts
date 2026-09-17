@@ -33,6 +33,21 @@ const resolveColors = (
     };
 };
 
+const isMatchingTheme = (colors: BookingFormStyles, themeColors: BookingFormStyles): boolean => {
+    const keys = Object.keys(themeColors) as (keyof BookingFormStyles)[];
+    return keys.every((key) => colors[key]?.toLowerCase() === themeColors[key]?.toLowerCase());
+};
+
+export const resolveThemeFromColors = (colors: BookingFormStyles): ThemeVariant => {
+    for (const [theme, themeColors] of Object.entries(THEMES)) {
+        if (isMatchingTheme(colors, themeColors)) {
+            return theme as ThemeVariant;
+        }
+    }
+
+    return 'custom';
+};
+
 export const useBookingFormStyles = ({ bookingFormId }: UseBookingFormStylesParams) => {
     const { bookingFormStyles, setBookingFormStyles } = useBookingFormConfiguratorStore(
         useShallow(({ bookingFormStyles, setBookingFormStyles }) => ({
@@ -41,12 +56,12 @@ export const useBookingFormStyles = ({ bookingFormId }: UseBookingFormStylesPara
         })),
     );
 
-    const [theme, setTheme] = useState<ThemeVariant>('dark');
-
     const colors = useMemo(
         () => resolveColors(bookingFormId, bookingFormStyles),
         [bookingFormId, bookingFormStyles],
     );
+    const [theme, setTheme] = useState<ThemeVariant>(resolveThemeFromColors(colors));
+
 
     const handleThemeChange = useCallback(
         (variant: ThemeVariant) => {
