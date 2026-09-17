@@ -1,5 +1,11 @@
 import { memo, useMemo, type ReactNode } from 'react';
-import { useForm, type Control, type FieldValues, type UseFormRegister } from 'react-hook-form';
+import {
+    useForm,
+    type Control,
+    type FieldValues,
+    type UseFormRegister,
+    type FieldErrors,
+} from 'react-hook-form';
 import { Button } from '@bookio/ui';
 import styles from './BookingForm.module.scss';
 import {
@@ -32,6 +38,8 @@ export type BookingFormData = {
 };
 
 export type BookingFormProps = {
+    onSubmit?: (data: Record<string, string>) => void;
+    onInvalid?: (errors: FieldErrors<Record<string, string>>) => void;
     bookingForm: BookingFormData;
 };
 
@@ -43,13 +51,10 @@ function normalizeField(field: BookingFormFieldInput): BookingFormFieldInput {
     };
 }
 
-function BookingForm({ bookingForm }: BookingFormProps) {
+function BookingForm({ bookingForm, onSubmit, onInvalid }: BookingFormProps) {
     const name = bookingForm.name;
     const description = bookingForm.description;
-    const fields = useMemo(
-        () => bookingForm.fields.map(normalizeField),
-        [bookingForm.fields],
-    );
+    const fields = useMemo(() => bookingForm.fields.map(normalizeField), [bookingForm.fields]);
 
     const rootFields = useMemo(() => {
         return fields.filter((field) => field.parentId === null).sort((a, b) => a.order - b.order);
@@ -65,10 +70,21 @@ function BookingForm({ bookingForm }: BookingFormProps) {
         [fields],
     );
 
-    const { register, control } = useForm({ defaultValues });
+    const { register, control, handleSubmit } = useForm({ defaultValues });
+
+    const onValidHandler = (data: Record<string, string>) => {
+        onSubmit?.(data);
+    };
+
+    const onInvalidHandler = (errors: FieldErrors<Record<string, string>>) => {
+        onInvalid?.(errors);
+    };
 
     return (
-        <div className={styles.bookingForm}>
+        <form
+            className={styles.bookingForm}
+            onSubmit={handleSubmit(onValidHandler, onInvalidHandler)}
+        >
             <div className={styles.summary}>
                 <h2 className={styles.title}>{name}</h2>
                 {description && <p className={styles.hint}>{description}</p>}
@@ -92,11 +108,11 @@ function BookingForm({ bookingForm }: BookingFormProps) {
             </div>
 
             <Appear delayMs={getAppearDelayMs(rootFields.length)}>
-                <Button type="button" variant="primary-filled" className={styles.cta}>
+                <Button type="submit" variant="primary-filled" className={styles.cta}>
                     Submit booking
                 </Button>
             </Appear>
-        </div>
+        </form>
     );
 }
 
