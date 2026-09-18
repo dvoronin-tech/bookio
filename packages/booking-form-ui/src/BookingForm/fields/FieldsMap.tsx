@@ -6,19 +6,19 @@ import {
     type FieldControlProps,
     type LeafFieldType,
 } from './field.types.js';
-import { CheckboxField } from './CheckboxField.js';
-import { DateInputField } from './DateInputField.js';
-import { EmailInputField } from './EmailInputField.js';
-import { FileField } from './FileField.js';
-import { ImageField } from './ImageField.js';
-import { NumberInputField } from './NumberInputField.js';
-import { PhoneInputField } from './PhoneInputField.js';
-import { RadioField } from './RadioField.js';
-import { SelectField } from './SelectField.js';
-import { TextAreaField } from './TextAreaField.js';
-import { TextInputField } from './TextInputField.js';
-import { TimeInputField } from './TimeInputField.js';
-import { UrlInputField } from './UrlInputField.js';
+import { CheckboxField } from './components/CheckboxField.js';
+import { DateInputField } from './components/DateInputField.js';
+import { EmailInputField } from './components/EmailInputField.js';
+import { FileField } from './components/FileField.js';
+import { ImageField } from './components/ImageField.js';
+import { NumberInputField } from './components/NumberInputField.js';
+import { PhoneInputField } from './components/PhoneInputField.js';
+import { RadioField } from './components/RadioField.js';
+import { SelectField } from './components/SelectField.js';
+import { TextAreaField } from './components/TextAreaField.js';
+import { TextInputField } from './components/TextInputField.js';
+import { TimeInputField } from './components/TimeInputField.js';
+import { UrlInputField } from './components/UrlInputField.js';
 
 type FieldsMap = {
     [K in LeafFieldType]: ComponentType<FieldControlProps<K>>;

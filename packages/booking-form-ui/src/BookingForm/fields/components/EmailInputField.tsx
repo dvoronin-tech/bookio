@@ -1,17 +1,19 @@
-import type { FC } from 'react';
+import { type FC } from 'react';
 import { ValidatableInput } from '@bookio/ui';
-import { getRequiredRule } from '../utils/rules.js';
-import { useFieldError } from '../utils/useFieldError.js';
-import type { FieldControlProps } from './field.types.js';
-import styles from './Fields.module.scss';
+import { getRequiredRule } from '../../utils/rules.js';
+import { useFieldError } from '../../utils/useFieldError.js';
+import type { FieldControlProps } from '../field.types.js';
+import styles from '../Fields.module.scss';
 
-export const TextInputField: FC<FieldControlProps<'text'>> = ({ field, register, control }) => {
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+export const EmailInputField: FC<FieldControlProps<'email'>> = ({ field, register, control }) => {
     const { hasError, errorMessage } = useFieldError(control, field.key);
 
     return (
         <ValidatableInput
             className={styles.default}
-            type="text"
+            type="email"
             label={field.name}
             placeholder={field.params.placeholder}
             helpText={field.params.helpText}
@@ -20,6 +22,10 @@ export const TextInputField: FC<FieldControlProps<'text'>> = ({ field, register,
             useConfirmationColor={false}
             {...register(field.key, {
                 required: getRequiredRule(field),
+                pattern: {
+                    value: EMAIL_PATTERN,
+                    message: 'Enter a valid email address',
+                },
             })}
         />
     );

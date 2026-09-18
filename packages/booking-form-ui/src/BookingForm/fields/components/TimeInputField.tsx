@@ -2,10 +2,10 @@ import type { FC } from 'react';
 import { Controller } from 'react-hook-form';
 import { clsx } from 'clsx';
 import { TimePicker } from '@bookio/ui';
-import { getRequiredRule } from '../utils/rules.js';
-import { FieldError } from './FieldError.js';
-import type { FieldControlProps } from './field.types.js';
-import styles from './Fields.module.scss';
+import { getRequiredRule } from '../../utils/rules.js';
+import { FieldError } from '../FieldError.js';
+import type { FieldControlProps } from '../field.types.js';
+import styles from '../Fields.module.scss';
 
 export const TimeInputField: FC<FieldControlProps<'time'>> = ({ field, control }) => {
     return (

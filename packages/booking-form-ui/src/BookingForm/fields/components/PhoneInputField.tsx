@@ -3,10 +3,10 @@ import { hasFlag } from 'country-flag-icons';
 import * as FlagSvgs from 'country-flag-icons/string/3x2';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { Input, ValidatableInput } from '@bookio/ui';
-import { getRequiredRule } from '../utils/rules.js';
-import { useFieldError } from '../utils/useFieldError.js';
-import type { FieldControlProps } from './field.types.js';
-import styles from './Fields.module.scss';
+import { getRequiredRule } from '../../utils/rules.js';
+import { useFieldError } from '../../utils/useFieldError.js';
+import type { FieldControlProps } from '../field.types.js';
+import styles from '../Fields.module.scss';
 
 const DEFAULT_COUNTRY = 'BY';
 const INVALID_PHONE_MESSAGE = 'Enter a valid phone number';
