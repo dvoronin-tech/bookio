@@ -77,11 +77,13 @@ function BookingForm({ bookingForm, onSubmit, onInvalid }: BookingFormProps) {
     };
 
     const onInvalidHandler = (errors: FieldErrors<Record<string, string>>) => {
+        console.log('Validation failed:', errors);
         onInvalid?.(errors);
     };
 
     return (
         <form
+            noValidate
             className={styles.bookingForm}
             onSubmit={handleSubmit(onValidHandler, onInvalidHandler)}
         >

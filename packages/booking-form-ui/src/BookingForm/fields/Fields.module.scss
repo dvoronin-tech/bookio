@@ -14,6 +14,22 @@
     object-fit: cover;
 }
 
+.fieldStack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+}
+
+.fieldError {
+    font-size: 1.2rem;
+    line-height: 1.3;
+    color: var(--color-system-red);
+}
+
+.invalid {
+    border-color: var(--color-system-red) !important;
+}
+
 .checkboxField {
     display: flex;
     flex-direction: column;

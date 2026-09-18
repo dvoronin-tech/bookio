@@ -1,23 +1,14 @@
-import { useCallback, type FC } from 'react';
+import type { FC } from 'react';
 import { ValidatableInput } from '@bookio/ui';
+import { getRequiredRule } from '../utils/rules.js';
+import { useFieldError } from '../utils/useFieldError.js';
 import type { FieldControlProps } from './field.types.js';
-import { useBlurValidation } from './useBlurValidation.js';
 import styles from './Fields.module.scss';
 
 const URL_PATTERN = /^https?:\/\/\S+$/i;
 
-export const UrlInputField: FC<FieldControlProps<'url'>> = ({ field, register }) => {
-    const { onBlur: registerOnBlur, ...registerProps } = register(field.key);
-
-    const isValueValid = useCallback(
-        (value: string) => (value ? URL_PATTERN.test(value) : !field.required),
-        [field.required],
-    );
-
-    const { isValid, handleBlur, resetValidation } = useBlurValidation(
-        registerOnBlur,
-        isValueValid,
-    );
+export const UrlInputField: FC<FieldControlProps<'url'>> = ({ field, register, control }) => {
+    const { hasError, errorMessage } = useFieldError(control, field.key);
 
     return (
         <ValidatableInput
@@ -26,12 +17,16 @@ export const UrlInputField: FC<FieldControlProps<'url'>> = ({ field, register })
             label={field.name}
             placeholder={field.params.placeholder}
             helpText={field.params.helpText}
-            isValid={isValid}
-            errorMessage="Enter a valid URL"
+            isValid={hasError ? false : null}
+            errorMessage={errorMessage}
             useConfirmationColor={false}
-            {...registerProps}
-            onBlur={handleBlur}
-            onFocus={resetValidation}
+            {...register(field.key, {
+                required: getRequiredRule(field),
+                pattern: {
+                    value: URL_PATTERN,
+                    message: 'Enter a valid URL',
+                },
+            })}
         />
     );
 };

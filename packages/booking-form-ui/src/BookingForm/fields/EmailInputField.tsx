@@ -1,23 +1,14 @@
-import { useCallback, type FC } from 'react';
+import { type FC } from 'react';
 import { ValidatableInput } from '@bookio/ui';
+import { getRequiredRule } from '../utils/rules.js';
+import { useFieldError } from '../utils/useFieldError.js';
 import type { FieldControlProps } from './field.types.js';
-import { useBlurValidation } from './useBlurValidation.js';
 import styles from './Fields.module.scss';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-export const EmailInputField: FC<FieldControlProps<'email'>> = ({ field, register }) => {
-    const { onBlur: registerOnBlur, ...registerProps } = register(field.key);
-
-    const isValueValid = useCallback(
-        (value: string) => (value ? EMAIL_PATTERN.test(value) : !field.required),
-        [field.required],
-    );
-
-    const { isValid, handleBlur, resetValidation } = useBlurValidation(
-        registerOnBlur,
-        isValueValid,
-    );
+export const EmailInputField: FC<FieldControlProps<'email'>> = ({ field, register, control }) => {
+    const { hasError, errorMessage } = useFieldError(control, field.key);
 
     return (
         <ValidatableInput
@@ -26,12 +17,16 @@ export const EmailInputField: FC<FieldControlProps<'email'>> = ({ field, registe
             label={field.name}
             placeholder={field.params.placeholder}
             helpText={field.params.helpText}
-            isValid={isValid}
-            errorMessage="Enter a valid email address"
+            isValid={hasError ? false : null}
+            errorMessage={errorMessage}
             useConfirmationColor={false}
-            {...registerProps}
-            onBlur={handleBlur}
-            onFocus={resetValidation}
+            {...register(field.key, {
+                required: getRequiredRule(field),
+                pattern: {
+                    value: EMAIL_PATTERN,
+                    message: 'Enter a valid email address',
+                },
+            })}
         />
     );
 };

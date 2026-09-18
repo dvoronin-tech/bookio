@@ -3,11 +3,13 @@ import { hasFlag } from 'country-flag-icons';
 import * as FlagSvgs from 'country-flag-icons/string/3x2';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { Input, ValidatableInput } from '@bookio/ui';
+import { getRequiredRule } from '../utils/rules.js';
+import { useFieldError } from '../utils/useFieldError.js';
 import type { FieldControlProps } from './field.types.js';
-import { useBlurValidation } from './useBlurValidation.js';
 import styles from './Fields.module.scss';
 
 const DEFAULT_COUNTRY = 'BY';
+const INVALID_PHONE_MESSAGE = 'Enter a valid phone number';
 
 function getCountryFlagSrc(country: string | undefined) {
     if (!country || !hasFlag(country)) {
@@ -23,17 +25,28 @@ function getCountryFlagSrc(country: string | undefined) {
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
-export const PhoneInputField: FC<FieldControlProps<'phone'>> = ({ field, register }) => {
+export const PhoneInputField: FC<FieldControlProps<'phone'>> = ({ field, register, control }) => {
     const { placeholder, helpText } = field.params;
 
     const [country, setCountry] = useState(DEFAULT_COUNTRY);
     const flagSrc = getCountryFlagSrc(country);
 
-    const {
-        onChange: registerOnChange,
-        onBlur: registerOnBlur,
-        ...registerProps
-    } = register(field.key);
+    const { hasError, errorMessage } = useFieldError(control, field.key);
+
+    const { onChange: registerOnChange, ...registerProps } = register(field.key, {
+        required: getRequiredRule(field),
+        validate: (value: string) => {
+            const phone = parsePhoneNumberFromString(value);
+
+            // Empty value or bare country code (e.g. the "+375" default) counts
+            // as "not filled" — only acceptable when the field is optional.
+            if (!phone || !phone.nationalNumber) {
+                return !field.required || INVALID_PHONE_MESSAGE;
+            }
+
+            return phone.isValid() || INVALID_PHONE_MESSAGE;
+        },
+    });
 
     const handleChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
@@ -41,24 +54,6 @@ export const PhoneInputField: FC<FieldControlProps<'phone'>> = ({ field, registe
             setCountry(parsePhoneNumberFromString(event.target.value)?.country ?? DEFAULT_COUNTRY);
         },
         [registerOnChange],
-    );
-
-    const isValueValid = useCallback(
-        (value: string) => {
-            const phone = parsePhoneNumberFromString(value);
-
-            if (!phone || !phone.nationalNumber) {
-                return !field.required;
-            }
-
-            return phone.isValid();
-        },
-        [field.required],
-    );
-
-    const { isValid, handleBlur, resetValidation } = useBlurValidation(
-        registerOnBlur,
-        isValueValid,
     );
 
     return (
@@ -73,13 +68,11 @@ export const PhoneInputField: FC<FieldControlProps<'phone'>> = ({ field, registe
                 type="tel"
                 placeholder={placeholder}
                 helpText={helpText}
-                isValid={isValid}
-                errorMessage="Enter a valid phone number"
+                isValid={hasError ? false : null}
+                errorMessage={errorMessage}
                 useConfirmationColor={false}
                 {...registerProps}
                 onChange={handleChange}
-                onBlur={handleBlur}
-                onFocus={resetValidation}
             />
         </Input.Root>
     );

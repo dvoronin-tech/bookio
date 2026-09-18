@@ -1,18 +1,26 @@
 import type { FC } from 'react';
-import { Input } from '@bookio/ui';
+import { ValidatableInput } from '@bookio/ui';
+import { getRequiredRule } from '../utils/rules.js';
+import { useFieldError } from '../utils/useFieldError.js';
 import type { FieldControlProps } from './field.types.js';
 import styles from './Fields.module.scss';
 
-export const TextInputField: FC<FieldControlProps<'text'>> = ({ field, register }) => {
+export const TextInputField: FC<FieldControlProps<'text'>> = ({ field, register, control }) => {
+    const { hasError, errorMessage } = useFieldError(control, field.key);
+
     return (
-        <Input
+        <ValidatableInput
             className={styles.default}
-            placeholder={field.params.placeholder}
-            label={field.name}
-            helpText={field.params.helpText}
-            required={field.required}
             type="text"
-            {...register(field.key)}
+            label={field.name}
+            placeholder={field.params.placeholder}
+            helpText={field.params.helpText}
+            isValid={hasError ? false : null}
+            errorMessage={errorMessage}
+            useConfirmationColor={false}
+            {...register(field.key, {
+                required: getRequiredRule(field),
+            })}
         />
     );
 };
