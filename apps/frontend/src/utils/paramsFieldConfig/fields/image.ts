@@ -10,6 +10,11 @@ export const imageFieldsConfig: Record<
     FileParamKey,
     BaseUIFieldType | SelectUIField | NumberUIField
 > = {
+    placeholder: {
+        formName: 'placeholder',
+        label: 'Placeholder',
+        type: 'text',
+    },
     accept: {
         formName: 'accept',
         label: 'Accepted image types (default: All types)',
@@ -29,6 +34,10 @@ export const imageFieldsConfig: Record<
 };
 
 // const fileFieldsConfig: Record<FileParamKey, BaseUIFieldConfig | FileUiField> = {
+//     placeholder: {
+//         label: 'Placeholder',
+//         type: 'text',
+//     },
 //     accept: {
 //         label: 'Accepted file types',
 //         multiple: true,

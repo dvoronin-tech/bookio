@@ -111,6 +111,7 @@ export const checkboxParamsSchema = z.object({
 }) satisfies z.ZodType<CheckboxFieldParams>;
 
 export const fileParamsSchema = z.object({
+    placeholder: z.string().optional(),
     accept: z.array(z.string()).optional(),
     maxSizeMb: z.number().positive().optional(),
 }) satisfies z.ZodType<FileFieldParams>;

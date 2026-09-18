@@ -9,7 +9,8 @@ import {
 import { CheckboxField } from './CheckboxField.js';
 import { DateInputField } from './DateInputField.js';
 import { EmailInputField } from './EmailInputField.js';
-import { FieldPlaceholder } from './FieldPlaceholder.js';
+import { FileField } from './FileField.js';
+import { ImageField } from './ImageField.js';
 import { NumberInputField } from './NumberInputField.js';
 import { PhoneInputField } from './PhoneInputField.js';
 import { RadioField } from './RadioField.js';
@@ -26,8 +27,8 @@ type FieldsMap = {
 const fieldsMap: FieldsMap = {
     text: TextInputField,
     number: NumberInputField,
-    file: FieldPlaceholder,
-    image: FieldPlaceholder,
+    file: FileField,
+    image: ImageField,
     url: UrlInputField,
     phone: PhoneInputField,
     date: DateInputField,

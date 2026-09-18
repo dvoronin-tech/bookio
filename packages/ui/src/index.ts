@@ -66,3 +66,21 @@ export type { ProgressBarProps } from './ProgressBar/ProgressBar.js';
 export { Reorder } from './DragAndDrop/DragAndDrop.js';
 export { useReorderContext } from './DragAndDrop/ExternalReorderContext.js';
 export type { ItemId } from './DragAndDrop/InternalReorderContext.js';
+
+export { default as ImageDropField } from './ImagePicker/ImageDropField.js';
+export type { ImageDropFieldProps } from './ImagePicker/ImageDropField.js';
+
+export { default as ImagePickerField } from './ImagePicker/ImagePickerField.js';
+export type { ImagePickerFieldProps } from './ImagePicker/ImagePickerField.js';
+
+export { useImagePicker } from './ImagePicker/useImagePicker.js';
+export type { UseImagePickerOptions, UseImagePickerResult } from './ImagePicker/useImagePicker.js';
+
+export { default as FileDropField } from './FilePicker/FileDropField.js';
+export type { FileDropFieldProps } from './FilePicker/FileDropField.js';
+
+export { default as FilePickerField } from './FilePicker/FilePickerField.js';
+export type { FilePickerFieldProps } from './FilePicker/FilePickerField.js';
+
+export { useFilePicker } from './hooks/useFilePicker.js';
+export type { UseFilePickerOptions, UseFilePickerResult } from './hooks/useFilePicker.js';

@@ -77,6 +77,7 @@ export type CheckboxFieldParams = {
 };
 
 export type FileFieldParams = {
+    placeholder?: string;
     accept?: string[];
     maxSizeMb?: number;
 };
