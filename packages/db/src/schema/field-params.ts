@@ -134,11 +134,6 @@ export type BookingFormFieldRowUnion =
     | BookingFormFieldRow<'textarea'>
     | BookingFormFieldRow<'group'>;
 
-/** Nested shape returned by queries that load root fields with childFields */
-export type BookingFormFieldWithChildren =
-    | (BookingFormFieldRow<'group'> & { childFields: BookingFormFieldRowUnion[] })
-    | BookingFormFieldRow<NonGroupFieldType>;
-
 /** Flat field item in PUT /fields/sync payload (`bookingFormId` is on the request root). */
 export type BookingFormFieldSyncItem = {
     [T in FieldType]: Omit<BookingFormFieldRow<T>, 'id' | 'bookingFormId'> & { id?: string };
