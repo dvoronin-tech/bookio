@@ -1,4 +1,4 @@
-import { memo, type FC, useCallback } from 'react';
+import { memo, type FC } from 'react';
 import styles from './OrganizationHeader.module.scss';
 import Logo from '#assets/logo.svg?react';
 import { Button, Input } from '@bookio/ui';
@@ -9,21 +9,18 @@ import PlusIcon from '#assets/icons/plus.svg?react';
 import SearchIcon from '#assets/icons/search.svg?react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { navigateToOrganizationsList } from '#navigation';
-import { useOrganizationListStore } from '#store/useOrganizationListStore';
 
-export const OrganizationHeader: FC = memo(() => {
+interface OrganizationHeaderProps {
+    onOpenSearch: () => void;
+}
+
+export const OrganizationHeader: FC<OrganizationHeaderProps> = memo(({ onOpenSearch }) => {
     const navigate = useNavigate();
     const { pathname } = useLocation();
-
-    const setIsOpen = useOrganizationListStore((state) => state.setIsOpen);
 
     const onClickHeader = () => {
         navigateToOrganizationsList(navigate);
     };
-
-    const onClickSearch = useCallback(() => {
-        setIsOpen(true);
-    }, [setIsOpen]);
 
     if (pathname === '/organizations/list') {
         return (
@@ -39,7 +36,7 @@ export const OrganizationHeader: FC = memo(() => {
                         <Input
                             type="search"
                             placeholder="Search"
-                            onClick={onClickSearch}
+                            onClick={onOpenSearch}
                             readOnly
                         />
                     </Input.Root>

@@ -1,8 +1,6 @@
 import type { FC } from 'react';
 import styles from './OrganizationSearch.module.scss';
 import { Input } from '@bookio/ui';
-import { useOrganizationListStore } from '#store/useOrganizationListStore';
-import { useShallow } from 'zustand/shallow';
 import { useOnPress } from '#hooks/useOnPress';
 import { useCallback, useRef, useState } from 'react';
 import { clsx } from 'clsx';
@@ -56,10 +54,12 @@ const filterOrganizations = (organizations: OrganizationsType, value: string) =>
     return preparedOrgs.filter((org) => org.score > 60).sort((a, b) => b.score - a.score);
 };
 
-export const OrganizationSearch: FC = () => {
-    const { setIsOpen, isOpen } = useOrganizationListStore(
-        useShallow(({ setIsOpen, isOpen }) => ({ isOpen, setIsOpen })),
-    );
+interface OrganizationSearchProps {
+    isOpen: boolean;
+    onOpenChange: (isOpen: boolean) => void;
+}
+
+export const OrganizationSearch: FC<OrganizationSearchProps> = ({ isOpen, onOpenChange }) => {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchWrapperRef = useRef<HTMLDivElement>(null);
     const [isClosing, setIsClosing] = useState(false);
@@ -75,9 +75,9 @@ export const OrganizationSearch: FC = () => {
             if (e.animationName !== styles.fadeOut) return;
 
             setIsClosing(false);
-            setIsOpen(false);
+            onOpenChange(false);
         },
-        [isClosing, setIsOpen],
+        [isClosing, onOpenChange],
     );
 
     const { data: organizations, error } = useGetOrganizationsByUserId();
