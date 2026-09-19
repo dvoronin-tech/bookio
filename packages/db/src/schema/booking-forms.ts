@@ -108,7 +108,7 @@ export const bookingFormsRelations = relations(
     }),
 );
 
-export type BookingFormUpdate = Partial<
+export type BookingFormSettingsUpdate = Partial<
     Omit<typeof bookingForms.$inferInsert, 'id'>
 >;
 

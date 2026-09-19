@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { BookingFormUpdate } from '@bookio/db';
+import type { BookingFormSettingsUpdate } from '@bookio/db';
 
 export const updateBookingFormSchema = z
     .object({
@@ -20,4 +20,4 @@ export const updateBookingFormSchema = z
         {
             message: 'At least one field must be provided',
         },
-    ) satisfies z.ZodType<BookingFormUpdate>;
+    ) satisfies z.ZodType<BookingFormSettingsUpdate>;

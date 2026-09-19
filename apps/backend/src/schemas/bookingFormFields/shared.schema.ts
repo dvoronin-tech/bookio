@@ -61,23 +61,36 @@ export const dateParamsSchema = z.object({
     placeholder: z.string().optional(),
     minYear: z.preprocess(
         emptyToUndefined,
-        z.number().int().min(DATE_YEAR_SLIDER_MIN).max(DATE_YEAR_SLIDER_MAX).default(DATE_YEAR_DEFAULT_MIN),
+        z
+            .number()
+            .int()
+            .min(DATE_YEAR_SLIDER_MIN)
+            .max(DATE_YEAR_SLIDER_MAX)
+            .default(DATE_YEAR_DEFAULT_MIN),
     ),
     maxYear: z.preprocess(
         emptyToUndefined,
-        z.number().int().min(DATE_YEAR_SLIDER_MIN).max(DATE_YEAR_SLIDER_MAX).default(getDateYearDefaultMax()),
+        z
+            .number()
+            .int()
+            .min(DATE_YEAR_SLIDER_MIN)
+            .max(DATE_YEAR_SLIDER_MAX)
+            .default(getDateYearDefaultMax()),
     ),
 }) satisfies z.ZodType<DateFieldParams>;
 
-export const timeStringSchema = z
-    .string()
-    .regex(/^([01]\d|2[0-3]):[0-5]\d$/, { message: 'Time must be in HH:mm format' });
+export const timeStringSchema = z.string().regex(/^([01]\d|2[0-3]):[0-5]\d$/, {
+    message: 'Time must be in HH:mm format',
+});
 
 export const timeParamsSchema = z.object({
     ...inputParamsSchema.shape,
     min: z.preprocess(emptyToUndefined, timeStringSchema.optional()),
     max: z.preprocess(emptyToUndefined, timeStringSchema.optional()),
-    step: z.preprocess(emptyToUndefined, z.number().int().positive().optional()),
+    step: z.preprocess(
+        emptyToUndefined,
+        z.number().int().positive().optional(),
+    ),
 }) satisfies z.ZodType<TimeFieldParams>;
 
 export const textAreaParamsSchema = z.object({
@@ -119,8 +132,6 @@ export const fileParamsSchema = z.object({
 type BuildFieldVariantsOptions<
     TBase extends z.ZodRawShape,
     TRequired extends z.ZodType,
-    TGroupRequired extends z.ZodType,
-    TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
     TDateParams extends z.ZodType,
     TTimeParams extends z.ZodType,
@@ -133,8 +144,6 @@ type BuildFieldVariantsOptions<
 > = {
     base: TBase;
     required: TRequired;
-    groupRequired: TGroupRequired;
-    groupParentId: TGroupParentId;
     leafParentId: z.ZodNullable<z.ZodUUID>;
     inputParams: TInputParams;
     dateParams: TDateParams;
@@ -154,8 +163,6 @@ type BuildFieldVariantsOptions<
 export const buildBookingFormFieldVariants = <
     TBase extends z.ZodRawShape,
     TRequired extends z.ZodType,
-    TGroupRequired extends z.ZodType,
-    TGroupParentId extends z.ZodType,
     TInputParams extends z.ZodType,
     TDateParams extends z.ZodType,
     TTimeParams extends z.ZodType,
@@ -168,8 +175,6 @@ export const buildBookingFormFieldVariants = <
 >({
     base,
     required,
-    groupRequired,
-    groupParentId,
     leafParentId,
     inputParams,
     dateParams,
@@ -183,8 +188,6 @@ export const buildBookingFormFieldVariants = <
 }: BuildFieldVariantsOptions<
     TBase,
     TRequired,
-    TGroupRequired,
-    TGroupParentId,
     TInputParams,
     TDateParams,
     TTimeParams,
@@ -195,7 +198,10 @@ export const buildBookingFormFieldVariants = <
     TFileParams,
     TGroupParams
 >) => {
-    const leafField = <T extends string, TParams extends z.ZodType>(type: T, params: TParams) =>
+    const leafField = <T extends string, TParams extends z.ZodType>(
+        type: T,
+        params: TParams,
+    ) =>
         z.object({
             ...base,
             type: z.literal(type),
@@ -221,45 +227,9 @@ export const buildBookingFormFieldVariants = <
         z.object({
             ...base,
             type: z.literal('group'),
-            required: groupRequired,
-            parentId: groupParentId,
+            required: z.literal(false).default(false),
+            parentId: z.null(),
             params: groupParams,
         }),
     ] as const;
 };
-
-const createInputFieldVariants = buildBookingFormFieldVariants({
-    base: {
-        id: z.uuid(),
-        name: fieldNameSchema,
-        key: fieldKeySchema,
-        order: z.number().int().min(0),
-    },
-    required: z.boolean().default(false),
-    groupRequired: z.literal(false).default(false),
-    groupParentId: z.null(),
-    leafParentId: z.uuid().nullable(),
-    inputParams: inputParamsSchema.default({}),
-    dateParams: dateParamsSchema.default(getDefaultDateParams),
-    timeParams: timeParamsSchema.default({}),
-    textAreaParams: textAreaParamsSchema.default({}),
-    selectParams: selectParamsSchema,
-    radioParams: choiceParamsSchema,
-    checkboxParams: checkboxParamsSchema.default({}),
-    fileParams: fileParamsSchema.default({}),
-    groupParams: groupParamsSchema.default({}),
-});
-
-export const createInputFieldSchema = z.discriminatedUnion('type', [
-    createInputFieldVariants[0],
-    createInputFieldVariants[1],
-    createInputFieldVariants[2],
-    createInputFieldVariants[3],
-    createInputFieldVariants[4],
-    createInputFieldVariants[5],
-    createInputFieldVariants[6],
-    createInputFieldVariants[7],
-]);
-
-export type CreateInputFieldInput = z.input<typeof createInputFieldSchema>;
-export type CreateInputFieldOutput = z.infer<typeof createInputFieldSchema>;

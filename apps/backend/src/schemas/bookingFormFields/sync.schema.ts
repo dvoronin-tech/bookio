@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import type { BookingFormFieldSyncItem, BookingFormFieldsSyncPayload } from '@bookio/db';
+import type { BookingFormFieldSyncItem } from '@bookio/db';
 import {
     buildBookingFormFieldVariants,
     checkboxParamsSchema,
@@ -26,8 +26,6 @@ export const syncBookingFormFieldItemSchema = z.discriminatedUnion(
             order: z.number().int().min(0),
         },
         required: z.boolean().default(false),
-        groupRequired: z.literal(false).default(false),
-        groupParentId: z.null(),
         leafParentId: z.uuid().nullable(),
         inputParams: inputParamsSchema.default({}),
         dateParams: dateParamsSchema.default(getDefaultDateParams),
@@ -78,23 +76,27 @@ export const syncBookingFormFieldsSchema = z
                 }
             }
 
-            if (typeof field.parentId === 'string' && !groupIds.has(field.parentId)) {
+            if (
+                typeof field.parentId === 'string' &&
+                !groupIds.has(field.parentId)
+            ) {
                 ctx.addIssue({
                     code: 'custom',
-                    message: 'Parent field must be a group field included in the payload',
+                    message:
+                        'Parent field must be a group field included in the payload',
                     path: ['fields', index, 'parentId'],
                 });
             }
         }
-    }) satisfies z.ZodType<BookingFormFieldsSyncPayload>;
+    });
 
-export type SyncBookingFormFieldItem = z.infer<typeof syncBookingFormFieldItemSchema>;
-export type SyncBookingFormFieldsInput = z.infer<typeof syncBookingFormFieldsSchema>;
+export type SyncBookingFormFieldItem = z.infer<
+    typeof syncBookingFormFieldItemSchema
+>;
 
 /** Alias for create-field modal — same shape as sync item schema. */
 export const createModalFieldSchema = syncBookingFormFieldItemSchema;
 
-export type CreateModalFieldInput = z.input<typeof createModalFieldSchema>;
 export type CreateModalFieldOutput = z.infer<typeof createModalFieldSchema>;
 
 /** Partial modal form state — decoupled from discriminated-union input correlation. */

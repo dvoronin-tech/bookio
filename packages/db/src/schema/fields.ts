@@ -1,4 +1,5 @@
 import {
+    type AnyPgColumn,
     boolean,
     index,
     integer,
@@ -8,7 +9,6 @@ import {
     text,
     uniqueIndex,
     uuid,
-    type AnyPgColumn,
 } from 'drizzle-orm/pg-core';
 import { relations } from 'drizzle-orm';
 import { bookingForms } from './booking-forms.js';
@@ -49,10 +49,7 @@ export const fieldTypeEnum = pgEnum('field_type', [...fieldTypeValues]);
 export const bookingFormFields = pgTable(
     'booking_form_fields',
     {
-        id: uuid('id')
-            .primaryKey()
-            .notNull()
-            .unique(),
+        id: uuid('id').primaryKey().notNull().unique(),
         bookingFormId: uuid('booking_form_id')
             .references(() => bookingForms.id, {
                 onDelete: 'cascade',
@@ -62,9 +59,12 @@ export const bookingFormFields = pgTable(
         type: fieldTypeEnum('type').notNull(),
         key: text('key').notNull(),
         required: boolean('required').notNull().default(false),
-        parentId: uuid('parent_id').references((): AnyPgColumn => bookingFormFields.id, {
-            onDelete: 'cascade',
-        }),
+        parentId: uuid('parent_id').references(
+            (): AnyPgColumn => bookingFormFields.id,
+            {
+                onDelete: 'cascade',
+            },
+        ),
         order: integer('order').notNull().default(0),
         params: jsonb('params').$type<FieldParams>().notNull().default({}),
     },
@@ -81,25 +81,29 @@ export const bookingFormFields = pgTable(
     ],
 );
 
-export const formFieldsRelations = relations(bookingFormFields, ({ one, many }) => ({
-    bookingForm: one(bookingForms, {
-        fields: [bookingFormFields.bookingFormId],
-        references: [bookingForms.id],
+export const formFieldsRelations = relations(
+    bookingFormFields,
+    ({ one, many }) => ({
+        bookingForm: one(bookingForms, {
+            fields: [bookingFormFields.bookingFormId],
+            references: [bookingForms.id],
+        }),
+        parentField: one(bookingFormFields, {
+            fields: [bookingFormFields.parentId],
+            references: [bookingFormFields.id],
+            relationName: 'nested_fields',
+        }),
+        childFields: many(bookingFormFields, {
+            relationName: 'nested_fields',
+        }),
     }),
-    parentField: one(bookingFormFields, {
-        fields: [bookingFormFields.parentId],
-        references: [bookingFormFields.id],
-        relationName: 'nested_fields',
-    }),
-    childFields: many(bookingFormFields, {
-        relationName: 'nested_fields',
-    }),
-}));
+);
 
 export type BookingFormFieldSelect = typeof bookingFormFields.$inferSelect;
 export type BookingFormFieldInsert = typeof bookingFormFields.$inferInsert;
 
-export type BookingFormFieldCreate = Omit<BookingFormFieldInsert, 'id' | 'order'>;
-export type BookingFormFieldUpdate = Partial<Omit<BookingFormFieldInsert, 'id'>>;
+export type BookingFormFieldUpdate = Partial<
+    Omit<BookingFormFieldInsert, 'id'>
+>;
 
 export * from './field-params.js';
