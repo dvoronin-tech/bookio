@@ -1,4 +1,4 @@
-import { useCallback, type FC, useState, type MouseEvent } from 'react';
+import { type FC, type MouseEvent, useCallback, useState } from 'react';
 import styles from './BookingFormCard.module.scss';
 import type { BookingFormType } from '#api/bookingForms/getBookingForms';
 import { Button } from '@bookio/ui';
@@ -14,7 +14,9 @@ import CopyIcon from '#assets/icons/copy.svg?react';
 import { useParams } from 'react-router-dom';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
-export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingForm }) => {
+export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
+    bookingForm,
+}) => {
     const { organizationId } = useParams();
     const { data: organization } = useGetOrganization(organizationId);
     const [isDeleting, setIsDeleting] = useState(false);
@@ -25,12 +27,15 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
         setIsDeleting(true);
     }, []);
 
-    const handleCopyBookingFormUrl = useCallback((e: MouseEvent<HTMLButtonElement>) => {
-        e.preventDefault();
-        e.stopPropagation();
-        navigator.clipboard.writeText(bookingFormUrl);
-        toast.success('Booking form URL copied to clipboard');
-    }, [bookingFormUrl]);
+    const handleCopyBookingFormUrl = useCallback(
+        (e: MouseEvent<HTMLButtonElement>) => {
+            e.preventDefault();
+            e.stopPropagation();
+            navigator.clipboard.writeText(bookingFormUrl);
+            toast.success('Booking form URL copied to clipboard');
+        },
+        [bookingFormUrl],
+    );
 
     const handleNavigateToBookingForm = useCallback(() => {
         window.open(bookingFormUrl, '_blank');
@@ -42,15 +47,23 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
                 <div className={styles.contentGroup}>
                     <div className={styles.cardHeader}>
                         <div className={styles.titleRow}>
-                            <h3 className={styles.formName}>{bookingForm.name}</h3>
+                            <h3 className={styles.formName}>
+                                {bookingForm.name}
+                            </h3>
                             <span
                                 className={clsx(styles.statusBadge, {
-                                    [styles.statusBadgeActive]: bookingForm.isActive,
-                                    [styles.statusBadgeInactive]: !bookingForm.isActive,
+                                    [styles.statusBadgeActive]:
+                                        bookingForm.isActive,
+                                    [styles.statusBadgeInactive]:
+                                        !bookingForm.isActive,
                                 })}
                             >
                                 <span className={styles.statusDot} />
-                                <span>{bookingForm.isActive ? 'Active' : 'Inactive'}</span>
+                                <span>
+                                    {bookingForm.isActive
+                                        ? 'Active'
+                                        : 'Inactive'}
+                                </span>
                             </span>
                         </div>
                         <p className={styles.formDescription}>
@@ -70,9 +83,16 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
                         </div>
 
                         <div className={styles.urlBlock}>
-                            <span className={styles.urlLabel}>Booking form URL</span>
-                            <button className={styles.urlRow} onClick={handleNavigateToBookingForm}>
-                                <span className={styles.urlText}>{bookingFormUrl}</span>
+                            <span className={styles.urlLabel}>
+                                Booking form URL
+                            </span>
+                            <a
+                                className={styles.urlRow}
+                                onClick={handleNavigateToBookingForm}
+                            >
+                                <span className={styles.urlText}>
+                                    {bookingFormUrl}
+                                </span>
                                 <button
                                     type="button"
                                     className={styles.copyButton}
@@ -81,7 +101,7 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({ bookingF
                                 >
                                     <CopyIcon />
                                 </button>
-                            </button>
+                            </a>
                         </div>
                     </div>
                 </div>

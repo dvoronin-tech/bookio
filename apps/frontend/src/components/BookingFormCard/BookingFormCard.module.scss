@@ -56,7 +56,11 @@
     }
 
     .statusBadgeActive {
-        background-color: color-mix(in srgb, var(--color-system-green) 13%, transparent);
+        background-color: color-mix(
+            in srgb,
+            var(--color-system-green) 13%,
+            transparent
+        );
         color: var(--color-system-green);
 
         .statusDot {
@@ -65,7 +69,11 @@
     }
 
     .statusBadgeInactive {
-        background-color: color-mix(in srgb, var(--color-text-secondary) 13%, transparent);
+        background-color: color-mix(
+            in srgb,
+            var(--color-text-secondary) 13%,
+            transparent
+        );
         color: var(--color-text-secondary);
 
         .statusDot {
@@ -155,9 +163,14 @@
         border-radius: 0.8rem;
         background-color: var(--color-bg-main);
         border: 1px solid var(--color-border);
+        cursor: pointer;
 
         &:hover {
-            background-color: color-mix(in srgb, var(--color-bg-main) 12%, transparent);
+            background-color: color-mix(
+                in srgb,
+                var(--color-bg-main) 12%,
+                transparent
+            );
             .urlText {
                 color: color-mix(in srgb, var(--color-primary) 80%, #fff);
             }
@@ -183,7 +196,11 @@
         height: 2.8rem;
         flex-shrink: 0;
         border-radius: 0.6rem;
-        background-color: color-mix(in srgb, var(--color-text-main) 7%, transparent);
+        background-color: color-mix(
+            in srgb,
+            var(--color-text-main) 7%,
+            transparent
+        );
         color: var(--color-text-secondary);
         transition:
             background-color 0.2s ease,
@@ -200,7 +217,11 @@
         }
 
         &:hover {
-            background-color: color-mix(in srgb, var(--color-text-main) 12%, transparent);
+            background-color: color-mix(
+                in srgb,
+                var(--color-text-main) 12%,
+                transparent
+            );
             color: var(--color-text-main);
         }
     }
