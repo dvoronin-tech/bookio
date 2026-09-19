@@ -7,7 +7,7 @@ import type { UpdateBookingFormMetaRequest } from '#api/bookingForms/bookingForm
 import {
     type ConfiguratorTabValue,
     DEFAULT_CONFIGURATOR_TAB,
-} from '#pages/App/BookingForms/BookingFormConfigurator/configuratorTabs';
+} from '#pages/BookingForms/BookingFormConfigurator/configuratorTabs';
 import type { SyncBookingFormFieldRequest } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
 
 interface BookingFormConfiguratorForm {
@@ -64,7 +64,7 @@ export const useBookingFormConfiguratorStore =
                         (state) => {
                             const stateId = state.bookingForm?.id;
                             const dataId = data.bookingForm.id;
-                            
+
                             if (stateId === dataId) {
                                 return {};
                             }

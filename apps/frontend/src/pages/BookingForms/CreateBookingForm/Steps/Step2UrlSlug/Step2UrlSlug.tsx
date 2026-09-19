@@ -1,0 +1,121 @@
+import { type ChangeEvent, type FC, useCallback } from 'react';
+import { useShallow } from 'zustand/shallow';
+import { Button, ValidatableInput } from '@bookio/ui';
+import { BookingFormUrlPreview } from '#components/BookingFormUrlPreview/BookingFormUrlPreview.tsx';
+import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts';
+import { useGetOrganization } from '#api/organizations/getOrganizationData.ts';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
+import { slugSchema } from '@/schemas';
+import toast from 'react-hot-toast';
+import styles from './Step2UrlSlug.module.scss';
+
+export const Step2UrlSlug: FC = () => {
+    const { slug, organizationId, setField, goToNextStep, goToPreviousStep } =
+        useCreateBookingFormStore(
+            useShallow((s) => ({
+                slug: s.data.slug,
+                organizationId: s.data.organizationId,
+                setField: s.setField,
+                goToNextStep: s.goToNextStep,
+                goToPreviousStep: s.goToPreviousStep,
+            })),
+        );
+
+    const { data: organization } = useGetOrganization(
+        organizationId || undefined,
+    );
+
+    const trimmedSlug = slug.trim();
+    const formatResult =
+        trimmedSlug.length > 0 ? slugSchema.safeParse(trimmedSlug) : null;
+    const isFormatValid = formatResult?.success === true;
+
+    const { isValid: slugExistsIsValid } = useIsBookingFormExists({
+        organizationId,
+        slug: isFormatValid ? trimmedSlug : '',
+    });
+
+    const slugIsValid =
+        trimmedSlug.length === 0
+            ? undefined
+            : !isFormatValid
+              ? false
+              : slugExistsIsValid;
+
+    const slugErrorMessage =
+        slugIsValid !== false
+            ? undefined
+            : !isFormatValid
+              ? (formatResult?.error.issues[0]?.message ?? 'Invalid slug')
+              : 'Booking form with this slug already exists';
+
+    const organizationSlug = organization?.slug ?? 'your-org';
+    const previewSlug = trimmedSlug || 'your-form';
+
+    const handleSlugChange = (event: ChangeEvent<HTMLInputElement>) => {
+        setField('slug', event.target.value);
+    };
+
+    const handleClickNext = useCallback(() => {
+        const parsed = slugSchema.safeParse(trimmedSlug);
+        if (!parsed.success) {
+            return toast.error(
+                parsed.error.issues[0]?.message ?? 'Invalid slug',
+            );
+        }
+
+        if (slugExistsIsValid === false) {
+            return toast.error('Booking form with this slug already exists');
+        }
+
+        if (slugExistsIsValid === undefined && trimmedSlug.length > 0) {
+            return toast.error(
+                'Please wait until the slug availability check finishes',
+            );
+        }
+
+        setField('slug', trimmedSlug);
+        goToNextStep();
+    }, [trimmedSlug, slugExistsIsValid, setField, goToNextStep]);
+
+    return (
+        <FormWizardLayout
+            stepNumber={2}
+            title="Choose a unique URL slug"
+            description="This slug becomes part of the public booking form link together with your organization slug. Clients will open this URL to book — keep it short and unique within your organization."
+            onEnterComplete={handleClickNext}
+            footer={
+                <div className={styles.footerActions}>
+                    <Button
+                        type="button"
+                        variant="primary-filled"
+                        onClick={handleClickNext}
+                    >
+                        Go to next
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="simple-clean"
+                        onClick={goToPreviousStep}
+                    >
+                        Back
+                    </Button>
+                </div>
+            }
+        >
+            <ValidatableInput
+                value={slug}
+                onChange={handleSlugChange}
+                placeholder="Slug*"
+                isValid={slugIsValid}
+                errorMessage={slugErrorMessage}
+                autoFocus
+            />
+            <BookingFormUrlPreview
+                organizationSlug={organizationSlug}
+                formSlug={previewSlug}
+            />
+        </FormWizardLayout>
+    );
+};

@@ -1,0 +1,70 @@
+import { type FC, useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {
+    navigateToBookingFormConfigurator,
+    navigateToBookingForms,
+} from '#navigation';
+import { useShallow } from 'zustand/shallow';
+import { Button } from '@bookio/ui';
+import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
+import styles from './Step6Success.module.scss';
+
+import DoneIcon from '#assets/icons/done.svg?react';
+
+export const Step6Success: FC = () => {
+    const navigate = useNavigate();
+    const { organizationId, createdBookingFormId } = useCreateBookingFormStore(
+        useShallow((s) => ({
+            organizationId: s.data.organizationId,
+            createdBookingFormId: s.createdBookingFormId,
+        })),
+    );
+
+    const handleContinueToConfigurator = useCallback(() => {
+        if (!organizationId || !createdBookingFormId) return;
+
+        navigateToBookingFormConfigurator(
+            navigate,
+            organizationId,
+            createdBookingFormId,
+        );
+    }, [navigate, organizationId, createdBookingFormId]);
+
+    const handleFinish = useCallback(() => {
+        if (!organizationId) return;
+
+        navigateToBookingForms(navigate, organizationId);
+    }, [navigate, organizationId]);
+
+    return (
+        <FormWizardLayout
+            stepNumber={6}
+            title="Booking form created"
+            description="Your booking form is ready. Continue to the configurator to set it up, or finish and return to the list."
+            footer={
+                <div className={styles.footerActions}>
+                    <Button
+                        type="button"
+                        variant="primary-filled"
+                        onClick={handleContinueToConfigurator}
+                        disabled={!createdBookingFormId}
+                    >
+                        Continue to configurator
+                    </Button>
+                    <Button
+                        type="button"
+                        variant="simple-clean"
+                        onClick={handleFinish}
+                    >
+                        Finish
+                    </Button>
+                </div>
+            }
+        >
+            <div className={styles.content}>
+                <DoneIcon className={styles.doneIcon} aria-hidden />
+            </div>
+        </FormWizardLayout>
+    );
+};

@@ -9,7 +9,10 @@ export const router = createBrowserRouter([
         children: [
             {
                 path: '/auth',
-                lazy: lazyRoute(() => import('#layouts/AuthLayout/AuthLayout'), 'AuthLayout'),
+                lazy: lazyRoute(
+                    () => import('#layouts/AuthLayout/AuthLayout'),
+                    'AuthLayout',
+                ),
                 children: [
                     {
                         index: true,
@@ -17,11 +20,17 @@ export const router = createBrowserRouter([
                     },
                     {
                         path: 'sign-up',
-                        lazy: lazyRoute(() => import('#pages/Auth/SignUp/SignUp'), 'SignUp'),
+                        lazy: lazyRoute(
+                            () => import('#pages/Auth/SignUp/SignUp'),
+                            'SignUp',
+                        ),
                     },
                     {
                         path: 'sign-in',
-                        lazy: lazyRoute(() => import('#pages/Auth/SignIn/SignIn'), 'SignIn'),
+                        lazy: lazyRoute(
+                            () => import('#pages/Auth/SignIn/SignIn'),
+                            'SignIn',
+                        ),
                     },
                 ],
             },
@@ -32,7 +41,8 @@ export const router = createBrowserRouter([
                     {
                         path: 'organizations',
                         lazy: lazyRoute(
-                            () => import('#layouts/OrganizationLayout/OrganizationLayout'),
+                            () =>
+                                import('#layouts/OrganizationLayout/OrganizationLayout'),
                             'OrganizationLayout',
                         ),
                         children: [
@@ -68,7 +78,10 @@ export const router = createBrowserRouter([
                     },
                     {
                         path: ':organizationId',
-                        lazy: lazyRoute(() => import('#layouts/AppLayout/AppLayout'), 'AppLayout'),
+                        lazy: lazyRoute(
+                            () => import('#layouts/AppLayout/AppLayout'),
+                            'AppLayout',
+                        ),
                         children: [
                             {
                                 path: 'booking-forms',
@@ -77,7 +90,8 @@ export const router = createBrowserRouter([
                                     {
                                         index: true,
                                         lazy: lazyRoute(
-                                            () => import('#pages/App/BookingForms/BookingFormsList/BookingFormsList'),
+                                            () =>
+                                                import('#pages/BookingForms/BookingFormsList/BookingFormsList'),
                                             'BookingForms',
                                         ),
                                     },
@@ -85,9 +99,7 @@ export const router = createBrowserRouter([
                                         path: 'create',
                                         lazy: lazyRoute(
                                             () =>
-                                                import(
-                                                    '#pages/App/BookingForms/CreateBookingForm/CreateBookingForm'
-                                                ),
+                                                import('#pages/BookingForms/CreateBookingForm/CreateBookingForm'),
                                             'CreateBookingForm',
                                         ),
                                     },
@@ -95,9 +107,7 @@ export const router = createBrowserRouter([
                                         path: ':bookingFormId/configurator',
                                         lazy: lazyRoute(
                                             () =>
-                                                import(
-                                                    '#pages/App/BookingForms/BookingFormConfigurator/BookingFormConfigurator'
-                                                ),
+                                                import('#pages/BookingForms/BookingFormConfigurator/BookingFormConfigurator'),
                                             'BookingFormConfigurator',
                                         ),
                                     },
