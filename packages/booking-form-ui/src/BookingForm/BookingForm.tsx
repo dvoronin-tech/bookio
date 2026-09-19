@@ -24,6 +24,7 @@ const DEFAULT_PHONE = '+375';
 export type BookingFormData = {
     name: string;
     description: string | null;
+    markRequiredFields: boolean;
     fields: BookingFormFieldInput[];
 };
 
@@ -38,7 +39,7 @@ function BookingForm({
     onSubmit,
     onInvalid,
 }: BookingFormProps) {
-    const { name, description } = bookingFormData;
+    const { name, description, markRequiredFields } = bookingFormData;
 
     const fields = useMemo(
         () => bookingFormData.fields.map(normalizeField),
@@ -91,12 +92,14 @@ function BookingForm({
                                 fields={fields}
                                 register={register}
                                 control={control}
+                                markRequiredFields={markRequiredFields}
                             />
                         ) : (
                             <RenderField
                                 field={field}
                                 register={register}
                                 control={control}
+                                markRequiredFields={markRequiredFields}
                             />
                         )}
                     </Appear>
@@ -121,9 +124,16 @@ interface GroupFieldProps {
     control: Control<FieldValues>;
     field: Extract<BookingFormField, { type: 'group' }>;
     fields: BookingFormFieldInput[];
+    markRequiredFields: boolean;
 }
 
-function GroupField({ field, fields, register, control }: GroupFieldProps) {
+function GroupField({
+    field,
+    fields,
+    register,
+    control,
+    markRequiredFields,
+}: GroupFieldProps) {
     const groupFields = useMemo(() => {
         return fields
             .filter((f) => f.parentId === field.id)
@@ -149,6 +159,7 @@ function GroupField({ field, fields, register, control }: GroupFieldProps) {
                     field={child}
                     register={register}
                     control={control}
+                    markRequiredFields={markRequiredFields}
                 />
             ))}
         </div>

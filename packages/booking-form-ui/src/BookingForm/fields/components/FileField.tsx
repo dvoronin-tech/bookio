@@ -5,10 +5,16 @@ import { FilePickerField } from '@bookio/ui';
 import { getRequiredRule } from '../../utils/rules.js';
 import { FieldError } from '../FieldError.js';
 import type { FieldControlProps } from '../field.types.js';
+import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
-export const FileField: FC<FieldControlProps<'file'>> = ({ field, control }) => {
+export const FileField: FC<FieldControlProps<'file'>> = ({
+    field,
+    control,
+    markRequiredFields,
+}) => {
     const { placeholder, accept, maxSizeMb } = field.params;
+    const label = formatLabel(markRequiredFields, field.name, field.required);
 
     return (
         <Controller
@@ -30,7 +36,7 @@ export const FileField: FC<FieldControlProps<'file'>> = ({ field, control }) => 
                 <div className={styles.fieldStack}>
                     <FilePickerField
                         className={clsx(styles.default, fieldState.error && styles.invalid)}
-                        label={field.name}
+                        label={label}
                         placeholder={placeholder}
                         accept={accept?.join(',')}
                         onChange={onChange}

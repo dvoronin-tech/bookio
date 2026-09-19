@@ -3,16 +3,23 @@ import { ValidatableInput } from '@bookio/ui';
 import { getRequiredRule } from '../../utils/rules.js';
 import { useFieldError } from '../../utils/useFieldError.js';
 import type { FieldControlProps } from '../field.types.js';
+import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
-export const NumberInputField: FC<FieldControlProps<'number'>> = ({ field, register, control }) => {
+export const NumberInputField: FC<FieldControlProps<'number'>> = ({
+    field,
+    register,
+    control,
+    markRequiredFields,
+}) => {
     const { hasError, errorMessage } = useFieldError(control, field.key);
+    const label = formatLabel(markRequiredFields, field.name, field.required);
 
     return (
         <ValidatableInput
             className={styles.default}
             type="number"
-            label={field.name}
+            label={label}
             placeholder={field.params.placeholder}
             helpText={field.params.helpText}
             isValid={hasError ? false : null}

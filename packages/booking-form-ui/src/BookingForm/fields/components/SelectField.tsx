@@ -5,11 +5,17 @@ import { SelectDropdown } from '@bookio/ui';
 import { getRequiredRule } from '../../utils/rules.js';
 import { FieldError } from '../FieldError.js';
 import type { FieldControlProps } from '../field.types.js';
+import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
-export const SelectField: FC<FieldControlProps<'select'>> = ({ field, control }) => {
+export const SelectField: FC<FieldControlProps<'select'>> = ({
+    field,
+    control,
+    markRequiredFields,
+}) => {
     const { required } = field;
     const { defaultValue, options } = field.params;
+    const label = formatLabel(markRequiredFields, field.name, required);
 
     const selectOptions = useMemo(() => {
         const labels = options.map((option) => option.label);
@@ -34,7 +40,7 @@ export const SelectField: FC<FieldControlProps<'select'>> = ({ field, control })
                                 styles.default,
                                 fieldState.error && styles.invalid,
                             )}
-                            label={field.name}
+                            label={label}
                             options={selectOptions}
                             selected={value ?? defaultValue}
                             onOptionClick={onChange}

@@ -99,4 +99,5 @@ export const toBookingFormSettings = (
 ): Omit<BookingFormData, 'fields'> => ({
     name: data.name ?? '',
     description: data.description ?? '',
+    markRequiredFields: data.markRequiredFields ?? true,
 });

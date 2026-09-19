@@ -5,9 +5,16 @@ import { DatePicker } from '@bookio/ui';
 import { getRequiredRule } from '../../utils/rules.js';
 import { FieldError } from '../FieldError.js';
 import type { FieldControlProps } from '../field.types.js';
+import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
-export const DateInputField: FC<FieldControlProps<'date'>> = ({ field, control }) => {
+export const DateInputField: FC<FieldControlProps<'date'>> = ({
+    field,
+    control,
+    markRequiredFields,
+}) => {
+    const label = formatLabel(markRequiredFields, field.name, field.required);
+
     return (
         <Controller
             name={field.key}
@@ -19,7 +26,7 @@ export const DateInputField: FC<FieldControlProps<'date'>> = ({ field, control }
                 <div className={styles.fieldStack}>
                     <DatePicker
                         triggerClassName={clsx(styles.default, fieldState.error && styles.invalid)}
-                        label={field.name}
+                        label={label}
                         placeholder={field.params.placeholder}
                         minYear={field.params.minYear}
                         maxYear={field.params.maxYear}

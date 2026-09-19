@@ -1,9 +1,9 @@
 import type { ComponentType, FC } from 'react';
 import type { Control, FieldValues, UseFormRegister } from 'react-hook-form';
 import {
-    isLeafField,
     type BookingFormFieldInput,
     type FieldControlProps,
+    isLeafField,
     type LeafFieldType,
 } from './field.types.js';
 import { CheckboxField } from './components/CheckboxField.js';
@@ -40,7 +40,9 @@ const fieldsMap: FieldsMap = {
     textarea: TextAreaField,
 };
 
-function getFieldComponent<T extends LeafFieldType>(type: T): ComponentType<FieldControlProps<T>> {
+function getFieldComponent<T extends LeafFieldType>(
+    type: T,
+): ComponentType<FieldControlProps<T>> {
     return fieldsMap[type];
 }
 
@@ -48,13 +50,26 @@ type RenderFieldProps = {
     field: BookingFormFieldInput;
     register: UseFormRegister<FieldValues>;
     control: Control<FieldValues>;
+    markRequiredFields: boolean;
 };
 
-export const RenderField: FC<RenderFieldProps> = ({ field, register, control }) => {
+export const RenderField: FC<RenderFieldProps> = ({
+    field,
+    register,
+    control,
+    markRequiredFields,
+}) => {
     if (!isLeafField(field)) {
         return null;
     }
 
     const Field = getFieldComponent(field.type);
-    return <Field field={field} register={register} control={control} />;
+    return (
+        <Field
+            field={field}
+            register={register}
+            control={control}
+            markRequiredFields={markRequiredFields}
+        />
+    );
 };

@@ -1,5 +1,9 @@
 import type { Control, FieldValues, UseFormRegister } from 'react-hook-form';
-import type { BookingFormFieldRowUnion, FieldParams, FieldType } from '@bookio/db';
+import type {
+    BookingFormFieldRowUnion,
+    FieldParams,
+    FieldType,
+} from '@bookio/db';
 
 export type BookingFormFieldInput = {
     id: string;
@@ -20,10 +24,12 @@ export type FieldRendererProps<T extends LeafFieldType = LeafFieldType> = {
     field: Extract<BookingFormField, { type: T }>;
 };
 
-export type FieldControlProps<T extends LeafFieldType = LeafFieldType> = FieldRendererProps<T> & {
-    register: UseFormRegister<FieldValues>;
-    control: Control<FieldValues>;
-};
+export type FieldControlProps<T extends LeafFieldType = LeafFieldType> =
+    FieldRendererProps<T> & {
+        register: UseFormRegister<FieldValues>;
+        control: Control<FieldValues>;
+        markRequiredFields: boolean;
+    };
 
 export function isGroupField(
     field: BookingFormFieldInput,
