@@ -1,5 +1,4 @@
 import { useCallback, type FC, memo, useMemo } from 'react';
-import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
 
 import styles from './ConfiguratorField.module.scss';
 
@@ -18,7 +17,7 @@ import {
 
 export interface ConfiguratorFieldProps {
     name: string;
-    type: EntireBookingFormField['type'];
+    type: SyncBookingFormFieldItem['type'];
     fieldKey: string;
     required?: boolean;
     onEdit?: (fieldId: string) => void;
@@ -79,7 +78,7 @@ interface ConfiguratorItemProps {
     fieldId: string;
     name: string;
     fieldKey: string;
-    type: EntireBookingFormField['type'];
+    type: SyncBookingFormFieldItem['type'];
     required?: boolean;
 }
 

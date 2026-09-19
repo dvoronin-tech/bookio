@@ -1,16 +1,28 @@
 import hono from '#lib/hono-client';
+import { queryClient } from '#lib/query-client';
 import { validateError } from '#utils/validateError';
 import type { InferResponseType } from 'hono/client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useSession } from '#api/auth';
 
+export const invalidateBookingForms = () => {
+    void queryClient.invalidateQueries({
+        queryKey: ['booking-forms'],
+    });
+};
+
 const getBookingFormsClient = hono['booking-forms']['get-all'];
 
-export type GetBookingFormsResponse = InferResponseType<typeof getBookingFormsClient.$get, 200>;
+export type GetBookingFormsResponse = InferResponseType<
+    typeof getBookingFormsClient.$get,
+    200
+>;
 export type BookingFormsType = GetBookingFormsResponse['data'];
 export type BookingFormType = BookingFormsType[number];
 
-const fetchBookingForms = async (organizationId: string): Promise<BookingFormsType> => {
+const fetchBookingForms = async (
+    organizationId: string,
+): Promise<BookingFormsType> => {
     const response = await getBookingFormsClient.$get({
         query: { organizationId },
     });
@@ -27,8 +39,8 @@ export const useGetBookingForms = (
 ): UseQueryResult<BookingFormsType> => {
     const { data: session } = useSession();
     return useQuery<BookingFormsType>({
-        queryKey: ['booking-forms', organizationId],
+        queryKey: ['booking-forms'],
         queryFn: () => fetchBookingForms(organizationId!),
-        enabled: !!session?.user.id,
+        enabled: !!session?.user.id && !!organizationId,
     });
 };

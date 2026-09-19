@@ -5,17 +5,10 @@ import type { UpdateBookingFormStylesRequest } from '#api/bookingForms/bookingFo
 import type { UpdateBookingFormMetaRequest } from '#api/bookingForms/bookingFormMeta/updateBookingFormMeta';
 
 import {
-    DEFAULT_CONFIGURATOR_TAB,
     type ConfiguratorTabValue,
+    DEFAULT_CONFIGURATOR_TAB,
 } from '#pages/App/BookingForms/BookingFormConfigurator/configuratorTabs';
 import type { SyncBookingFormFieldRequest } from '#api/bookingForms/bookingFormFields/syncBookingFormField';
-
-export interface BookingFormConfiguratorDefaults {
-    bookingForm: UpdateBookingFormRequest;
-    bookingFormStyles: UpdateBookingFormStylesRequest;
-    bookingFormMeta: UpdateBookingFormMetaRequest;
-    bookingFormFields: SyncBookingFormFieldRequest;
-}
 
 interface BookingFormConfiguratorForm {
     bookingForm: UpdateBookingFormRequest | null;
@@ -23,6 +16,12 @@ interface BookingFormConfiguratorForm {
     bookingFormMeta: UpdateBookingFormMetaRequest | null;
     bookingFormFields: SyncBookingFormFieldRequest | null;
 }
+
+export type BookingFormConfiguratorDefaults = {
+    [T in keyof BookingFormConfiguratorForm]: NonNullable<
+        BookingFormConfiguratorForm[T]
+    >;
+};
 
 const initialFormState: BookingFormConfiguratorForm = {
     bookingForm: null,
@@ -38,68 +37,81 @@ interface BookingFormConfiguratorState extends BookingFormConfiguratorForm {
     setIsCollapsed: (collapsed: boolean) => void;
     setDefaultBookingFormData: (data: BookingFormConfiguratorDefaults) => void;
     setBookingForm: (bookingForm: UpdateBookingFormRequest) => void;
-    setBookingFormStyles: (bookingFormStyles: UpdateBookingFormStylesRequest) => void;
+    setBookingFormStyles: (
+        bookingFormStyles: UpdateBookingFormStylesRequest,
+    ) => void;
     setBookingFormMeta: (bookingFormMeta: UpdateBookingFormMetaRequest) => void;
-    setBookingFormFields: (bookingFormFields: SyncBookingFormFieldRequest) => void;
+    setBookingFormFields: (
+        bookingFormFields: SyncBookingFormFieldRequest,
+    ) => void;
     deleteBookingFormField: (fieldId: string) => void;
     reset: () => void;
 }
 
-export const useBookingFormConfiguratorStore = create<BookingFormConfiguratorState>()(
-    devtools(
-        (set) => ({
-            activeTab: DEFAULT_CONFIGURATOR_TAB,
-            isCollapsed: false,
-            ...initialFormState,
-            setActiveTab: (activeTab) => set({ activeTab }, false, 'setActiveTab'),
-            setIsCollapsed: (isCollapsed) => set({ isCollapsed }, false, 'setIsCollapsed'),
-            setDefaultBookingFormData: (data) =>
-                set(
-                    (state) => {
-                        if (state.bookingForm?.bookingFormId === data.bookingForm.bookingFormId) {
-                            return {};
-                        }
+export const useBookingFormConfiguratorStore =
+    create<BookingFormConfiguratorState>()(
+        devtools(
+            (set) => ({
+                activeTab: DEFAULT_CONFIGURATOR_TAB,
+                isCollapsed: false,
+                ...initialFormState,
+                setActiveTab: (activeTab) =>
+                    set({ activeTab }, false, 'setActiveTab'),
+                setIsCollapsed: (isCollapsed) =>
+                    set({ isCollapsed }, false, 'setIsCollapsed'),
+                setDefaultBookingFormData: (data) =>
+                    set(
+                        (state) => {
+                            const stateId = state.bookingForm?.id;
+                            const dataId = data.bookingForm.id;
+                            
+                            if (stateId === dataId) {
+                                return {};
+                            }
 
-                        return data;
-                    },
-                    false,
-                    'setDefaultBookingFormData',
-                ),
-            setBookingForm: (bookingForm) => set({ bookingForm }, false, 'setBookingForm'),
-            setBookingFormStyles: (bookingFormStyles) =>
-                set({ bookingFormStyles }, false, 'setBookingFormStyles'),
-            setBookingFormMeta: (bookingFormMeta) =>
-                set({ bookingFormMeta }, false, 'setBookingFormMeta'),
-            setBookingFormFields: (bookingFormFields) =>
-                set({ bookingFormFields }, false, 'setBookingFormFields'),
-            deleteBookingFormField: (fieldId) =>
-                set(
-                    (state) => {
-                        if (!state.bookingFormFields) return {};
+                            return data;
+                        },
+                        false,
+                        'setDefaultBookingFormData',
+                    ),
+                setBookingForm: (bookingForm) =>
+                    set({ bookingForm }, false, 'setBookingForm'),
+                setBookingFormStyles: (bookingFormStyles) =>
+                    set({ bookingFormStyles }, false, 'setBookingFormStyles'),
+                setBookingFormMeta: (bookingFormMeta) =>
+                    set({ bookingFormMeta }, false, 'setBookingFormMeta'),
+                setBookingFormFields: (bookingFormFields) =>
+                    set({ bookingFormFields }, false, 'setBookingFormFields'),
+                deleteBookingFormField: (fieldId) =>
+                    set(
+                        (state) => {
+                            if (!state.bookingFormFields) return {};
 
-                        return {
-                            bookingFormFields: {
-                                ...state.bookingFormFields,
-                                fields: state.bookingFormFields.fields.filter(
-                                    (field) => field.id !== fieldId && field.parentId !== fieldId,
-                                ),
-                            },
-                        };
-                    },
-                    false,
-                    'deleteBookingFormField',
-                ),
-            reset: () =>
-                set(
-                    {
-                        activeTab: DEFAULT_CONFIGURATOR_TAB,
-                        isCollapsed: false,
-                        ...initialFormState,
-                    },
-                    false,
-                    'reset',
-                ),
-        }),
-        { name: 'BookingFormConfiguratorStore' },
-    ),
-);
+                            return {
+                                bookingFormFields: {
+                                    ...state.bookingFormFields,
+                                    fields: state.bookingFormFields.fields.filter(
+                                        (field) =>
+                                            field.id !== fieldId &&
+                                            field.parentId !== fieldId,
+                                    ),
+                                },
+                            };
+                        },
+                        false,
+                        'deleteBookingFormField',
+                    ),
+                reset: () =>
+                    set(
+                        {
+                            activeTab: DEFAULT_CONFIGURATOR_TAB,
+                            isCollapsed: false,
+                            ...initialFormState,
+                        },
+                        false,
+                        'reset',
+                    ),
+            }),
+            { name: 'BookingFormConfiguratorStore' },
+        ),
+    );

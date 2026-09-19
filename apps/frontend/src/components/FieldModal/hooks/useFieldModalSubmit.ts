@@ -3,7 +3,7 @@ import toast from 'react-hot-toast';
 import { useShallow } from 'zustand/shallow';
 import { createModalFieldSchema, type FieldModalFormValues } from '@bookio/backend/schemas';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
-import { getNextSiblingFieldOrder } from '#utils/dataPreparers/bookingFormPreparers';
+import { getNextSiblingFieldOrder } from '#utils/bookingFormFieldTree';
 import { normalizeFieldParams } from '../utils/fieldModalParams';
 
 interface UseFieldModalSubmitParams {

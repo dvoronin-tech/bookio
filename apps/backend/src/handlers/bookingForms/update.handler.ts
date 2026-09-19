@@ -13,10 +13,12 @@ export const updateBookingFormHandler = factory(
     zValidator('json', updateBookingFormSchema),
     async (c) => {
         try {
-            const { bookingFormId, name, description, isActive, slug } = c.req.valid('json');
+            const { id, ...dataToUpdate } = c.req.valid('json');
+            const { name, slug } = dataToUpdate;
 
             const existingBookingForm = await db.query.bookingForms.findFirst({
-                where: (bookingForms, { eq }) => eq(bookingForms.id, bookingFormId),
+                where: (bookingForms, { eq }) =>
+                    eq(bookingForms.id, id),
             });
 
             if (!existingBookingForm) {
@@ -30,7 +32,12 @@ export const updateBookingFormHandler = factory(
                 });
 
                 if (duplicateByName) {
-                    return c.json(prepareError('Booking form with this name already exists'), 400);
+                    return c.json(
+                        prepareError(
+                            'Booking form with this name already exists',
+                        ),
+                        400,
+                    );
                 }
             }
 
@@ -41,18 +48,26 @@ export const updateBookingFormHandler = factory(
                 });
 
                 if (duplicateBySlug) {
-                    return c.json(prepareError('Booking form with this slug already exists'), 400);
+                    return c.json(
+                        prepareError(
+                            'Booking form with this slug already exists',
+                        ),
+                        400,
+                    );
                 }
             }
 
             const [updatedBookingForm] = await db
                 .update(bookingForms)
-                .set({ name, description, isActive, slug })
-                .where(eq(bookingForms.id, bookingFormId))
+                .set(dataToUpdate)
+                .where(eq(bookingForms.id, id))
                 .returning();
 
             if (!updatedBookingForm) {
-                return c.json(prepareError('Failed to update booking form'), 500);
+                return c.json(
+                    prepareError('Failed to update booking form'),
+                    500,
+                );
             }
 
             return c.json(prepareSuccess(updatedBookingForm));

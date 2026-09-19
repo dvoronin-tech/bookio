@@ -11,6 +11,10 @@ export const isBookingFormExists = async ({
     name,
     slug,
 }: IsBookingFormExistsParams) => {
+    if (!name && !slug) {
+        throw new Error('Name and slug must be a string');
+    }
+
     const bookingForm = await db.query.bookingForms.findFirst({
         where: (bookingForms, { eq, and }) =>
             and(

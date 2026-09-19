@@ -1,4 +1,4 @@
-import { useEffect, type FC } from 'react';
+import { type FC, useEffect } from 'react';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm';
 import { useParams } from 'react-router-dom';
 import { Button, Checkbox, Input, ValidatableInput } from '@bookio/ui';
@@ -15,14 +15,17 @@ import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfigurat
 import { Loader } from '#components/Loader/Loader';
 import { trimObj } from '#utils/trimObj';
 
-type SettingsTabFormData = Omit<UpdateBookingFormRequest, 'bookingFormId'>;
+type SettingsTabFormData = Omit<UpdateBookingFormRequest, 'id'>;
 
 type SettingsTabFormProps = {
     organizationId: string;
     organizationSlug: string;
 };
 
-const SettingsTabForm: FC<SettingsTabFormProps> = ({ organizationId, organizationSlug }) => {
+const SettingsTabForm: FC<SettingsTabFormProps> = ({
+    organizationId,
+    organizationSlug,
+}) => {
     const { setBookingForm, bookingForm } = useBookingFormConfiguratorStore(
         useShallow(({ setBookingForm, bookingForm }) => ({
             setBookingForm,
@@ -34,25 +37,27 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({ organizationId, organizatio
         defaultValues: {
             name: bookingForm?.name ?? '',
             description: bookingForm?.description ?? '',
+            markRequiredFields: bookingForm?.markRequiredFields ?? true,
             slug: bookingForm?.slug ?? '',
             isActive: bookingForm?.isActive ?? false,
         },
     });
 
     const formValues = useWatch({ control });
-    const bookingFormId = bookingForm?.bookingFormId;
+    const id = bookingForm?.id;
 
     useEffect(() => {
-        if (!bookingFormId) return;
+        if (!id) return;
 
         setBookingForm({
-            bookingFormId: bookingFormId,
+            id,
             name: formValues?.name ?? '',
             description: formValues?.description ?? '',
             slug: formValues?.slug ?? '',
             isActive: formValues?.isActive ?? false,
+            markRequiredFields: formValues?.markRequiredFields ?? true,
         });
-    }, [formValues, bookingFormId, setBookingForm]);
+    }, [formValues, id, setBookingForm]);
 
     const currentName = formValues?.name ?? '';
     const currentSlug = formValues?.slug ?? '';
@@ -105,6 +110,10 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({ organizationId, organizatio
                 formSlug={currentSlug || originalSlug}
                 organizationSlug={organizationSlug}
             />
+            <Checkbox
+                label="Mark required fields"
+                {...register('markRequiredFields')}
+            />
             <Checkbox label="Is active" {...register('isActive')} />
         </div>
     );
@@ -134,9 +143,13 @@ export const SettingsTab = () => {
             return (
                 <div className={styles.errorContainer}>
                     <h2>
-                        {organizationError?.message || 'An error occurred while fetching the data'}
+                        {organizationError?.message ||
+                            'An error occurred while fetching the data'}
                     </h2>
-                    <Button variant="primary-outlined" onClick={handleRefetchOrganization}>
+                    <Button
+                        variant="primary-outlined"
+                        onClick={handleRefetchOrganization}
+                    >
                         Retry
                     </Button>
                 </div>
@@ -147,6 +160,9 @@ export const SettingsTab = () => {
     }
 
     return (
-        <SettingsTabForm organizationId={organization.id} organizationSlug={organization.slug} />
+        <SettingsTabForm
+            organizationId={organization.id}
+            organizationSlug={organization.slug}
+        />
     );
 };

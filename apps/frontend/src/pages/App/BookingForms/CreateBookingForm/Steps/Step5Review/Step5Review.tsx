@@ -83,7 +83,7 @@ export const Step5Review: FC = () => {
             })),
         );
 
-    const { mutateAsync: createBookingForm, isPending } = useCreateBookingForm(data.organizationId);
+    const { mutateAsync: createBookingForm, isPending } = useCreateBookingForm();
 
     const sections = useMemo(() => buildReviewSections(data), [data]);
 

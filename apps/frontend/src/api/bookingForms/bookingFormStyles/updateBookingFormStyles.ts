@@ -1,10 +1,9 @@
 import hono from '#lib/hono-client';
-import { queryClient } from '#lib/query-client';
 import { useMutation } from '@tanstack/react-query';
 import { validateError } from '#utils/validateError';
 import { trimObj } from '#utils/trimObj';
 import type { InferRequestType, InferResponseType } from 'hono/client';
-import { invalidateEntireBookingForm } from '../getEntireBookingFormById';
+import { invalidateBookingForm } from '../getBookingForm';
 
 const updateBookingFormStylesClient = hono['booking-form-styles']['update'];
 
@@ -16,7 +15,9 @@ export type UpdateBookingFormStylesResponse = InferResponseType<
     200
 >;
 
-const updateBookingFormStylesRequest = async (requestData: UpdateBookingFormStylesRequest) => {
+const updateBookingFormStylesRequest = async (
+    requestData: UpdateBookingFormStylesRequest,
+) => {
     const response = await updateBookingFormStylesClient.$put({
         json: trimObj(requestData),
     });
@@ -28,12 +29,13 @@ const updateBookingFormStylesRequest = async (requestData: UpdateBookingFormStyl
     return body.data;
 };
 
-export const useUpdateBookingFormStyles = (bookingFormId: string | undefined) => {
+export const useUpdateBookingFormStyles = (
+    bookingFormId: string | undefined,
+) => {
     return useMutation({
         mutationFn: updateBookingFormStylesRequest,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['booking-form-styles', bookingFormId] });
-            invalidateEntireBookingForm(bookingFormId);
+            invalidateBookingForm(bookingFormId);
         },
     });
 };

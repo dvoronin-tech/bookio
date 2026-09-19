@@ -3,18 +3,19 @@ import { queryClient } from '#lib/query-client';
 import { useMutation } from '@tanstack/react-query';
 import { validateError } from '#utils/validateError';
 import { trimObj } from '#utils/trimObj';
-import type { InferRequestType, InferResponseType } from 'hono/client';
-import type { BookingFormsType } from './getBookingForms';
-import { invalidateEntireBookingForm } from './getEntireBookingFormById';
+import type { InferRequestType } from 'hono/client';
+import { type BookingFormsType } from './getBookingForms';
+import { type BookingFormType, invalidateBookingForm } from './getBookingForm';
 
 const updateBookingFormClient = hono['booking-forms']['update'];
 
 export type UpdateBookingFormRequest = InferRequestType<
     typeof updateBookingFormClient.$put
 >['json'];
-export type UpdateBookingFormResponse = InferResponseType<typeof updateBookingFormClient.$put, 200>;
 
-const updateBookingFormRequest = async (requestData: UpdateBookingFormRequest) => {
+const updateBookingFormRequest = async (
+    requestData: UpdateBookingFormRequest,
+) => {
     const response = await updateBookingFormClient.$put({
         json: trimObj(requestData),
     });
@@ -30,8 +31,11 @@ export const useUpdateBookingForm = (bookingFormId: string | undefined) => {
     return useMutation({
         mutationFn: updateBookingFormRequest,
         onSuccess: (updatedBookingForm) => {
-            queryClient.setQueryData(['booking-form', bookingFormId], updatedBookingForm);
-            invalidateEntireBookingForm(bookingFormId);
+            queryClient.setQueryData<BookingFormType>(
+                ['booking-form', bookingFormId],
+                (old) => (old ? { ...old, ...updatedBookingForm } : old),
+            );
+            invalidateBookingForm(bookingFormId);
 
             queryClient.setQueriesData<BookingFormsType>(
                 { queryKey: ['booking-forms'] },

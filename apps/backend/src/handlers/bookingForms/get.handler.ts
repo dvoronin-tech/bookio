@@ -17,7 +17,8 @@ export const getBookingFormsHandler = factory(
             const { organizationId } = c.req.valid('query');
 
             const forms = await db.query.bookingForms.findMany({
-                where: (bookingForms, { eq }) => eq(bookingForms.organizationId, organizationId),
+                where: (bookingForms, { eq }) =>
+                    eq(bookingForms.organizationId, organizationId),
             });
 
             return c.json(prepareSuccess(forms));
@@ -34,30 +35,10 @@ export const getBookingFormHandler = factory(
             const { bookingFormId } = c.req.valid('query');
 
             const form = await db.query.bookingForms.findFirst({
-                where: (bookingForms, { eq }) => eq(bookingForms.id, bookingFormId),
-            });
-
-            return c.json(prepareSuccess(form));
-        } catch (error) {
-            return c.json(prepareError('Failed to get booking form'), 500);
-        }
-    },
-);
-
-export const getEntireBookingFormByIdHandler = factory(
-    zValidator('query', getBookingFormSchema),
-    async (c) => {
-        try {
-            const { bookingFormId } = c.req.valid('query');
-
-            const form = await db.query.bookingForms.findFirst({
-                where: (bookingForms, { eq }) => eq(bookingForms.id, bookingFormId),
+                where: (bookingForms, { eq }) =>
+                    eq(bookingForms.id, bookingFormId),
                 with: {
                     fields: {
-                        where: (field, { isNull }) => isNull(field.parentId),
-                        with: {
-                            childFields: true,
-                        },
                         orderBy: (field, { asc }) => [asc(field.order)],
                     },
                     metaData: true,
@@ -71,7 +52,7 @@ export const getEntireBookingFormByIdHandler = factory(
 
             return c.json(prepareSuccess(form));
         } catch (error) {
-            return c.json(prepareError('Failed to get entire booking form by id'), 500);
+            return c.json(prepareError('Failed to get booking form'), 500);
         }
     },
 );
@@ -82,36 +63,59 @@ export const getBookingFromBySlugsHandler = factory(
         try {
             const { organizationSlug, bookingFormSlug } = c.req.valid('query');
 
-            const data = await db.query.organizations.findFirst({
+            const organization = await db.query.organizations.findFirst({
                 where: (org, { eq }) => eq(org.slug, organizationSlug),
                 with: {
                     bookingForms: {
-                        where: (bookingForm, { eq }) => eq(bookingForm.slug, bookingFormSlug),
+                        where: (bookingForm, { eq }) =>
+                            eq(bookingForm.slug, bookingFormSlug),
                         with: {
-                            fields: true
-                        }
+                            fields: {
+                                orderBy: (field, { asc }) => [asc(field.order)],
+                            },
+                        },
                     },
-                }
-            })
+                },
+            });
 
-            if (!data) {
-                return c.json(prepareError('Organization not found', 'ORGANIZATION_NOT_FOUND'), 404);
+            if (!organization) {
+                return c.json(
+                    prepareError(
+                        'Organization not found',
+                        'ORGANIZATION_NOT_FOUND',
+                    ),
+                    404,
+                );
             }
 
-            if (!data.bookingForms.length) {
-                return c.json(prepareError('Booking form not found', 'BOOKING_FORM_NOT_FOUND'), 404);
+            if (!organization.bookingForms.length) {
+                return c.json(
+                    prepareError(
+                        'Booking form not found',
+                        'BOOKING_FORM_NOT_FOUND',
+                    ),
+                    404,
+                );
             }
 
-            const bookingForm = data.bookingForms[0];
-            
-            if (bookingForm.isActive === false) {
-                return c.json(prepareError('Booking form is not active', 'BOOKING_FORM_NOT_ACTIVE'), 404);
+            const bookingForm = organization.bookingForms[0];
+
+            if (!bookingForm.isActive) {
+                return c.json(
+                    prepareError(
+                        'Booking form is not active',
+                        'BOOKING_FORM_NOT_ACTIVE',
+                    ),
+                    404,
+                );
             }
 
             return c.json(prepareSuccess(bookingForm));
-
         } catch (error) {
-            return c.json(prepareError('Failed to get booking form by slugs'), 500);
+            return c.json(
+                prepareError('Failed to get booking form by slugs'),
+                500,
+            );
         }
     },
 );

@@ -9,7 +9,7 @@ import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfigurat
 import {
     moveBookingFormFieldToParent,
     reorderBookingFormSiblingFields,
-} from '#utils/dataPreparers/bookingFormPreparers';
+} from '#utils/bookingFormFieldTree';
 import { useShallow } from 'zustand/shallow';
 
 import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField';

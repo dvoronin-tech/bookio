@@ -1,5 +1,5 @@
 import type { FC, SVGProps } from 'react';
-import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
+import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormPreparers';
 
 import TextIcon from '#assets/icons/field-types/text.svg?react';
 import EmailIcon from '#assets/icons/field-types/email.svg?react';
@@ -16,7 +16,7 @@ import UrlIcon from '#assets/icons/field-types/url.svg?react';
 import ImageIcon from '#assets/icons/field-types/image.svg?react';
 import GroupIcon from '#assets/icons/field-types/group.svg?react';
 
-type FieldType = EntireBookingFormField['type'];
+type FieldType = SyncBookingFormFieldItem['type'];
 type IconComponent = FC<SVGProps<SVGSVGElement>>;
 
 export interface FieldTypeIconData {

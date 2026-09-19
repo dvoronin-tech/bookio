@@ -6,7 +6,7 @@ import { ConfiguratorLayout } from './ConfiguratorLayout/ConfiguratorLayout';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { getConfiguratorTab } from './configuratorTabs';
 import { BookingFormPreview } from '#components/BookingFormPreview/BookingFormPreview';
-import { useGetEntireBookingFormById } from '#api/bookingForms/getEntireBookingFormById';
+import { useGetBookingForm } from '#api/bookingForms/getBookingForm';
 import { guardConfiguratorRoute } from '#navigation';
 import { toDefaultBookingFormData } from '#utils/dataPreparers/bookingFormPreparers';
 import { Loader } from '#components/Loader/Loader';
@@ -16,13 +16,14 @@ import styles from './BookingFormConfigurator.module.scss';
 export const BookingFormConfigurator: FC = () => {
     const { bookingFormId, organizationId } = useParams();
     const navigate = useNavigate();
-    const { setDefaultBookingFormData, isSeeded, activeTab } = useBookingFormConfiguratorStore(
-        useShallow((state) => ({
-            setDefaultBookingFormData: state.setDefaultBookingFormData,
-            isSeeded: state.bookingForm?.bookingFormId === bookingFormId,
-            activeTab: state.activeTab,
-        })),
-    );
+    const { setDefaultBookingFormData, isSeeded, activeTab } =
+        useBookingFormConfiguratorStore(
+            useShallow((state) => ({
+                setDefaultBookingFormData: state.setDefaultBookingFormData,
+                isSeeded: state.bookingForm?.id === bookingFormId,
+                activeTab: state.activeTab,
+            })),
+        );
 
     const {
         data: bookingForm,
@@ -30,9 +31,13 @@ export const BookingFormConfigurator: FC = () => {
         isError: isBookingFormError,
         error: bookingFormError,
         refetch: refetchBookingForm,
-    } = useGetEntireBookingFormById(bookingFormId);
+    } = useGetBookingForm(bookingFormId);
 
-    const routeParams = guardConfiguratorRoute(navigate, organizationId, bookingFormId);
+    const routeParams = guardConfiguratorRoute(
+        navigate,
+        organizationId,
+        bookingFormId,
+    );
 
     useLayoutEffect(() => {
         if (!bookingForm) return;
@@ -60,9 +65,13 @@ export const BookingFormConfigurator: FC = () => {
             return (
                 <div className={styles.errorContainer}>
                     <h2>
-                        {bookingFormError?.message || 'An error occurred while fetching the data'}
+                        {bookingFormError?.message ||
+                            'An error occurred while fetching the data'}
                     </h2>
-                    <Button variant="primary-outlined" onClick={handleRefetchBookingForm}>
+                    <Button
+                        variant="primary-outlined"
+                        onClick={handleRefetchBookingForm}
+                    >
                         Retry
                     </Button>
                 </div>

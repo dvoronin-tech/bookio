@@ -4,8 +4,8 @@ import { ConfiguratorField } from './ConfiguratorField';
 import {
     moveBookingFormFieldToParent,
     reorderBookingFormSiblingFields,
-    type SyncBookingFormFieldItem,
-} from '#utils/dataPreparers/bookingFormPreparers';
+} from '#utils/bookingFormFieldTree';
+import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormPreparers';
 import { useConfiguratorFieldContext } from './ConfiguratorFieldContext';
 import { Reorder, type ItemId } from '@bookio/ui';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';

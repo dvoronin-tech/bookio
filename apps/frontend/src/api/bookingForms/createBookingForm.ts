@@ -1,9 +1,9 @@
 import hono from '#lib/hono-client';
-import { queryClient } from '#lib/query-client';
 import { useMutation } from '@tanstack/react-query';
 import { validateError } from '#utils/validateError';
 import { trimObj } from '#utils/trimObj';
 import type { InferRequestType, InferResponseType } from 'hono/client';
+import { invalidateBookingForms } from './getBookingForms';
 
 const createBookingFormClient = hono['booking-forms']['create'];
 
@@ -15,7 +15,9 @@ export type CreateBookingFormResponse = InferResponseType<
     200
 >;
 
-const createBookingFormRequest = async (requestData: CreateBookingFormRequest) => {
+const createBookingFormRequest = async (
+    requestData: CreateBookingFormRequest,
+) => {
     const response = await createBookingFormClient.$post({
         json: trimObj(requestData),
     });
@@ -27,11 +29,11 @@ const createBookingFormRequest = async (requestData: CreateBookingFormRequest) =
     return body.data;
 };
 
-export const useCreateBookingForm = (organizationId: string | undefined) => {
+export const useCreateBookingForm = () => {
     return useMutation({
         mutationFn: createBookingFormRequest,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['booking-forms', organizationId] });
+            invalidateBookingForms();
         },
     });
 };

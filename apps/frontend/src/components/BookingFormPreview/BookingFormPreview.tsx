@@ -31,7 +31,7 @@ export const BookingFormPreview: FC = () => {
 
 
 
-    const draftForm = bookingForm?.bookingFormId === bookingFormId ? bookingForm : null;
+    const draftForm = bookingForm?.id === bookingFormId ? bookingForm : null;
     const draftFields =
         bookingFormFields?.bookingFormId === bookingFormId ? bookingFormFields?.fields : null;
     const draftStyles =

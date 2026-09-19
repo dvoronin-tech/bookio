@@ -6,6 +6,7 @@ import { queryClient } from '#lib/query-client';
 import { router } from './router';
 import { Toaster } from 'react-hot-toast';
 import './index.css';
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
 createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
@@ -26,6 +27,7 @@ createRoot(document.getElementById('root')!).render(
         />
         <ButtonLinkProvider component={Link}>
             <RouterProvider router={router} />
+            <ReactQueryDevtools />
         </ButtonLinkProvider>
     </QueryClientProvider>,
 );

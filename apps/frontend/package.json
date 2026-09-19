@@ -41,6 +41,7 @@
         "eslint": "^10.6.0",
         "eslint-plugin-react-hooks": "^7.1.1",
         "eslint-plugin-react-refresh": "^0.5.3",
+        "@tanstack/react-query-devtools": "^5.103.1",
         "globals": "^17.7.0",
         "sass-embedded": "^1.100.0",
         "typescript": "~6.0.2",

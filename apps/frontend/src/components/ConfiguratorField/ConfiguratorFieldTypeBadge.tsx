@@ -1,11 +1,11 @@
 import type { CSSProperties, FC } from 'react';
-import type { EntireBookingFormField } from '#api/bookingForms/getEntireBookingFormById';
+import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormPreparers';
 
 import { fieldTypeIcons } from './fieldTypeIcons';
 import styles from './ConfiguratorField.module.scss';
 
 interface ConfiguratorFieldTypeBadgeProps {
-    type: EntireBookingFormField['type'];
+    type: SyncBookingFormFieldItem['type'];
 }
 
 export const ConfiguratorFieldTypeBadge: FC<ConfiguratorFieldTypeBadgeProps> = ({ type }) => {
