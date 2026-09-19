@@ -8,7 +8,7 @@ export const BookingFormLayout: FC = () => {
 
     return (
         <div className={styles.bookingFormLayout}>
-            <BookingForm bookingForm={bookingForm} />
+            <BookingForm bookingFormData={bookingForm} />
         </div>
     );
 };

@@ -8,6 +8,7 @@ import type { UpdateBookingFormMetaRequest } from '#api/bookingForms/bookingForm
 import type { UpdateBookingFormStylesRequest } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles';
 import { DEFAULT_DARK_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyles';
 import type { BookingFormConfiguratorDefaults } from '#store/useBookingFormConfiguratorStore';
+import type { BookingFormData } from '@bookio/booking-form-ui';
 
 export type SyncBookingFormFieldItem =
     SyncBookingFormFieldRequest['fields'][number];
@@ -91,4 +92,11 @@ export const toDefaultBookingFormData = (
     ),
     bookingFormStyles: toComparableBookingFormStyles(bookingForm.styles),
     bookingFormMeta: toComparableBookingFormMeta(bookingForm.metaData),
+});
+
+export const toBookingFormSettings = (
+    data: UpdateBookingFormRequest,
+): Omit<BookingFormData, 'fields'> => ({
+    name: data.name ?? '',
+    description: data.description ?? '',
 });

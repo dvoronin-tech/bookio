@@ -1,20 +1,21 @@
 import { memo, useMemo } from 'react';
 import {
-    useForm,
     type Control,
-    type FieldValues,
-    type UseFormRegister,
     type FieldErrors,
+    type FieldValues,
+    useForm,
+    type UseFormRegister,
 } from 'react-hook-form';
 import { Button } from '@bookio/ui';
 import { Appear, getAppearDelayMs } from './Appear.js';
 import styles from './BookingForm.module.scss';
 import {
-    isGroupField,
     type BookingFormField,
     type BookingFormFieldInput,
+    isGroupField,
 } from './fields/field.types.js';
 import { RenderField } from './fields/FieldsMap.js';
+import { normalizeField } from './utils/normalizeField.js';
 
 export type { BookingFormFieldInput } from './fields/field.types.js';
 
@@ -22,31 +23,32 @@ const DEFAULT_PHONE = '+375';
 
 export type BookingFormData = {
     name: string;
-    description?: string | null;
+    description: string | null;
     fields: BookingFormFieldInput[];
 };
 
 export type BookingFormProps = {
+    bookingFormData: BookingFormData;
     onSubmit?: (data: Record<string, string>) => void;
     onInvalid?: (errors: FieldErrors<Record<string, string>>) => void;
-    bookingForm: BookingFormData;
 };
 
-function normalizeField(field: BookingFormFieldInput): BookingFormFieldInput {
-    return {
-        ...field,
-        required: field.required ?? false,
-        params: field.params ?? {},
-    };
-}
+function BookingForm({
+    bookingFormData,
+    onSubmit,
+    onInvalid,
+}: BookingFormProps) {
+    const { name, description } = bookingFormData;
 
-function BookingForm({ bookingForm, onSubmit, onInvalid }: BookingFormProps) {
-    const name = bookingForm.name;
-    const description = bookingForm.description;
-    const fields = useMemo(() => bookingForm.fields.map(normalizeField), [bookingForm.fields]);
+    const fields = useMemo(
+        () => bookingFormData.fields.map(normalizeField),
+        [bookingFormData.fields],
+    );
 
     const rootFields = useMemo(() => {
-        return fields.filter((field) => field.parentId === null).sort((a, b) => a.order - b.order);
+        return fields
+            .filter((field) => field.parentId === null)
+            .sort((a, b) => a.order - b.order);
     }, [fields]);
 
     const defaultValues = useMemo(
@@ -66,7 +68,6 @@ function BookingForm({ bookingForm, onSubmit, onInvalid }: BookingFormProps) {
     };
 
     const onInvalidHandler = (errors: FieldErrors<Record<string, string>>) => {
-        console.log('Validation failed:', errors);
         onInvalid?.(errors);
     };
 
@@ -92,14 +93,22 @@ function BookingForm({ bookingForm, onSubmit, onInvalid }: BookingFormProps) {
                                 control={control}
                             />
                         ) : (
-                            <RenderField field={field} register={register} control={control} />
+                            <RenderField
+                                field={field}
+                                register={register}
+                                control={control}
+                            />
                         )}
                     </Appear>
                 ))}
             </div>
 
             <Appear delayMs={getAppearDelayMs(rootFields.length)}>
-                <Button type="submit" variant="primary-filled" className={styles.cta}>
+                <Button
+                    type="submit"
+                    variant="primary-filled"
+                    className={styles.cta}
+                >
                     Submit booking
                 </Button>
             </Appear>
@@ -116,7 +125,9 @@ interface GroupFieldProps {
 
 function GroupField({ field, fields, register, control }: GroupFieldProps) {
     const groupFields = useMemo(() => {
-        return fields.filter((f) => f.parentId === field.id).sort((a, b) => a.order - b.order);
+        return fields
+            .filter((f) => f.parentId === field.id)
+            .sort((a, b) => a.order - b.order);
     }, [fields, field.id]);
 
     const groupHint = field.params.description;
@@ -127,11 +138,18 @@ function GroupField({ field, fields, register, control }: GroupFieldProps) {
                 <span className={styles.groupAccent} aria-hidden />
                 <div className={styles.groupTitles}>
                     <span className={styles.groupTitle}>{field.name}</span>
-                    {groupHint && <span className={styles.groupHint}>{groupHint}</span>}
+                    {groupHint && (
+                        <span className={styles.groupHint}>{groupHint}</span>
+                    )}
                 </div>
             </div>
             {groupFields.map((child) => (
-                <RenderField key={child.id} field={child} register={register} control={control} />
+                <RenderField
+                    key={child.id}
+                    field={child}
+                    register={register}
+                    control={control}
+                />
             ))}
         </div>
     );

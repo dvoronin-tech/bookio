@@ -1,13 +1,14 @@
-import { type CSSProperties, type FC } from 'react';
+import { type CSSProperties, type FC, useMemo } from 'react';
 import { useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/shallow';
 import { BookingForm } from '@bookio/booking-form-ui';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import {
-    DEFAULT_DARK_BOOKING_FORM_STYLES,
     type BookingFormStyles,
+    DEFAULT_DARK_BOOKING_FORM_STYLES,
 } from '#utils/defaultBookingFormStyles';
-import styles from './BookingFormPreview.module.scss';
+import scssStyles from './BookingFormPreview.module.scss';
+import { toBookingFormSettings } from '#utils/dataPreparers/bookingFormPreparers.ts';
 
 const toPreviewCssVars = (colors: BookingFormStyles): CSSProperties =>
     ({
@@ -21,45 +22,64 @@ const toPreviewCssVars = (colors: BookingFormStyles): CSSProperties =>
 
 export const BookingFormPreview: FC = () => {
     const { bookingFormId } = useParams<{ bookingFormId: string }>();
-    const { bookingForm, bookingFormFields, bookingFormStyles } = useBookingFormConfiguratorStore(
-        useShallow(({ bookingForm, bookingFormFields, bookingFormStyles }) => ({
-            bookingForm,
-            bookingFormFields,
-            bookingFormStyles,
-        })),
-    );
+    const { bookingForm, bookingFormFields, bookingFormStyles } =
+        useBookingFormConfiguratorStore(
+            useShallow(
+                ({ bookingForm, bookingFormFields, bookingFormStyles }) => ({
+                    bookingForm,
+                    bookingFormFields,
+                    bookingFormStyles,
+                }),
+            ),
+        );
 
+    const data = useMemo(() => {
+        if (bookingForm?.id === bookingFormId && bookingForm) {
+            return {
+                settings: toBookingFormSettings(bookingForm),
+                fields: bookingFormFields?.fields,
+                styles: bookingFormStyles,
+            };
+        }
 
+        return null;
+    }, [
+        bookingForm,
+        bookingFormFields?.fields,
+        bookingFormId,
+        bookingFormStyles,
+    ]);
 
-    const draftForm = bookingForm?.id === bookingFormId ? bookingForm : null;
-    const draftFields =
-        bookingFormFields?.bookingFormId === bookingFormId ? bookingFormFields?.fields : null;
-    const draftStyles =
-        bookingFormStyles?.bookingFormId === bookingFormId ? bookingFormStyles : null;
-
-    if (!draftForm || !draftFields || !draftStyles) {
+    if (!data?.settings || !data?.fields || !data?.styles) {
         return null;
     }
 
-    const name = draftForm.name ?? '';
-    const description = draftForm.description ?? null;
+    const { settings, fields, styles } = data;
 
     const previewColors: BookingFormStyles = {
-        primary: draftStyles.primary ?? DEFAULT_DARK_BOOKING_FORM_STYLES.primary,
-        bgMain: draftStyles.bgMain ?? DEFAULT_DARK_BOOKING_FORM_STYLES.bgMain,
-        bgSecondary: draftStyles.bgSecondary ?? DEFAULT_DARK_BOOKING_FORM_STYLES.bgSecondary,
-        borderColor: draftStyles.borderColor ?? DEFAULT_DARK_BOOKING_FORM_STYLES.borderColor,
-        textMain: draftStyles.textMain ?? DEFAULT_DARK_BOOKING_FORM_STYLES.textMain,
-        textSecondary: draftStyles.textSecondary ?? DEFAULT_DARK_BOOKING_FORM_STYLES.textSecondary,
+        primary: styles.primary ?? DEFAULT_DARK_BOOKING_FORM_STYLES.primary,
+        bgMain: styles.bgMain ?? DEFAULT_DARK_BOOKING_FORM_STYLES.bgMain,
+        bgSecondary:
+            styles.bgSecondary ?? DEFAULT_DARK_BOOKING_FORM_STYLES.bgSecondary,
+        borderColor:
+            styles.borderColor ?? DEFAULT_DARK_BOOKING_FORM_STYLES.borderColor,
+        textMain: styles.textMain ?? DEFAULT_DARK_BOOKING_FORM_STYLES.textMain,
+        textSecondary:
+            styles.textSecondary ??
+            DEFAULT_DARK_BOOKING_FORM_STYLES.textSecondary,
     };
 
-    if (!name && draftFields.length === 0) {
-        return <div className={styles.preview} />;
-    }
-
     return (
-        <div className={styles.preview} style={toPreviewCssVars(previewColors)}>
-            <BookingForm bookingForm={{ name, description, fields: draftFields }} />
+        <div
+            className={scssStyles.preview}
+            style={toPreviewCssVars(previewColors)}
+        >
+            <BookingForm
+                bookingFormData={{
+                    ...settings,
+                    fields,
+                }}
+            />
         </div>
     );
 };
