@@ -1,4 +1,4 @@
-import { memo, useMemo, type ReactNode } from 'react';
+import { memo, useMemo } from 'react';
 import {
     useForm,
     type Control,
@@ -7,6 +7,7 @@ import {
     type FieldErrors,
 } from 'react-hook-form';
 import { Button } from '@bookio/ui';
+import { Appear, getAppearDelayMs } from './Appear.js';
 import styles from './BookingForm.module.scss';
 import {
     isGroupField,
@@ -18,18 +19,6 @@ import { RenderField } from './fields/FieldsMap.js';
 export type { BookingFormFieldInput } from './fields/field.types.js';
 
 const DEFAULT_PHONE = '+375';
-const FIELD_APPEAR_START_MS = 300;
-const FIELD_APPEAR_STEP_MS = 100;
-
-const getAppearDelayMs = (index: number) => FIELD_APPEAR_START_MS + index * FIELD_APPEAR_STEP_MS;
-
-function Appear({ delayMs, children }: { delayMs: number; children: ReactNode }) {
-    return (
-        <div className={styles.appear} style={{ animationDelay: `${delayMs}ms` }}>
-            {children}
-        </div>
-    );
-}
 
 export type BookingFormData = {
     name: string;

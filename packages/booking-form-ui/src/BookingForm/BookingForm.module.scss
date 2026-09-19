@@ -1,6 +1,5 @@
 .bookingForm {
     --box-appear-duration: 0.5s;
-    --field-appear-duration: 0.5s;
 
     display: flex;
     flex-direction: column;
@@ -103,11 +102,6 @@
     border-radius: 1.6rem !important;
 }
 
-.appear {
-    width: 100%;
-    animation: FieldAppear var(--field-appear-duration) ease backwards;
-}
-
 @keyframes FormBoxAppear {
     from {
         opacity: 0;
@@ -115,21 +109,6 @@
         filter: blur(10px);
     }
     to {
-        opacity: 1;
-        scale: 1;
-        filter: blur(0);
-    }
-}
-
-@keyframes FieldAppear {
-    from {
-        transform: translateY(-2rem);
-        opacity: 0;
-        scale: 0.96;
-        filter: blur(10px);
-    }
-    to {
-        transform: translateY(0);
         opacity: 1;
         scale: 1;
         filter: blur(0);

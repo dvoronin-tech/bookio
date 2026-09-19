@@ -1,0 +1,21 @@
+.appear {
+    --field-appear-duration: 0.5s;
+
+    width: 100%;
+    animation: FieldAppear var(--field-appear-duration) ease backwards;
+}
+
+@keyframes FieldAppear {
+    from {
+        transform: translateY(-2rem);
+        opacity: 0;
+        scale: 0.96;
+        filter: blur(10px);
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+        scale: 1;
+        filter: blur(0);
+    }
+}
