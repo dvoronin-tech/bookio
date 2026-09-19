@@ -4,13 +4,13 @@
     color: var(--color-text-secondary);
 }
 
-.dropdownContent {
+.dropdownContent.dropdownContent {
     display: flex;
     flex-direction: column;
     max-height: 40rem;
     overflow: hidden;
     padding: 0;
-    background-color: var(--color-bg-main);
+    background: var(--color-bg-main);
     box-shadow: 0 0.4rem 1.2rem rgba(0, 0, 0, 0.12);
 }
 
@@ -59,18 +59,18 @@
         font-size: 1.6rem;
         font-family: var(--font-family);
         color: var(--color-text-main);
-        background-color: var(--color-bg-main);
+        background: var(--color-bg-main);
         border: 1px solid var(--color-border);
         transition: border-color 0.2s ease;
         text-align: left;
 
         &:hover {
-            background-color: var(--color-bg-main);
+            background: var(--color-bg-main);
         }
 
         &:focus-visible {
             border-color: var(--color-primary);
-            background-color: var(--color-bg-main);
+            background: var(--color-bg-main);
             outline: none;
         }
 

@@ -24,6 +24,7 @@ import {
     type ReactNode,
 } from 'react';
 import Button, { type ButtonAsButtonProps } from '../Button/Button.js';
+import { getThemeCssVars } from '../utils/themeCssVars.js';
 import styles from './Dropdown.module.scss';
 
 const OUTSIDE_CLICK_IGNORE_ATTR = 'data-outside-click-ignore';
@@ -163,13 +164,17 @@ function DropdownContent({ children, className }: DropdownContentProps) {
 
     if (!open) return null;
 
+    const reference = refs.reference.current;
+    const themeVars = getThemeCssVars(
+        reference instanceof Element ? reference : null,
+    );
     const classes = clsx(styles.content, className);
 
     return (
         <FloatingPortal>
             <div
                 ref={refs.setFloating}
-                style={floatingStyles}
+                style={{ ...themeVars, ...floatingStyles }}
                 className={classes}
                 {...getFloatingProps()}
                 {...{ [OUTSIDE_CLICK_IGNORE_ATTR]: '' }}

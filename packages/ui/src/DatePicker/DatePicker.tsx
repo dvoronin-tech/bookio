@@ -23,6 +23,7 @@ import {
     toIsoDateString,
 } from './dateUtils.js';
 import CalendarIcon from './icons/calendar.svg?react';
+import { getThemeCssVars } from '../utils/themeCssVars.js';
 import styles from './DatePicker.module.scss';
 
 const OUTSIDE_CLICK_IGNORE_ATTR = 'data-outside-click-ignore';
@@ -236,7 +237,14 @@ function DatePicker({
                 <FloatingPortal>
                     <div
                         ref={refs.setFloating}
-                        style={floatingStyles}
+                        style={{
+                            ...getThemeCssVars(
+                                refs.reference.current instanceof Element
+                                    ? refs.reference.current
+                                    : null,
+                            ),
+                            ...floatingStyles,
+                        }}
                         className={styles.popover}
                         {...getFloatingProps()}
                         {...{ [OUTSIDE_CLICK_IGNORE_ATTR]: '' }}

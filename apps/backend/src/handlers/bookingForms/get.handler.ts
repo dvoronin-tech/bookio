@@ -73,6 +73,7 @@ export const getBookingFromBySlugsHandler = factory(
                             fields: {
                                 orderBy: (field, { asc }) => [asc(field.order)],
                             },
+                            styles: true,
                         },
                     },
                 },

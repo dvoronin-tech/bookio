@@ -22,6 +22,7 @@ import {
     parseTime,
     TIME_PLACEHOLDER,
 } from './timeUtils.js';
+import { getThemeCssVars } from '../utils/themeCssVars.js';
 import styles from './TimePicker.module.scss';
 const DEFAULT_STEP = 1;
 
@@ -221,7 +222,14 @@ function TimePicker({
             {open && (
                 <TimePopover
                     floatingRef={refs.setFloating}
-                    floatingStyles={floatingStyles}
+                    floatingStyles={{
+                        ...getThemeCssVars(
+                            refs.reference.current instanceof Element
+                                ? refs.reference.current
+                                : null,
+                        ),
+                        ...floatingStyles,
+                    }}
                     floatingProps={getFloatingProps()}
                     hourOptions={hourOptions}
                     minuteOptions={minuteOptions}
