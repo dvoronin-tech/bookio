@@ -8,7 +8,7 @@ import { BookingFormPreview } from '#components/BookingFormPreview/BookingFormPr
 import { useGetBookingForm } from '#api/bookingForms/getBookingForm.ts';
 import { configuratorRouteApi } from '#lib/routeApis';
 import { toDefaultBookingFormData } from '#utils/dataPreparers/bookingFormPreparers.ts';
-import { Button, Loader } from '@bookio/ui';
+import { Button, PageLoader } from '@bookio/ui';
 import styles from './BookingFormConfigurator.module.scss';
 
 export const BookingFormConfigurator: FC = () => {
@@ -40,11 +40,11 @@ export const BookingFormConfigurator: FC = () => {
     const Panel = tab?.Panel;
 
     if (isBookingFormLoading) {
-        return <Loader />;
+        return <PageLoader />;
     }
 
     const handleRefetchBookingForm = () => {
-        refetchBookingForm();
+        void refetchBookingForm();
     };
 
     if (!bookingForm) {
@@ -65,11 +65,11 @@ export const BookingFormConfigurator: FC = () => {
             );
         }
 
-        return <Loader />;
+        return <PageLoader />;
     }
 
     if (!isSeeded) {
-        return <Loader />;
+        return <PageLoader />;
     }
 
     return (

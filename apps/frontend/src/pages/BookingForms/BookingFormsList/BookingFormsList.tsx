@@ -3,7 +3,7 @@ import styles from './BookingFormsList.module.scss';
 import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
-import { Button, Input, Loader } from '@bookio/ui';
+import { Button, Input, PageLoader } from '@bookio/ui';
 import { BookingFormCard } from '#components/BookingFormCard/BookingFormCard.tsx';
 
 import PlusIcon from '#assets/icons/plus.svg?react';
@@ -20,11 +20,11 @@ export const BookingForms: FC = () => {
     } = useGetBookingForms(organizationId);
 
     const handleRetry = useCallback(() => {
-        refetch();
+        void refetch();
     }, [refetch]);
 
     if (isPending) {
-        return <Loader />;
+        return <PageLoader />;
     }
 
     if (error) {

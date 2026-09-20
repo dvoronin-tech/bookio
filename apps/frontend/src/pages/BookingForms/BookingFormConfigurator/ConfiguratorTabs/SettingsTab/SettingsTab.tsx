@@ -1,7 +1,13 @@
 import { type FC, useEffect } from 'react';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm.ts';
 import { configuratorRouteApi } from '#lib/routeApis';
-import { Button, Checkbox, Input, Loader, ValidatableInput } from '@bookio/ui';
+import {
+    Button,
+    Checkbox,
+    Input,
+    PageLoader,
+    ValidatableInput,
+} from '@bookio/ui';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts';
 
 import styles from './SettingsTab.module.scss';
@@ -130,11 +136,11 @@ export const SettingsTab = () => {
     } = useGetOrganization(organizationId);
 
     if (isOrganizationLoading) {
-        return <Loader />;
+        return <PageLoader />;
     }
 
     const handleRefetchOrganization = () => {
-        refetchOrganization();
+        void refetchOrganization();
     };
 
     if (!organization) {
@@ -155,7 +161,7 @@ export const SettingsTab = () => {
             );
         }
 
-        return <Loader />;
+        return <PageLoader />;
     }
 
     return (

@@ -4,7 +4,7 @@ import styles from './OrganizationList.module.scss';
 import { OrganizationItem } from '#components/OrganizationItem/OrganizationItem';
 import { useGetOrganizationsByUserId } from '#api/organizations/getOrganizationsByUserId';
 import { toast } from 'react-hot-toast';
-import { Button, Loader } from '@bookio/ui';
+import { Button, PageLoader } from '@bookio/ui';
 import { useNavigate } from '@tanstack/react-router';
 
 export const OrganizationList: FC = () => {
@@ -40,7 +40,7 @@ export const OrganizationList: FC = () => {
     }
 
     if (isPending) {
-        return <Loader />;
+        return <PageLoader />;
     }
 
     if (data.length === 0) {
