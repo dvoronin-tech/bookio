@@ -49,5 +49,6 @@ export const useGetBookingForm = (
         queryKey: bookingFormQueryKey(bookingFormId),
         queryFn: () => fetchBookingForm(bookingFormId!),
         enabled: !!session?.user.id && !!bookingFormId,
+        staleTime: 3 * 60 * 1000,
     });
 };

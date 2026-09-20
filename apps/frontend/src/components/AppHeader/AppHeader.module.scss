@@ -20,7 +20,7 @@
         width: fit-content;
         max-width: 20rem;
     }
-    
+
     .menuItemImage {
         height: 3rem;
         border-radius: 0.6rem;
@@ -48,10 +48,14 @@
         max-width: 100%;
         min-width: 0;
         &:hover {
-            background-color: color-mix(in srgb, var(--color-text-main) 8%, transparent);
+            background-color: color-mix(
+                in srgb,
+                var(--color-text-main) 8%,
+                transparent
+            );
         }
     }
-    
+
     .arrowIcon {
         flex: 0 0 2rem;
         height: 2rem;
@@ -115,4 +119,9 @@
         width: 1.6rem !important;
         height: 1.6rem !important;
     }
+}
+
+.loader {
+    height: 2.6rem;
+    aspect-ratio: 1;
 }

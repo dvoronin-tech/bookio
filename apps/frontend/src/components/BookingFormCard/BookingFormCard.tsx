@@ -15,6 +15,9 @@ import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
+const throwNoOrgToast = () =>
+    toast.error("Organization slug haven't loaded yet");
+
 export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
     bookingForm,
 }) => {
@@ -23,25 +26,36 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
     const { data: organization } = useGetOrganization(organizationId);
     const [isDeleting, setIsDeleting] = useState(false);
 
-    const bookingFormUrl = `${BOOKING_FORM_URL}/${organization?.slug}/${bookingForm.slug}`;
+    const slug = organization?.slug;
+
+    const bookingFormUrl = `${BOOKING_FORM_URL}/${slug ?? 'LOADING'}/${bookingForm.slug}`;
 
     const handleOpenDeleteDialog = useCallback(() => {
         setIsDeleting(true);
     }, []);
 
     const handleCopyBookingFormUrl = useCallback(
-        (e: MouseEvent<HTMLButtonElement>) => {
+        async (e: MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             e.stopPropagation();
-            navigator.clipboard.writeText(bookingFormUrl);
-            toast.success('Booking form URL copied to clipboard');
+
+            if (slug) {
+                await navigator.clipboard.writeText(bookingFormUrl);
+                toast.success('Booking form URL copied to clipboard');
+            } else {
+                throwNoOrgToast();
+            }
         },
-        [bookingFormUrl],
+        [bookingFormUrl, slug],
     );
 
     const handleNavigateToBookingForm = useCallback(() => {
-        window.open(bookingFormUrl, '_blank');
-    }, [bookingFormUrl]);
+        if (slug) {
+            window.open(bookingFormUrl, '_blank');
+        } else {
+            throwNoOrgToast();
+        }
+    }, [bookingFormUrl, slug]);
 
     const handleOpenConfigurator = useCallback(() => {
         void navigate({
