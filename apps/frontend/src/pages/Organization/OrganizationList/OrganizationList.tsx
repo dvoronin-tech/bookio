@@ -4,7 +4,7 @@ import styles from './OrganizationList.module.scss';
 import { OrganizationItem } from '#components/OrganizationItem/OrganizationItem';
 import { useGetOrganizationsByUserId } from '#api/organizations/getOrganizationsByUserId';
 import { toast } from 'react-hot-toast';
-import { Button, Spinner } from '@bookio/ui';
+import { Button, Loader } from '@bookio/ui';
 import { useNavigate } from 'react-router-dom';
 import { navigateToOrganization } from '#navigation';
 
@@ -35,12 +35,9 @@ export const OrganizationList: FC = () => {
         );
     }
 
-    if (isPending)
-        return (
-            <div className={styles.container}>
-                <Spinner size={6} />
-            </div>
-        );
+    if (isPending) {
+        return <Loader />;
+    }
 
     if (data.length === 0) {
         return (

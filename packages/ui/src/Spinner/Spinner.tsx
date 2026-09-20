@@ -1,16 +1,16 @@
-import type { CSSProperties } from 'react';
+import { Mark } from './Mark.js';
 import styles from './Spinner.module.scss';
 
 export type SpinnerProps = {
     size?: number;
 };
 
-function Spinner({ size = 3 }: SpinnerProps) {
-    const style = {
-        '--spinner-size': `${size}rem`,
-    } as CSSProperties;
-
-    return <span className={styles.loader} style={style} />;
+function Spinner({ size }: SpinnerProps) {
+    return (
+        <div className={styles.spinner}>
+            <Mark size={size} />
+        </div>
+    );
 }
 
 export default Spinner;

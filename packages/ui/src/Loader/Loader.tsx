@@ -1,14 +1,9 @@
-import Spinner from '../Spinner/Spinner.js';
 import styles from './Loader.module.scss';
 
-export type LoaderProps = {
-    size?: number;
-};
-
-function Loader({ size }: LoaderProps) {
+function Loader() {
     return (
-        <div className={styles.loader}>
-            <Spinner size={size} />
+        <div className={styles.loader} role="status" aria-label="Loading">
+            <div className={styles.spinner} />
         </div>
     );
 }

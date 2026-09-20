@@ -64,7 +64,6 @@ export { default as ProgressBar } from './ProgressBar/ProgressBar.js';
 export type { ProgressBarProps } from './ProgressBar/ProgressBar.js';
 
 export { default as Loader } from './Loader/Loader.js';
-export type { LoaderProps } from './Loader/Loader.js';
 
 export { default as Spinner } from './Spinner/Spinner.js';
 export type { SpinnerProps } from './Spinner/Spinner.js';

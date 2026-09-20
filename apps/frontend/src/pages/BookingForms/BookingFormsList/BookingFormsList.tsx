@@ -22,7 +22,7 @@ export const BookingForms: FC = () => {
     }, [refetch]);
 
     if (isPending) {
-        return <Loader size={6} />;
+        return <Loader />;
     }
 
     if (error) {

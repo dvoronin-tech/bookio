@@ -2,7 +2,7 @@ import { type FC, useEffect, Suspense } from 'react';
 import { Outlet, useNavigate } from 'react-router-dom';
 import { navigateToOrganizations } from '#navigation';
 import { useSession } from '#api/auth';
-import { PageLoader } from '#components/PageLoader/PageLoader';
+import { Spinner } from '@bookio/ui';
 import styles from './AuthLayout.module.scss';
 
 export const AuthLayout: FC = () => {
@@ -21,7 +21,7 @@ export const AuthLayout: FC = () => {
 
     return (
         <div className={styles.authLayout}>
-            <Suspense fallback={<PageLoader />}>
+            <Suspense fallback={<Spinner />}>
                 <Outlet />
             </Suspense>
         </div>

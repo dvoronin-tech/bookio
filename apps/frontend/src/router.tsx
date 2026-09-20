@@ -1,11 +1,11 @@
 import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
 import { lazyRoute } from '#lib/lazy-route';
 import { MainLayout } from '#layouts/MainLayout/MainLayout';
-import { PageLoader } from '#components/PageLoader/PageLoader';
+import { Spinner } from '@bookio/ui';
 
 export const router = createBrowserRouter([
     {
-        hydrateFallbackElement: <PageLoader />,
+        hydrateFallbackElement: <Spinner />,
         children: [
             {
                 path: '/auth',
