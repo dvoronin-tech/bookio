@@ -5,7 +5,8 @@ import { parsePhoneNumberFromString } from 'libphonenumber-js';
 import { Input, ValidatableInput } from '@bookio/ui';
 import { getRequiredRule } from '../../utils/rules.js';
 import { useFieldError } from '../../utils/useFieldError.js';
-import type { FieldControlProps } from '../field.types.js';
+import { useBookingFormContext } from '../../BookingFormContext.js';
+import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
@@ -26,12 +27,9 @@ function getCountryFlagSrc(country: string | undefined) {
     return `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`;
 }
 
-export const PhoneInputField: FC<FieldControlProps<'phone'>> = ({
-    field,
-    register,
-    control,
-    markRequiredFields,
-}) => {
+export const PhoneInputField: FC<FieldRendererProps<'phone'>> = ({ field }) => {
+    const { formState, register, control, markRequiredFields } = useBookingFormContext();
+    const disabled = formState === 'loading';
     const { placeholder, helpText } = field.params;
     const label = formatLabel(markRequiredFields, field.name, field.required);
 
@@ -86,6 +84,7 @@ export const PhoneInputField: FC<FieldControlProps<'phone'>> = ({
                     useConfirmationColor={false}
                     {...registerProps}
                     onChange={handleChange}
+                    disabled={disabled}
                 />
             </Input.Root>
         </Input.Field>

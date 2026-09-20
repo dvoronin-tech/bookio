@@ -1,14 +1,9 @@
-import { memo, useMemo } from 'react';
-import {
-    type Control,
-    type FieldErrors,
-    type FieldValues,
-    useForm,
-    type UseFormRegister,
-} from 'react-hook-form';
-import { Button } from '@bookio/ui';
-import { Appear, getAppearDelayMs } from './Appear.js';
+import { memo, useMemo, useRef, useState } from 'react';
+import { type FieldErrors, useForm } from 'react-hook-form';
+import { Appear, getAppearDelayMs } from './components/Appear/Appear.js';
+import { SubmitButton } from './components/SubmitButton/SubmitButton.js';
 import styles from './BookingForm.module.scss';
+import { BookingFormProvider } from './BookingFormContext.js';
 import {
     type BookingFormField,
     type BookingFormFieldInput,
@@ -30,15 +25,25 @@ export type BookingFormData = {
 
 export type BookingFormProps = {
     bookingFormData: BookingFormData;
-    onSubmit?: (data: Record<string, string>) => void;
+    /**
+     * Function which calls when RHF validation passed successfully
+     * @param data Received data from RHF
+     * */
+    onSubmit?: (data: Record<string, string>) => Promise<void>;
+    /** Function which will call if RHF validation failed */
     onInvalid?: (errors: FieldErrors<Record<string, string>>) => void;
 };
+
+export type FormState = 'idle' | 'loading' | 'error';
 
 function BookingForm({
     bookingFormData,
     onSubmit,
     onInvalid,
 }: BookingFormProps) {
+    const [formState, setFormState] = useState<FormState>('idle');
+    const formStateRef = useRef<FormState>(formState);
+
     const { name, description, markRequiredFields } = bookingFormData;
 
     const fields = useMemo(
@@ -64,8 +69,23 @@ function BookingForm({
 
     const { register, control, handleSubmit } = useForm({ defaultValues });
 
-    const onValidHandler = (data: Record<string, string>) => {
-        onSubmit?.(data);
+    const setProcessingState = (nextState: FormState) => {
+        formStateRef.current = nextState;
+        setFormState(nextState);
+    };
+
+    const onValidHandler = async (data: Record<string, string>) => {
+        if (formStateRef.current === 'loading') {
+            return;
+        }
+
+        try {
+            setProcessingState('loading');
+            await onSubmit?.(data);
+            setProcessingState('idle');
+        } catch {
+            setProcessingState('error');
+        }
     };
 
     const onInvalidHandler = (errors: FieldErrors<Record<string, string>>) => {
@@ -73,67 +93,53 @@ function BookingForm({
     };
 
     return (
-        <form
-            noValidate
-            className={styles.bookingForm}
-            onSubmit={handleSubmit(onValidHandler, onInvalidHandler)}
+        <BookingFormProvider
+            register={register}
+            control={control}
+            markRequiredFields={markRequiredFields}
+            formState={formState}
         >
-            <div className={styles.summary}>
-                <h2 className={styles.title}>{name}</h2>
-                {description && <p className={styles.hint}>{description}</p>}
-            </div>
+            <form
+                noValidate
+                className={styles.bookingForm}
+                onSubmit={handleSubmit(onValidHandler, onInvalidHandler)}
+            >
+                <div className={styles.summary}>
+                    <h2 className={styles.title}>{name}</h2>
+                    {description && (
+                        <p className={styles.hint}>{description}</p>
+                    )}
+                </div>
 
-            <div className={styles.fields}>
-                {rootFields.map((field, index) => (
-                    <Appear key={field.id} delayMs={getAppearDelayMs(index)}>
-                        {isGroupField(field) ? (
-                            <GroupField
-                                field={field}
-                                fields={fields}
-                                register={register}
-                                control={control}
-                                markRequiredFields={markRequiredFields}
-                            />
-                        ) : (
-                            <RenderField
-                                field={field}
-                                register={register}
-                                control={control}
-                                markRequiredFields={markRequiredFields}
-                            />
-                        )}
-                    </Appear>
-                ))}
-            </div>
+                <div className={styles.fields}>
+                    {rootFields.map((field, index) => (
+                        <Appear
+                            key={field.id}
+                            delayMs={getAppearDelayMs(index)}
+                        >
+                            {isGroupField(field) ? (
+                                <GroupField field={field} fields={fields} />
+                            ) : (
+                                <RenderField field={field} />
+                            )}
+                        </Appear>
+                    ))}
+                </div>
 
-            <Appear delayMs={getAppearDelayMs(rootFields.length)}>
-                <Button
-                    type="submit"
-                    variant="primary-filled"
-                    className={styles.cta}
-                >
-                    Submit booking
-                </Button>
-            </Appear>
-        </form>
+                <Appear delayMs={getAppearDelayMs(rootFields.length)}>
+                    <SubmitButton />
+                </Appear>
+            </form>
+        </BookingFormProvider>
     );
 }
 
 interface GroupFieldProps {
-    register: UseFormRegister<FieldValues>;
-    control: Control<FieldValues>;
     field: Extract<BookingFormField, { type: 'group' }>;
     fields: BookingFormFieldInput[];
-    markRequiredFields: boolean;
 }
 
-function GroupField({
-    field,
-    fields,
-    register,
-    control,
-    markRequiredFields,
-}: GroupFieldProps) {
+function GroupField({ field, fields }: GroupFieldProps) {
     const groupFields = useMemo(() => {
         return fields
             .filter((f) => f.parentId === field.id)
@@ -154,13 +160,7 @@ function GroupField({
                 </div>
             </div>
             {groupFields.map((child) => (
-                <RenderField
-                    key={child.id}
-                    field={child}
-                    register={register}
-                    control={control}
-                    markRequiredFields={markRequiredFields}
-                />
+                <RenderField key={child.id} field={child} />
             ))}
         </div>
     );

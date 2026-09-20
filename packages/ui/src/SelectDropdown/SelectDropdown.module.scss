@@ -74,6 +74,11 @@
             outline: none;
         }
 
+        &:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
         > div:first-child {
             flex: 1;
             min-width: 0;

@@ -1,11 +1,7 @@
 import styles from './Loader.module.scss';
 
 function Loader() {
-    return (
-        <div className={styles.loader} role="status" aria-label="Loading">
-            <div className={styles.spinner} />
-        </div>
-    );
+    return <div className={styles.spinner} />;
 }
 
 export default Loader;

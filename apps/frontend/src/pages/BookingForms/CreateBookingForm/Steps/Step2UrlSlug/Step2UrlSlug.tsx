@@ -6,7 +6,7 @@ import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts
 import { useGetOrganization } from '#api/organizations/getOrganizationData.ts';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
-import { slugSchema } from '@/schemas';
+import { slugSchema } from '@bookio/backend/schemas';
 import toast from 'react-hot-toast';
 import styles from './Step2UrlSlug.module.scss';
 

@@ -20,6 +20,7 @@ type SelectDropdownBaseProps = {
     triggerClassName?: string;
     withSearch?: boolean;
     highlightSelected?: boolean;
+    disabled?: boolean;
 };
 
 type SelectDropdownSingleProps = SelectDropdownBaseProps & {
@@ -61,6 +62,7 @@ function SelectDropdown(props: SelectDropdownProps) {
         triggerClassName,
         withSearch = false,
         highlightSelected = false,
+        disabled = false,
     } = props;
 
     assertUniqueOptions(options);
@@ -95,12 +97,16 @@ function SelectDropdown(props: SelectDropdownProps) {
         return options.filter((option) => String(option).toLowerCase().includes(query));
     }, [options, searchQuery, withSearch]);
 
-    const handleOpenChange = useCallback((open: boolean) => {
-        setIsOpen(open);
-        if (!open) {
-            setSearchQuery('');
-        }
-    }, []);
+    const handleOpenChange = useCallback(
+        (open: boolean) => {
+            if (disabled) return;
+            setIsOpen(open);
+            if (!open) {
+                setSearchQuery('');
+            }
+        },
+        [disabled],
+    );
 
     const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
@@ -120,6 +126,7 @@ function SelectDropdown(props: SelectDropdownProps) {
                 placement={placement}
             >
                 <Dropdown.Trigger
+                    disabled={disabled}
                     className={clsx(
                         styles.selectTrigger,
                         selectedKeys.size === 0 && styles.selectTriggerPlaceholder,

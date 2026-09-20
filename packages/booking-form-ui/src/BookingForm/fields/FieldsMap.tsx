@@ -1,8 +1,7 @@
 import type { ComponentType, FC } from 'react';
-import type { Control, FieldValues, UseFormRegister } from 'react-hook-form';
 import {
     type BookingFormFieldInput,
-    type FieldControlProps,
+    type FieldRendererProps,
     isLeafField,
     type LeafFieldType,
 } from './field.types.js';
@@ -21,7 +20,7 @@ import { TimeInputField } from './components/TimeInputField.js';
 import { UrlInputField } from './components/UrlInputField.js';
 
 type FieldsMap = {
-    [K in LeafFieldType]: ComponentType<FieldControlProps<K>>;
+    [K in LeafFieldType]: ComponentType<FieldRendererProps<K>>;
 };
 
 const fieldsMap: FieldsMap = {
@@ -42,34 +41,19 @@ const fieldsMap: FieldsMap = {
 
 function getFieldComponent<T extends LeafFieldType>(
     type: T,
-): ComponentType<FieldControlProps<T>> {
+): ComponentType<FieldRendererProps<T>> {
     return fieldsMap[type];
 }
 
 type RenderFieldProps = {
     field: BookingFormFieldInput;
-    register: UseFormRegister<FieldValues>;
-    control: Control<FieldValues>;
-    markRequiredFields: boolean;
 };
 
-export const RenderField: FC<RenderFieldProps> = ({
-    field,
-    register,
-    control,
-    markRequiredFields,
-}) => {
+export const RenderField: FC<RenderFieldProps> = ({ field }) => {
     if (!isLeafField(field)) {
         return null;
     }
 
     const Field = getFieldComponent(field.type);
-    return (
-        <Field
-            field={field}
-            register={register}
-            control={control}
-            markRequiredFields={markRequiredFields}
-        />
-    );
+    return <Field field={field} />;
 };

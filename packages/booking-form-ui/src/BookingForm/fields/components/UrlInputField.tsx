@@ -2,18 +2,16 @@ import type { FC } from 'react';
 import { ValidatableInput } from '@bookio/ui';
 import { getRequiredRule } from '../../utils/rules.js';
 import { useFieldError } from '../../utils/useFieldError.js';
-import type { FieldControlProps } from '../field.types.js';
+import { useBookingFormContext } from '../../BookingFormContext.js';
+import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
 const URL_PATTERN = /^https?:\/\/\S+$/i;
 
-export const UrlInputField: FC<FieldControlProps<'url'>> = ({
-    field,
-    register,
-    control,
-    markRequiredFields,
-}) => {
+export const UrlInputField: FC<FieldRendererProps<'url'>> = ({ field }) => {
+    const { formState, register, control, markRequiredFields } = useBookingFormContext();
+    const disabled = formState === 'loading';
     const { hasError, errorMessage } = useFieldError(control, field.key);
     const label = formatLabel(markRequiredFields, field.name, field.required);
 
@@ -34,6 +32,7 @@ export const UrlInputField: FC<FieldControlProps<'url'>> = ({
                     message: 'Enter a valid URL',
                 },
             })}
+            disabled={disabled}
         />
     );
 };

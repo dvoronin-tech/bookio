@@ -4,15 +4,14 @@ import { clsx } from 'clsx';
 import { FilePickerField } from '@bookio/ui';
 import { getRequiredRule } from '../../utils/rules.js';
 import { FieldError } from '../FieldError.js';
-import type { FieldControlProps } from '../field.types.js';
+import { useBookingFormContext } from '../../BookingFormContext.js';
+import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
-export const FileField: FC<FieldControlProps<'file'>> = ({
-    field,
-    control,
-    markRequiredFields,
-}) => {
+export const FileField: FC<FieldRendererProps<'file'>> = ({ field }) => {
+    const { formState, control, markRequiredFields } = useBookingFormContext();
+    const disabled = formState === 'loading';
     const { placeholder, accept, maxSizeMb } = field.params;
     const label = formatLabel(markRequiredFields, field.name, field.required);
 
@@ -40,6 +39,7 @@ export const FileField: FC<FieldControlProps<'file'>> = ({
                         placeholder={placeholder}
                         accept={accept?.join(',')}
                         onChange={onChange}
+                        disabled={disabled}
                     />
                     <FieldError message={fieldState.error?.message} />
                 </div>

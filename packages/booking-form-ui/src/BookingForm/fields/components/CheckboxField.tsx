@@ -3,16 +3,16 @@ import { Checkbox } from '@bookio/ui';
 import { getRequiredRule } from '../../utils/rules.js';
 import { useFieldError } from '../../utils/useFieldError.js';
 import { FieldError } from '../FieldError.js';
-import type { FieldControlProps } from '../field.types.js';
+import { useBookingFormContext } from '../../BookingFormContext.js';
+import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
-export const CheckboxField: FC<FieldControlProps<'checkbox'>> = ({
+export const CheckboxField: FC<FieldRendererProps<'checkbox'>> = ({
     field,
-    register,
-    control,
-    markRequiredFields,
 }) => {
+    const { formState, register, control, markRequiredFields } = useBookingFormContext();
+    const disabled = formState === 'loading';
     const { helpText } = field.params;
     const { errorMessage } = useFieldError(control, field.key);
 
@@ -25,6 +25,7 @@ export const CheckboxField: FC<FieldControlProps<'checkbox'>> = ({
                 {...register(field.key, {
                     required: getRequiredRule(field),
                 })}
+                disabled={disabled}
             />
             {helpText && (
                 <span className={styles.checkboxHelpText}>{helpText}</span>

@@ -16,6 +16,7 @@ type RadioContextValue = {
     onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
     onBlur?: (event: FocusEvent<HTMLInputElement>) => void;
     ref?: Ref<HTMLInputElement>;
+    disabled?: boolean;
 };
 
 const RadioContext = createContext<RadioContextValue | null>(null);
@@ -33,12 +34,13 @@ function useRadioContext() {
 export type RadioProps = RadioContextValue & {
     className?: string;
     children: ReactNode;
+    disabled?: boolean;
 };
 
-function RadioRoot({ name, onChange, onBlur, ref, className, children }: RadioProps) {
+function RadioRoot({ name, onChange, onBlur, ref, disabled, className, children }: RadioProps) {
     return (
-        <RadioContext.Provider value={{ name, onChange, onBlur, ref }}>
-            <fieldset className={clsx(styles.group, className)}>{children}</fieldset>
+        <RadioContext.Provider value={{ name, onChange, onBlur, ref, disabled }}>
+            <fieldset className={clsx(styles.group, className)} disabled={disabled}>{children}</fieldset>
         </RadioContext.Provider>
     );
 }
@@ -60,10 +62,11 @@ export type RadioItemProps = {
     children?: ReactNode;
 };
 
-function RadioItem({ value, className, disabled, id, children }: RadioItemProps) {
-    const { name, onChange, onBlur, ref } = useRadioContext();
+function RadioItem({ value, className, disabled: itemDisabled, id, children }: RadioItemProps) {
+    const { name, onChange, onBlur, ref, disabled: rootDisabled } = useRadioContext();
     const generatedId = useId();
     const inputId = id ?? generatedId;
+    const disabled = itemDisabled ?? rootDisabled;
 
     return (
         <label className={clsx(styles.item, className)} htmlFor={inputId}>
