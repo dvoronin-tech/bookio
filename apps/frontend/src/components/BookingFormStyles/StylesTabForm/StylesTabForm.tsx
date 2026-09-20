@@ -4,19 +4,15 @@ import { StyleColorField } from '#components/BookingFormStyles/StyleColorField/S
 import { StyleColorGroup } from '#components/BookingFormStyles/StyleColorGroup/StyleColorGroup';
 import { ThemeCard } from '#components/BookingFormStyles/ThemeCard/ThemeCard';
 import type { FC } from 'react';
-import { useParams } from 'react-router-dom';
+import { configuratorRouteApi } from '#lib/routeApis';
 
 import styles from './StylesTabForm.module.scss';
 
 export const StylesTabForm: FC = () => {
-    const { bookingFormId } = useParams();
+    const { bookingFormId } = configuratorRouteApi.useParams();
     const { theme, colors, handleThemeChange, handleColorChange } = useBookingFormStyles({
-        bookingFormId: bookingFormId ?? '',
+        bookingFormId,
     });
-
-    if (!bookingFormId) {
-        return null;
-    }
 
     return (
         <div className={styles.stylesTabForm}>

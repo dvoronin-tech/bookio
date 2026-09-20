@@ -1,12 +1,11 @@
-import { useCallback, type FC } from 'react';
+import { type FC, useCallback } from 'react';
 import styles from './OrganizationList.module.scss';
 
 import { OrganizationItem } from '#components/OrganizationItem/OrganizationItem';
 import { useGetOrganizationsByUserId } from '#api/organizations/getOrganizationsByUserId';
 import { toast } from 'react-hot-toast';
 import { Button, Loader } from '@bookio/ui';
-import { useNavigate } from 'react-router-dom';
-import { navigateToOrganization } from '#navigation';
+import { useNavigate } from '@tanstack/react-router';
 
 export const OrganizationList: FC = () => {
     const { data, isPending, refetch, error } = useGetOrganizationsByUserId();
@@ -17,17 +16,22 @@ export const OrganizationList: FC = () => {
 
     const handleClickOnOrganization = useCallback(
         (id: string) => {
-            navigateToOrganization(navigate, id);
+            void navigate({
+                to: '/$organizationId/booking-forms',
+                params: { organizationId: id },
+            });
         },
         [navigate],
     );
 
     if (error) {
-        toast.error(error.message)
+        toast.error(error.message);
 
         return (
             <div className={styles.container}>
-                <h2 className={styles.message}>❌ Failed to load organizations</h2>
+                <h2 className={styles.message}>
+                    ❌ Failed to load organizations
+                </h2>
                 <Button variant="primary-filled" onClick={handleRetry}>
                     Retry
                 </Button>
@@ -42,7 +46,9 @@ export const OrganizationList: FC = () => {
     if (data.length === 0) {
         return (
             <div className={styles.container}>
-                <h2 className={styles.message}>You haven't any Organizations yet</h2>
+                <h2 className={styles.message}>
+                    You haven't any Organizations yet
+                </h2>
             </div>
         );
     }

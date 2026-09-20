@@ -1,6 +1,6 @@
 import { type FC, useEffect } from 'react';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm.ts';
-import { useParams } from 'react-router-dom';
+import { configuratorRouteApi } from '#lib/routeApis';
 import { Button, Checkbox, Input, Loader, ValidatableInput } from '@bookio/ui';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts';
 
@@ -119,7 +119,7 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({
 };
 
 export const SettingsTab = () => {
-    const { organizationId } = useParams();
+    const { organizationId } = configuratorRouteApi.useParams();
 
     const {
         data: organization,

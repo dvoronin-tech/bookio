@@ -1,5 +1,4 @@
 import { type FC, useLayoutEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
 import { useShallow } from 'zustand/shallow';
 
 import { ConfiguratorLayout } from './ConfiguratorLayout/ConfiguratorLayout.tsx';
@@ -7,14 +6,13 @@ import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfigurat
 import { getConfiguratorTab } from './configuratorTabs.tsx';
 import { BookingFormPreview } from '#components/BookingFormPreview/BookingFormPreview.tsx';
 import { useGetBookingForm } from '#api/bookingForms/getBookingForm.ts';
-import { guardConfiguratorRoute } from '#navigation';
+import { configuratorRouteApi } from '#lib/routeApis';
 import { toDefaultBookingFormData } from '#utils/dataPreparers/bookingFormPreparers.ts';
 import { Button, Loader } from '@bookio/ui';
 import styles from './BookingFormConfigurator.module.scss';
 
 export const BookingFormConfigurator: FC = () => {
-    const { bookingFormId, organizationId } = useParams();
-    const navigate = useNavigate();
+    const { bookingFormId } = configuratorRouteApi.useParams();
     const { setDefaultBookingFormData, isSeeded, activeTab } =
         useBookingFormConfiguratorStore(
             useShallow((state) => ({
@@ -32,12 +30,6 @@ export const BookingFormConfigurator: FC = () => {
         refetch: refetchBookingForm,
     } = useGetBookingForm(bookingFormId);
 
-    const routeParams = guardConfiguratorRoute(
-        navigate,
-        organizationId,
-        bookingFormId,
-    );
-
     useLayoutEffect(() => {
         if (!bookingForm) return;
 
@@ -46,10 +38,6 @@ export const BookingFormConfigurator: FC = () => {
 
     const tab = getConfiguratorTab(activeTab);
     const Panel = tab?.Panel;
-
-    if (!routeParams) {
-        return null;
-    }
 
     if (isBookingFormLoading) {
         return <Loader />;

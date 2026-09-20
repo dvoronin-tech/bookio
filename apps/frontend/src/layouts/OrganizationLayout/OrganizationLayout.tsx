@@ -1,5 +1,5 @@
 import { type FC, Suspense, useCallback, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet } from '@tanstack/react-router';
 import styles from './OrganizationLayout.module.scss';
 import { OrganizationHeader } from '#components/OrganizationHeader/OrganizationHeader';
 import { Spinner } from '@bookio/ui';

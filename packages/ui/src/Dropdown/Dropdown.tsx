@@ -23,7 +23,7 @@ import {
     type MouseEvent,
     type ReactNode,
 } from 'react';
-import Button, { type ButtonAsButtonProps } from '../Button/Button.js';
+import Button, { type ButtonProps } from '../Button/Button.js';
 import { getThemeCssVars } from '../utils/themeCssVars.js';
 import styles from './Dropdown.module.scss';
 
@@ -185,7 +185,7 @@ function DropdownContent({ children, className }: DropdownContentProps) {
     );
 }
 
-export type DropdownItemProps = ButtonAsButtonProps & {
+export type DropdownItemProps = ButtonProps & {
     autoClose?: boolean;
 };
 

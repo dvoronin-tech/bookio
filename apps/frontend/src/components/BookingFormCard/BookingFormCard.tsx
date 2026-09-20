@@ -11,13 +11,15 @@ import TrashIcon from '#assets/icons/trash.svg?react';
 import CalendarIcon from '#assets/icons/calendar.svg?react';
 import CopyIcon from '#assets/icons/copy.svg?react';
 
-import { useParams } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
+import { organizationRouteApi } from '#lib/routeApis';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
 export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
     bookingForm,
 }) => {
-    const { organizationId } = useParams();
+    const navigate = useNavigate();
+    const { organizationId } = organizationRouteApi.useParams();
     const { data: organization } = useGetOrganization(organizationId);
     const [isDeleting, setIsDeleting] = useState(false);
 
@@ -40,6 +42,13 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
     const handleNavigateToBookingForm = useCallback(() => {
         window.open(bookingFormUrl, '_blank');
     }, [bookingFormUrl]);
+
+    const handleOpenConfigurator = useCallback(() => {
+        void navigate({
+            to: '/$organizationId/booking-forms/$bookingFormId/configurator',
+            params: { organizationId, bookingFormId: bookingForm.id },
+        });
+    }, [navigate, organizationId, bookingForm.id]);
 
     return (
         <>
@@ -117,9 +126,8 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
                     </Button>
                     <Button
                         variant="simple-filled"
-                        type="link"
-                        to={`${bookingForm.id}/configurator`}
                         className={styles.bookingFormCardConfiguratorButton}
+                        onClick={handleOpenConfigurator}
                     >
                         Open configurator
                     </Button>

@@ -1,5 +1,5 @@
 import { type CSSProperties, type FC, useMemo } from 'react';
-import { useParams } from 'react-router-dom';
+import { configuratorRouteApi } from '#lib/routeApis';
 import { useShallow } from 'zustand/shallow';
 import { BookingForm } from '@bookio/booking-form-ui';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
@@ -21,7 +21,7 @@ const toPreviewCssVars = (colors: BookingFormStyles): CSSProperties =>
     }) as CSSProperties;
 
 export const BookingFormPreview: FC = () => {
-    const { bookingFormId } = useParams<{ bookingFormId: string }>();
+    const { bookingFormId } = configuratorRouteApi.useParams();
     const { bookingForm, bookingFormFields, bookingFormStyles } =
         useBookingFormConfiguratorStore(
             useShallow(

@@ -1,12 +1,8 @@
-import { useState, type FC, useCallback } from 'react';
+import { type FC, useCallback, useState } from 'react';
 import styles from './AppHeader.module.scss';
 import Logo from '#assets/logo.svg?react';
-import { useNavigate, useParams } from 'react-router-dom';
-import {
-    navigateToBookingForms,
-    navigateToOrganization,
-    navigateToOrganizations,
-} from '#navigation';
+import { useNavigate } from '@tanstack/react-router';
+import { organizationRouteApi } from '#lib/routeApis';
 import { Dropdown } from '@bookio/ui';
 
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
@@ -20,26 +16,31 @@ import toast from 'react-hot-toast';
 
 export const AppHeader: FC = () => {
     const navigate = useNavigate();
-    const { organizationId } = useParams();
-    const { data: organizationData, error } = useGetOrganization(organizationId);
+    const { organizationId } = organizationRouteApi.useParams();
+    const { data: organizationData, error } =
+        useGetOrganization(organizationId);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     if (error) {
-        toast.error(error.message)
+        toast.error(error.message);
     }
 
     const handleNavigateToBookingForms = useCallback(() => {
-        if (!organizationId) return;
-        navigateToBookingForms(navigate, organizationId);
+        void navigate({
+            to: '/$organizationId/booking-forms',
+            params: { organizationId },
+        });
     }, [navigate, organizationId]);
 
     const handleNavigateToOrganizations = useCallback(() => {
-        navigateToOrganizations(navigate);
+        void navigate({ to: '/organizations/list' });
     }, [navigate]);
 
     const handleNavigateToOrganization = useCallback(() => {
-        if (!organizationId) return;
-        navigateToOrganization(navigate, organizationId);
+        void navigate({
+            to: '/$organizationId/booking-forms',
+            params: { organizationId },
+        });
     }, [navigate, organizationId]);
 
     return (
@@ -51,14 +52,20 @@ export const AppHeader: FC = () => {
                 <Logo className={styles.logo} />
             </button>
             <div className={styles.dropdown}>
-                <Dropdown open={isMenuOpen} onOpenChange={setIsMenuOpen} placement="bottom">
+                <Dropdown
+                    open={isMenuOpen}
+                    onOpenChange={setIsMenuOpen}
+                    placement="bottom"
+                >
                     <Dropdown.Trigger className={styles.menuTrigger}>
                         <img
                             src={PlaceholderImage}
                             alt="Organization image"
                             className={styles.menuItemImage}
                         />
-                        <div className={styles.menuItemText}>{organizationData?.name}</div>
+                        <div className={styles.menuItemText}>
+                            {organizationData?.name}
+                        </div>
                         <ArrowIcon className={styles.arrowIcon} />
                     </Dropdown.Trigger>
                     <Dropdown.Content className={styles.dropdownContent}>

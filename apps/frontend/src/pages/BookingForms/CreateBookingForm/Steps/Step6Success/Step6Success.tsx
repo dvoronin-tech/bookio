@@ -1,9 +1,5 @@
 import { type FC, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
-import {
-    navigateToBookingFormConfigurator,
-    navigateToBookingForms,
-} from '#navigation';
+import { useNavigate } from '@tanstack/react-router';
 import { useShallow } from 'zustand/shallow';
 import { Button } from '@bookio/ui';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
@@ -24,17 +20,19 @@ export const Step6Success: FC = () => {
     const handleContinueToConfigurator = useCallback(() => {
         if (!organizationId || !createdBookingFormId) return;
 
-        navigateToBookingFormConfigurator(
-            navigate,
-            organizationId,
-            createdBookingFormId,
-        );
+        void navigate({
+            to: '/$organizationId/booking-forms/$bookingFormId/configurator',
+            params: { organizationId, bookingFormId: createdBookingFormId },
+        });
     }, [navigate, organizationId, createdBookingFormId]);
 
     const handleFinish = useCallback(() => {
         if (!organizationId) return;
 
-        navigateToBookingForms(navigate, organizationId);
+        void navigate({
+            to: '/$organizationId/booking-forms',
+            params: { organizationId },
+        });
     }, [navigate, organizationId]);
 
     return (

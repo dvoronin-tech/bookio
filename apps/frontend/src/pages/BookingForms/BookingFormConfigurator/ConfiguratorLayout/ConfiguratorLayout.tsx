@@ -17,8 +17,8 @@ import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfigurat
 import { configuratorTabs } from '../configuratorTabs.tsx';
 import styles from './ConfiguratorLayout.module.scss';
 import { ConfiguratorTabs } from './ConfiguratorTabs.tsx';
-import { useNavigate, useParams } from 'react-router-dom';
-import { navigateToBookingForms } from '#navigation';
+import { useNavigate } from '@tanstack/react-router';
+import { configuratorRouteApi } from '#lib/routeApis';
 import { useGetBookingForm } from '#api/bookingForms/getBookingForm.ts';
 import isEqual from 'fast-deep-equal';
 import { useUpdateBookingForm } from '#api/bookingForms/updateBookingForm.ts';
@@ -137,7 +137,7 @@ const ConfiguratorHeader: FC = memo(() => {
 });
 
 const ConfiguratorFooter: FC = memo(() => {
-    const { bookingFormId, organizationId } = useParams();
+    const { bookingFormId, organizationId } = configuratorRouteApi.useParams();
     const { data: baseLine } = useGetBookingForm(bookingFormId);
     const {
         bookingForm,
@@ -227,8 +227,6 @@ const ConfiguratorFooter: FC = memo(() => {
     }, [baseLine, bookingFormMeta]);
 
     const saveRequestThunks = useMemo(() => {
-        if (!bookingFormId) return [];
-
         const thunks: Array<() => Promise<unknown>> = [];
 
         if (isDirtyBookingForm && bookingForm) {
@@ -279,7 +277,10 @@ const ConfiguratorFooter: FC = memo(() => {
     ]);
 
     const handleNavigateToBookingForms = useCallback(() => {
-        navigateToBookingForms(navigate, organizationId);
+        void navigate({
+            to: '/$organizationId/booking-forms',
+            params: { organizationId },
+        });
     }, [organizationId, navigate]);
 
     const handleSave = useCallback(() => {

@@ -1,18 +1,23 @@
 import { type FC } from 'react';
 import { Button, Input } from '@bookio/ui';
+import { useNavigate } from '@tanstack/react-router';
 import styles from './SignUp.module.scss';
 import { useSignUp } from '#api/auth';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
-import { useForm, type FieldErrors } from 'react-hook-form';
+import { type FieldErrors, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 
 const passwordSchema = z
     .string()
     .min(6, { message: 'Password must be at least 8 characters long' })
-    .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
-    .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
+    .regex(/[A-Z]/, {
+        message: 'Password must contain at least one uppercase letter',
+    })
+    .regex(/[a-z]/, {
+        message: 'Password must contain at least one lowercase letter',
+    })
     .regex(/[0-9]/, { message: 'Password must contain at least one number' })
     .regex(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, {
         message: 'Password must contain at least one special character',
@@ -32,6 +37,7 @@ const signUpSchema = z
 type SignUpData = z.infer<typeof signUpSchema>;
 
 export const SignUp: FC = () => {
+    const navigate = useNavigate();
     const { mutateAsync, isPending } = useSignUp();
 
     const {
@@ -49,6 +55,7 @@ export const SignUp: FC = () => {
             success: 'Signed up successfully',
             error: (error: Error) => error.message,
         });
+        await navigate({ to: '/organizations/list' });
     };
 
     const onInvalid = (errors: FieldErrors<SignUpData>) => {
@@ -58,7 +65,10 @@ export const SignUp: FC = () => {
     const isDisabled = isPending || isSubmitting;
 
     return (
-        <form className={styles.signUpForm} onSubmit={handleSubmit(onSubmit, onInvalid)}>
+        <form
+            className={styles.signUpForm}
+            onSubmit={handleSubmit(onSubmit, onInvalid)}
+        >
             <h1>Sign up</h1>
             <Input
                 type="email"
@@ -89,7 +99,11 @@ export const SignUp: FC = () => {
             >
                 {isPending ? 'Signing up…' : 'Sign Up'}
             </Button>
-            <Button type="link" to="/auth/sign-in" variant="simple-outlined">
+            <Button
+                type="button"
+                variant="simple-outlined"
+                onClick={() => void navigate({ to: '/auth/sign-in' })}
+            >
                 Sign in
             </Button>
         </form>

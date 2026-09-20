@@ -1,10 +1,11 @@
-import { Input, Button } from '@bookio/ui';
+import { Button, Input } from '@bookio/ui';
 import { type FC } from 'react';
+import { useNavigate } from '@tanstack/react-router';
 import styles from './SignIn.module.scss';
 import { useSignIn } from '#api/auth';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
-import { useForm, type FieldErrors } from 'react-hook-form';
+import { type FieldErrors, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 
@@ -13,9 +14,15 @@ const signInSchema = z.object({
     password: z
         .string()
         .min(6, { message: 'Password must be at least 8 characters long' })
-        .regex(/[A-Z]/, { message: 'Password must contain at least one uppercase letter' })
-        .regex(/[a-z]/, { message: 'Password must contain at least one lowercase letter' })
-        .regex(/[0-9]/, { message: 'Password must contain at least one number' })
+        .regex(/[A-Z]/, {
+            message: 'Password must contain at least one uppercase letter',
+        })
+        .regex(/[a-z]/, {
+            message: 'Password must contain at least one lowercase letter',
+        })
+        .regex(/[0-9]/, {
+            message: 'Password must contain at least one number',
+        })
         .regex(/[!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]/, {
             message: 'Password must contain at least one special character',
         }),
@@ -24,6 +31,7 @@ const signInSchema = z.object({
 type SignInData = z.infer<typeof signInSchema>;
 
 export const SignIn: FC = () => {
+    const navigate = useNavigate();
     const { mutateAsync, isPending } = useSignIn();
 
     const {
@@ -41,6 +49,7 @@ export const SignIn: FC = () => {
             success: 'Signed in successfully',
             error: (error: Error) => error.message,
         });
+        await navigate({ to: '/organizations/list' });
     };
 
     const onInvalid = (errors: FieldErrors<SignInData>) => {
@@ -50,7 +59,10 @@ export const SignIn: FC = () => {
     const isDisabled = isPending || isSubmitting;
 
     return (
-        <form className={styles.signInForm} onSubmit={handleSubmit(onSubmit, onInvalid)}>
+        <form
+            className={styles.signInForm}
+            onSubmit={handleSubmit(onSubmit, onInvalid)}
+        >
             <h1>Sign in</h1>
             <Input
                 type="email"
@@ -74,7 +86,11 @@ export const SignIn: FC = () => {
             >
                 {isPending ? 'Signing in…' : 'Sign in'}
             </Button>
-            <Button type="link" to="/auth/sign-up" variant="simple-outlined">
+            <Button
+                type="button"
+                variant="simple-outlined"
+                onClick={() => void navigate({ to: '/auth/sign-up' })}
+            >
                 Sign Up
             </Button>
         </form>

@@ -14,8 +14,7 @@ import { useIsOrganizationExists } from '#api/organizations/isOrganizationExists
 import { Controller, useForm, useWatch, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
-import { useNavigate } from 'react-router-dom';
-import { navigateBack } from '#navigation';
+import { useNavigate, useRouter } from '@tanstack/react-router';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
 import { useDebouncedValidation } from '#utils/useDebouncedValidation';
@@ -37,7 +36,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export const CreateOrganization: FC = () => {
-    const navigate = useNavigate();
+    const router = useRouter();
     const { data: session } = useSession();
     const { data: organization, mutateAsync, isPending, isSuccess } = useCreateOrganization();
 
@@ -87,8 +86,8 @@ export const CreateOrganization: FC = () => {
     }, [handleSubmit, onSubmit, onInvalid]);
 
     const handleClose = useCallback(() => {
-        navigateBack(navigate);
-    }, [navigate]);
+        router.history.back();
+    }, [router]);
 
     const isDisabled = isPending || isSubmitting;
 
@@ -157,9 +156,15 @@ export const CreateOrganization: FC = () => {
 const SuccessfulOrganizationCreation: FC<{ data: CreateOrganizationResponse['data'] }> = ({
     data,
 }) => {
+    const navigate = useNavigate();
+
     const handleCopy = useCallback(() => {
         toast.success('Secret key copied to clipboard');
     }, []);
+
+    const handleGoToOrganizations = useCallback(() => {
+        void navigate({ to: '/organizations/list' });
+    }, [navigate]);
 
     return (
         <FormWizardLayout
@@ -168,7 +173,7 @@ const SuccessfulOrganizationCreation: FC<{ data: CreateOrganizationResponse['dat
             description="Your organization has been created successfully. Below, in the hidden field, you can find the organization secret key. Copy and keep it in a safe place."
             footer={
                 <div className={styles.footerActions}>
-                    <Button type="link" to="/organizations/list" variant="primary-filled">
+                    <Button variant="primary-filled" onClick={handleGoToOrganizations}>
                         Go to organizations
                     </Button>
                 </div>

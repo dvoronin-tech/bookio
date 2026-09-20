@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { configuratorRouteApi } from '#lib/routeApis';
 import { Button, type ItemId, Reorder } from '@bookio/ui';
 
 import styles from './FieldsTab.module.scss';
@@ -15,7 +15,7 @@ import { useShallow } from 'zustand/shallow';
 import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField.tsx';
 
 export const FieldsTab: FC = () => {
-    const { bookingFormId } = useParams();
+    const { bookingFormId } = configuratorRouteApi.useParams();
     const [isOpenModal, setIsOpenModal] = useState(false);
     const [editingFieldId, setEditingFieldId] = useState<string | null>(null);
     const { setBookingFormFields, bookingFormFields, deleteBookingFormField } =

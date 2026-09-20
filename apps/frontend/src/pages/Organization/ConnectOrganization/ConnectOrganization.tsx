@@ -1,4 +1,4 @@
-import { type FC, useCallback } from 'react';
+import { type FC, useCallback, useEffect } from 'react';
 import styles from './ConnectOrganization.module.scss';
 import { Button, Input } from '@bookio/ui';
 import {
@@ -7,8 +7,7 @@ import {
 } from '#api/organizations/connectToOrganization';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
-import { navigateBack, navigateToOrganizationsList } from '#navigation';
+import { useNavigate, useRouter } from '@tanstack/react-router';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
@@ -23,6 +22,7 @@ type FormData = z.infer<typeof formSchema>;
 
 export const ConnectOrganization: FC = () => {
     const navigate = useNavigate();
+    const router = useRouter();
     const { mutateAsync, isSuccess, isPending } = useConnectToOrganization();
 
     const {
@@ -51,12 +51,14 @@ export const ConnectOrganization: FC = () => {
     }, [handleSubmit, onSubmit, onInvalid]);
 
     const handleClose = useCallback(() => {
-        navigateBack(navigate);
-    }, [navigate]);
+        router.history.back();
+    }, [router]);
 
-    if (isSuccess) {
-        navigateToOrganizationsList(navigate, { replace: true });
-    }
+    useEffect(() => {
+        if (isSuccess) {
+            void navigate({ to: '/organizations/list', replace: true });
+        }
+    }, [isSuccess, navigate]);
 
     const isDisabled = isPending || isSubmitting;
 

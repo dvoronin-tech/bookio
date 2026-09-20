@@ -1,6 +1,7 @@
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { defineConfig } from 'vite';
+import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
 
@@ -8,7 +9,14 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 // https://vite.dev/config/
 export default defineConfig({
-    plugins: [react(), svgr()],
+    plugins: [
+        tanstackRouter({
+            target: 'react',
+            autoCodeSplitting: true,
+        }),
+        react(),
+        svgr(),
+    ],
     resolve: {
         alias: [
             {
@@ -32,7 +40,6 @@ export default defineConfig({
             { find: '#utils', replacement: path.resolve(__dirname, 'src/utils') },
             { find: '#api', replacement: path.resolve(__dirname, 'src/api') },
             { find: '#store', replacement: path.resolve(__dirname, 'src/store') },
-            { find: '#navigation', replacement: path.resolve(__dirname, 'src/navigation') },
         ],
     },
     build: {
@@ -46,7 +53,7 @@ export default defineConfig({
                     if (
                         id.includes('react-dom') ||
                         id.includes('/react/') ||
-                        id.includes('react-router')
+                        id.includes('@tanstack/react-router')
                     ) {
                         return 'vendor-react';
                     }

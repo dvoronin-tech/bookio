@@ -1,7 +1,8 @@
 import { type FC, useCallback } from 'react';
 import styles from './BookingFormsList.module.scss';
 import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
-import { useParams } from 'react-router-dom';
+import { useNavigate } from '@tanstack/react-router';
+import { organizationRouteApi } from '#lib/routeApis';
 import { Button, Input, Loader } from '@bookio/ui';
 import { BookingFormCard } from '#components/BookingFormCard/BookingFormCard.tsx';
 
@@ -9,7 +10,8 @@ import PlusIcon from '#assets/icons/plus.svg?react';
 import SearchIcon from '#assets/icons/search.svg?react';
 
 export const BookingForms: FC = () => {
-    const { organizationId } = useParams();
+    const navigate = useNavigate();
+    const { organizationId } = organizationRouteApi.useParams();
     const {
         data: bookingForms,
         isPending,
@@ -45,9 +47,13 @@ export const BookingForms: FC = () => {
                 </div>
                 <Button
                     variant="primary-filled"
-                    type="link"
                     className={styles.createButton}
-                    to="create"
+                    onClick={() =>
+                        void navigate({
+                            to: '/$organizationId/booking-forms/create',
+                            params: { organizationId },
+                        })
+                    }
                 >
                     Create your first booking form
                 </Button>
@@ -86,6 +92,9 @@ const BookingFormHeader: FC<BookingFormHeaderProps> = ({
     formsCount,
     activeFormsCount,
 }) => {
+    const navigate = useNavigate();
+    const { organizationId } = organizationRouteApi.useParams();
+
     return (
         <div className={styles.bookingHeader}>
             <div className={styles.headerLeft}>
@@ -122,9 +131,13 @@ const BookingFormHeader: FC<BookingFormHeaderProps> = ({
 
                 <Button
                     variant="primary-filled"
-                    type="link"
-                    to="create"
                     className={styles.headerCreateButton}
+                    onClick={() =>
+                        void navigate({
+                            to: '/$organizationId/booking-forms/create',
+                            params: { organizationId },
+                        })
+                    }
                 >
                     <PlusIcon />
                     Create

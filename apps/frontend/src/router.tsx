@@ -1,122 +1,21 @@
-import { createBrowserRouter, Navigate, Outlet } from 'react-router-dom';
-import { lazyRoute } from '#lib/lazy-route';
-import { MainLayout } from '#layouts/MainLayout/MainLayout';
+import { createRouter } from '@tanstack/react-router';
 import { Spinner } from '@bookio/ui';
+import { NotFound } from '#components/NotFound/NotFound';
+import { queryClient } from '#lib/query-client';
+import { routeTree } from './routeTree.gen';
 
-export const router = createBrowserRouter([
-    {
-        hydrateFallbackElement: <Spinner />,
-        children: [
-            {
-                path: '/auth',
-                lazy: lazyRoute(
-                    () => import('#layouts/AuthLayout/AuthLayout'),
-                    'AuthLayout',
-                ),
-                children: [
-                    {
-                        index: true,
-                        element: <Navigate to="sign-up" replace />,
-                    },
-                    {
-                        path: 'sign-up',
-                        lazy: lazyRoute(
-                            () => import('#pages/Auth/SignUp/SignUp'),
-                            'SignUp',
-                        ),
-                    },
-                    {
-                        path: 'sign-in',
-                        lazy: lazyRoute(
-                            () => import('#pages/Auth/SignIn/SignIn'),
-                            'SignIn',
-                        ),
-                    },
-                ],
-            },
-            {
-                path: '/',
-                element: <MainLayout />,
-                children: [
-                    {
-                        path: 'organizations',
-                        lazy: lazyRoute(
-                            () =>
-                                import('#layouts/OrganizationLayout/OrganizationLayout'),
-                            'OrganizationLayout',
-                        ),
-                        children: [
-                            {
-                                index: true,
-                                element: <Navigate to="list" replace />,
-                            },
-                            {
-                                path: 'list',
-                                lazy: lazyRoute(
-                                    () =>
-                                        import('#pages/Organization/OrganizationList/OrganizationList'),
-                                    'OrganizationList',
-                                ),
-                            },
-                            {
-                                path: 'create',
-                                lazy: lazyRoute(
-                                    () =>
-                                        import('#pages/Organization/CreateOrganization/CreateOrganization'),
-                                    'CreateOrganization',
-                                ),
-                            },
-                            {
-                                path: 'connect',
-                                lazy: lazyRoute(
-                                    () =>
-                                        import('#pages/Organization/ConnectOrganization/ConnectOrganization'),
-                                    'ConnectOrganization',
-                                ),
-                            },
-                        ],
-                    },
-                    {
-                        path: ':organizationId',
-                        lazy: lazyRoute(
-                            () => import('#layouts/AppLayout/AppLayout'),
-                            'AppLayout',
-                        ),
-                        children: [
-                            {
-                                path: 'booking-forms',
-                                element: <Outlet />,
-                                children: [
-                                    {
-                                        index: true,
-                                        lazy: lazyRoute(
-                                            () =>
-                                                import('#pages/BookingForms/BookingFormsList/BookingFormsList'),
-                                            'BookingForms',
-                                        ),
-                                    },
-                                    {
-                                        path: 'create',
-                                        lazy: lazyRoute(
-                                            () =>
-                                                import('#pages/BookingForms/CreateBookingForm/CreateBookingForm'),
-                                            'CreateBookingForm',
-                                        ),
-                                    },
-                                    {
-                                        path: ':bookingFormId/configurator',
-                                        lazy: lazyRoute(
-                                            () =>
-                                                import('#pages/BookingForms/BookingFormConfigurator/BookingFormConfigurator'),
-                                            'BookingFormConfigurator',
-                                        ),
-                                    },
-                                ],
-                            },
-                        ],
-                    },
-                ],
-            },
-        ],
-    },
-]);
+export const router = createRouter({
+    routeTree,
+    context: { queryClient },
+    defaultPreload: 'intent',
+    defaultPreloadStaleTime: 0,
+    scrollRestoration: true,
+    defaultPendingComponent: Spinner,
+    defaultNotFoundComponent: NotFound,
+});
+
+declare module '@tanstack/react-router' {
+    interface Register {
+        router: typeof router;
+    }
+}

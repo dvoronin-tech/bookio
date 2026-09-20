@@ -1,17 +1,16 @@
 import type { FC } from 'react';
+import { useCallback, useRef, useState } from 'react';
 import styles from './OrganizationSearch.module.scss';
 import { Input } from '@bookio/ui';
 import { useOnPress } from '#hooks/useOnPress';
-import { useCallback, useRef, useState } from 'react';
 import { clsx } from 'clsx';
 import { useOutsideClick } from '#hooks/useOutsideClick';
 import {
-    useGetOrganizationsByUserId,
     type OrganizationsType,
+    useGetOrganizationsByUserId,
 } from '#api/organizations/getOrganizationsByUserId';
 import { OrganizationItem } from '#components/OrganizationItem/OrganizationItem';
-import { useNavigate } from 'react-router-dom';
-import { navigateToOrganization } from '#navigation';
+import { useNavigate } from '@tanstack/react-router';
 import { toast } from 'react-hot-toast';
 import SearchIcon from '#assets/icons/search.svg?react';
 
@@ -24,13 +23,18 @@ const createTrigrams = (value: string) => {
         .filter((trigram) => trigram.length === 3);
 };
 
-const filterOrganizations = (organizations: OrganizationsType, value: string) => {
+const filterOrganizations = (
+    organizations: OrganizationsType,
+    value: string,
+) => {
     if (!value.trim()) return [];
 
     const searchLower = value.toLowerCase();
 
     if (value.length < 3)
-        return organizations.filter((org) => org.name.toLowerCase().includes(searchLower));
+        return organizations.filter((org) =>
+            org.name.toLowerCase().includes(searchLower),
+        );
 
     const searchTrigrams = createTrigrams(searchLower);
 
@@ -51,7 +55,9 @@ const filterOrganizations = (organizations: OrganizationsType, value: string) =>
         };
     });
 
-    return preparedOrgs.filter((org) => org.score > 60).sort((a, b) => b.score - a.score);
+    return preparedOrgs
+        .filter((org) => org.score > 60)
+        .sort((a, b) => b.score - a.score);
 };
 
 interface OrganizationSearchProps {
@@ -59,7 +65,10 @@ interface OrganizationSearchProps {
     onOpenChange: (isOpen: boolean) => void;
 }
 
-export const OrganizationSearch: FC<OrganizationSearchProps> = ({ isOpen, onOpenChange }) => {
+export const OrganizationSearch: FC<OrganizationSearchProps> = ({
+    isOpen,
+    onOpenChange,
+}) => {
     const searchInputRef = useRef<HTMLInputElement>(null);
     const searchWrapperRef = useRef<HTMLDivElement>(null);
     const [isClosing, setIsClosing] = useState(false);
@@ -81,24 +90,25 @@ export const OrganizationSearch: FC<OrganizationSearchProps> = ({ isOpen, onOpen
     );
 
     const { data: organizations, error } = useGetOrganizationsByUserId();
-    const [filteredOrganizations, setFilteredOrganizations] = useState<
-        OrganizationsType
-    >([]);
+    const [filteredOrganizations, setFilteredOrganizations] =
+        useState<OrganizationsType>([]);
 
     useOnPress('Escape', closeSearch);
     useOutsideClick([searchInputRef, searchWrapperRef], closeSearch);
 
     if (error) {
-        toast.error(error.message)
+        toast.error(error.message);
     }
 
     const handleSearchChange = useCallback(
         (e: React.ChangeEvent<HTMLInputElement>) => {
             const value = e.target.value;
-            
+
             if (!organizations) return;
 
-            setFilteredOrganizations(filterOrganizations(organizations || [], value));
+            setFilteredOrganizations(
+                filterOrganizations(organizations || [], value),
+            );
         },
         [organizations, setFilteredOrganizations],
     );
@@ -107,7 +117,9 @@ export const OrganizationSearch: FC<OrganizationSearchProps> = ({ isOpen, onOpen
 
     return (
         <div
-            className={clsx(styles.organizationSearch, { [styles.closing]: isClosing })}
+            className={clsx(styles.organizationSearch, {
+                [styles.closing]: isClosing,
+            })}
             onAnimationEnd={handleAnimationEnd}
         >
             <Input.Root className={styles.searchInput}>
@@ -122,7 +134,10 @@ export const OrganizationSearch: FC<OrganizationSearchProps> = ({ isOpen, onOpen
                     autoFocus
                 />
             </Input.Root>
-            <OrganizationSearchWrapper data={filteredOrganizations} ref={searchWrapperRef} />
+            <OrganizationSearchWrapper
+                data={filteredOrganizations}
+                ref={searchWrapperRef}
+            />
         </div>
     );
 };
@@ -132,11 +147,20 @@ interface OrganizationSearchWrapperProps {
     ref: React.RefObject<HTMLDivElement | null>;
 }
 
-const OrganizationSearchWrapper = ({ data, ref }: OrganizationSearchWrapperProps) => {
+const OrganizationSearchWrapper = ({
+    data,
+    ref,
+}: OrganizationSearchWrapperProps) => {
     const navigate = useNavigate();
-    const handleClickOnOrganization = useCallback((id: string) => {
-        navigateToOrganization(navigate, id);
-    }, [navigate]);
+    const handleClickOnOrganization = useCallback(
+        (id: string) => {
+            void navigate({
+                to: '/$organizationId/booking-forms',
+                params: { organizationId: id },
+            });
+        },
+        [navigate],
+    );
 
     return (
         <div

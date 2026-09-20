@@ -1,5 +1,5 @@
 import { type FC, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { organizationRouteApi } from '#lib/routeApis';
 import { useShallow } from 'zustand/shallow';
 import {
     type CreateBookingFormStep,
@@ -23,7 +23,7 @@ const STEPS: Record<CreateBookingFormStep, FC> = {
 };
 
 export const CreateBookingForm: FC = () => {
-    const { organizationId } = useParams();
+    const { organizationId } = organizationRouteApi.useParams();
     const { step, setOrganizationId, reset } = useCreateBookingFormStore(
         useShallow((s) => ({
             step: s.step,
@@ -33,7 +33,7 @@ export const CreateBookingForm: FC = () => {
     );
 
     useEffect(() => {
-        if (organizationId) setOrganizationId(organizationId);
+        setOrganizationId(organizationId);
         return () => reset();
     }, [organizationId, setOrganizationId, reset]);
 

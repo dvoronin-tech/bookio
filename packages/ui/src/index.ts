@@ -1,9 +1,6 @@
-export { default as Button, ButtonLinkProvider } from './Button/Button.js';
+export { default as Button } from './Button/Button.js';
 export type {
-    ButtonAsButtonProps,
-    ButtonAsLinkProps,
     ButtonColor,
-    ButtonLinkComponent,
     ButtonProps,
     ButtonType,
     ButtonVariant,
