@@ -11,11 +11,11 @@ type RequestBody = InferRequestType<typeof createClient.$post>['json'];
 export const createBooking = async (body: RequestBody) => {
     const res = await createClient.$post({ json: trimObj(body) });
 
+    if (res.ok) return
+
     const responseBody = await res.json();
 
     validateError(res, responseBody, 'Failed to create booking');
-
-    return responseBody.data;
 };
 
 export const useCreateBooking = () => {
