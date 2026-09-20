@@ -4,9 +4,7 @@ import { MainLayout } from '#layouts/MainLayout/MainLayout';
 import { getSession } from '#lib/session';
 
 export const Route = createFileRoute('/_authenticated')({
-    // Avoid re-fetching the session on every navigation inside the app.
-    staleTime: 30_000,
-    beforeLoad: async () => {
+    loader: async () => {
         const session = await getSession();
 
         if (!session) {
