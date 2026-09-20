@@ -1,14 +1,16 @@
-import type { CSSProperties, FC } from 'react';
+import type { CSSProperties } from 'react';
 import styles from './Spinner.module.scss';
 
-interface SpinnerProps {
+export type SpinnerProps = {
     size?: number;
-}
+};
 
-export const Spinner: FC<SpinnerProps> = ({ size = 3 }) => {
+function Spinner({ size = 3 }: SpinnerProps) {
     const style = {
         '--spinner-size': `${size}rem`,
     } as CSSProperties;
 
     return <span className={styles.loader} style={style} />;
-};
+}
+
+export default Spinner;

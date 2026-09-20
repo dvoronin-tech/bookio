@@ -9,8 +9,7 @@ import { BookingFormPreview } from '#components/BookingFormPreview/BookingFormPr
 import { useGetBookingForm } from '#api/bookingForms/getBookingForm.ts';
 import { guardConfiguratorRoute } from '#navigation';
 import { toDefaultBookingFormData } from '#utils/dataPreparers/bookingFormPreparers.ts';
-import { Loader } from '#components/Loader/Loader.tsx';
-import { Button } from '@bookio/ui';
+import { Button, Loader } from '@bookio/ui';
 import styles from './BookingFormConfigurator.module.scss';
 
 export const BookingFormConfigurator: FC = () => {

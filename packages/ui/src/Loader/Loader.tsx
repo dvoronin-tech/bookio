@@ -1,15 +1,16 @@
-import type { FC } from 'react';
-import { Spinner } from '#components/Spinner/Spinner';
+import Spinner from '../Spinner/Spinner.js';
 import styles from './Loader.module.scss';
 
-type LoaderProps = {
+export type LoaderProps = {
     size?: number;
 };
 
-export const Loader: FC<LoaderProps> = ({ size }) => {
+function Loader({ size }: LoaderProps) {
     return (
         <div className={styles.loader}>
             <Spinner size={size} />
         </div>
     );
-};
+}
+
+export default Loader;

@@ -2,8 +2,7 @@ import { type FC, useCallback } from 'react';
 import styles from './BookingFormsList.module.scss';
 import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { useParams } from 'react-router-dom';
-import { Button, Input } from '@bookio/ui';
-import { Loader } from '#components/Loader/Loader.tsx';
+import { Button, Input, Loader } from '@bookio/ui';
 import { BookingFormCard } from '#components/BookingFormCard/BookingFormCard.tsx';
 
 import PlusIcon from '#assets/icons/plus.svg?react';

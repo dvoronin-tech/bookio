@@ -1,7 +1,7 @@
 import { type FC, useEffect } from 'react';
 import type { UpdateBookingFormRequest } from '#api/bookingForms/updateBookingForm.ts';
 import { useParams } from 'react-router-dom';
-import { Button, Checkbox, Input, ValidatableInput } from '@bookio/ui';
+import { Button, Checkbox, Input, Loader, ValidatableInput } from '@bookio/ui';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts';
 
 import styles from './SettingsTab.module.scss';
@@ -12,7 +12,6 @@ import { useForm, useWatch } from 'react-hook-form';
 import { useShallow } from 'zustand/shallow';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore.ts';
-import { Loader } from '#components/Loader/Loader.tsx';
 import { trimObj } from '#utils/trimObj.ts';
 
 type SettingsTabFormData = Omit<UpdateBookingFormRequest, 'id'>;

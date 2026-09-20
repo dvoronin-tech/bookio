@@ -63,6 +63,12 @@ export type { ValidatableInputProps } from './ValidatableInput/ValidatableInput.
 export { default as ProgressBar } from './ProgressBar/ProgressBar.js';
 export type { ProgressBarProps } from './ProgressBar/ProgressBar.js';
 
+export { default as Loader } from './Loader/Loader.js';
+export type { LoaderProps } from './Loader/Loader.js';
+
+export { default as Spinner } from './Spinner/Spinner.js';
+export type { SpinnerProps } from './Spinner/Spinner.js';
+
 export { Reorder } from './DragAndDrop/DragAndDrop.js';
 export { useReorderContext } from './DragAndDrop/ExternalReorderContext.js';
 export type { ItemId } from './DragAndDrop/InternalReorderContext.js';

@@ -3,10 +3,8 @@ import styles from './OrganizationList.module.scss';
 
 import { OrganizationItem } from '#components/OrganizationItem/OrganizationItem';
 import { useGetOrganizationsByUserId } from '#api/organizations/getOrganizationsByUserId';
-import { Spinner } from '#components/Spinner/Spinner';
-
 import { toast } from 'react-hot-toast';
-import { Button } from '@bookio/ui';
+import { Button, Spinner } from '@bookio/ui';
 import { useNavigate } from 'react-router-dom';
 import { navigateToOrganization } from '#navigation';
 
