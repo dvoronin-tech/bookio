@@ -3,6 +3,7 @@ import { BookingFormLayout } from '#/layouts/BookingFormLayout/BookingFormLayout
 import { Background } from '#/components/Background/Background';
 import { useSteps } from '#/store/Steps/StepsContext';
 import { GreetingLayout } from '#/layouts/GreetingLayout/GreetingLayout';
+import { SuccessLayout } from '#/layouts/SuccessLayout/SuccessLayout';
 import { useBookingFormData } from '#/store/BookingFormData/BookingFormDataContext.tsx';
 
 export const MainPage: FC = () => {
@@ -25,6 +26,7 @@ export const MainPage: FC = () => {
         <div style={formColors as CSSProperties}>
             {step === 'Greeting' && <GreetingLayout />}
             {step === 'BookingForm' && <BookingFormLayout />}
+            {step === 'Success' && <SuccessLayout />}
             <Background />
         </div>
     );

@@ -15,6 +15,10 @@ export const stepsManager: StepsManager = {
     },
     BookingForm: {
         prev: () => 'Greeting',
+        next: () => 'Success'
+    },
+    Success: {
+        prev: null,
         next: null
     }
 };

@@ -4,7 +4,7 @@ import styles from './SubmitButton.module.scss';
 
 export function SubmitButton() {
     const { formState } = useBookingFormContext();
-    const isLoading = formState === 'loading';
+    const isLoading = formState === 'loading' || formState === 'success';
 
     return (
         <div className={styles.submit}>

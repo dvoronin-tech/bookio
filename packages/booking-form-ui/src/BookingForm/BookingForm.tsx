@@ -1,4 +1,11 @@
-import { memo, useMemo, useRef, useState } from 'react';
+import {
+    type AnimationEventHandler,
+    memo,
+    useMemo,
+    useRef,
+    useState,
+} from 'react';
+import { clsx } from 'clsx';
 import { type FieldErrors, useForm } from 'react-hook-form';
 import { Appear, getAppearDelayMs } from './components/Appear/Appear.js';
 import { SubmitButton } from './components/SubmitButton/SubmitButton.js';
@@ -32,14 +39,21 @@ export type BookingFormProps = {
     onSubmit?: (data: Record<string, string>) => Promise<void>;
     /** Function which will call if RHF validation failed */
     onInvalid?: (errors: FieldErrors<Record<string, string>>) => void;
+    /**
+     * Called after `onSubmit` resolves and the form exit animation finishes.
+     * With `prefers-reduced-motion: reduce` it fires as soon as the form
+     * switches to success.
+     * */
+    onSuccess?: () => void;
 };
 
-export type FormState = 'idle' | 'loading' | 'error';
+export type FormState = 'idle' | 'loading' | 'error' | 'success';
 
 function BookingForm({
     bookingFormData,
     onSubmit,
     onInvalid,
+    onSuccess,
 }: BookingFormProps) {
     const [formState, setFormState] = useState<FormState>('idle');
     const formStateRef = useRef<FormState>(formState);
@@ -82,10 +96,20 @@ function BookingForm({
         try {
             setProcessingState('loading');
             await onSubmit?.(data);
-            setProcessingState('idle');
+            if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+                onSuccess?.();
+                return;
+            }
+            setProcessingState('success');
         } catch {
             setProcessingState('error');
         }
+    };
+
+    const handleAnimationEnd: AnimationEventHandler<HTMLFormElement> = (e) => {
+        if (e.target !== e.currentTarget) return;
+        if (formStateRef.current !== 'success') return;
+        onSuccess?.();
     };
 
     const onInvalidHandler = (errors: FieldErrors<Record<string, string>>) => {
@@ -101,8 +125,11 @@ function BookingForm({
         >
             <form
                 noValidate
-                className={styles.bookingForm}
+                className={clsx(styles.bookingForm, {
+                    [styles.success]: formState === 'success',
+                })}
                 onSubmit={handleSubmit(onValidHandler, onInvalidHandler)}
+                onAnimationEnd={handleAnimationEnd}
             >
                 <div className={styles.summary}>
                     <h2 className={styles.title}>{name}</h2>

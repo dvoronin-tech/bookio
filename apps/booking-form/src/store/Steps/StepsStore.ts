@@ -1,7 +1,7 @@
 import { createStore } from 'zustand/vanilla';
 import { devtools } from 'zustand/middleware';
 
-export type Steps = 'Greeting' | 'BookingForm';
+export type Steps = 'Greeting' | 'BookingForm' | 'Success';
 
 export interface StepsState {
     step: Steps;
