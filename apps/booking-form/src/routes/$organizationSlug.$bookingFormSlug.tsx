@@ -12,12 +12,19 @@ export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
         const { bookingFormSlug, organizationSlug } = params;
 
         try {
-            const bookingForm = await fetchBookingFormBySlugs(organizationSlug, bookingFormSlug);
+            const bookingForm = await fetchBookingFormBySlugs(
+                organizationSlug,
+                bookingFormSlug,
+            );
             return { bookingForm };
         } catch (error) {
             console.error(error);
             if (error instanceof Error && typeof error.cause === 'string') {
-                return { bookingForm: null, error: error.message, code: error.cause };
+                return {
+                    bookingForm: null,
+                    error: error.message,
+                    code: error.cause,
+                };
             }
 
             return {
@@ -26,6 +33,31 @@ export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
                 code: 'UNKNOWN_ERROR',
             };
         }
+    },
+    head: ({ loaderData }) => {
+        if (!loaderData) return { meta: [] };
+        const { bookingForm } = loaderData;
+        if (!bookingForm) return { meta: [] };
+
+        const { metaData } = bookingForm;
+
+        return {
+            meta: [
+                {
+                    title: metaData.title,
+                },
+                {
+                    name: 'description',
+                    content: metaData.description,
+                },
+                ...Object.entries(metaData.additionalMetaData).map(
+                    ([name, content]) => ({
+                        name,
+                        content,
+                    }),
+                ),
+            ],
+        };
     },
     component: RouteComponent,
 });
