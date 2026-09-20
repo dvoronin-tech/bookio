@@ -3,11 +3,10 @@ import styles from './BookingFormsList.module.scss';
 import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
-import { Button, Input, PageLoader } from '@bookio/ui';
+import { Button, PageLoader } from '@bookio/ui';
 import { BookingFormCard } from '#components/BookingFormCard/BookingFormCard.tsx';
 
 import PlusIcon from '#assets/icons/plus.svg?react';
-import SearchIcon from '#assets/icons/search.svg?react';
 
 export const BookingForms: FC = () => {
     const navigate = useNavigate();
@@ -117,17 +116,17 @@ const BookingFormHeader: FC<BookingFormHeaderProps> = ({
             </div>
 
             <div className={styles.headerToolbar}>
-                <Input.Root className={styles.searchInput}>
-                    <Input.Icon>
-                        <SearchIcon />
-                    </Input.Icon>
-                    <Input
-                        type="search"
-                        placeholder="Search forms…"
-                        aria-label="Search forms"
-                        readOnly
-                    />
-                </Input.Root>
+                {/*<Input.Root className={styles.searchInput}>*/}
+                {/*    <Input.Icon>*/}
+                {/*        <SearchIcon />*/}
+                {/*    </Input.Icon>*/}
+                {/*    <Input*/}
+                {/*        type="search"*/}
+                {/*        placeholder="Search forms…"*/}
+                {/*        aria-label="Search forms"*/}
+                {/*        readOnly*/}
+                {/*    />*/}
+                {/*</Input.Root>*/}
 
                 <Button
                     variant="primary-filled"
