@@ -1,0 +1,31 @@
+.idCell {
+    font-family: monospace;
+    font-size: 1.3rem;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.idText {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.copyBtn {
+    flex-shrink: 0;
+    cursor: pointer;
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-secondary);
+    transition: color 0.15s;
+
+    &:hover {
+        color: var(--color-text-main);
+    }
+}

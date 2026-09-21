@@ -1,15 +1,13 @@
 import { AnalyticTable } from '#components/AnalyticTable/AnalyticTable/AnalyticTable.tsx';
 import { AnalyticTablePagination } from '#components/AnalyticTable/AnalyticTablePagination/AnalyticTablePagination.tsx';
 import styles from './AnalyticTableCard.module.scss';
-import { type FC, useCallback, useMemo } from 'react';
-import toast from 'react-hot-toast';
+import { type FC, useMemo } from 'react';
 import { type ColumnDef, useTable } from '@tanstack/react-table';
 import analyticTableFeatures, {
     type AnalyticTableFeatures,
 } from '#components/AnalyticTable/utils/analyticTableFeatures.ts';
 
 import type { BookingItem } from '#api/bookings/getOrganizationBookings.ts';
-import CopyIcon from '#assets/icons/copy.svg?react';
 import clsx from 'clsx';
 
 import {
@@ -17,17 +15,13 @@ import {
     formatStatusText,
 } from '#components/AnalyticTable/utils/format.ts';
 import { getStatusClass } from '#components/AnalyticTable/utils/getStatusClass.ts';
+import { BookingId } from '#components/AnalyticTable/components/BookingId.tsx';
 
 interface AnalyticTableProps {
     data: BookingItem[];
 }
 
 export const AnalyticTableCard: FC<AnalyticTableProps> = ({ data }) => {
-    const handleCopy = useCallback((text: string, label: string) => {
-        void navigator.clipboard.writeText(text);
-        toast.success(`${label} copied to clipboard`);
-    }, []);
-
     const columns = useMemo<
         Array<ColumnDef<AnalyticTableFeatures, BookingItem>>
     >(
@@ -35,26 +29,9 @@ export const AnalyticTableCard: FC<AnalyticTableProps> = ({ data }) => {
             {
                 accessorKey: 'id',
                 header: 'Booking ID',
-                cell: (info) => {
-                    const id = info.getValue<string>();
-                    const shortId = id.length > 8 ? `${id.slice(0, 8)}...` : id;
-                    return (
-                        <div className={styles.idCell} title={id}>
-                            <span>{shortId}</span>
-                            <button
-                                type="button"
-                                className={styles.copyBtn}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleCopy(id, 'Booking ID');
-                                }}
-                                title="Copy full ID"
-                            >
-                                <CopyIcon width={14} height={14} />
-                            </button>
-                        </div>
-                    );
-                },
+                cell: (info) => (
+                    <BookingId bookingId={info.getValue<string>()} />
+                ),
             },
             {
                 accessorKey: 'status',
@@ -87,6 +64,7 @@ export const AnalyticTableCard: FC<AnalyticTableProps> = ({ data }) => {
                 header: 'Created At',
                 cell: (info) => formatBookingDate(info.getValue<string>()),
             },
+
             {
                 id: 'bookingData',
                 header: 'Customer Details',
@@ -133,7 +111,7 @@ export const AnalyticTableCard: FC<AnalyticTableProps> = ({ data }) => {
                 },
             },
         ],
-        [handleCopy],
+        [],
     );
 
     const table = useTable({
@@ -142,7 +120,7 @@ export const AnalyticTableCard: FC<AnalyticTableProps> = ({ data }) => {
         data,
         initialState: {
             pagination: {
-                pageSize: 10,
+                pageSize: 20,
                 pageIndex: 0,
             },
         },

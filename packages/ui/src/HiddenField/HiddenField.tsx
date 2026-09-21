@@ -18,8 +18,12 @@ function HiddenField({ value, className, onCopy }: HiddenFieldProps) {
     const displayValue = isVisible ? value : '*'.repeat(value.length);
 
     const handleCopy = useCallback(() => {
+        if (onCopy) {
+            onCopy(value);
+            return;
+        }
+
         void navigator.clipboard.writeText(value);
-        onCopy?.(value);
     }, [value, onCopy]);
 
     const handleToggleVisibility = useCallback(() => {

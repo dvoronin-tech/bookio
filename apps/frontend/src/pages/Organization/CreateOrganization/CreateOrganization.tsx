@@ -19,6 +19,7 @@ import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout'
 import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
 import { useDebouncedValidation } from '#utils/useDebouncedValidation';
 import { formatZodError } from '#utils/parseError';
+import { copyToClipboard } from '#utils/copyToClipboard.ts';
 
 const formSchema = z.object({
     name: z.string().min(3).max(255),
@@ -158,10 +159,6 @@ const SuccessfulOrganizationCreation: FC<{ data: CreateOrganizationResponse['dat
 }) => {
     const navigate = useNavigate();
 
-    const handleCopy = useCallback(() => {
-        toast.success('Secret key copied to clipboard');
-    }, []);
-
     const handleGoToOrganizations = useCallback(() => {
         void navigate({ to: '/organizations/list' });
     }, [navigate]);
@@ -179,7 +176,10 @@ const SuccessfulOrganizationCreation: FC<{ data: CreateOrganizationResponse['dat
                 </div>
             }
         >
-            <HiddenField value={data.organization.secretKey} onCopy={handleCopy} />
+            <HiddenField
+                value={data.organization.secretKey}
+                onCopy={(value) => copyToClipboard(value, 'Secret key')}
+            />
         </FormWizardLayout>
     );
 };
