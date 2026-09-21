@@ -75,28 +75,11 @@ export const AnalyticTableCard: FC<AnalyticTableProps> = ({ data }) => {
                 },
             },
             {
-                accessorKey: 'bookingFormId',
-                header: 'Form ID',
-                cell: (info) => {
-                    const formId = info.getValue<string>();
-                    const shortFormId =
-                        formId.length > 8 ? `${formId.slice(0, 8)}...` : formId;
-                    return (
-                        <div className={styles.idCell} title={formId}>
-                            <span>{shortFormId}</span>
-                            <button
-                                type="button"
-                                className={styles.copyBtn}
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleCopy(formId, 'Form ID');
-                                }}
-                                title="Copy form ID"
-                            >
-                                <CopyIcon width={14} height={14} />
-                            </button>
-                        </div>
-                    );
+                id: 'bookingFormInfo',
+                header: 'Form Info',
+                cell: ({ row }) => {
+                    const { name, slug } = row.original.bookingForm;
+                    return `${name} | ${slug}`;
                 },
             },
             {

@@ -29,11 +29,12 @@ export const getOrganizationBookings = factory(
                 with: {
                     bookingForm: {
                         columns: {
-                            id: true,
+                            name: true,
+                            slug: true,
                         },
                     },
                 },
-                orderBy: (bookings, { asc }) => [asc(bookings.createdAt)],
+                orderBy: (bookings, { desc }) => [desc(bookings.createdAt)],
             });
 
             if (!bookings.length)
