@@ -14,7 +14,15 @@ export const TBody: FC<TBodyProps> = ({ table }) => {
             {table.getRowModel().rows.map((row) => (
                 <tr key={row.id} className={styles.row}>
                     {row.getAllCells().map((cell) => (
-                        <td key={cell.id} className={styles.cell}>
+                        <td
+                            key={cell.id}
+                            className={styles.cell}
+                            style={{
+                                width: cell.column.getSize(),
+                                minWidth: cell.column.getSize(),
+                                maxWidth: cell.column.getSize(),
+                            }}
+                        >
                             <table.FlexRender cell={cell} />
                         </td>
                     ))}

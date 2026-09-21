@@ -1,4 +1,5 @@
 import {
+    columnSizingFeature,
     createPaginatedRowModel,
     rowPaginationFeature,
     tableFeatures,
@@ -6,6 +7,7 @@ import {
 
 const analyticTableFeatures = tableFeatures({
     rowPaginationFeature,
+    columnSizingFeature,
     paginatedRowModel: createPaginatedRowModel(),
 });
 

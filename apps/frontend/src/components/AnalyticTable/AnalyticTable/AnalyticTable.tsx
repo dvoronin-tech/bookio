@@ -11,8 +11,13 @@ interface AnalyticTableProps {
 }
 
 export const AnalyticTable: FC<AnalyticTableProps> = ({ table }) => {
+    const tableWidth = table.getTotalSize();
+
     return (
-        <table className={styles.table}>
+        <table
+            className={styles.table}
+            style={{ width: '100%', minWidth: tableWidth }}
+        >
             <THead table={table} />
             <TBody table={table} />
         </table>

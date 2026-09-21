@@ -15,42 +15,6 @@
     overflow: auto;
 }
 
-.statusBadge {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 0.4rem 1rem;
-    border-radius: 9999px;
-    font-size: 1.2rem;
-    font-weight: 600;
-    text-transform: capitalize;
-
-    &.pending {
-        background: rgba(204, 176, 110, 0.15);
-        color: var(--color-yellow);
-        border: 1px solid rgba(204, 176, 110, 0.3);
-    }
-
-    &.confirmed {
-        background: rgba(86, 147, 81, 0.15);
-        color: var(--color-green);
-        border: 1px solid rgba(86, 147, 81, 0.3);
-    }
-
-    &.cancelled {
-        background: rgba(207, 49, 22, 0.15);
-        color: var(--color-system-red);
-        border: 1px solid rgba(207, 49, 22, 0.3);
-    }
-}
-
-.statusDot {
-    width: 0.6rem;
-    height: 0.6rem;
-    border-radius: 50%;
-    background: currentColor;
-}
-
 .dataPreview {
     display: flex;
     flex-wrap: wrap;

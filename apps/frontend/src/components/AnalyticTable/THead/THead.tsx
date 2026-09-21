@@ -15,7 +15,15 @@ export const THead: FC<THeadProps> = ({ table }) => {
                 <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header) => {
                         return (
-                            <th key={header.id} className={styles.headerCell}>
+                            <th
+                                key={header.id}
+                                className={styles.headerCell}
+                                style={{
+                                    width: header.getSize(),
+                                    minWidth: header.getSize(),
+                                    maxWidth: header.getSize(),
+                                }}
+                            >
                                 {header.isPlaceholder ? null : (
                                     <table.FlexRender header={header} />
                                 )}
