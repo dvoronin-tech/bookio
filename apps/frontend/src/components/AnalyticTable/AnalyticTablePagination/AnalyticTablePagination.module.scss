@@ -44,11 +44,16 @@
 }
 
 .pageSizeSelect {
-    background: #191918;
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    border-radius: 0.4rem;
-    color: var(--color-text-main);
-    padding: 0.4rem 0.8rem;
-    font-size: 1.3rem;
-    cursor: pointer;
+    width: 9rem;
+    flex-shrink: 0;
+
+    .pageSizeTrigger {
+        padding: 0.4rem 0.8rem;
+        border-radius: 0.4rem;
+        font-size: 1.3rem;
+    }
+
+    .pageSizeContent {
+        width: 100%;
+    }
 }

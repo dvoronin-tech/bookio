@@ -1,8 +1,11 @@
 import type { ReactTable } from '@tanstack/react-table';
 import type { AnalyticTableFeatures } from '#components/AnalyticTable/utils/analyticTableFeatures.ts';
 import type { BookingItem } from '#api/bookings/getOrganizationBookings.ts';
-import type { FC } from 'react';
+import { type FC, useCallback } from 'react';
+import { SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 import styles from './AnalyticTablePagination.module.scss';
+
+const PAGE_SIZE_OPTIONS: SelectDropdownOption[] = [20, 50, 100];
 
 interface AnalyticTablePaginationProps {
     table: ReactTable<AnalyticTableFeatures, BookingItem>;
@@ -15,6 +18,13 @@ export const AnalyticTablePagination: FC<AnalyticTablePaginationProps> = ({
     const pageCount = table.getPageCount();
     const totalRows = table.options.data.length;
 
+    const handlePageSizeChange = useCallback(
+        (option: SelectDropdownOption) => {
+            table.setPageSize(Number(option));
+        },
+        [table],
+    );
+
     return (
         <div className={styles.pagination}>
             <div className={styles.paginationInfo}>
@@ -26,17 +36,16 @@ export const AnalyticTablePagination: FC<AnalyticTablePaginationProps> = ({
                     ({totalRows} total{' '}
                     {totalRows === 1 ? 'booking' : 'bookings'})
                 </span>
-                <select
-                    className={styles.pageSizeSelect}
-                    value={pageSize}
-                    onChange={(e) => table.setPageSize(Number(e.target.value))}
-                >
-                    {[5, 10, 20, 50].map((size) => (
-                        <option key={size} value={size}>
-                            Show {size}
-                        </option>
-                    ))}
-                </select>
+                <div className={styles.pageSizeSelect}>
+                    <SelectDropdown
+                        options={PAGE_SIZE_OPTIONS}
+                        selected={pageSize}
+                        onOptionClick={handlePageSizeChange}
+                        placeholder="Page size"
+                        highlightSelected
+                        triggerClassName={styles.pageSizeTrigger}
+                    />
+                </div>
             </div>
 
             <div className={styles.paginationControls}>
