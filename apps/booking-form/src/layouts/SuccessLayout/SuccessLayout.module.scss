@@ -45,8 +45,11 @@
     }
 
     .checkIcon {
+        display: block;
+        flex-shrink: 0;
         width: 2.8rem;
         height: 2.8rem;
+        overflow: visible;
     }
 
     .title {
