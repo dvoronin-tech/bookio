@@ -1,11 +1,11 @@
 import type { ReactTable } from '@tanstack/react-table';
 import type { BookingsTableFeatures } from '#components/BookingsTable/bookingsTableFeatures.ts';
-import type { BookingItem } from '#api/bookings/getOrganizationBookings.ts';
+import type { BookingByIdItem } from '#api/bookings/getBookingsById.ts';
 import type { FC } from 'react';
 import styles from './TBody.module.scss';
 
 interface TBodyProps {
-    table: ReactTable<BookingsTableFeatures, BookingItem>;
+    table: ReactTable<BookingsTableFeatures, BookingByIdItem>;
 }
 
 export const TBody: FC<TBodyProps> = ({ table }) => {

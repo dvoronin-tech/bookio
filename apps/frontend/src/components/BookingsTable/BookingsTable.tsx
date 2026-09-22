@@ -4,27 +4,27 @@ import { createColumnHelper, useTable } from '@tanstack/react-table';
 import bookingsTableFeatures, {
     type BookingsTableFeatures,
 } from '#components/BookingsTable/bookingsTableFeatures.ts';
-import type { BookingItem } from '#api/bookings/getOrganizationBookings.ts';
-import { BookingId } from '#components/AnalyticTable/components/BookingId.tsx';
+import type { BookingByIdItem } from '#api/bookings/getBookingsById.ts';
+import { BookingId } from '#components/BookingsTable/components/BookingId.tsx';
 import {
     formatBookingDate,
     formatDataValue,
 } from '#components/BookingsTable/utils/format.tsx';
 import { getDataKeys } from '#components/BookingsTable/utils/getDataKeys.ts';
 import { readBookingDataValue } from '#components/BookingsTable/utils/readBookingDataValue.ts';
-import { BookingStatus } from '#components/AnalyticTable/components/BookingStatus.tsx';
+import { BookingStatus } from '#components/BookingsTable/components/BookingStatus.tsx';
 import { THead } from '#components/BookingsTable/THead/THead.tsx';
 import { TBody } from '#components/BookingsTable/TBody/TBody.tsx';
 import { BookingsTablePagination } from '#components/BookingsTable/BookingsTablePagination/BookingsTablePagination.tsx';
 
 interface BookingsTableProps {
-    data: BookingItem[];
+    data: BookingByIdItem[];
 }
 
 export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
     const createColumn = createColumnHelper<
         BookingsTableFeatures,
-        BookingItem
+        BookingByIdItem
     >();
 
     const bookingDataColumns = useMemo(() => {

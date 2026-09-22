@@ -10,7 +10,6 @@ import { useGetOrganization } from '#api/organizations/getOrganizationData';
 import ArrowIcon from '#assets/icons/short-arrow.svg?react';
 import FormIcon from '#assets/icons/form.svg?react';
 import OrganizationIcon from '#assets/icons/organization.svg?react';
-import TableIcon from '#assets/icons/table.svg?react';
 
 import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import toast from 'react-hot-toast';
@@ -54,13 +53,6 @@ const HeaderDropdown: FC = () => {
     } = useGetOrganization(organizationId);
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    const handleNavigateToBookings = () => {
-        void navigate({
-            to: '/$organizationId/analytics',
-            params: { organizationId },
-        });
-    };
 
     const handleNavigateToBookingForms = () => {
         void navigate({
@@ -124,15 +116,6 @@ const HeaderDropdown: FC = () => {
                             @{organization.slug}
                         </span>
                     </div>
-                </Dropdown.Item>
-                <Dropdown.Item
-                    className={styles.menuItem}
-                    onClick={handleNavigateToBookings}
-                >
-                    <TableIcon
-                        className={clsx(styles.menuItemIcon, styles.pink)}
-                    />
-                    Bookings
                 </Dropdown.Item>
                 <Dropdown.Item
                     className={styles.menuItem}

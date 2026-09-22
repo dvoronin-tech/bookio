@@ -1,6 +1,6 @@
 import type { ReactTable } from '@tanstack/react-table';
 import type { BookingsTableFeatures } from '#components/BookingsTable/bookingsTableFeatures.ts';
-import type { BookingItem } from '#api/bookings/getOrganizationBookings.ts';
+import type { BookingByIdItem } from '#api/bookings/getBookingsById.ts';
 import { type FC, useCallback } from 'react';
 import { SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 import styles from './BookingsTablePagination.module.scss';
@@ -8,7 +8,7 @@ import styles from './BookingsTablePagination.module.scss';
 const PAGE_SIZE_OPTIONS: SelectDropdownOption[] = [20, 50, 100];
 
 interface BookingsTablePaginationProps {
-    table: ReactTable<BookingsTableFeatures, BookingItem>;
+    table: ReactTable<BookingsTableFeatures, BookingByIdItem>;
 }
 
 export const BookingsTablePagination: FC<BookingsTablePaginationProps> = ({
