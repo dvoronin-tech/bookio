@@ -1,7 +1,7 @@
 import { type FC } from 'react';
 import clsx from 'clsx';
 import styles from './Components.module.scss';
-import { formatStatusText } from '#components/BookingsTable/utils/format.tsx';
+import { formatStatusText } from '#components/BookingsTable/utils/format.ts';
 
 interface BookingStatusProps {
     status: string;

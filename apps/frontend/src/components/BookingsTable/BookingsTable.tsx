@@ -6,16 +6,14 @@ import bookingsTableFeatures, {
 } from '#components/BookingsTable/bookingsTableFeatures.ts';
 import type { BookingByIdItem } from '#api/bookings/getBookingsById.ts';
 import { BookingId } from '#components/BookingsTable/components/BookingId.tsx';
-import {
-    formatBookingDate,
-    formatDataValue,
-} from '#components/BookingsTable/utils/format.tsx';
+import { formatBookingDate } from '#components/BookingsTable/utils/format.ts';
 import { getDataKeys } from '#components/BookingsTable/utils/getDataKeys.ts';
 import { readBookingDataValue } from '#components/BookingsTable/utils/readBookingDataValue.ts';
 import { BookingStatus } from '#components/BookingsTable/components/BookingStatus.tsx';
 import { THead } from '#components/BookingsTable/THead/THead.tsx';
 import { TBody } from '#components/BookingsTable/TBody/TBody.tsx';
 import { BookingsTablePagination } from '#components/BookingsTable/BookingsTablePagination/BookingsTablePagination.tsx';
+import { SimpleCell } from '#components/BookingsTable/components/SimpleCell.tsx';
 
 interface BookingsTableProps {
     data: BookingByIdItem[];
@@ -36,7 +34,7 @@ export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
                 {
                     id: `data.${key}`,
                     header: key,
-                    cell: ({ getValue }) => formatDataValue(getValue()),
+                    cell: ({ getValue }) => <SimpleCell data={getValue()} />,
                 },
             ),
         );
@@ -61,7 +59,9 @@ export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
                 createColumn.accessor('createdAt', {
                     header: 'Created at',
                     size: 200,
-                    cell: ({ getValue }) => formatBookingDate(getValue()),
+                    cell: ({ getValue }) => (
+                        <SimpleCell data={formatBookingDate(getValue())} />
+                    ),
                 }),
                 ...bookingDataColumns,
             ]),
