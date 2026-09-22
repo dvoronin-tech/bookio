@@ -1,0 +1,31 @@
+.bookingTable {
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    i {
+        color: var(--color-text-secondary);
+        font-size: 1.2rem;
+    }
+}
+
+.table {
+    table-layout: fixed;
+    border-collapse: collapse;
+    text-align: left;
+    font-size: 1.4rem;
+
+    th,
+    td {
+        border: 1px solid var(--color-border);
+    }
+}
+
+.tableWrapper {
+    flex: 1;
+    min-height: 0;
+    width: 100%;
+    overflow: auto;
+}

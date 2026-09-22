@@ -191,6 +191,9 @@ p {
     --color-pink: #9c4cad;
     --color-yellow: #ccb06e;
     --color-orange: #bd6f4e;
+
+    --color-table-bg-main: #0f0f10;
+    --color-table-bg-head: #252424;
 }
 
 /* Scrollbar Styles */
