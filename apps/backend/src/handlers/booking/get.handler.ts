@@ -18,9 +18,6 @@ export const getBookingsById = factory(
                 orderBy: (bookings, { desc }) => [desc(bookings.createdAt)],
             });
 
-            if (!bookings.length)
-                return c.json(prepareError('No bookings found'), 404);
-
             return c.json(prepareSuccess(bookings));
         } catch (e) {
             return c.json(prepareError('Failed to get bookings'));

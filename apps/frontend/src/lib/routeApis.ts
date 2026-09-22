@@ -9,3 +9,7 @@ export const organizationRouteApi = getRouteApi(
 export const configuratorRouteApi = getRouteApi(
     '/_authenticated/$organizationId/booking-forms/$bookingFormId/configurator',
 );
+
+export const bookingsRouteApi = getRouteApi(
+    '/_authenticated/$organizationId/bookings/$bookingFormId',
+);

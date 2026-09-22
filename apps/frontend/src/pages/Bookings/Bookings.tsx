@@ -3,12 +3,22 @@ import styles from './Bookings.module.scss';
 import { BookingsTable } from '#components/BookingsTable/BookingsTable.tsx';
 import { useGetBookingsById } from '#api/bookings/getBookingsById.ts';
 import { Button, PageLoader } from '@bookio/ui';
-import { getRouteApi } from '@tanstack/react-router';
+import { bookingsRouteApi } from '#lib/routeApis.ts';
+import { BookingAsideBar } from '#components/AsideBar/BookingAsideBar.tsx';
 
 export const Bookings: FC = () => {
-    const { bookingFormId } = getRouteApi(
-        '/_authenticated/$organizationId/bookings/$bookingFormId',
-    ).useParams();
+    return (
+        <div className={styles.bookingsPage}>
+            <BookingAsideBar />
+            <div className={styles.content}>
+                <TableContent />
+            </div>
+        </div>
+    );
+};
+
+const TableContent = () => {
+    const { bookingFormId } = bookingsRouteApi.useParams();
     const {
         data: bookingsData,
         isPending,
@@ -18,11 +28,8 @@ export const Bookings: FC = () => {
 
     const data = useMemo(() => bookingsData ?? [], [bookingsData]);
 
-    if (isPending) {
-        return <PageLoader />;
-    }
-
-    if (error) {
+    if (isPending) return <PageLoader />;
+    if (error)
         return (
             <div className={styles.errorContainer}>
                 <h2>Failed to load bookings</h2>
@@ -35,11 +42,10 @@ export const Bookings: FC = () => {
                 </Button>
             </div>
         );
-    }
 
-    if (data.length === 0) {
+    if (!data.length)
         return (
-            <div className={styles.bookingsPage}>
+            <>
                 <div className={styles.header}>
                     <div className={styles.titleSection}>
                         <h1>Bookings</h1>
@@ -53,13 +59,7 @@ export const Bookings: FC = () => {
                         appointments will appear here.
                     </p>
                 </div>
-            </div>
+            </>
         );
-    }
-
-    return (
-        <div className={styles.bookingsPage}>
-            <BookingsTable data={data} />
-        </div>
-    );
+    return <BookingsTable data={data} />;
 };
