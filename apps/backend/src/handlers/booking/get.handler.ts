@@ -1,13 +1,16 @@
 import { createFactory } from 'hono/factory';
 import { zValidator } from '@hono/zod-validator';
-import { getBookingsSchema } from '@/schemas/booking/get.schema.js';
+import {
+    getBookingsByIdSchema,
+    getOrganizationBookingsSchema,
+} from '@/schemas/booking/get.schema.js';
 import { db } from '@/db.js';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 
 const factory = createFactory().createHandlers;
 
 export const getOrganizationBookings = factory(
-    zValidator('query', getBookingsSchema),
+    zValidator('query', getOrganizationBookingsSchema),
     async (c) => {
         try {
             const { organizationId } = c.req.valid('query');
@@ -43,6 +46,28 @@ export const getOrganizationBookings = factory(
             return c.json(prepareSuccess(bookings));
         } catch (e) {
             return c.json(prepareError('Failed to get booking form'), 500);
+        }
+    },
+);
+
+export const getBookingsById = factory(
+    zValidator('query', getBookingsByIdSchema),
+    async (c) => {
+        try {
+            const { bookingFormId } = c.req.valid('query');
+
+            const bookings = await db.query.bookings.findMany({
+                where: (booking, { eq }) =>
+                    eq(booking.bookingFormId, bookingFormId),
+                orderBy: (bookings, { desc }) => [desc(bookings.createdAt)],
+            });
+
+            if (!bookings.length)
+                return c.json(prepareError('No bookings found'), 404);
+
+            return c.json(prepareSuccess(bookings));
+        } catch (e) {
+            return c.json(prepareError('Failed to get bookings'));
         }
     },
 );
