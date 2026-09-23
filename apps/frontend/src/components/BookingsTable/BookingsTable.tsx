@@ -72,9 +72,10 @@ export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
         features: bookingsTableFeatures,
         columns,
         data,
+        columnResizeMode: 'onChange',
         defaultColumn: {
             minSize: 100,
-            maxSize: 300,
+            maxSize: 500,
         },
         initialState: {
             pagination: {

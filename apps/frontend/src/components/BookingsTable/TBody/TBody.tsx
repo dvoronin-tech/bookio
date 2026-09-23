@@ -2,6 +2,7 @@ import type { ReactTable } from '@tanstack/react-table';
 import type { BookingsTableFeatures } from '#components/BookingsTable/bookingsTableFeatures.ts';
 import type { BookingByIdItem } from '#api/bookings/getBookingsById.ts';
 import type { FC } from 'react';
+import clsx from 'clsx';
 import styles from './TBody.module.scss';
 
 interface TBodyProps {
@@ -9,6 +10,8 @@ interface TBodyProps {
 }
 
 export const TBody: FC<TBodyProps> = ({ table }) => {
+    const isResizingCol = table.state.columnResizing.isResizingColumn;
+
     return (
         <tbody>
             {table.getRowModel().rows.map((row) => (
@@ -16,7 +19,11 @@ export const TBody: FC<TBodyProps> = ({ table }) => {
                     {row.getAllCells().map((cell) => (
                         <td
                             key={cell.id}
-                            className={styles.cell}
+                            className={clsx(
+                                styles.cell,
+                                cell.column.id === isResizingCol &&
+                                    styles.resizeBorder,
+                            )}
                             style={{
                                 width: cell.column.getSize(),
                             }}

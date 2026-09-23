@@ -7,6 +7,7 @@
 }
 
 .headerCell {
+    position: relative;
     padding: 0.8rem 1.4rem;
     font-size: 1.3rem;
     font-weight: 600;
@@ -16,6 +17,61 @@
     text-overflow: ellipsis;
     user-select: none;
     text-align: start;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 1px;
+        height: 100%;
+        opacity: 0;
+        background-color: var(--color-border);
+    }
+
+    &::before {
+        left: 0;
+    }
+
+    &::after {
+        right: 0;
+    }
+
+    &:hover,
+    &.isResizingTh {
+        &::before,
+        &::after {
+            opacity: 1;
+        }
+    }
+}
+
+.resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    width: 0.8rem;
+    height: 100%;
+    cursor: col-resize;
+    touch-action: none;
+    user-select: none;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 2px;
+        background: transparent;
+        transition: background-color 0.15s ease;
+    }
+
+    &:hover::after,
+    &.isResizing::after {
+        background: var(--color-primary);
+    }
 }
 
 .sortableHeader {
