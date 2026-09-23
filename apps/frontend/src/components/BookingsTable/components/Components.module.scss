@@ -1,0 +1,79 @@
+.idCell {
+    font-family: monospace;
+    font-size: 1.3rem;
+    color: var(--color-text-secondary);
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.idText {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0.4rem 1rem;
+    border-radius: 9999px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    text-transform: capitalize;
+
+    &.pending {
+        background: rgba(204, 176, 110, 0.15);
+        color: var(--color-yellow);
+        border: 1px solid rgba(204, 176, 110, 0.3);
+    }
+
+    &.confirmed {
+        background: rgba(86, 147, 81, 0.15);
+        color: var(--color-green);
+        border: 1px solid rgba(86, 147, 81, 0.3);
+    }
+
+    &.cancelled {
+        background: rgba(207, 49, 22, 0.15);
+        color: var(--color-system-red);
+        border: 1px solid rgba(207, 49, 22, 0.3);
+    }
+}
+
+.statusDot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: currentColor;
+}
+
+.copyBtn {
+    flex-shrink: 0;
+    cursor: pointer;
+    padding: 0.2rem;
+    display: flex;
+    align-items: center;
+    color: var(--color-text-secondary);
+    transition:
+        color 0.15s,
+        opacity 0.15s;
+    opacity: 0;
+
+    &:hover {
+        opacity: 1;
+        color: var(--color-text-main);
+    }
+}
+
+.simpleCell {
+    display: inline-block;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

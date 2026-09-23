@@ -1,0 +1,88 @@
+.page {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    gap: 1.2rem;
+    width: 100%;
+    height: 3.8rem;
+    min-width: 0;
+}
+
+.pageTitle {
+    font-size: 2.8rem;
+    font-weight: 700;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.metaChips {
+    display: flex;
+    align-items: stretch;
+    align-self: stretch;
+    gap: 0.8rem;
+    flex-shrink: 0;
+}
+
+.chipButton {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 0 1.5rem;
+    font-size: 1.4rem;
+    font-weight: 600;
+    line-height: 1;
+    white-space: nowrap;
+    color: var(--color-text-secondary);
+}
+
+.grid {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(32rem, 1fr));
+    gap: 2rem;
+    align-items: start;
+    align-content: start;
+}
+
+.state {
+    width: 100%;
+    flex: 1;
+    min-height: 0;
+    background-color: var(--color-bg-ui);
+    border-radius: 0.6rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 1.2rem;
+    padding: 3rem;
+    text-align: center;
+
+    h2 {
+        font-size: 2.8rem;
+        font-weight: 700;
+    }
+
+    p {
+        font-size: 1.6rem;
+        color: var(--color-text-secondary);
+        max-width: 42rem;
+    }
+}
+
+.stateButton {
+    max-width: 40rem;
+    width: 100%;
+    margin-top: 0.8rem;
+}

@@ -1,0 +1,111 @@
+.thead {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: var(--color-table-bg-head);
+    border-bottom: 1px solid var(--color-border);
+}
+
+.headerCell {
+    position: relative;
+    padding: 0.8rem 1.4rem;
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: var(--color-text-secondary);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    user-select: none;
+    text-align: start;
+
+    &::before,
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        width: 1px;
+        height: 100%;
+        opacity: 0;
+        background-color: var(--color-border);
+    }
+
+    &::before {
+        left: 0;
+    }
+
+    &::after {
+        right: 0;
+    }
+
+    &:hover,
+    &.isResizingTh {
+        &::before,
+        &::after {
+            opacity: 1;
+        }
+    }
+}
+
+.resizer {
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 1;
+    width: 0.8rem;
+    height: 100%;
+    cursor: col-resize;
+    touch-action: none;
+    user-select: none;
+
+    &::after {
+        content: '';
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        width: 2px;
+        background: transparent;
+        transition: background-color 0.15s ease;
+    }
+
+    &:hover::after,
+    &.isResizing::after {
+        background: var(--color-primary);
+    }
+}
+
+.sortableHeader {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    cursor: pointer;
+    transition: color 0.15s ease;
+
+    &:hover {
+        color: var(--color-text-main);
+    }
+}
+
+.sortIcon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.2rem;
+    height: 1.2rem;
+    opacity: 0.35;
+    transition:
+        transform 0.2s ease,
+        opacity 0.15s ease;
+
+    &.asc {
+        opacity: 1;
+        transform: rotate(180deg);
+        color: var(--color-primary);
+    }
+
+    &.desc {
+        opacity: 1;
+        transform: rotate(0deg);
+        color: var(--color-primary);
+    }
+}

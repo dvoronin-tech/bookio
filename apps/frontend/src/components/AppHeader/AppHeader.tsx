@@ -9,10 +9,12 @@ import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
 import ArrowIcon from '#assets/icons/short-arrow.svg?react';
 import FormIcon from '#assets/icons/form.svg?react';
+import TableIcon from '#assets/icons/table.svg?react';
 import OrganizationIcon from '#assets/icons/organization.svg?react';
 
 import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import toast from 'react-hot-toast';
+import clsx from 'clsx';
 
 export const AppHeader: FC = () => {
     const { organizationId } = organizationRouteApi.useParams();
@@ -56,6 +58,13 @@ const HeaderDropdown: FC = () => {
     const handleNavigateToBookingForms = () => {
         void navigate({
             to: '/$organizationId/booking-forms',
+            params: { organizationId },
+        });
+    };
+
+    const handleNavigateToBookings = () => {
+        void navigate({
+            to: '/$organizationId/bookings',
             params: { organizationId },
         });
     };
@@ -120,14 +129,27 @@ const HeaderDropdown: FC = () => {
                     className={styles.menuItem}
                     onClick={handleNavigateToBookingForms}
                 >
-                    <FormIcon className={styles.menuItemIcon} />
+                    <FormIcon
+                        className={clsx(styles.menuItemIcon, styles.blue)}
+                    />
                     Booking forms
+                </Dropdown.Item>
+                <Dropdown.Item
+                    className={styles.menuItem}
+                    onClick={handleNavigateToBookings}
+                >
+                    <TableIcon
+                        className={clsx(styles.menuItemIcon, styles.green)}
+                    />
+                    Bookings
                 </Dropdown.Item>
                 <Dropdown.Item
                     className={styles.menuItem}
                     onClick={handleNavigateToOrganizations}
                 >
-                    <OrganizationIcon className={styles.menuItemIcon} />
+                    <OrganizationIcon
+                        className={clsx(styles.menuItemIcon, styles.orange)}
+                    />
                     Organizations
                 </Dropdown.Item>
             </Dropdown.Content>

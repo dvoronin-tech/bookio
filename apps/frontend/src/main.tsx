@@ -6,7 +6,6 @@ import { router } from './router';
 import { Toaster } from 'react-hot-toast';
 import './index.css';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
-
 createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
         <Toaster

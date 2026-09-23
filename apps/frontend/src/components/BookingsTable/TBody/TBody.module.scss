@@ -1,0 +1,25 @@
+.row {
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.03);
+    }
+
+    &:last-child .cell {
+        border-bottom: none;
+    }
+}
+
+.cell {
+    padding: 1.2rem 1.4rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    color: var(--color-text-main);
+    font-size: 1.4rem;
+    vertical-align: middle;
+    overflow: hidden;
+}
+
+.resizeBorder {
+    box-shadow: inset -2px 0 0 var(--color-primary);
+}

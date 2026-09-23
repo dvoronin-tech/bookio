@@ -1,0 +1,212 @@
+.tile {
+    display: flex;
+    flex-direction: column;
+    gap: 1.6rem;
+    padding: 2rem;
+    border-radius: 1rem;
+    background-color: var(--color-bg-ui);
+    border: 1px solid var(--color-border);
+    color: inherit;
+    transition:
+        border-color 0.2s ease,
+        background-color 0.2s ease;
+
+    &:hover {
+        border-color: var(--color-primary);
+        background-color: color-mix(
+            in srgb,
+            var(--color-primary) 6%,
+            var(--color-bg-ui)
+        );
+    }
+}
+
+.header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    min-width: 0;
+}
+
+.name {
+    min-width: 0;
+    font-size: 2rem;
+    font-weight: 700;
+    line-height: 1.2;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.statusBadge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.6rem;
+    flex-shrink: 0;
+    padding: 0.4rem 1rem;
+    border-radius: 999px;
+    font-size: 1.2rem;
+    font-weight: 600;
+    line-height: 1;
+}
+
+.statusBadgeActive {
+    background-color: color-mix(
+        in srgb,
+        var(--color-system-green) 13%,
+        transparent
+    );
+    color: var(--color-system-green);
+
+    .statusDot {
+        background-color: var(--color-system-green);
+    }
+}
+
+.statusBadgeInactive {
+    background-color: color-mix(
+        in srgb,
+        var(--color-text-secondary) 13%,
+        transparent
+    );
+    color: var(--color-text-secondary);
+
+    .statusDot {
+        background-color: var(--color-text-secondary);
+    }
+}
+
+.statusDot {
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+}
+
+.description {
+    min-height: calc(1.4em * 2);
+    font-size: 1.4rem;
+    line-height: 1.4;
+    color: var(--color-text-secondary);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.stat {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.2rem;
+    padding: 1.4rem 1.6rem;
+    border-radius: 0.8rem;
+    background-color: var(--color-bg-main);
+}
+
+.statLabel {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.statIcon {
+    width: 1.6rem;
+    height: 1.6rem;
+    flex-shrink: 0;
+
+    path {
+        fill: none;
+    }
+}
+
+.statValue {
+    font-size: 2.4rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--color-text-main);
+}
+
+.footer {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    min-width: 0;
+}
+
+.url {
+    display: flex;
+    align-items: center;
+    gap: 0.8rem;
+    min-width: 0;
+    padding: 0.5rem;
+    border-radius: 0.8rem;
+    background-color: var(--color-bg-main);
+    border: 1px solid var(--color-border);
+}
+
+.urlBadge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.6rem;
+    height: 2.6rem;
+    flex-shrink: 0;
+    border-radius: 0.6rem;
+    background-color: color-mix(
+        in srgb,
+        var(--color-primary) 18%,
+        transparent
+    );
+    color: var(--color-primary);
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1;
+}
+
+.urlPath {
+    display: flex;
+    align-items: center;
+    min-width: 0;
+    font-size: 1.3rem;
+    line-height: 1.2;
+}
+
+.urlOrg {
+    flex: 0 1 auto;
+    max-width: 42%;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 500;
+    color: var(--color-text-secondary);
+}
+
+.urlSlash {
+    flex-shrink: 0;
+    margin-inline: 0.55rem;
+    font-weight: 400;
+    color: color-mix(in srgb, var(--color-text-secondary) 50%, transparent);
+}
+
+.urlForm {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    font-weight: 700;
+    color: var(--color-text-main);
+}
+
+.createdAt {
+    align-self: flex-end;
+    font-size: 1.2rem;
+    line-height: 1;
+    color: var(--color-text-secondary);
+}

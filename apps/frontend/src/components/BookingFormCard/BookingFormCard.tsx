@@ -6,6 +6,7 @@ import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { DeleteBookingFormDialog } from './DeleteBookingFormDialog';
 import { BOOKING_FORM_URL } from '#utils/constants';
+import { copyToClipboard } from '#utils/copyToClipboard.ts';
 
 import TrashIcon from '#assets/icons/trash.svg?react';
 import CalendarIcon from '#assets/icons/calendar.svg?react';
@@ -35,13 +36,12 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
     }, []);
 
     const handleCopyBookingFormUrl = useCallback(
-        async (e: MouseEvent<HTMLButtonElement>) => {
+        (e: MouseEvent<HTMLButtonElement>) => {
             e.preventDefault();
             e.stopPropagation();
 
             if (slug) {
-                await navigator.clipboard.writeText(bookingFormUrl);
-                toast.success('Booking form URL copied to clipboard');
+                copyToClipboard(bookingFormUrl, 'Booking form URL');
             } else {
                 throwNoOrgToast();
             }

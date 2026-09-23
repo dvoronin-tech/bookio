@@ -75,7 +75,8 @@ svg:not([data-multicolor]) {
         fill: currentColor;
     }
 
-    path[fill='none'] {
+    path[fill='none'],
+    path[stroke]:not([fill]) {
         fill: none;
     }
 }
