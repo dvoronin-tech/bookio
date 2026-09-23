@@ -20,7 +20,7 @@ export const getBookingsById = factory(
 
             return c.json(prepareSuccess(bookings));
         } catch (e) {
-            return c.json(prepareError('Failed to get bookings'));
+            return c.json(prepareError('Failed to get bookings'), 500);
         }
     },
 );

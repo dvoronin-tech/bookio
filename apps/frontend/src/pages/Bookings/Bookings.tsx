@@ -45,21 +45,13 @@ const TableContent = () => {
 
     if (!data.length)
         return (
-            <>
-                <div className={styles.header}>
-                    <div className={styles.titleSection}>
-                        <h1>Bookings</h1>
-                        <span className={styles.badge}>0</span>
-                    </div>
-                </div>
-                <div className={styles.emptyContainer}>
-                    <h2>No bookings yet</h2>
-                    <p>
-                        When customers submit your booking forms, their
-                        appointments will appear here.
-                    </p>
-                </div>
-            </>
+            <div className={styles.emptyContainer}>
+                <h2>No bookings yet</h2>
+                <p>
+                    When customers submit your booking forms, their appointments
+                    will appear here.
+                </p>
+            </div>
         );
     return <BookingsTable data={data} />;
 };

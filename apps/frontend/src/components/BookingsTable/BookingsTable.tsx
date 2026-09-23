@@ -1,5 +1,6 @@
-import { type FC, useMemo } from 'react';
+import { type FC, useCallback, useMemo, useState } from 'react';
 import styles from './BookingsTable.module.scss';
+import { BookingDialog } from '#components/BookingsTable/BookingDialog/BookingDialog.tsx';
 import { createColumnHelper, useTable } from '@tanstack/react-table';
 import bookingsTableFeatures, {
     type BookingsTableFeatures,
@@ -20,15 +21,25 @@ interface BookingsTableProps {
 }
 
 export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
+    const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
+        null,
+    );
+
+    const handleDialogOpenChange = useCallback((open: boolean) => {
+        if (!open) {
+            setSelectedBookingId(null);
+        }
+    }, []);
+
     const createColumn = createColumnHelper<
         BookingsTableFeatures,
         BookingByIdItem
     >();
 
-    const bookingDataColumns = useMemo(() => {
-        const keys = getDataKeys(data);
+    const dataKeys = useMemo(() => getDataKeys(data), [data]);
 
-        return keys.map((key) =>
+    const bookingDataColumns = useMemo(() => {
+        return dataKeys.map((key) =>
             createColumn.accessor(
                 (row) => readBookingDataValue(row.data, key),
                 {
@@ -38,7 +49,7 @@ export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
                 },
             ),
         );
-    }, [createColumn, data]);
+    }, [createColumn, dataKeys]);
 
     const columns = useMemo(
         () =>
@@ -93,11 +104,18 @@ export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
                     width={table.getCenterTotalSize()}
                 >
                     <THead table={table} />
-                    <TBody table={table} />
+                    <TBody table={table} onClick={setSelectedBookingId} />
                 </table>
             </div>
 
             <BookingsTablePagination table={table} />
+
+            <BookingDialog
+                selectedBookingId={selectedBookingId}
+                bookings={data}
+                dataKeys={dataKeys}
+                onOpenChange={handleDialogOpenChange}
+            />
         </div>
     );
 };
