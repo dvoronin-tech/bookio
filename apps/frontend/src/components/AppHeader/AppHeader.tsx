@@ -9,6 +9,7 @@ import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
 import ArrowIcon from '#assets/icons/short-arrow.svg?react';
 import FormIcon from '#assets/icons/form.svg?react';
+import TableIcon from '#assets/icons/table.svg?react';
 import OrganizationIcon from '#assets/icons/organization.svg?react';
 
 import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
@@ -57,6 +58,13 @@ const HeaderDropdown: FC = () => {
     const handleNavigateToBookingForms = () => {
         void navigate({
             to: '/$organizationId/booking-forms',
+            params: { organizationId },
+        });
+    };
+
+    const handleNavigateToBookings = () => {
+        void navigate({
+            to: '/$organizationId/bookings',
             params: { organizationId },
         });
     };
@@ -125,6 +133,15 @@ const HeaderDropdown: FC = () => {
                         className={clsx(styles.menuItemIcon, styles.blue)}
                     />
                     Booking forms
+                </Dropdown.Item>
+                <Dropdown.Item
+                    className={styles.menuItem}
+                    onClick={handleNavigateToBookings}
+                >
+                    <TableIcon
+                        className={clsx(styles.menuItemIcon, styles.green)}
+                    />
+                    Bookings
                 </Dropdown.Item>
                 <Dropdown.Item
                     className={styles.menuItem}

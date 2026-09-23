@@ -22,6 +22,7 @@ import { Route as AuthenticatedOrganizationIdIndexRouteImport } from './routes/_
 import { Route as AuthenticatedOrganizationsListRouteImport } from './routes/_authenticated/organizations/list'
 import { Route as AuthenticatedOrganizationsCreateRouteImport } from './routes/_authenticated/organizations/create'
 import { Route as AuthenticatedOrganizationsConnectRouteImport } from './routes/_authenticated/organizations/connect'
+import { Route as AuthenticatedOrganizationIdBookingsIndexRouteImport } from './routes/_authenticated/$organizationId/bookings/index'
 import { Route as AuthenticatedOrganizationIdBookingFormsIndexRouteImport } from './routes/_authenticated/$organizationId/booking-forms/index'
 import { Route as AuthenticatedOrganizationIdBookingsBookingFormIdRouteImport } from './routes/_authenticated/$organizationId/bookings/$bookingFormId'
 import { Route as AuthenticatedOrganizationIdBookingFormsCreateRouteImport } from './routes/_authenticated/$organizationId/booking-forms/create'
@@ -98,6 +99,12 @@ const AuthenticatedOrganizationsConnectRoute =
     path: '/connect',
     getParentRoute: () => AuthenticatedOrganizationsRouteRoute,
   } as any)
+const AuthenticatedOrganizationIdBookingsIndexRoute =
+  AuthenticatedOrganizationIdBookingsIndexRouteImport.update({
+    id: '/bookings/',
+    path: '/bookings/',
+    getParentRoute: () => AuthenticatedOrganizationIdRouteRoute,
+  } as any)
 const AuthenticatedOrganizationIdBookingFormsIndexRoute =
   AuthenticatedOrganizationIdBookingFormsIndexRouteImport.update({
     id: '/booking-forms/',
@@ -141,6 +148,7 @@ export interface FileRoutesByFullPath {
   '/$organizationId/booking-forms/create': typeof AuthenticatedOrganizationIdBookingFormsCreateRoute
   '/$organizationId/bookings/$bookingFormId': typeof AuthenticatedOrganizationIdBookingsBookingFormIdRoute
   '/$organizationId/booking-forms/': typeof AuthenticatedOrganizationIdBookingFormsIndexRoute
+  '/$organizationId/bookings/': typeof AuthenticatedOrganizationIdBookingsIndexRoute
   '/$organizationId/booking-forms/$bookingFormId/configurator': typeof AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRoute
 }
 export interface FileRoutesByTo {
@@ -156,6 +164,7 @@ export interface FileRoutesByTo {
   '/$organizationId/booking-forms/create': typeof AuthenticatedOrganizationIdBookingFormsCreateRoute
   '/$organizationId/bookings/$bookingFormId': typeof AuthenticatedOrganizationIdBookingsBookingFormIdRoute
   '/$organizationId/booking-forms': typeof AuthenticatedOrganizationIdBookingFormsIndexRoute
+  '/$organizationId/bookings': typeof AuthenticatedOrganizationIdBookingsIndexRoute
   '/$organizationId/booking-forms/$bookingFormId/configurator': typeof AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRoute
 }
 export interface FileRoutesById {
@@ -176,6 +185,7 @@ export interface FileRoutesById {
   '/_authenticated/$organizationId/booking-forms/create': typeof AuthenticatedOrganizationIdBookingFormsCreateRoute
   '/_authenticated/$organizationId/bookings/$bookingFormId': typeof AuthenticatedOrganizationIdBookingsBookingFormIdRoute
   '/_authenticated/$organizationId/booking-forms/': typeof AuthenticatedOrganizationIdBookingFormsIndexRoute
+  '/_authenticated/$organizationId/bookings/': typeof AuthenticatedOrganizationIdBookingsIndexRoute
   '/_authenticated/$organizationId/booking-forms/$bookingFormId/configurator': typeof AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRoute
 }
 export interface FileRouteTypes {
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/$organizationId/booking-forms/create'
     | '/$organizationId/bookings/$bookingFormId'
     | '/$organizationId/booking-forms/'
+    | '/$organizationId/bookings/'
     | '/$organizationId/booking-forms/$bookingFormId/configurator'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -211,6 +222,7 @@ export interface FileRouteTypes {
     | '/$organizationId/booking-forms/create'
     | '/$organizationId/bookings/$bookingFormId'
     | '/$organizationId/booking-forms'
+    | '/$organizationId/bookings'
     | '/$organizationId/booking-forms/$bookingFormId/configurator'
   id:
     | '__root__'
@@ -230,6 +242,7 @@ export interface FileRouteTypes {
     | '/_authenticated/$organizationId/booking-forms/create'
     | '/_authenticated/$organizationId/bookings/$bookingFormId'
     | '/_authenticated/$organizationId/booking-forms/'
+    | '/_authenticated/$organizationId/bookings/'
     | '/_authenticated/$organizationId/booking-forms/$bookingFormId/configurator'
   fileRoutesById: FileRoutesById
 }
@@ -331,6 +344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedOrganizationsConnectRouteImport
       parentRoute: typeof AuthenticatedOrganizationsRouteRoute
     }
+    '/_authenticated/$organizationId/bookings/': {
+      id: '/_authenticated/$organizationId/bookings/'
+      path: '/bookings'
+      fullPath: '/$organizationId/bookings/'
+      preLoaderRoute: typeof AuthenticatedOrganizationIdBookingsIndexRouteImport
+      parentRoute: typeof AuthenticatedOrganizationIdRouteRoute
+    }
     '/_authenticated/$organizationId/booking-forms/': {
       id: '/_authenticated/$organizationId/booking-forms/'
       path: '/booking-forms'
@@ -367,6 +387,7 @@ interface AuthenticatedOrganizationIdRouteRouteChildren {
   AuthenticatedOrganizationIdBookingFormsCreateRoute: typeof AuthenticatedOrganizationIdBookingFormsCreateRoute
   AuthenticatedOrganizationIdBookingsBookingFormIdRoute: typeof AuthenticatedOrganizationIdBookingsBookingFormIdRoute
   AuthenticatedOrganizationIdBookingFormsIndexRoute: typeof AuthenticatedOrganizationIdBookingFormsIndexRoute
+  AuthenticatedOrganizationIdBookingsIndexRoute: typeof AuthenticatedOrganizationIdBookingsIndexRoute
   AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRoute: typeof AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRoute
 }
 
@@ -380,6 +401,8 @@ const AuthenticatedOrganizationIdRouteRouteChildren: AuthenticatedOrganizationId
       AuthenticatedOrganizationIdBookingsBookingFormIdRoute,
     AuthenticatedOrganizationIdBookingFormsIndexRoute:
       AuthenticatedOrganizationIdBookingFormsIndexRoute,
+    AuthenticatedOrganizationIdBookingsIndexRoute:
+      AuthenticatedOrganizationIdBookingsIndexRoute,
     AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRoute:
       AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRoute,
   }
