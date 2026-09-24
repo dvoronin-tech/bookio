@@ -2,7 +2,12 @@ import { betterAuth } from 'better-auth';
 import { drizzleAdapter } from '@better-auth/drizzle-adapter';
 import * as schema from '@bookio/db';
 import { db } from './db.js';
-import { BETTER_AUTH_SECRET, BETTER_AUTH_URL, ENVIRONMENT, TRUSTED_ORIGINS } from '@/utils/constants.js';
+import {
+    BETTER_AUTH_SECRET,
+    BETTER_AUTH_URL,
+    ENVIRONMENT,
+    TRUSTED_ORIGINS,
+} from '@/utils/constants.js';
 
 const isHttps = BETTER_AUTH_URL?.startsWith('https://');
 
@@ -29,7 +34,7 @@ export const auth = betterAuth({
         },
         disableOriginCheck: ENVIRONMENT === 'development',
         // Cross-origin frontend/backend (different *.vercel.app hosts) need
-        // SameSite=None; Secure or the browser drops the session cookie.
+        // SameSite=None; Secure or the browser drops the session cookie
         ...(isHttps
             ? {
                   defaultCookieAttributes: {
