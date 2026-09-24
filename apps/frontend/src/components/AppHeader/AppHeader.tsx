@@ -3,7 +3,7 @@ import styles from './AppHeader.module.scss';
 import Logo from '#assets/logo.svg?react';
 import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
-import { Button, Dropdown, Loader } from '@bookio/ui';
+import { Button, Dialog, Dropdown, Loader } from '@bookio/ui';
 
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
 
@@ -11,10 +11,12 @@ import ArrowIcon from '#assets/icons/short-arrow.svg?react';
 import FormIcon from '#assets/icons/form.svg?react';
 import TableIcon from '#assets/icons/table.svg?react';
 import OrganizationIcon from '#assets/icons/organization.svg?react';
+import LogOutIcon from '#assets/icons/log-out.svg?react';
 
 import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
+import { useSignOut } from '#api/auth';
 
 export const AppHeader: FC = () => {
     const { organizationId } = organizationRouteApi.useParams();
@@ -45,6 +47,7 @@ export const AppHeader: FC = () => {
 const HeaderDropdown: FC = () => {
     const navigate = useNavigate();
     const { organizationId } = organizationRouteApi.useParams();
+    const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
 
     const {
         data: organization,
@@ -52,6 +55,8 @@ const HeaderDropdown: FC = () => {
         isPending,
         refetch,
     } = useGetOrganization(organizationId);
+
+    const { mutateAsync } = useSignOut();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -71,6 +76,28 @@ const HeaderDropdown: FC = () => {
 
     const handleNavigateToOrganizations = () => {
         void navigate({ to: '/organizations/list' });
+    };
+
+    const handleOpenLogoutDialog = () => {
+        setIsLogoutDialogOpen(true);
+    };
+
+    const handleLogout = async () => {
+        const logoutRes = mutateAsync();
+
+        await toast.promise(logoutRes, {
+            loading: 'Trying to logout',
+            error: (error) =>
+                `Something went wrong during logout, error: ${error}`,
+            success: "You've been logged out successfully",
+        });
+
+        const logoutData = await logoutRes;
+        if (logoutData.success) {
+            await navigate({
+                to: '/auth/sign-in',
+            });
+        }
     };
 
     if (error) {
@@ -152,7 +179,38 @@ const HeaderDropdown: FC = () => {
                     />
                     Organizations
                 </Dropdown.Item>
+                <Dropdown.Item
+                    className={styles.menuItem}
+                    onClick={handleOpenLogoutDialog}
+                >
+                    <LogOutIcon
+                        className={clsx(styles.menuItemIcon, styles.pink)}
+                    />
+                    Logout
+                </Dropdown.Item>
             </Dropdown.Content>
+            <Dialog
+                open={isLogoutDialogOpen}
+                onOpenChange={setIsLogoutDialogOpen}
+            >
+                <Dialog.Title>
+                    Are you sure that you want to log out?
+                </Dialog.Title>
+                <Dialog.Description>
+                    If you continue, you will be logged out.
+                </Dialog.Description>
+                <Dialog.Actions>
+                    <Dialog.Button
+                        variant="simple-clean"
+                        onClick={() => setIsLogoutDialogOpen(false)}
+                    >
+                        Go back
+                    </Dialog.Button>
+                    <Dialog.Button variant="red-filled" onClick={handleLogout}>
+                        Logout
+                    </Dialog.Button>
+                </Dialog.Actions>
+            </Dialog>
         </Dropdown>
     );
 };
