@@ -1,6 +1,6 @@
 import type { Placement } from '@floating-ui/react';
 import { clsx } from 'clsx';
-import { memo, useCallback, useMemo, useState, type ChangeEvent } from 'react';
+import { type ChangeEvent, memo, useCallback, useMemo, useState } from 'react';
 import Checkbox from '../Checkbox/Checkbox.js';
 import Dropdown from '../Dropdown/Dropdown.js';
 import Input from '../Input/Input.js';
@@ -21,6 +21,7 @@ type SelectDropdownBaseProps = {
     withSearch?: boolean;
     highlightSelected?: boolean;
     disabled?: boolean;
+    scrollSelectedIntoView?: boolean;
 };
 
 type SelectDropdownSingleProps = SelectDropdownBaseProps & {
@@ -34,7 +35,8 @@ type SelectDropdownMultipleProps = SelectDropdownBaseProps & {
     formatSelectedCount?: (count: number) => string;
 };
 
-export type SelectDropdownProps = SelectDropdownSingleProps | SelectDropdownMultipleProps;
+export type SelectDropdownProps =
+    SelectDropdownSingleProps | SelectDropdownMultipleProps;
 
 const defaultFormatSelectedCount = (count: number) => `${count} selected`;
 
@@ -44,7 +46,9 @@ function assertUniqueOptions(options: SelectDropdownOption[]) {
     for (const option of options) {
         const key = String(option);
         if (seen.has(key)) {
-            throw new Error(`SelectDropdown: duplicate option "${key}". Options must be unique.`);
+            throw new Error(
+                `SelectDropdown: duplicate option "${key}". Options must be unique.`,
+            );
         }
         seen.add(key);
     }
@@ -63,6 +67,7 @@ function SelectDropdown(props: SelectDropdownProps) {
         withSearch = false,
         highlightSelected = false,
         disabled = false,
+        scrollSelectedIntoView: scrollIntoView = false,
     } = props;
 
     assertUniqueOptions(options);
@@ -71,8 +76,13 @@ function SelectDropdown(props: SelectDropdownProps) {
     const [searchQuery, setSearchQuery] = useState('');
 
     const selectedKeys = useMemo(() => {
-        const selected = props.multiple === true ? props.selected : [props.selected];
-        return new Set(selected.filter((value) => value !== undefined && value !== '').map(String));
+        const selected =
+            props.multiple === true ? props.selected : [props.selected];
+        return new Set(
+            selected
+                .filter((value) => value !== undefined && value !== '')
+                .map(String),
+        );
     }, [props.multiple, props.selected]);
 
     const triggerText = useMemo(() => {
@@ -85,7 +95,9 @@ function SelectDropdown(props: SelectDropdownProps) {
         const formatSelectedCount =
             props.multiple === true ? props.formatSelectedCount : undefined;
 
-        return (formatSelectedCount ?? defaultFormatSelectedCount)(selectedKeys.size);
+        return (formatSelectedCount ?? defaultFormatSelectedCount)(
+            selectedKeys.size,
+        );
     }, [selectedKeys, placeholder, props]);
 
     const filteredOptions = useMemo(() => {
@@ -94,7 +106,9 @@ function SelectDropdown(props: SelectDropdownProps) {
         const query = searchQuery.trim().toLowerCase();
         if (!query) return options;
 
-        return options.filter((option) => String(option).toLowerCase().includes(query));
+        return options.filter((option) =>
+            String(option).toLowerCase().includes(query),
+        );
     }, [options, searchQuery, withSearch]);
 
     const handleOpenChange = useCallback(
@@ -108,13 +122,20 @@ function SelectDropdown(props: SelectDropdownProps) {
         [disabled],
     );
 
-    const handleSearchChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
-        setSearchQuery(event.target.value);
-    }, []);
+    const handleSearchChange = useCallback(
+        (event: ChangeEvent<HTMLInputElement>) => {
+            setSearchQuery(event.target.value);
+        },
+        [],
+    );
 
-    const scrollSelectedIntoView = useCallback((node: HTMLButtonElement | null) => {
-        node?.scrollIntoView({ block: 'center' });
-    }, []);
+    const scrollSelectedIntoView = useCallback(
+        (node: HTMLButtonElement | null) => {
+            if (!scrollIntoView) return;
+            node?.scrollIntoView({ block: 'center' });
+        },
+        [],
+    );
 
     return (
         <div className={styles.selectField}>
@@ -129,7 +150,8 @@ function SelectDropdown(props: SelectDropdownProps) {
                     disabled={disabled}
                     className={clsx(
                         styles.selectTrigger,
-                        selectedKeys.size === 0 && styles.selectTriggerPlaceholder,
+                        selectedKeys.size === 0 &&
+                            styles.selectTriggerPlaceholder,
                         triggerClassName,
                     )}
                 >
@@ -155,7 +177,9 @@ function SelectDropdown(props: SelectDropdownProps) {
                     )}
                     <div className={styles.dropdownOptions}>
                         {filteredOptions.length === 0 ? (
-                            <p className={styles.dropdownEmpty}>{emptyOptionsText}</p>
+                            <p className={styles.dropdownEmpty}>
+                                {emptyOptionsText}
+                            </p>
                         ) : (
                             filteredOptions.map((option) => {
                                 const optionKey = String(option);
@@ -165,14 +189,20 @@ function SelectDropdown(props: SelectDropdownProps) {
 
                                 const isSelected = selectedKeys.has(optionKey);
                                 const itemClassName = clsx(
-                                    highlightSelected && isSelected && styles.optionSelected,
+                                    highlightSelected &&
+                                        isSelected &&
+                                        styles.optionSelected,
                                 );
 
                                 if (props.multiple === true) {
                                     return (
                                         <Dropdown.Item
                                             key={optionKey}
-                                            ref={isSelected ? scrollSelectedIntoView : undefined}
+                                            ref={
+                                                isSelected
+                                                    ? scrollSelectedIntoView
+                                                    : undefined
+                                            }
                                             className={itemClassName}
                                             onClick={handleOptionClick}
                                             autoClose={false}
@@ -181,7 +211,9 @@ function SelectDropdown(props: SelectDropdownProps) {
                                                 label={optionKey}
                                                 checked={isSelected}
                                                 readOnly
-                                                className={styles.optionCheckbox}
+                                                className={
+                                                    styles.optionCheckbox
+                                                }
                                             />
                                         </Dropdown.Item>
                                     );
@@ -190,7 +222,11 @@ function SelectDropdown(props: SelectDropdownProps) {
                                 return (
                                     <Dropdown.Item
                                         key={optionKey}
-                                        ref={isSelected ? scrollSelectedIntoView : undefined}
+                                        ref={
+                                            isSelected
+                                                ? scrollSelectedIntoView
+                                                : undefined
+                                        }
                                         className={itemClassName}
                                         onClick={handleOptionClick}
                                     >

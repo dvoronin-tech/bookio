@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as OriginRouteRouteImport } from './routes/origin/route'
 import { Route as AuthRouteRouteImport } from './routes/auth/route'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthIndexRouteImport } from './routes/auth/index'
@@ -28,6 +29,11 @@ import { Route as AuthenticatedOrganizationIdBookingsBookingFormIdRouteImport } 
 import { Route as AuthenticatedOrganizationIdBookingFormsCreateRouteImport } from './routes/_authenticated/$organizationId/booking-forms/create'
 import { Route as AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRouteImport } from './routes/_authenticated/$organizationId/booking-forms/$bookingFormId.configurator'
 
+const OriginRouteRoute = OriginRouteRouteImport.update({
+  id: '/origin',
+  path: '/origin',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRouteRoute = AuthRouteRouteImport.update({
   id: '/auth',
   path: '/auth',
@@ -135,6 +141,7 @@ const AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthenticatedIndexRoute
   '/auth': typeof AuthRouteRouteWithChildren
+  '/origin': typeof OriginRouteRoute
   '/$organizationId': typeof AuthenticatedOrganizationIdRouteRouteWithChildren
   '/organizations': typeof AuthenticatedOrganizationsRouteRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
@@ -152,6 +159,7 @@ export interface FileRoutesByFullPath {
   '/$organizationId/booking-forms/$bookingFormId/configurator': typeof AuthenticatedOrganizationIdBookingFormsBookingFormIdConfiguratorRoute
 }
 export interface FileRoutesByTo {
+  '/origin': typeof OriginRouteRoute
   '/auth/sign-in': typeof AuthSignInRoute
   '/auth/sign-up': typeof AuthSignUpRoute
   '/': typeof AuthenticatedIndexRoute
@@ -171,6 +179,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
   '/auth': typeof AuthRouteRouteWithChildren
+  '/origin': typeof OriginRouteRoute
   '/_authenticated/$organizationId': typeof AuthenticatedOrganizationIdRouteRouteWithChildren
   '/_authenticated/organizations': typeof AuthenticatedOrganizationsRouteRouteWithChildren
   '/auth/sign-in': typeof AuthSignInRoute
@@ -193,6 +202,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/auth'
+    | '/origin'
     | '/$organizationId'
     | '/organizations'
     | '/auth/sign-in'
@@ -210,6 +220,7 @@ export interface FileRouteTypes {
     | '/$organizationId/booking-forms/$bookingFormId/configurator'
   fileRoutesByTo: FileRoutesByTo
   to:
+    | '/origin'
     | '/auth/sign-in'
     | '/auth/sign-up'
     | '/'
@@ -228,6 +239,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_authenticated'
     | '/auth'
+    | '/origin'
     | '/_authenticated/$organizationId'
     | '/_authenticated/organizations'
     | '/auth/sign-in'
@@ -249,10 +261,18 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
   AuthRouteRoute: typeof AuthRouteRouteWithChildren
+  OriginRouteRoute: typeof OriginRouteRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/origin': {
+      id: '/origin'
+      path: '/origin'
+      fullPath: '/origin'
+      preLoaderRoute: typeof OriginRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
@@ -470,6 +490,7 @@ const AuthRouteRouteWithChildren = AuthRouteRoute._addFileChildren(
 const rootRouteChildren: RootRouteChildren = {
   AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
   AuthRouteRoute: AuthRouteRouteWithChildren,
+  OriginRouteRoute: OriginRouteRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

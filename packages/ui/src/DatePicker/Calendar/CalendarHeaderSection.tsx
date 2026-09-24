@@ -42,6 +42,7 @@ export const CalendarHeaderSection = memo(function CalendarHeaderSection({
                     onOptionClick={onChange}
                     triggerClassName={styles.selectorTrigger}
                     highlightSelected
+                    scrollSelectedIntoView
                 />
             </div>
             <Button
