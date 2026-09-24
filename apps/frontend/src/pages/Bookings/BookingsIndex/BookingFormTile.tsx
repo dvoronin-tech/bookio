@@ -3,7 +3,6 @@ import { Link } from '@tanstack/react-router';
 import clsx from 'clsx';
 import { format } from 'date-fns';
 import type { BookingFormType } from '#api/bookingForms/getBookingForms.ts';
-import { useGetOrganization } from '#api/organizations/getOrganizationData.ts';
 import styles from './BookingFormTile.module.scss';
 
 import CalendarIcon from '#assets/icons/calendar.svg?react';
@@ -17,7 +16,6 @@ export const BookingFormTile: FC<BookingFormTileProps> = ({
     organizationId,
     bookingForm,
 }) => {
-    const { data: organization } = useGetOrganization(organizationId);
     const bookingsLabel =
         bookingForm.totalBookings === 1 ? 'booking' : 'bookings';
 
