@@ -1,12 +1,16 @@
-import { type FC, useCallback } from 'react';
+import { type FC, useCallback, useMemo, useState } from 'react';
+import { clsx } from 'clsx';
 import styles from './BookingFormsList.module.scss';
 import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
 import { Button, PageLoader } from '@bookio/ui';
 import { BookingFormCard } from '#components/BookingFormCard/BookingFormCard.tsx';
+import { filterByIsActive } from './utils/filterByIsActive.ts';
 
 import PlusIcon from '#assets/icons/plus.svg?react';
+
+type BookingFormListFilter = 'all' | 'active';
 
 export const BookingForms: FC = () => {
     const navigate = useNavigate();
@@ -18,9 +22,16 @@ export const BookingForms: FC = () => {
         refetch,
     } = useGetBookingForms(organizationId);
 
+    const [filter, setFilter] = useState<BookingFormListFilter>('all');
+
     const handleRetry = useCallback(() => {
         void refetch();
     }, [refetch]);
+
+    const activeForms = useMemo(
+        () => filterByIsActive(bookingForms ?? []),
+        [bookingForms],
+    );
 
     if (isPending) {
         return <PageLoader />;
@@ -37,7 +48,7 @@ export const BookingForms: FC = () => {
         );
     }
 
-    if (bookingForms.length === 0) {
+    if (activeForms.length === 0) {
         return (
             <div className={styles.emptyContainer}>
                 <div className={styles.emptyContainerContent}>
@@ -60,18 +71,18 @@ export const BookingForms: FC = () => {
         );
     }
 
-    const activeFormsCount = bookingForms.filter(
-        (form) => form.isActive,
-    ).length;
+    const visibleForms = filter === 'active' ? activeForms : bookingForms;
 
     return (
         <>
             <BookingFormHeader
                 formsCount={bookingForms.length}
-                activeFormsCount={activeFormsCount}
+                activeFormsCount={activeForms.length}
+                filter={filter}
+                onFilterChange={setFilter}
             />
             <div className={styles.bookingForms}>
-                {bookingForms.map((bookingForm) => (
+                {visibleForms.map((bookingForm) => (
                     <BookingFormCard
                         key={bookingForm.id}
                         bookingForm={bookingForm}
@@ -85,11 +96,15 @@ export const BookingForms: FC = () => {
 type BookingFormHeaderProps = {
     formsCount: number;
     activeFormsCount: number;
+    filter: BookingFormListFilter;
+    onFilterChange: (filter: BookingFormListFilter) => void;
 };
 
 const BookingFormHeader: FC<BookingFormHeaderProps> = ({
     formsCount,
     activeFormsCount,
+    filter,
+    onFilterChange,
 }) => {
     const navigate = useNavigate();
     const { organizationId } = organizationRouteApi.useParams();
@@ -101,13 +116,21 @@ const BookingFormHeader: FC<BookingFormHeaderProps> = ({
                 <div className={styles.metaChips}>
                     <Button
                         variant="simple-filled"
-                        className={styles.chipButton}
+                        className={clsx(
+                            styles.chipButton,
+                            filter === 'all' && styles.chipButtonSelected,
+                        )}
+                        onClick={() => onFilterChange('all')}
                     >
                         {formsCount} forms
                     </Button>
                     <Button
                         variant="simple-filled"
-                        className={styles.chipButton}
+                        className={clsx(
+                            styles.chipButton,
+                            filter === 'active' && styles.chipButtonSelected,
+                        )}
+                        onClick={() => onFilterChange('active')}
                     >
                         <span className={styles.activeDot} aria-hidden />
                         {activeFormsCount} active
