@@ -40,10 +40,15 @@ export type BookingFormProps = {
     onInvalid?: (errors: FieldErrors<Record<string, string>>) => void;
     /**
      * Called after `onSubmit` resolves and the form exit animation finishes.
-     * With `prefers-reduced-motion: reduce` it fires as soon as the form
-     * switches to success.
+     * With `prefers-reduced-motion: reduce`, or when `isPreview` is set,
+     * it fires as soon as submit succeeds.
      * */
     onSuccess?: () => void;
+    /**
+     * Preview keeps the form on screen after a successful submit
+     * and skips the exit animation.
+     * */
+    isPreview?: boolean;
 };
 
 export type FormState = 'idle' | 'loading' | 'error' | 'success';
@@ -53,6 +58,7 @@ function BookingForm({
     onSubmit,
     onInvalid,
     onSuccess,
+    isPreview = false,
 }: BookingFormProps) {
     const [formState, setFormState] = useState<FormState>('idle');
     const formStateRef = useRef<FormState>(formState);
@@ -70,7 +76,9 @@ function BookingForm({
             .sort((a, b) => a.order - b.order);
     }, [fields]);
 
-    const { register, control, handleSubmit } = useForm();
+    const { register, control, handleSubmit } = useForm({
+        mode: 'onChange',
+    });
 
     const setProcessingState = (nextState: FormState) => {
         formStateRef.current = nextState;
@@ -94,6 +102,11 @@ function BookingForm({
                 }
             }
             await onSubmit?.(submittedData);
+            if (isPreview) {
+                setProcessingState('idle');
+                onSuccess?.();
+                return;
+            }
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 onSuccess?.();
                 return;
