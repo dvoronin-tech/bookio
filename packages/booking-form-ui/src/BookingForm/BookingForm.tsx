@@ -17,11 +17,10 @@ import {
     isGroupField,
 } from './fields/field.types.js';
 import { RenderField } from './fields/FieldsMap.js';
+import { normalizePhoneNumber } from './fields/components/PhoneInputField.js';
 import { normalizeField } from './utils/normalizeField.js';
 
 export type { BookingFormFieldInput } from './fields/field.types.js';
-
-const DEFAULT_PHONE = '+375';
 
 export type BookingFormData = {
     name: string;
@@ -71,17 +70,7 @@ function BookingForm({
             .sort((a, b) => a.order - b.order);
     }, [fields]);
 
-    const defaultValues = useMemo(
-        () =>
-            Object.fromEntries(
-                fields
-                    .filter((field) => field.type === 'phone')
-                    .map((field) => [field.key, DEFAULT_PHONE]),
-            ),
-        [fields],
-    );
-
-    const { register, control, handleSubmit } = useForm({ defaultValues });
+    const { register, control, handleSubmit } = useForm();
 
     const setProcessingState = (nextState: FormState) => {
         formStateRef.current = nextState;
@@ -95,7 +84,16 @@ function BookingForm({
 
         try {
             setProcessingState('loading');
-            await onSubmit?.(data);
+            const submittedData = { ...data };
+            for (const field of fields) {
+                if (field.type === 'phone') {
+                    const value = data[field.key] ?? '';
+                    submittedData[field.key] = value.trim()
+                        ? (normalizePhoneNumber(value) ?? value)
+                        : '';
+                }
+            }
+            await onSubmit?.(submittedData);
             if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
                 onSuccess?.();
                 return;
