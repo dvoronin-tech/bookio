@@ -4,10 +4,14 @@ import PanelLeftCloseIcon from '#assets/icons/panel-left-close.svg?react';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore.ts';
 import { configuratorTabs } from '../configuratorTabs.tsx';
 import styles from './ConfiguratorLayout.module.scss';
+import { useShallow } from 'zustand/shallow';
 
 export const ConfiguratorHeader: FC = memo(() => {
-    const activeTab = useBookingFormConfiguratorStore(
-        (state) => state.activeTab,
+    const { activeTab, setIsCollapsed } = useBookingFormConfiguratorStore(
+        useShallow(({ activeTab, setIsCollapsed }) => ({
+            activeTab,
+            setIsCollapsed,
+        })),
     );
     return (
         <div className={styles.header}>
@@ -20,6 +24,7 @@ export const ConfiguratorHeader: FC = memo(() => {
             <button
                 type="button"
                 className={styles.collapseButton}
+                onClick={() => setIsCollapsed(true)}
                 aria-label="Collapse panel"
             >
                 <PanelLeftCloseIcon />
@@ -27,4 +32,3 @@ export const ConfiguratorHeader: FC = memo(() => {
         </div>
     );
 });
-
