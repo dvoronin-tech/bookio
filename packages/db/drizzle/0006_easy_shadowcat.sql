@@ -1,0 +1,1 @@
+ALTER TABLE "booking_forms" ALTER COLUMN "is_active" SET DEFAULT false;

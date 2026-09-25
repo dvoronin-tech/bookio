@@ -43,6 +43,13 @@
       "when": 1789736213688,
       "tag": "0005_silent_the_anarchist",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1790353889687,
+      "tag": "0006_easy_shadowcat",
+      "breakpoints": true
     }
   ]
 }
