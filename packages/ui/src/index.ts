@@ -65,6 +65,9 @@ export type {
 export { default as ValidatableInput } from './ValidatableInput/ValidatableInput.js';
 export type { ValidatableInputProps } from './ValidatableInput/ValidatableInput.js';
 
+export { default as Tooltip } from './Tooltip/Tooltip.js';
+export type { TooltipProps } from './Tooltip/Tooltip.js';
+
 export { default as ProgressBar } from './ProgressBar/ProgressBar.js';
 export type { ProgressBarProps } from './ProgressBar/ProgressBar.js';
 

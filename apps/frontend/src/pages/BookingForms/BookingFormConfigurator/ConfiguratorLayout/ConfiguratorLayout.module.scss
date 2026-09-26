@@ -153,3 +153,15 @@
 .saveButton {
     padding: 0.8rem 3.5rem !important;
 }
+
+.saveButtonWrap {
+    display: inline-flex;
+
+    &:has(:disabled) {
+        cursor: not-allowed;
+
+        .saveButton {
+            pointer-events: none;
+        }
+    }
+}

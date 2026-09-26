@@ -1,6 +1,6 @@
 import { type FC, memo, useCallback, useMemo } from 'react';
 
-import { Button } from '@bookio/ui';
+import { Button, Tooltip } from '@bookio/ui';
 import { useShallow } from 'zustand/shallow';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore.ts';
 import { useNavigate } from '@tanstack/react-router';
@@ -19,6 +19,12 @@ import {
 import { useUpdateBookingFormStyles } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles.ts';
 import { useUpdateBookingFormMeta } from '#api/bookingForms/bookingFormMeta/updateBookingFormMeta.ts';
 import styles from './ConfiguratorLayout.module.scss';
+
+const NO_CHANGES_MESSAGE = 'No changes to save';
+const ACTIVE_WITHOUT_FIELDS_MESSAGE = "A booking form without fields can't be active";
+const META_TITLE_AND_DESCRIPTION_MESSAGE = 'Meta title and description are required';
+const META_TITLE_MESSAGE = 'Meta title is required';
+const META_DESCRIPTION_MESSAGE = 'Meta description is required';
 
 export const ConfiguratorFooter: FC = memo(() => {
     const { bookingFormId, organizationId } = configuratorRouteApi.useParams();
@@ -167,8 +173,32 @@ export const ConfiguratorFooter: FC = memo(() => {
         });
     }, [organizationId, navigate]);
 
+    const fieldCount =
+        bookingFormFields && bookingFormFields.bookingFormId === baseLine?.id
+            ? bookingFormFields.fields.length
+            : baseLine?.fields.length;
+
+    const isActiveWithoutFields =
+        Boolean(bookingForm?.isActive) && fieldCount === 0;
+
+    const meta =
+        bookingFormMeta &&
+        bookingFormMeta.bookingFormId === (bookingForm?.id ?? baseLine?.id)
+            ? bookingFormMeta
+            : baseLine?.metaData;
+    const isMetaTitleMissing = meta != null && !meta.title?.trim();
+    const isMetaDescriptionMissing = meta != null && !meta.description?.trim();
+    const isMetaIncomplete = isMetaTitleMissing || isMetaDescriptionMissing;
+
     const handleSave = useCallback(() => {
-        if (saveRequestThunks.length === 0 || isSaving) return;
+        if (
+            saveRequestThunks.length === 0 ||
+            isSaving ||
+            isActiveWithoutFields ||
+            isMetaIncomplete
+        ) {
+            return;
+        }
 
         const savePromises = Promise.all(
             saveRequestThunks.map((request) => request()),
@@ -185,7 +215,13 @@ export const ConfiguratorFooter: FC = memo(() => {
                     ? err.message
                     : 'Failed to save booking form',
         });
-    }, [saveRequestThunks, handleNavigateToBookingForms, isSaving]);
+    }, [
+        saveRequestThunks,
+        handleNavigateToBookingForms,
+        isSaving,
+        isActiveWithoutFields,
+        isMetaIncomplete,
+    ]);
 
     const hasSomethingToSave = useMemo(
         () =>
@@ -201,6 +237,24 @@ export const ConfiguratorFooter: FC = memo(() => {
         ],
     );
 
+    const missingMetaMessage = isMetaTitleMissing
+        ? isMetaDescriptionMissing
+            ? META_TITLE_AND_DESCRIPTION_MESSAGE
+            : META_TITLE_MESSAGE
+        : isMetaDescriptionMissing
+          ? META_DESCRIPTION_MESSAGE
+          : null;
+
+    const saveDisabledReason = isSaving
+        ? null
+        : isActiveWithoutFields
+          ? ACTIVE_WITHOUT_FIELDS_MESSAGE
+          : missingMetaMessage
+            ? missingMetaMessage
+            : !hasSomethingToSave
+              ? NO_CHANGES_MESSAGE
+              : null;
+
     return (
         <div className={styles.footer}>
             <Button
@@ -210,14 +264,16 @@ export const ConfiguratorFooter: FC = memo(() => {
             >
                 Back
             </Button>
-            <Button
-                variant="green-filled"
-                className={styles.saveButton}
-                onClick={handleSave}
-                disabled={!hasSomethingToSave || isSaving}
-            >
-                {isSaving ? 'Saving…' : 'Save booking form'}
-            </Button>
+            <Tooltip message={saveDisabledReason} className={styles.saveButtonWrap}>
+                <Button
+                    variant="green-filled"
+                    className={styles.saveButton}
+                    onClick={handleSave}
+                    disabled={Boolean(saveDisabledReason) || isSaving}
+                >
+                    {isSaving ? 'Saving…' : 'Save booking form'}
+                </Button>
+            </Tooltip>
         </div>
     );
 });

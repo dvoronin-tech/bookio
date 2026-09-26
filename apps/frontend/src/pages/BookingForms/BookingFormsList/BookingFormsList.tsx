@@ -28,7 +28,7 @@ export const BookingForms: FC = () => {
         void refetch();
     }, [refetch]);
 
-    const activeForms = useMemo(
+    const filteredForms = useMemo(
         () => filterByIsActive(bookingForms ?? []),
         [bookingForms],
     );
@@ -48,7 +48,7 @@ export const BookingForms: FC = () => {
         );
     }
 
-    if (activeForms.length === 0) {
+    if (bookingForms.length === 0) {
         return (
             <div className={styles.emptyContainer}>
                 <div className={styles.emptyContainerContent}>
@@ -71,13 +71,12 @@ export const BookingForms: FC = () => {
         );
     }
 
-    const visibleForms = filter === 'active' ? activeForms : bookingForms;
-
+    const visibleForms = filter === 'active' ? filteredForms : bookingForms;
     return (
         <>
             <BookingFormHeader
                 formsCount={bookingForms.length}
-                activeFormsCount={activeForms.length}
+                activeFormsCount={filteredForms.length}
                 filter={filter}
                 onFilterChange={setFilter}
             />
