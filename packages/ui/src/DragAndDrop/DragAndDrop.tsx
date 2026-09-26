@@ -38,6 +38,50 @@ const OPPOSITE_DIRECTION: Record<Direction, Direction> = {
     toRight: 'toLeft',
 };
 
+/** Pointer within this distance of the scrollport edge starts auto-scroll. */
+const AUTO_SCROLL_EDGE_PX = 56;
+
+/** Ignore a grab that hasn't actually moved, so holding a row in the edge zone doesn't scroll. */
+const AUTO_SCROLL_START_SLOP = 8;
+
+/** Full-speed auto-scroll, in px/s, when the pointer is at or past the edge. */
+const AUTO_SCROLL_MAX_SPEED = 900;
+
+const SCROLLABLE_OVERFLOW = new Set(['auto', 'scroll', 'overlay']);
+
+const findScrollableAncestor = (start: HTMLElement | null, axis: Axis): HTMLElement | null => {
+    let node = start;
+    while (node) {
+        const style = getComputedStyle(node);
+        const overflow = axis === 'y' ? style.overflowY : style.overflowX;
+        if (SCROLLABLE_OVERFLOW.has(overflow)) {
+            const overflowAmount =
+                axis === 'y'
+                    ? node.scrollHeight - node.clientHeight
+                    : node.scrollWidth - node.clientWidth;
+            if (overflowAmount > 1) return node;
+        }
+        node = node.parentElement;
+    }
+    return null;
+};
+
+/** Signed scroll step. Negative moves toward the start of the scrollport. */
+const autoScrollDelta = (pointer: number, start: number, end: number, maxStep: number): number => {
+    const fromStart = pointer - start;
+    const fromEnd = end - pointer;
+
+    if (fromStart < AUTO_SCROLL_EDGE_PX) {
+        const intensity = Math.min(1, (AUTO_SCROLL_EDGE_PX - fromStart) / AUTO_SCROLL_EDGE_PX);
+        return -maxStep * intensity * intensity;
+    }
+    if (fromEnd < AUTO_SCROLL_EDGE_PX) {
+        const intensity = Math.min(1, (AUTO_SCROLL_EDGE_PX - fromEnd) / AUTO_SCROLL_EDGE_PX);
+        return maxStep * intensity * intensity;
+    }
+    return 0;
+};
+
 const Container: FC<ReorderProps> = ({
     axis,
     onReorder,
@@ -62,6 +106,9 @@ const Container: FC<ReorderProps> = ({
     const settlingRef = useRef(false);
     const isDraggedOutRef = useRef(false);
     const hoveredDropTargetRef = useRef<ItemId | null>(null);
+    const scrollContainerRef = useRef<HTMLElement | null>(null);
+    const dragStartScrollRef = useRef(0);
+    const autoScrollTimeRef = useRef(0);
 
     const [isDragging, setIsDragging] = useState(false);
 
@@ -72,6 +119,13 @@ const Container: FC<ReorderProps> = ({
     const unregisterItem = useCallback((id: ItemId) => {
         itemsMapRef.current.delete(id);
     }, []);
+
+    const getScrollDelta = useCallback(() => {
+        const scroller = scrollContainerRef.current;
+        if (!scroller) return 0;
+        const current = axis === 'y' ? scroller.scrollTop : scroller.scrollLeft;
+        return current - dragStartScrollRef.current;
+    }, [axis]);
 
     const moveDraggedItem = useCallback(
         (deltaX: number, deltaY: number) => {
@@ -230,11 +284,15 @@ const Container: FC<ReorderProps> = ({
         const startRect = dragStartRectRef.current;
         if (!draggedItem || !startRect || movedIdsRef.current.length === 0) return;
 
+        // The original slot moves with the scrollport; the stored rect does not.
+        const scrollDelta = getScrollDelta();
+        const shiftX = axis === 'x' ? scrollDelta : 0;
+        const shiftY = axis === 'y' ? scrollDelta : 0;
         const hitbox = {
-            top: startRect.top + MOVE_TRIGGER_OFFSET,
-            bottom: startRect.bottom - MOVE_TRIGGER_OFFSET,
-            left: startRect.left + MOVE_TRIGGER_OFFSET,
-            right: startRect.right - MOVE_TRIGGER_OFFSET,
+            top: startRect.top - shiftY + MOVE_TRIGGER_OFFSET,
+            bottom: startRect.bottom - shiftY - MOVE_TRIGGER_OFFSET,
+            left: startRect.left - shiftX + MOVE_TRIGGER_OFFSET,
+            right: startRect.right - shiftX - MOVE_TRIGGER_OFFSET,
         };
 
         // Hitbox collapsed — start rect is smaller than 2 * OFFSET.
@@ -252,7 +310,7 @@ const Container: FC<ReorderProps> = ({
         movedIdsRef.current.forEach(resetSiblingShift);
         movedIdsRef.current = [];
         movedDirectionRef.current = null;
-    }, [resetSiblingShift]);
+    }, [axis, getScrollDelta, resetSiblingShift]);
 
     /** Highlights the drop target under the dragged item's center. A target that was
     already shifted snaps back, since dropping now means "into it", not a reorder. */
@@ -330,16 +388,50 @@ const Container: FC<ReorderProps> = ({
         [onDropOut],
     );
 
+    // Scroll moves the dragged item's layout box. Add that delta so the item
+    // stays under the pointer, and pin it inside the scrollport once the pointer
+    // leaves — the list keeps scrolling, the row stays visible.
+    const syncDraggedItemPosition = useCallback(() => {
+        const { x: startX, y: startY } = dragStartMouseRef.current;
+        const { x, y } = lastPointerRef.current;
+        const scrollDelta = getScrollDelta();
+        const startRect = dragStartRectRef.current;
+        const scroller = scrollContainerRef.current;
+
+        let deltaX = x - startX;
+        let deltaY = y - startY;
+
+        if (startRect && scroller) {
+            const rect = scroller.getBoundingClientRect();
+            if (axis === 'y') {
+                const layoutTop = startRect.top - scrollDelta;
+                const unclampedTop = startRect.top + deltaY;
+                const maxTop = Math.max(rect.top, rect.bottom - startRect.height);
+                const visualTop = Math.min(maxTop, Math.max(rect.top, unclampedTop));
+                deltaY = visualTop - layoutTop;
+            } else {
+                const layoutLeft = startRect.left - scrollDelta;
+                const unclampedLeft = startRect.left + deltaX;
+                const maxLeft = Math.max(rect.left, rect.right - startRect.width);
+                const visualLeft = Math.min(maxLeft, Math.max(rect.left, unclampedLeft));
+                deltaX = visualLeft - layoutLeft;
+            }
+        } else if (axis === 'y') {
+            deltaY += scrollDelta;
+        } else {
+            deltaX += scrollDelta;
+        }
+
+        moveDraggedItem(deltaX, deltaY);
+    }, [axis, getScrollDelta, moveDraggedItem]);
+
     const handlePointerMove = useCallback(
         (e: globalThis.PointerEvent) => {
-            const { x: startX, y: startY } = dragStartMouseRef.current;
-            const deltaX = e.clientX - startX;
-            const deltaY = e.clientY - startY;
             const moveX = e.clientX - lastPointerRef.current.x;
             const moveY = e.clientY - lastPointerRef.current.y;
             lastPointerRef.current = { x: e.clientX, y: e.clientY };
 
-            moveDraggedItem(deltaX, deltaY);
+            syncDraggedItemPosition();
             setDirection(moveX, moveY);
             updateDropTargetHover();
             updateDraggedOut(e.clientX, e.clientY);
@@ -349,7 +441,7 @@ const Container: FC<ReorderProps> = ({
             }
         },
         [
-            moveDraggedItem,
+            syncDraggedItemPosition,
             setDirection,
             updateDropTargetHover,
             updateDraggedOut,
@@ -373,6 +465,15 @@ const Container: FC<ReorderProps> = ({
             movedDirectionRef.current = null;
             isDraggedOutRef.current = false;
             hoveredDropTargetRef.current = null;
+            autoScrollTimeRef.current = 0;
+
+            const scrollContainer = findScrollableAncestor(containerRef.current, axis);
+            scrollContainerRef.current = scrollContainer;
+            dragStartScrollRef.current = scrollContainer
+                ? axis === 'y'
+                    ? scrollContainer.scrollTop
+                    : scrollContainer.scrollLeft
+                : 0;
 
             // Shift distance is fixed per drag: dragged item size + container gap.
             const container = containerRef.current;
@@ -394,6 +495,7 @@ const Container: FC<ReorderProps> = ({
 
             itemRef.onpointermove = handlePointerMove;
             itemRef.style.zIndex = '1000';
+            itemRef.style.transition = 'none';
             itemRef.dataset.dragging = 'true';
             setIsDragging(true);
         },
@@ -441,6 +543,9 @@ const Container: FC<ReorderProps> = ({
         movedDirectionRef.current = null;
         shiftDistanceRef.current = 0;
         gapRef.current = 0;
+        scrollContainerRef.current = null;
+        dragStartScrollRef.current = 0;
+        autoScrollTimeRef.current = 0;
         setIsDragging(false);
     }, []);
 
@@ -557,6 +662,87 @@ const Container: FC<ReorderProps> = ({
         settleDraggedItem,
     ]);
 
+    /** Scrolls the nearest scrollable ancestor while the pointer rests on its edge,
+    so a long list can be reordered past the visible area without releasing. */
+    const autoScroll = useCallback(() => {
+        if (settlingRef.current) return;
+        const scroller = scrollContainerRef.current;
+        const draggedItem = draggedItemRef.current;
+        if (!scroller || !draggedItem) return;
+
+        const now = performance.now();
+        const dt =
+            autoScrollTimeRef.current === 0
+                ? 16
+                : Math.min(48, now - autoScrollTimeRef.current);
+        autoScrollTimeRef.current = now;
+        const maxStep = (AUTO_SCROLL_MAX_SPEED * dt) / 1000;
+        if (maxStep <= 0) return;
+
+        const rect = scroller.getBoundingClientRect();
+        const pointer = lastPointerRef.current;
+
+        // Leaving through the cross axis is a drag-out, not a scroll.
+        if (axis === 'y' && (pointer.x < rect.left || pointer.x > rect.right)) return;
+        if (axis === 'x' && (pointer.y < rect.top || pointer.y > rect.bottom)) return;
+
+        const startPointer = dragStartMouseRef.current;
+        const movedFromStart =
+            axis === 'y'
+                ? Math.abs(pointer.y - startPointer.y)
+                : Math.abs(pointer.x - startPointer.x);
+        if (movedFromStart < AUTO_SCROLL_START_SLOP) return;
+
+        const delta =
+            axis === 'y'
+                ? autoScrollDelta(pointer.y, rect.top, rect.bottom, maxStep)
+                : autoScrollDelta(pointer.x, rect.left, rect.right, maxStep);
+        if (delta === 0) return;
+
+        const before = axis === 'y' ? scroller.scrollTop : scroller.scrollLeft;
+        const max = Math.max(
+            0,
+            axis === 'y'
+                ? scroller.scrollHeight - scroller.clientHeight
+                : scroller.scrollWidth - scroller.clientWidth,
+        );
+        const next = Math.min(max, Math.max(0, before + delta));
+        if (next === before) return;
+
+        if (axis === 'y') scroller.scrollTop = next;
+        else scroller.scrollLeft = next;
+
+        // Items enter from the side we're scrolling toward.
+        directionRef.current =
+            axis === 'y' ? (delta > 0 ? 'toDown' : 'toUp') : delta > 0 ? 'toRight' : 'toLeft';
+
+        syncDraggedItemPosition();
+        updateDropTargetHover();
+        updateDraggedOut(pointer.x, pointer.y);
+        if (!isDraggedOutRef.current) {
+            resetMovedIds();
+            // A fast scroll can pass several rows in one frame. Keep going only
+            // while more rows are picked up; a release must not be undone here.
+            for (let step = 0; step < 8; step++) {
+                const count = movedIdsRef.current.length;
+                updateMovedIds();
+                if (movedIdsRef.current.length <= count) break;
+            }
+        }
+    }, [
+        axis,
+        syncDraggedItemPosition,
+        updateDropTargetHover,
+        updateDraggedOut,
+        resetMovedIds,
+        updateMovedIds,
+    ]);
+
+    const autoScrollRef = useRef(autoScroll);
+    useLayoutEffect(() => {
+        autoScrollRef.current = autoScroll;
+    }, [autoScroll]);
+
     /** Drag end listener. */
     useEffect(() => {
         if (!isDragging) return;
@@ -569,7 +755,17 @@ const Container: FC<ReorderProps> = ({
         document.addEventListener('pointerup', handlePointerUp, { signal: abort.signal });
         document.addEventListener('pointercancel', handlePointerUp, { signal: abort.signal });
 
-        return () => abort.abort();
+        let frame = 0;
+        const tick = () => {
+            autoScrollRef.current();
+            frame = requestAnimationFrame(tick);
+        };
+        frame = requestAnimationFrame(tick);
+
+        return () => {
+            abort.abort();
+            cancelAnimationFrame(frame);
+        };
     }, [isDragging, onDragEnd]);
 
     return (
