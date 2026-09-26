@@ -13,7 +13,9 @@ export type CreateOrganizationResponse = InferResponseType<
     200
 >;
 
-const createOrganizationRequest = async (requestData: CreateOrganizationRequest) => {
+const createOrganizationRequest = async (
+    requestData: CreateOrganizationRequest,
+) => {
     const response = await hono.organizations.create.$post({
         json: trimObj(requestData),
     });
@@ -29,7 +31,7 @@ export const useCreateOrganization = () => {
     return useMutation({
         mutationFn: createOrganizationRequest,
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['organizations'] });
+            void queryClient.invalidateQueries({ queryKey: ['organizations'] });
         },
     });
 };

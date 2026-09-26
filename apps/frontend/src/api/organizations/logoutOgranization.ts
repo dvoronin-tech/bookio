@@ -40,7 +40,7 @@ export const useLogoutOrganization = () => {
         mutationFn: (data: Omit<LogoutOrganizationRequest, 'userId'>) =>
             logoutOrganization({ ...data, userId: session!.user.id }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['organizations'] });
+            void queryClient.invalidateQueries({ queryKey: ['organizations'] });
         },
     });
 };

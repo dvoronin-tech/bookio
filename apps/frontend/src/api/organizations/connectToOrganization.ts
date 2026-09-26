@@ -12,7 +12,9 @@ export type ConnectToOrganizationResponse = InferResponseType<
     typeof hono.organizations.connect.$put
 >;
 
-const connectToOrganizationRequest = async (requestData: ConnectToOrganizationRequest) => {
+const connectToOrganizationRequest = async (
+    requestData: ConnectToOrganizationRequest,
+) => {
     const response = await hono.organizations.connect.$put({
         json: requestData,
     });
@@ -31,7 +33,7 @@ export const useConnectToOrganization = () => {
         mutationFn: (data: Omit<ConnectToOrganizationRequest, 'userId'>) =>
             connectToOrganizationRequest({ ...data, userId: session!.user.id }),
         onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['organizations'] });
+            void queryClient.invalidateQueries({ queryKey: ['organizations'] });
         },
     });
 };
