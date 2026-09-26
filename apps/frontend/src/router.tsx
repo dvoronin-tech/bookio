@@ -1,5 +1,5 @@
 import { createRouter } from '@tanstack/react-router';
-import { Loader } from '@bookio/ui';
+import { PageLoader } from '@bookio/ui';
 import { NotFound } from '#components/NotFound/NotFound';
 import { queryClient } from '#lib/query-client';
 import { routeTree } from './routeTree.gen';
@@ -10,7 +10,7 @@ export const router = createRouter({
     defaultPreload: 'intent',
     defaultPreloadStaleTime: 0,
     scrollRestoration: true,
-    defaultPendingComponent: Loader,
+    defaultPendingComponent: PageLoader,
     defaultNotFoundComponent: NotFound,
 });
 
