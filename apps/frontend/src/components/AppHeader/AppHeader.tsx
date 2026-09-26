@@ -5,7 +5,10 @@ import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
 import { Button, Dialog, Dropdown, Loader } from '@bookio/ui';
 
-import { useGetOrganization } from '#api/organizations/getOrganizationData';
+import {
+    useGetOrganization,
+    type OrganizationData,
+} from '#api/organizations/getOrganizationData';
 
 import ArrowIcon from '#assets/icons/short-arrow.svg?react';
 import FormIcon from '#assets/icons/form.svg?react';
@@ -16,17 +19,25 @@ import LogOutIcon from '#assets/icons/log-out.svg?react';
 import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
-import { useSignOut } from '#api/auth';
+import { useSession, useSignOut } from '#api/auth';
 
 export const AppHeader: FC = () => {
-    const { organizationId } = organizationRouteApi.useParams();
+    const params = organizationRouteApi.useParams({ shouldThrow: false });
     const navigate = useNavigate();
 
+    const organizationId = params?.organizationId;
+
     const handleNavigateToOrganization = () => {
-        void navigate({
-            to: '/$organizationId/booking-forms',
-            params: { organizationId },
-        });
+        if (organizationId) {
+            void navigate({
+                to: '/$organizationId/booking-forms',
+                params: { organizationId },
+            });
+        } else {
+            void navigate({
+                to: '/organizations/list',
+            });
+        }
     };
 
     return (
@@ -46,33 +57,28 @@ export const AppHeader: FC = () => {
 
 const HeaderDropdown: FC = () => {
     const navigate = useNavigate();
-    const { organizationId } = organizationRouteApi.useParams();
+    const params = organizationRouteApi.useParams({ shouldThrow: false });
     const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+
+    const organizationId = params?.organizationId;
 
     const {
         data: organization,
-        error,
-        isPending,
-        refetch,
+        error: orgError,
+        isPending: isOrgPending,
+        refetch: refetchOrg,
     } = useGetOrganization(organizationId);
+
+    const {
+        data: session,
+        refetch: refetchUser,
+        error: userError,
+        isPending: isUserPending,
+    } = useSession();
 
     const { mutateAsync } = useSignOut();
 
     const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-    const handleNavigateToBookingForms = () => {
-        void navigate({
-            to: '/$organizationId/booking-forms',
-            params: { organizationId },
-        });
-    };
-
-    const handleNavigateToBookings = () => {
-        void navigate({
-            to: '/$organizationId/bookings',
-            params: { organizationId },
-        });
-    };
 
     const handleNavigateToOrganizations = () => {
         void navigate({ to: '/organizations/list' });
@@ -100,22 +106,32 @@ const HeaderDropdown: FC = () => {
         }
     };
 
-    if (error) {
-        toast.error(error.message);
-    }
+    if (organizationId) {
+        if (isOrgPending) {
+            return (
+                <div className={styles.loader}>
+                    <Loader />
+                </div>
+            );
+        }
 
-    if (isPending) {
+        if (!organization || orgError) {
+            toast.error('Failed to fetch organization');
+            return (
+                <Button variant="primary-outlined" onClick={() => refetchOrg()}>
+                    Retry
+                </Button>
+            );
+        }
+    } else if (isUserPending) {
         return (
             <div className={styles.loader}>
                 <Loader />
             </div>
         );
-    }
-
-    if (!organization) {
-        toast.error('Failed to fetch organization');
+    } else if (!session?.user || userError) {
         return (
-            <Button variant="primary-outlined" onClick={() => refetch()}>
+            <Button variant="primary-outlined" onClick={() => refetchUser()}>
                 Retry
             </Button>
         );
@@ -128,48 +144,29 @@ const HeaderDropdown: FC = () => {
             placement="bottom"
         >
             <Dropdown.Trigger className={styles.menuTrigger}>
-                <img
-                    src={PlaceholderImage}
-                    alt="Organization image"
-                    className={styles.menuItemImage}
-                />
-                <div className={styles.menuItemText}>{organization.name}</div>
+                {organization ? (
+                    <>
+                        <img
+                            src={PlaceholderImage}
+                            alt="Organization image"
+                            className={styles.menuItemImage}
+                        />
+                        <div className={styles.menuItemText}>
+                            {organization.name}
+                        </div>
+                    </>
+                ) : (
+                    <div className={styles.menuItemText}>
+                        {session?.user.email}
+                    </div>
+                )}
                 <ArrowIcon className={styles.arrowIcon} />
             </Dropdown.Trigger>
             <Dropdown.Content className={styles.dropdownContent}>
-                <Dropdown.Item className={styles.companyInfo}>
-                    <img
-                        src={PlaceholderImage}
-                        alt="Organization image"
-                        className={styles.menuItemImage}
-                    />
-                    <div className={styles.menuItemText}>
-                        <span className={styles.menuItemName}>
-                            {organization.name}
-                        </span>
-                        <span className={styles.menuItemSlug}>
-                            @{organization.slug}
-                        </span>
-                    </div>
-                </Dropdown.Item>
-                <Dropdown.Item
-                    className={styles.menuItem}
-                    onClick={handleNavigateToBookingForms}
-                >
-                    <FormIcon
-                        className={clsx(styles.menuItemIcon, styles.blue)}
-                    />
-                    Booking forms
-                </Dropdown.Item>
-                <Dropdown.Item
-                    className={styles.menuItem}
-                    onClick={handleNavigateToBookings}
-                >
-                    <TableIcon
-                        className={clsx(styles.menuItemIcon, styles.green)}
-                    />
-                    Bookings
-                </Dropdown.Item>
+                {organization && (
+                    <OrganizationDropdownElements {...organization} />
+                )}
+
                 <Dropdown.Item
                     className={styles.menuItem}
                     onClick={handleNavigateToOrganizations}
@@ -189,6 +186,7 @@ const HeaderDropdown: FC = () => {
                     Logout
                 </Dropdown.Item>
             </Dropdown.Content>
+
             <Dialog
                 open={isLogoutDialogOpen}
                 onOpenChange={setIsLogoutDialogOpen}
@@ -212,5 +210,64 @@ const HeaderDropdown: FC = () => {
                 </Dialog.Actions>
             </Dialog>
         </Dropdown>
+    );
+};
+
+type OrganizationDropdownElementsProps = Pick<
+    OrganizationData,
+    'id' | 'slug' | 'name'
+>;
+
+const OrganizationDropdownElements: FC<OrganizationDropdownElementsProps> = ({
+    id,
+    slug,
+    name,
+}) => {
+    const navigate = useNavigate();
+
+    const handleNavigateToBookingForms = () => {
+        void navigate({
+            to: '/$organizationId/booking-forms',
+            params: { organizationId: id },
+        });
+    };
+
+    const handleNavigateToBookings = () => {
+        void navigate({
+            to: '/$organizationId/bookings',
+            params: { organizationId: id },
+        });
+    };
+
+    return (
+        <>
+            <Dropdown.Item className={styles.companyInfo}>
+                <img
+                    src={PlaceholderImage}
+                    alt="Organization image"
+                    className={styles.menuItemImage}
+                />
+                <div className={styles.menuItemText}>
+                    <span className={styles.menuItemName}>{name}</span>
+                    <span className={styles.menuItemSlug}>@{slug}</span>
+                </div>
+            </Dropdown.Item>
+            <Dropdown.Item
+                className={styles.menuItem}
+                onClick={handleNavigateToBookingForms}
+            >
+                <FormIcon className={clsx(styles.menuItemIcon, styles.blue)} />
+                Booking forms
+            </Dropdown.Item>
+            <Dropdown.Item
+                className={styles.menuItem}
+                onClick={handleNavigateToBookings}
+            >
+                <TableIcon
+                    className={clsx(styles.menuItemIcon, styles.green)}
+                />
+                Bookings
+            </Dropdown.Item>
+        </>
     );
 };

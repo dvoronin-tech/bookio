@@ -1,8 +1,14 @@
 .organizationLayout {
+    padding: 1rem;
+    width: 100%;
+    height: 100svh;
     display: flex;
     flex-direction: column;
-    height: 100vh;
-    width: 100%;
-    padding: 1rem;
     gap: 1rem;
+}
+
+@media screen and (max-width: 440px) {
+    .organizationLayout {
+        padding: 0;
+    }
 }
