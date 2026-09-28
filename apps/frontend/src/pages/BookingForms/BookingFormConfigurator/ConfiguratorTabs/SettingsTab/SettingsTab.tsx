@@ -9,6 +9,8 @@ import {
     ValidatableInput,
 } from '@bookio/ui';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts';
+import { useGetBookingForm } from '#api/bookingForms/getBookingForm.ts';
+import { slugSchema } from '@bookio/backend/schemas';
 
 import styles from './SettingsTab.module.scss';
 import { BookingFormUrlPreview } from '#components/BookingFormUrlPreview/BookingFormUrlPreview.tsx';
@@ -66,24 +68,41 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({
 
     const currentName = formValues?.name ?? '';
     const currentSlug = formValues?.slug ?? '';
+    const trimmedSlug = currentSlug.trim();
+    const slugFormatResult = slugSchema.safeParse(trimmedSlug);
+    const slugFormatError = slugFormatResult.success
+        ? undefined
+        : (slugFormatResult.error.issues[0]?.message ?? 'Invalid slug');
 
-    const originalName = bookingForm?.name;
-    const originalSlug = bookingForm?.slug;
+    const { data: savedBookingForm } = useGetBookingForm(id);
 
     const { isValid: nameIsValid } = useIsBookingFormExists(
         trimObj({
             organizationId: organizationId,
             name: currentName,
-            unchangedValue: originalName,
+            unchangedValue: bookingForm?.name,
         }),
     );
-    const { isValid: slugIsValid } = useIsBookingFormExists(
+    const { isValid: slugExistsIsValid } = useIsBookingFormExists(
         trimObj({
             organizationId: organizationId,
-            slug: currentSlug,
-            unchangedValue: originalSlug,
+            slug: slugFormatResult.success ? trimmedSlug : '',
+            unchangedValue: savedBookingForm?.slug,
         }),
     );
+
+    const slugIsTaken =
+        Boolean(savedBookingForm) && slugExistsIsValid === false;
+    const slugIsValid = slugFormatError
+        ? false
+        : savedBookingForm
+          ? slugExistsIsValid
+          : undefined;
+    const slugErrorMessage = slugFormatError
+        ? slugFormatError
+        : slugIsTaken
+          ? 'Booking form with this slug already exists'
+          : undefined;
 
     if (!bookingForm) {
         return null;
@@ -109,10 +128,10 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({
                 className={styles.input}
                 {...register('slug')}
                 isValid={slugIsValid}
-                errorMessage="Booking form with this slug already exists"
+                errorMessage={slugErrorMessage}
             />
             <BookingFormUrlPreview
-                formSlug={currentSlug || originalSlug}
+                formSlug={trimmedSlug}
                 organizationSlug={organizationSlug}
             />
             <Checkbox
