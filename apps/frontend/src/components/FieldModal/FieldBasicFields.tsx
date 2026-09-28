@@ -6,7 +6,10 @@ import {
     type SelectDropdownOption,
     ValidatableInput,
 } from '@bookio/ui';
-import type { FieldModalFormValues } from '@bookio/backend/schemas';
+import {
+    fieldKeySchema,
+    type FieldModalFormValues,
+} from '@bookio/backend/schemas';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 
 interface FieldBasicFieldsProps {
@@ -64,24 +67,42 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
         [bookingFormFields, setValue],
     );
 
-    const isKeyValid = useMemo(() => {
-        if (!watchedKey?.trim()) return undefined;
+    const { isKeyValid, keyErrorMessage } = useMemo(() => {
+        if (!watchedKey) {
+            return { isKeyValid: undefined, keyErrorMessage: undefined };
+        }
+
+        const formatResult = fieldKeySchema.safeParse(watchedKey);
+        if (!formatResult.success) {
+            return {
+                isKeyValid: false,
+                keyErrorMessage:
+                    formatResult.error.issues[0]?.message ?? 'Invalid key',
+            };
+        }
 
         const conflictingField = bookingFormFields?.fields.find(
             (field) => field.key === watchedKey && field.id !== fieldId,
         );
 
-        if (conflictingField) return false;
+        if (conflictingField) {
+            return {
+                isKeyValid: false,
+                keyErrorMessage: 'Key must be unique',
+            };
+        }
 
         // Keep neutral while the original key is unchanged in edit mode
         if (fieldId) {
             const originalField = bookingFormFields?.fields.find(
                 (field) => field.id === fieldId,
             );
-            if (originalField?.key === watchedKey) return undefined;
+            if (originalField?.key === watchedKey) {
+                return { isKeyValid: undefined, keyErrorMessage: undefined };
+            }
         }
 
-        return true;
+        return { isKeyValid: true, keyErrorMessage: undefined };
     }, [bookingFormFields, watchedKey, fieldId]);
 
     return (
@@ -92,7 +113,7 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
                 {...register('key')}
                 disabled={!!fieldId}
                 isValid={isKeyValid}
-                errorMessage="Key must be unique"
+                errorMessage={keyErrorMessage}
                 helpText={fieldId ? KEY_HELP_TEXT_ON_EDIT : KEY_HELP_TEXT}
             />
             {watchedType !== 'group' && (
