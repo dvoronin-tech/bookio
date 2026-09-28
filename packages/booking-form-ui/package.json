@@ -16,8 +16,7 @@
         "@bookio/db": "workspace:*",
         "@bookio/ui": "workspace:*",
         "clsx": "^2.1.1",
-        "country-flag-icons": "^1.6.20",
-        "libphonenumber-js": "^1.13.11",
+        "libphonenumber-js": "^1.13.14",
         "react": "^19.2.7",
         "react-dom": "^19.2.7",
         "react-hook-form": "^7.81.0"

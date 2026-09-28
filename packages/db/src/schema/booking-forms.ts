@@ -26,7 +26,7 @@ export const bookingForms = pgTable('booking_forms', {
         })
         .notNull(),
     markRequiredFields: boolean('mark_required').notNull().default(true),
-    isActive: boolean('is_active').notNull().default(true),
+    isActive: boolean('is_active').notNull().default(false),
     name: text('name').notNull(),
     totalBookings: integer('total_bookings').notNull().default(0),
     description: text('description'),

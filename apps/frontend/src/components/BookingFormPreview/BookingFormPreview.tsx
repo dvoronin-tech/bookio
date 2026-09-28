@@ -1,4 +1,5 @@
-import { type CSSProperties, type FC, useMemo } from 'react';
+import { type CSSProperties, type FC, useCallback, useMemo } from 'react';
+import toast from 'react-hot-toast';
 import { configuratorRouteApi } from '#lib/routeApis';
 import { useShallow } from 'zustand/shallow';
 import { BookingForm } from '@bookio/booking-form-ui';
@@ -50,6 +51,10 @@ export const BookingFormPreview: FC = () => {
         bookingFormStyles,
     ]);
 
+    const handlePreviewSuccess = useCallback(() => {
+        toast.success('Form submitted successfully');
+    }, []);
+
     if (!data?.settings || !data?.fields || !data?.styles) {
         return null;
     }
@@ -75,10 +80,12 @@ export const BookingFormPreview: FC = () => {
             style={toPreviewCssVars(previewColors)}
         >
             <BookingForm
+                isPreview
                 bookingFormData={{
                     ...settings,
                     fields,
                 }}
+                onSuccess={handlePreviewSuccess}
             />
         </div>
     );

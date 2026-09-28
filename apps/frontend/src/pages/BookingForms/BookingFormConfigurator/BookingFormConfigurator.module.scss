@@ -1,9 +1,48 @@
 .bookingFormConfigurator {
+    --collapse-animation-duration: 0.5s;
+    --configurator-preview-gap: 3rem;
+
+    position: relative;
     display: flex;
-    gap: 3rem;
+    gap: var(--configurator-preview-gap);
     justify-content: space-between;
     flex: 1;
     min-height: 0;
+}
+
+.expandButton {
+    position: absolute;
+    top: 1.6rem;
+    left: 0;
+    z-index: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 3.2rem;
+    height: 3.2rem;
+    padding: 0;
+    border: 1px solid var(--color-border);
+    border-radius: 0.6rem;
+    background-color: var(--color-bg-ui);
+    color: var(--color-text-secondary);
+    cursor: pointer;
+    opacity: 0;
+    transform: translateX(-100%);
+    pointer-events: none;
+    transition:
+        opacity var(--collapse-animation-duration) ease,
+        transform var(--collapse-animation-duration) ease;
+
+    svg {
+        width: 1.6rem;
+        height: 1.6rem;
+    }
+}
+
+.expandButtonVisible {
+    opacity: 1;
+    transform: translateX(0);
+    pointer-events: auto;
 }
 
 .configuratorPreview {

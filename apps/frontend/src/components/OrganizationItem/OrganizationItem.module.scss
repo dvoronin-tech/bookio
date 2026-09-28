@@ -5,7 +5,7 @@
     height: 100%;
     padding: 1.5rem 2rem;
     border-radius: 1rem;
-    background-color: var(--color-bg-main);
+    background-color: var(--color-bg-ui);
     border: 1px solid var(--color-border);
     color: var(--color-text-main);
     cursor: pointer;
@@ -16,7 +16,11 @@
         border-color 0.2s ease;
 
     &:hover {
-        background-color: rgba(255, 255, 255, 0.04);
+        background-color: color-mix(
+            in srgb,
+            var(--color-primary) 6%,
+            var(--color-bg-ui)
+        );
         border-color: var(--color-primary);
 
         .actionButtons {
@@ -117,7 +121,7 @@
 
     .role {
         padding: 0.5rem 1rem;
-        background-color: var(--color-bg-ui);
+        background-color: var(--color-bg-main);
         border-radius: 10rem;
         font-size: 1.2rem;
         font-weight: 600;

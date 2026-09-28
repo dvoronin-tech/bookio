@@ -1,18 +1,6 @@
-import { useState, type JSX } from 'react';
-import {
-    autoUpdate,
-    flip,
-    FloatingPortal,
-    offset,
-    shift,
-    useDismiss,
-    useFloating,
-    useFocus,
-    useHover,
-    useInteractions,
-    useRole,
-} from '@floating-ui/react';
+import { type JSX } from 'react';
 import { Input as BaseInput, InputField } from '../Input/Input.js';
+import Tooltip from '../Tooltip/Tooltip.js';
 import WarningIcon from './icons/warning.svg?react';
 import styles from './ValidatableInput.module.scss';
 import {
@@ -25,46 +13,15 @@ import {
 export type { ValidatableInputProps };
 
 function ErrorHint({ message }: { message?: string }) {
-    const [open, setOpen] = useState(false);
-
-    const { refs, floatingStyles, context } = useFloating({
-        open,
-        onOpenChange: setOpen,
-        placement: 'top',
-        middleware: [offset(8), flip(), shift({ padding: 8 })],
-        whileElementsMounted: autoUpdate,
-    });
-
-    const hover = useHover(context, { move: false });
-    const focus = useFocus(context);
-    const dismiss = useDismiss(context);
-    const role = useRole(context, { role: 'tooltip' });
-    const { getReferenceProps, getFloatingProps } = useInteractions([hover, focus, dismiss, role]);
-
     return (
-        <>
-            <span
-                ref={refs.setReference}
-                className={styles.warningTrigger}
-                tabIndex={message ? 0 : undefined}
-                aria-label={message ?? 'Validation error'}
-                {...(message ? getReferenceProps() : {})}
-            >
-                <WarningIcon className={styles.warningIcon} aria-hidden />
-            </span>
-            {open && message && (
-                <FloatingPortal>
-                    <div
-                        ref={refs.setFloating}
-                        style={floatingStyles}
-                        className={styles.tooltip}
-                        {...getFloatingProps()}
-                    >
-                        {message}
-                    </div>
-                </FloatingPortal>
-            )}
-        </>
+        <Tooltip
+            message={message}
+            className={styles.warningTrigger}
+            tabIndex={message ? 0 : undefined}
+            aria-label={message ?? 'Validation error'}
+        >
+            <WarningIcon className={styles.warningIcon} aria-hidden />
+        </Tooltip>
     );
 }
 

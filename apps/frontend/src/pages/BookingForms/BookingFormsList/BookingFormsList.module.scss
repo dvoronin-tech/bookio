@@ -112,6 +112,20 @@
         color: var(--color-text-secondary);
     }
 
+    .chipButtonSelected {
+        color: var(--color-text-main);
+        background-color: color-mix(
+            in srgb,
+            var(--color-primary) 16%,
+            var(--color-bg-ui)
+        );
+        border-color: color-mix(
+            in srgb,
+            var(--color-primary) 45%,
+            var(--color-border)
+        );
+    }
+
     .activeDot {
         width: 0.6rem;
         height: 0.6rem;

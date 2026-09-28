@@ -39,7 +39,7 @@ export const useGetBookingForms = (
 ): UseQueryResult<BookingFormsType> => {
     const { data: session } = useSession();
     return useQuery<BookingFormsType>({
-        queryKey: ['booking-forms'],
+        queryKey: ['booking-forms', organizationId],
         queryFn: () => fetchBookingForms(organizationId!),
         enabled: !!session?.user.id && !!organizationId,
     });

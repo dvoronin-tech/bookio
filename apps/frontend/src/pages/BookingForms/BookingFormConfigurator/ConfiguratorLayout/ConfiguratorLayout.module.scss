@@ -1,13 +1,33 @@
+.collapseSlot {
+    display: flex;
+    flex: 0 0 45rem;
+    min-width: 0;
+    overflow: hidden;
+    transition: all var(--collapse-animation-duration) ease;
+
+    &.collapsed {
+        flex-basis: 0;
+        margin-right: var(--configurator-preview-gap);
+        pointer-events: none;
+        opacity: 0;
+
+        .configuratorContainer {
+            transform: translateX(-100%);
+        }
+    }
+}
+
 .configuratorContainer {
     display: flex;
     flex-direction: column;
-    flex: 0 0 45rem;
+    width: 100%;
+    min-width: 45rem;
     min-height: 0;
     border-radius: 1rem;
     border: 1px solid var(--color-border);
-    align-self: stretch;
     background-color: var(--color-bg-ui);
     overflow: hidden;
+    transition: transform var(--collapse-animation-duration) ease;
 }
 
 .tabs {
@@ -132,4 +152,16 @@
 
 .saveButton {
     padding: 0.8rem 3.5rem !important;
+}
+
+.saveButtonWrap {
+    display: inline-flex;
+
+    &:has(:disabled) {
+        cursor: not-allowed;
+
+        .saveButton {
+            pointer-events: none;
+        }
+    }
 }
