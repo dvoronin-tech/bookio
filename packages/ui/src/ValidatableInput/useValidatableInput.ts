@@ -7,6 +7,7 @@ type ValidatableInputBaseProps = {
     isValid?: boolean | null;
     errorMessage?: string;
     useConfirmationColor?: boolean;
+    disabled?: boolean;
 };
 
 export type TextareaValidatableInputProps = ValidatableInputBaseProps &
@@ -14,7 +15,8 @@ export type TextareaValidatableInputProps = ValidatableInputBaseProps &
 export type NativeValidatableInputProps = ValidatableInputBaseProps &
     Exclude<InputProps, { type: 'textarea' }>;
 
-export type ValidatableInputProps = TextareaValidatableInputProps | NativeValidatableInputProps;
+export type ValidatableInputProps =
+    TextareaValidatableInputProps | NativeValidatableInputProps;
 
 function useShake(isValid: boolean | null | undefined) {
     const [isShaking, setIsShaking] = useState(false);
@@ -75,7 +77,12 @@ export function useValidatableInput<T extends ValidatableInputProps>(props: T) {
         inputId,
         inputProps,
         className:
-            getValidationClasses(isValid, className, showError, useConfirmationColor) || undefined,
+            getValidationClasses(
+                isValid,
+                className,
+                showError,
+                useConfirmationColor,
+            ) || undefined,
         helpText: showError ? undefined : helpText,
         rootClasses: clsx(styles.root, isShaking && styles.shake),
         showError,
