@@ -15,12 +15,14 @@ import { THead } from '#components/BookingsTable/THead/THead.tsx';
 import { TBody } from '#components/BookingsTable/TBody/TBody.tsx';
 import { BookingsTablePagination } from '#components/BookingsTable/BookingsTablePagination/BookingsTablePagination.tsx';
 import { SimpleCell } from '#components/BookingsTable/components/SimpleCell.tsx';
+import { BookingCard } from './BookingCard/BookingCard.tsx';
 
 interface BookingsTableProps {
     data: BookingByIdItem[];
 }
 
 export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
+    const [view, setView] = useState<'table' | 'cards'>('table');
     const [selectedBookingId, setSelectedBookingId] = useState<string | null>(
         null,
     );
@@ -98,14 +100,82 @@ export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
 
     return (
         <div className={styles.bookingTable}>
-            <div className={styles.tableWrapper}>
-                <table
-                    className={styles.table}
-                    width={table.getCenterTotalSize()}
+            <div className={styles.toolbar}>
+                <h2 className={styles.title}>Bookings</h2>
+                <div
+                    className={styles.viewSwitcher}
+                    role="group"
+                    aria-label="Booking view"
                 >
-                    <THead table={table} />
-                    <TBody table={table} onClick={setSelectedBookingId} />
-                </table>
+                    <button
+                        type="button"
+                        aria-pressed={view === 'table'}
+                        onClick={() => setView('table')}
+                    >
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                            <rect x="3" y="3" width="14" height="14" rx="2" />
+                            <path d="M3 8h14M3 12.5h14M8 8v9" fill="none" />
+                        </svg>
+                        Table
+                    </button>
+                    <button
+                        type="button"
+                        aria-pressed={view === 'cards'}
+                        onClick={() => setView('cards')}
+                    >
+                        <svg viewBox="0 0 20 20" aria-hidden="true">
+                            <rect x="3" y="3" width="5.5" height="5.5" rx="1" />
+                            <rect
+                                x="11.5"
+                                y="3"
+                                width="5.5"
+                                height="5.5"
+                                rx="1"
+                            />
+                            <rect
+                                x="3"
+                                y="11.5"
+                                width="5.5"
+                                height="5.5"
+                                rx="1"
+                            />
+                            <rect
+                                x="11.5"
+                                y="11.5"
+                                width="5.5"
+                                height="5.5"
+                                rx="1"
+                            />
+                        </svg>
+                        Cards
+                    </button>
+                </div>
+            </div>
+            <div className={styles.tableWrapper}>
+                {view === 'table' ? (
+                    <table
+                        className={styles.table}
+                        width={table.getCenterTotalSize()}
+                    >
+                        <THead table={table} />
+                        <TBody table={table} onClick={setSelectedBookingId} />
+                    </table>
+                ) : (
+                    <div className={styles.cards}>
+                        {table
+                            .getRowModel()
+                            .rows.map(({ original: booking }) => (
+                                <BookingCard
+                                    key={booking.id}
+                                    booking={booking}
+                                    dataKeys={dataKeys}
+                                    onClick={() =>
+                                        setSelectedBookingId(booking.id)
+                                    }
+                                />
+                            ))}
+                    </div>
+                )}
             </div>
 
             <BookingsTablePagination table={table} />

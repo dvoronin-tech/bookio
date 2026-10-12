@@ -34,3 +34,71 @@
     width: 100%;
     overflow: auto;
 }
+
+.toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    padding: 1.2rem 1.6rem;
+    border-bottom: 1px solid var(--color-border);
+    background: var(--color-bg-ui);
+}
+
+.title {
+    margin: 0;
+    font-size: 1.6rem;
+    font-weight: 600;
+}
+
+.viewSwitcher {
+    display: flex;
+    gap: 0.4rem;
+    padding: 0.4rem;
+    border: 1px solid var(--color-border);
+    border-radius: 0.8rem;
+    background: var(--color-bg-main);
+
+    button {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.6rem 1rem;
+        border-radius: 0.5rem;
+        color: var(--color-text-secondary);
+        font: inherit;
+        font-size: 1.3rem;
+        cursor: pointer;
+
+        &:hover {
+            color: var(--color-text-main);
+        }
+
+        &[aria-pressed='true'] {
+            color: var(--color-text-main);
+            background: var(--color-bg-ui);
+        }
+
+        &:focus-visible {
+            outline: 2px solid var(--color-primary);
+            outline-offset: 2px;
+        }
+    }
+
+    svg {
+        width: 1.6rem;
+        height: 1.6rem;
+        fill: none;
+        stroke: currentColor;
+        stroke-width: 1.5;
+    }
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 32rem), 1fr));
+    align-items: stretch;
+    gap: 1.6rem;
+    padding: 1.6rem;
+}
