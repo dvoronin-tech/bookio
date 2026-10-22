@@ -1,7 +1,6 @@
-import { Button, Input } from '@bookio/ui';
 import { type FC } from 'react';
 import { useNavigate } from '@tanstack/react-router';
-import styles from './SignIn.module.scss';
+import styles from '#layouts/AuthLayout/AuthLayout.module.scss';
 import { useSignIn } from '#api/auth';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
@@ -59,40 +58,55 @@ export const SignIn: FC = () => {
     const isDisabled = isPending || isSubmitting;
 
     return (
-        <form
-            className={styles.signInForm}
-            onSubmit={handleSubmit(onSubmit, onInvalid)}
-        >
-            <h1>Sign in</h1>
-            <Input
-                type="email"
-                placeholder="Email"
-                autoComplete="email"
-                disabled={isDisabled}
-                {...register('email')}
-            />
-            <Input
-                type="password"
-                placeholder="Password"
-                autoComplete="new-password"
-                disabled={isDisabled}
-                {...register('password')}
-            />
-            <Button
-                type="submit"
-                variant="primary-filled"
-                className={styles.submitButton}
-                disabled={isDisabled}
+        <div className={styles.formBlock}>
+            <p className={styles.eyebrow}>Welcome back</p>
+            <h1 className={styles.title}>Sign in</h1>
+            <p className={styles.support}>
+                Enter your credentials to continue to Bookio.
+            </p>
+            <form
+                className={styles.form}
+                onSubmit={handleSubmit(onSubmit, onInvalid)}
             >
-                {isPending ? 'Signing in…' : 'Sign in'}
-            </Button>
-            <Button
-                type="button"
-                variant="simple-outlined"
-                onClick={() => void navigate({ to: '/auth/sign-up' })}
-            >
-                Sign Up
-            </Button>
-        </form>
+                <label className={styles.field}>
+                    <span className={styles.label}>Email</span>
+                    <input
+                        className={styles.input}
+                        type="email"
+                        placeholder="you@organization.com"
+                        autoComplete="email"
+                        disabled={isDisabled}
+                        {...register('email')}
+                    />
+                </label>
+                <label className={styles.field}>
+                    <span className={styles.label}>Password</span>
+                    <input
+                        className={styles.input}
+                        type="password"
+                        placeholder="Enter your password"
+                        autoComplete="new-password"
+                        disabled={isDisabled}
+                        {...register('password')}
+                    />
+                </label>
+                <button
+                    type="submit"
+                    className={styles.primaryButton}
+                    disabled={isDisabled}
+                >
+                    {isPending ? 'Signing in…' : 'Sign in'}
+                </button>
+            </form>
+            <div className={styles.switchRow}>
+                <button
+                    type="button"
+                    className={styles.textControl}
+                    onClick={() => void navigate({ to: '/auth/sign-up' })}
+                >
+                    Create an account
+                </button>
+            </div>
+        </div>
     );
 };
