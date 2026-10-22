@@ -1,7 +1,6 @@
 import { type FC } from 'react';
-import { Button, Input } from '@bookio/ui';
 import { useNavigate } from '@tanstack/react-router';
-import styles from './SignUp.module.scss';
+import styles from '#layouts/AuthLayout/AuthLayout.module.scss';
 import { useSignUp } from '#api/auth';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
@@ -65,47 +64,67 @@ export const SignUp: FC = () => {
     const isDisabled = isPending || isSubmitting;
 
     return (
-        <form
-            className={styles.signUpForm}
-            onSubmit={handleSubmit(onSubmit, onInvalid)}
-        >
-            <h1>Sign up</h1>
-            <Input
-                type="email"
-                placeholder="Email"
-                autoComplete="email"
-                disabled={isDisabled}
-                {...register('email')}
-            />
-            <Input
-                type="password"
-                placeholder="Password"
-                autoComplete="new-password"
-                disabled={isDisabled}
-                {...register('password')}
-            />
-            <Input
-                type="password"
-                placeholder="Confirm Password"
-                autoComplete="new-password"
-                disabled={isDisabled}
-                {...register('confirmPassword')}
-            />
-            <Button
-                type="submit"
-                variant="primary-filled"
-                className={styles.submitButton}
-                disabled={isDisabled}
+        <div className={styles.formBlock}>
+            <p className={styles.eyebrow}>Get started</p>
+            <h1 className={styles.title}>Create account</h1>
+            <p className={styles.support}>
+                Set up access for your organization in a few steps.
+            </p>
+            <form
+                className={styles.form}
+                onSubmit={handleSubmit(onSubmit, onInvalid)}
             >
-                {isPending ? 'Signing up…' : 'Sign Up'}
-            </Button>
-            <Button
-                type="button"
-                variant="simple-outlined"
-                onClick={() => void navigate({ to: '/auth/sign-in' })}
-            >
-                Sign in
-            </Button>
-        </form>
+                <label className={styles.field}>
+                    <span className={styles.label}>Email</span>
+                    <input
+                        className={styles.input}
+                        type="email"
+                        placeholder="you@organization.com"
+                        autoComplete="email"
+                        disabled={isDisabled}
+                        {...register('email')}
+                    />
+                </label>
+                <label className={styles.field}>
+                    <span className={styles.label}>Password</span>
+                    <input
+                        className={styles.input}
+                        type="password"
+                        placeholder="Enter your password"
+                        autoComplete="new-password"
+                        disabled={isDisabled}
+                        {...register('password')}
+                    />
+                </label>
+                <label className={styles.field}>
+                    <span className={styles.label}>Confirm password</span>
+                    <input
+                        className={styles.input}
+                        type="password"
+                        placeholder="Repeat your password"
+                        autoComplete="new-password"
+                        disabled={isDisabled}
+                        {...register('confirmPassword')}
+                    />
+                </label>
+                <button
+                    type="submit"
+                    className={styles.primaryButton}
+                    disabled={isDisabled}
+                >
+                    {isPending ? 'Signing up…' : 'Create account'}
+                </button>
+            </form>
+            <div className={styles.switchRow}>
+                Already have an account?{' '}
+                <button
+                    type="button"
+                    className={styles.textControl}
+                    onClick={() => void navigate({ to: '/auth/sign-in' })}
+                >
+                    Sign in
+                </button>
+            </div>
+        </div>
     );
 };

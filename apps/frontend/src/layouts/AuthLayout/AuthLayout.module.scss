@@ -1,9 +1,308 @@
-.authLayout {
-    width: 100%;
-    height: 100svh;
-    background-color: var(--color-bg-main);
-    color: var(--color-text-main);
+.page {
     display: flex;
+    min-height: 100svh;
+    height: 100svh;
+    overflow: auto;
+    background: var(--color-bg-main);
+    color: var(--color-text-main);
+    font-family: var(--font-family);
+}
+
+.brandPanel {
+    position: relative;
+    flex: 0 0 46%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 5.6rem 6.4rem;
+    background: #0c0c0c;
+    overflow: hidden;
+}
+
+.brandGlow {
+    position: absolute;
+    inset: -20% -30% auto auto;
+    width: 72rem;
+    height: 72rem;
+    border-radius: 50%;
+    background: radial-gradient(
+        circle,
+        color-mix(in srgb, var(--color-primary) 42%, transparent) 0%,
+        color-mix(in srgb, var(--color-primary) 14%, transparent) 38%,
+        transparent 68%
+    );
+    pointer-events: none;
+}
+
+.brandContent {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 8rem;
+    max-width: 44rem;
+    height: 100%;
+}
+
+.logo {
+    width: 14rem;
+    height: auto;
+    flex-shrink: 0;
+}
+
+.brandCopy {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    margin-top: auto;
+    padding-bottom: 1.2rem;
+}
+
+.brandHeadline {
+    margin: 0;
+    font-size: 4.2rem;
+    font-weight: 800;
+    line-height: 1.12;
+    letter-spacing: -0.02em;
+    color: var(--color-text-main);
+}
+
+.brandSubtitle {
+    margin: 0;
+    max-width: 36rem;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.55;
+    color: var(--color-text-secondary);
+}
+
+.featureList {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    margin: 2.4rem 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.featureList li {
+    position: relative;
+    padding-left: 1.8rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    line-height: 1.45;
+    color: color-mix(
+        in srgb,
+        var(--color-text-secondary) 88%,
+        var(--color-text-main)
+    );
+}
+
+.featureList li::before {
+    content: '';
+    position: absolute;
+    top: 0.75rem;
+    left: 0;
+    width: 0.6rem;
+    height: 0.6rem;
+    border-radius: 50%;
+    background: var(--color-primary);
+    opacity: 0.85;
+}
+
+.formPanel {
+    flex: 1 1 auto;
+    display: flex;
+    align-items: safe center;
     justify-content: center;
+    padding: 6.4rem 7.2rem;
+    background: var(--color-bg-ui);
+}
+
+.formInner {
+    width: 100%;
+    max-width: 42rem;
+}
+
+.formBlock {
+    display: flex;
+    flex-direction: column;
+}
+
+.eyebrow {
+    margin: 0 0 1.2rem;
+    font-size: 1.3rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--color-primary);
+}
+
+.title {
+    margin: 0 0 1.2rem;
+    font-size: 3.6rem;
+    font-weight: 800;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--color-text-main);
+}
+
+.support {
+    margin: 0 0 3.6rem;
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+}
+
+.label {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--color-text-main);
+}
+
+.input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 4.8rem;
+    padding: 0 1.6rem;
+    border: 1px solid var(--color-border);
+    border-radius: 1rem;
+    background: color-mix(
+        in srgb,
+        var(--color-bg-main) 55%,
+        var(--color-bg-ui)
+    );
+    color: var(--color-text-main);
+    font-family: inherit;
+    font-size: 1.5rem;
+    font-weight: 500;
+    outline: none;
+    transition:
+        border-color 0.15s ease,
+        box-shadow 0.15s ease;
+}
+
+.input::placeholder {
+    color: color-mix(in srgb, var(--color-text-secondary) 70%, transparent);
+    font-weight: 400;
+}
+
+.input:hover {
+    border-color: color-mix(
+        in srgb,
+        var(--color-border) 70%,
+        var(--color-primary)
+    );
+}
+
+.input:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 0.3rem
+        color-mix(in srgb, var(--color-primary) 28%, transparent);
+}
+
+.textControl {
+    padding: 0;
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+    transition: color 0.15s ease;
+}
+
+.textControl:hover {
+    color: var(--color-text-main);
+}
+
+.primaryButton {
+    display: inline-flex;
     align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 4.8rem;
+    margin-top: 0.8rem;
+    border: none;
+    border-radius: 1rem;
+    background: var(--color-primary);
+    color: var(--color-text-accent-button);
+    font-family: inherit;
+    font-size: 1.6rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition:
+        filter 0.15s ease,
+        transform 0.15s ease;
+}
+
+.primaryButton:disabled,
+.input:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.primaryButton:hover:not(:disabled) {
+    filter: brightness(1.08);
+}
+
+.primaryButton:active:not(:disabled) {
+    transform: translateY(1px);
+}
+
+.switchRow {
+    margin: 2.8rem 0 0;
+    font-size: 1.4rem;
+    font-weight: 400;
+    line-height: 1.5;
+    color: var(--color-text-secondary);
+    text-align: center;
+}
+
+.switchRow .textControl {
+    text-decoration: none;
+    color: var(--color-text-main);
+}
+
+.switchRow .textControl:hover {
+    color: var(--color-primary);
+    text-decoration: underline;
+}
+
+@media (max-width: 900px) {
+    .page {
+        flex-direction: column;
+    }
+
+    .brandPanel {
+        display: none;
+    }
+
+    .formPanel {
+        padding: 4rem 2.4rem 5.6rem;
+    }
+
+    .title {
+        font-size: 3rem;
+    }
+
+    .support {
+        margin-bottom: 2.8rem;
+    }
 }
