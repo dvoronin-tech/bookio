@@ -12,6 +12,7 @@ export const AuthLayout: FC = () => {
                     <Outlet />
                 </div>
             </main>
+            <div className={styles.brandGlow} aria-hidden />
         </div>
     );
 };
@@ -19,7 +20,7 @@ export const AuthLayout: FC = () => {
 const BrandPanel: FC = () => {
     return (
         <aside className={styles.brandPanel}>
-            <div className={styles.brandGlow} aria-hidden />
+
             <div className={styles.brandContent}>
                 <Logo className={styles.logo} />
                 <div className={styles.brandCopy}>

@@ -176,6 +176,7 @@ p {
     --color-text-accent-button: #ffffff;
     --color-bg-main: #101010;
     --color-bg-ui: #191918;
+    --color-bg-glass: color-mix(in srgb, var(--color-bg-ui) 50%, transparent);
 
     --color-text-main: #ffffff;
     --color-text-secondary: #bbb7b7;
