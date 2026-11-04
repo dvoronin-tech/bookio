@@ -5,50 +5,8 @@
     {
       "idx": 0,
       "version": "7",
-      "when": 1782939567564,
-      "tag": "0000_furry_mimic",
-      "breakpoints": true
-    },
-    {
-      "idx": 1,
-      "version": "7",
-      "when": 1783609555543,
-      "tag": "0001_zippy_mauler",
-      "breakpoints": true
-    },
-    {
-      "idx": 2,
-      "version": "7",
-      "when": 1784098301774,
-      "tag": "0002_sticky_mimic",
-      "breakpoints": true
-    },
-    {
-      "idx": 3,
-      "version": "7",
-      "when": 1784133826845,
-      "tag": "0003_low_vivisector",
-      "breakpoints": true
-    },
-    {
-      "idx": 4,
-      "version": "7",
-      "when": 1784581456553,
-      "tag": "0004_great_triton",
-      "breakpoints": true
-    },
-    {
-      "idx": 5,
-      "version": "7",
-      "when": 1789736213688,
-      "tag": "0005_silent_the_anarchist",
-      "breakpoints": true
-    },
-    {
-      "idx": 6,
-      "version": "7",
-      "when": 1790353889687,
-      "tag": "0006_easy_shadowcat",
+      "when": 1793792462101,
+      "tag": "0000_abnormal_phantom_reporter",
       "breakpoints": true
     }
   ]
