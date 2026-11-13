@@ -57,7 +57,6 @@ export const BookingsIndex: FC = () => {
                         void navigate({
                             to: '/$organizationId/booking-forms/create',
                             params: { organizationId },
-                            search: { guided: true },
                         })
                     }
                 >
