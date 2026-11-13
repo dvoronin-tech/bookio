@@ -1,75 +1,100 @@
 import { clsx } from 'clsx';
-import { memo, type ReactNode } from 'react';
+import {
+    createContext,
+    memo,
+    useContext,
+    type ComponentProps,
+    type ReactNode,
+} from 'react';
 import styles from './SegmentedControl.module.scss';
 
-type SegmentedControlOptionBase<Value extends string> = {
-    value: Value;
-    label: string;
+type SegmentedControlContextValue = {
+    value: string;
+    onValueChange: (value: string) => void;
 };
 
-export type SegmentedControlOption<Value extends string = string> =
-    | (SegmentedControlOptionBase<Value> & {
-          text: string;
-          icon?: never;
-      })
-    | (SegmentedControlOptionBase<Value> & {
-          icon: ReactNode;
-          text?: never;
-      });
+const SegmentedControlContext = createContext<SegmentedControlContextValue | null>(null);
+
+function useSegmentedControlContext() {
+    const context = useContext(SegmentedControlContext);
+
+    if (!context) {
+        throw new Error('SegmentedControl.Item must be used within <SegmentedControl>');
+    }
+
+    return context;
+}
 
 export type SegmentedControlProps<Value extends string = string> = {
     value: Value;
-    options: readonly [
-        SegmentedControlOption<Value>,
-        SegmentedControlOption<Value>,
-    ];
-    onChange: (value: Value) => void;
+    onValueChange: (value: Value) => void;
+    children: ReactNode;
     className?: string;
-    'aria-label'?: string;
-};
+} & Omit<ComponentProps<'div'>, 'children' | 'className'>;
 
-function isIconOption<Value extends string>(
-    option: SegmentedControlOption<Value>,
-): option is SegmentedControlOption<Value> & { icon: ReactNode } {
-    return option.icon !== undefined;
-}
-
-function SegmentedControl<Value extends string>({
+function SegmentedControlRoot<Value extends string>({
     value,
-    options,
-    onChange,
+    onValueChange,
+    children,
     className,
-    'aria-label': ariaLabel,
+    ...rest
 }: SegmentedControlProps<Value>) {
     return (
-        <div
-            className={clsx(styles.control, className)}
-            role="group"
-            aria-label={ariaLabel}
+        <SegmentedControlContext.Provider
+            value={{
+                value,
+                onValueChange: onValueChange as (next: string) => void,
+            }}
         >
-            {options.map((option) => {
-                const selected = option.value === value;
-                const icon = isIconOption(option);
-
-                return (
-                    <button
-                        key={option.value}
-                        type="button"
-                        className={clsx(
-                            styles.segment,
-                            icon ? styles.segmentIcon : styles.segmentText,
-                            selected && styles.segmentSelected,
-                        )}
-                        aria-pressed={selected}
-                        aria-label={option.label}
-                        onClick={() => onChange(option.value)}
-                    >
-                        {icon ? option.icon : option.text}
-                    </button>
-                );
-            })}
-        </div>
+            <div
+                {...rest}
+                className={clsx(styles.control, className)}
+                role="group"
+            >
+                {children}
+            </div>
+        </SegmentedControlContext.Provider>
     );
 }
 
-export default memo(SegmentedControl) as typeof SegmentedControl;
+export type SegmentedControlItemProps = {
+    value: string;
+    children: ReactNode;
+} & Omit<ComponentProps<'button'>, 'value' | 'type' | 'children'>;
+
+function SegmentedControlItem({
+    value,
+    children,
+    className,
+    onClick,
+    ...buttonProps
+}: SegmentedControlItemProps) {
+    const { value: selectedValue, onValueChange } = useSegmentedControlContext();
+    const selected = value === selectedValue;
+
+    return (
+        <button
+            {...buttonProps}
+            type="button"
+            className={clsx(styles.segment, selected && styles.segmentSelected, className)}
+            aria-pressed={selected}
+            onClick={(event) => {
+                onClick?.(event);
+                onValueChange(value);
+            }}
+        >
+            {children}
+        </button>
+    );
+}
+
+type SegmentedControlComponent = (<Value extends string>(
+    props: SegmentedControlProps<Value>,
+) => ReactNode) & {
+    Item: typeof SegmentedControlItem;
+};
+
+const SegmentedControl = memo(SegmentedControlRoot) as unknown as SegmentedControlComponent;
+SegmentedControl.Item = SegmentedControlItem;
+
+export default SegmentedControl;

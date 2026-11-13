@@ -73,7 +73,7 @@ export type { ProgressBarProps } from './ProgressBar/ProgressBar.js';
 
 export { default as SegmentedControl } from './SegmentedControl/SegmentedControl.js';
 export type {
-    SegmentedControlOption,
+    SegmentedControlItemProps,
     SegmentedControlProps,
 } from './SegmentedControl/SegmentedControl.js';
 

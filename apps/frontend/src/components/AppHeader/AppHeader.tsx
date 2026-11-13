@@ -69,20 +69,15 @@ const LanguageSwitch: FC = () => {
         <SegmentedControl
             aria-label="Language"
             value={locale}
-            onChange={setLocale}
-            options={[
-                {
-                    value: 'en',
-                    label: m.language_en(),
-                    icon: <FlagUsIcon className={styles.languageFlag} />,
-                },
-                {
-                    value: 'ru',
-                    label: m.language_ru(),
-                    icon: <FlagRuIcon className={styles.languageFlag} />,
-                },
-            ]}
-        />
+            onValueChange={setLocale}
+        >
+            <SegmentedControl.Item value="en" aria-label={m.language_en()}>
+                <FlagUsIcon className={styles.languageFlag} />
+            </SegmentedControl.Item>
+            <SegmentedControl.Item value="ru" aria-label={m.language_ru()}>
+                <FlagRuIcon className={styles.languageFlag} />
+            </SegmentedControl.Item>
+        </SegmentedControl>
     );
 };
 
