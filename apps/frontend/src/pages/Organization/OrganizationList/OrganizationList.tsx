@@ -6,7 +6,7 @@ import { useGetOrganizationsByUserId } from '#api/organizations/getOrganizations
 import { toast } from 'react-hot-toast';
 import { Button, Input, PageLoader } from '@bookio/ui';
 import { useNavigate } from '@tanstack/react-router';
-import { resolveOrganizationWorkspaceTarget } from '#lib/bookingFormEntry';
+import { goToOrganizationWorkspace } from '#lib/bookingFormEntry';
 import PlusIcon from '#assets/icons/plus.svg?react';
 import ConnectIcon from '#assets/icons/connect.svg?react';
 import SearchIcon from '#assets/icons/search.svg?react';
@@ -23,11 +23,7 @@ export const OrganizationList: FC = () => {
 
     const handleClickOnOrganization = useCallback(
         (id: string) => {
-            void (async () => {
-                await navigate({
-                    ...(await resolveOrganizationWorkspaceTarget(id)),
-                });
-            })();
+            void goToOrganizationWorkspace(id, navigate);
         },
         [navigate],
     );

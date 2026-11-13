@@ -1,8 +1,11 @@
+import { redirect, useNavigate } from '@tanstack/react-router';
 import {
     bookingFormsQueryKey,
     fetchBookingForms,
 } from '#api/bookingForms/getBookingForms';
 import { queryClient } from '#lib/query-client';
+
+type AppNavigate = ReturnType<typeof useNavigate>;
 
 /** Search on `/$organizationId/booking-forms/create`. Set only for the first form. */
 export type CreateBookingFormSearch = {
@@ -62,7 +65,21 @@ export async function resolveOrganizationWorkspaceTarget(
     };
 }
 
-export type CreateBookingFormRouteTarget = {
+export async function goToOrganizationWorkspace(
+    organizationId: string,
+    navigate?: AppNavigate,
+): Promise<void> {
+    const target = await resolveOrganizationWorkspaceTarget(organizationId);
+
+    if (navigate) {
+        await navigate({ ...target });
+        return;
+    }
+
+    throw redirect({ ...target, replace: true });
+}
+
+type CreateBookingFormRouteTarget = {
     to: '/$organizationId/booking-forms/create';
     params: { organizationId: string };
     search: CreateBookingFormSearch;
@@ -74,7 +91,7 @@ export type CreateBookingFormRouteTarget = {
  * The param stays for this visit, so creating the form (count becomes 1)
  * does not put the list exit back on the success step.
  */
-export async function resolveCreateBookingFormRoute(options: {
+async function resolveCreateBookingFormRoute(options: {
     organizationId: string;
     guided: boolean;
 }): Promise<CreateBookingFormRouteTarget | null> {
@@ -100,4 +117,26 @@ export async function resolveCreateBookingFormRoute(options: {
     }
 
     return null;
+}
+
+export async function goToCreateBookingForm(
+    organizationId: string,
+    guided: boolean,
+    navigate?: AppNavigate,
+): Promise<void> {
+    const target = await resolveCreateBookingFormRoute({
+        organizationId,
+        guided,
+    });
+
+    if (!target) {
+        return;
+    }
+
+    if (navigate) {
+        await navigate({ ...target });
+        return;
+    }
+
+    throw redirect({ ...target, replace: true });
 }

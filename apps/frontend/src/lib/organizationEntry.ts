@@ -1,4 +1,3 @@
-import { useCallback } from 'react';
 import { redirect, useNavigate } from '@tanstack/react-router';
 import {
     fetchOrganizationsByUserId,
@@ -11,6 +10,8 @@ import {
 } from '#lib/bookingFormEntry';
 import { queryClient } from '#lib/query-client';
 import { getSession } from '#lib/session';
+
+type AppNavigate = ReturnType<typeof useNavigate>;
 
 type OrganizationsLoadResult =
     | { status: 'anonymous' }
@@ -51,7 +52,7 @@ export type OrganizationEntryTarget =
     | OrganizationWorkspaceTarget;
 
 /** 0 orgs → create, 1 → its workspace, 2+ → chooser. */
-export async function resolveOrganizationEntryTarget(
+async function resolveOrganizationEntryTarget(
     organizations: OrganizationsType,
 ): Promise<OrganizationEntryTarget> {
     if (organizations.length === 0) {
@@ -76,14 +77,14 @@ type CurrentUserEntryTarget =
  * Anonymous with no `anonymousTo` is a sentinel: the caller stays put.
  * Error opens the chooser. A ready session uses the org-count target.
  */
-export async function resolveCurrentUserEntryTarget(options: {
+async function resolveCurrentUserEntryTarget(options: {
     fresh?: boolean;
     anonymousTo: '/auth/sign-in';
 }): Promise<CurrentUserEntryTarget>;
-export async function resolveCurrentUserEntryTarget(options?: {
+async function resolveCurrentUserEntryTarget(options?: {
     fresh?: boolean;
 }): Promise<CurrentUserEntryTarget | null>;
-export async function resolveCurrentUserEntryTarget(options?: {
+async function resolveCurrentUserEntryTarget(options?: {
     fresh?: boolean;
     anonymousTo?: '/auth/sign-in';
 }): Promise<CurrentUserEntryTarget | null> {
@@ -103,9 +104,22 @@ export async function resolveCurrentUserEntryTarget(options?: {
 }
 
 /** Signed-in home and auth: 0 orgs → create, 1 org → its workspace, 2+ → chooser. */
-export async function redirectToCurrentUserEntry(): Promise<void> {
-    const target = await resolveCurrentUserEntryTarget();
+export async function goToCurrentUserEntry(
+    navigate?: AppNavigate,
+): Promise<void> {
+    const target = navigate
+        ? await resolveCurrentUserEntryTarget({
+              fresh: true,
+              anonymousTo: '/auth/sign-in',
+          })
+        : await resolveCurrentUserEntryTarget();
+
     if (!target) {
+        return;
+    }
+
+    if (navigate) {
+        await navigate({ ...target, replace: true });
         return;
     }
 
@@ -129,18 +143,4 @@ export async function redirectIfUserHasNoOrganizations(): Promise<void> {
     if (result.status === 'ready' && result.organizations.length === 0) {
         throw redirect({ to: '/organizations/create', replace: true });
     }
-}
-
-export function useNavigateToOrganizationEntry() {
-    const navigate = useNavigate();
-
-    return useCallback(async () => {
-        await navigate({
-            ...(await resolveCurrentUserEntryTarget({
-                fresh: true,
-                anonymousTo: '/auth/sign-in',
-            })),
-            replace: true,
-        });
-    }, [navigate]);
 }

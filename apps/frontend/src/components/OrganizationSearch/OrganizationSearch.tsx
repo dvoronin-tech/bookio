@@ -11,7 +11,7 @@ import {
 } from '#api/organizations/getOrganizationsByUserId';
 import { OrganizationItem } from '#components/OrganizationItem/OrganizationItem';
 import { useNavigate } from '@tanstack/react-router';
-import { resolveOrganizationWorkspaceTarget } from '#lib/bookingFormEntry';
+import { goToOrganizationWorkspace } from '#lib/bookingFormEntry';
 import { toast } from 'react-hot-toast';
 import SearchIcon from '#assets/icons/search.svg?react';
 
@@ -155,11 +155,7 @@ const OrganizationSearchWrapper = ({
     const navigate = useNavigate();
     const handleClickOnOrganization = useCallback(
         (id: string) => {
-            void (async () => {
-                await navigate({
-                    ...(await resolveOrganizationWorkspaceTarget(id)),
-                });
-            })();
+            void goToOrganizationWorkspace(id, navigate);
         },
         [navigate],
     );

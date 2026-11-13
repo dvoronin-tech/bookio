@@ -1,7 +1,7 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { createFileRoute } from '@tanstack/react-router';
 import { CreateBookingForm } from '#pages/BookingForms/CreateBookingForm/CreateBookingForm';
 import {
-    resolveCreateBookingFormRoute,
+    goToCreateBookingForm,
     validateCreateBookingFormSearch,
 } from '#lib/bookingFormEntry';
 
@@ -9,15 +9,10 @@ export const Route = createFileRoute(
     '/_authenticated/$organizationId/booking-forms/create',
 )({
     validateSearch: validateCreateBookingFormSearch,
-    beforeLoad: async ({ search, params }) => {
-        const target = await resolveCreateBookingFormRoute({
-            organizationId: params.organizationId,
-            guided: search.guided === true,
-        });
-
-        if (target) {
-            throw redirect({ ...target, replace: true });
-        }
-    },
+    beforeLoad: ({ search, params }) =>
+        goToCreateBookingForm(
+            params.organizationId,
+            search.guided === true,
+        ),
     component: CreateBookingForm,
 });

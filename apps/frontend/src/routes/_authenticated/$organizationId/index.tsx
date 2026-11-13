@@ -1,11 +1,6 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
-import { resolveOrganizationWorkspaceTarget } from '#lib/bookingFormEntry';
+import { createFileRoute } from '@tanstack/react-router';
+import { goToOrganizationWorkspace } from '#lib/bookingFormEntry';
 
 export const Route = createFileRoute('/_authenticated/$organizationId/')({
-    beforeLoad: async ({ params }) => {
-        throw redirect({
-            ...(await resolveOrganizationWorkspaceTarget(params.organizationId)),
-            replace: true,
-        });
-    },
+    beforeLoad: ({ params }) => goToOrganizationWorkspace(params.organizationId),
 });
