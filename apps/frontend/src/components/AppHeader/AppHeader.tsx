@@ -15,6 +15,8 @@ import FormIcon from '#assets/icons/form.svg?react';
 import TableIcon from '#assets/icons/table.svg?react';
 import OrganizationIcon from '#assets/icons/organization.svg?react';
 import LogOutIcon from '#assets/icons/log-out.svg?react';
+import FlagUsIcon from '#assets/icons/flag-us.svg?react';
+import FlagRuIcon from '#assets/icons/flag-ru.svg?react';
 
 import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import toast from 'react-hot-toast';
@@ -72,9 +74,10 @@ const LanguageSwitch: FC = () => {
                     locale === 'en' && styles.languageOptionActive,
                 )}
                 aria-pressed={locale === 'en'}
+                aria-label={m.language_en()}
                 onClick={() => setLocale('en')}
             >
-                {m.language_en()}
+                <FlagUsIcon className={styles.languageFlag} />
             </button>
             <button
                 type="button"
@@ -83,9 +86,10 @@ const LanguageSwitch: FC = () => {
                     locale === 'ru' && styles.languageOptionActive,
                 )}
                 aria-pressed={locale === 'ru'}
+                aria-label={m.language_ru()}
                 onClick={() => setLocale('ru')}
             >
-                {m.language_ru()}
+                <FlagRuIcon className={styles.languageFlag} />
             </button>
         </div>
     );
