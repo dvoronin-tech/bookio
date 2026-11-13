@@ -16,7 +16,6 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { useNavigate } from '@tanstack/react-router';
 import { resolveOrganizationWorkspaceTarget } from '#lib/bookingFormEntry';
-import { runNavigation } from '#lib/navigation';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
 import { useDebouncedValidation } from '#utils/useDebouncedValidation';
@@ -171,10 +170,9 @@ const SuccessfulOrganizationCreation: FC<{
 
     const handleOpenBookingForms = useCallback(() => {
         void (async () => {
-            await runNavigation(
-                navigate,
-                await resolveOrganizationWorkspaceTarget(data.organization.id),
-            );
+            await navigate({
+                ...(await resolveOrganizationWorkspaceTarget(data.organization.id)),
+            });
         })();
     }, [data.organization.id, navigate]);
 

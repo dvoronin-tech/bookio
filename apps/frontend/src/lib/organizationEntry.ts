@@ -1,5 +1,5 @@
 import { useCallback } from 'react';
-import { useNavigate } from '@tanstack/react-router';
+import { redirect, useNavigate } from '@tanstack/react-router';
 import {
     fetchOrganizationsByUserId,
     organizationsQueryKey,
@@ -9,7 +9,6 @@ import {
     resolveOrganizationWorkspaceTarget,
     type OrganizationWorkspaceTarget,
 } from '#lib/bookingFormEntry';
-import { throwNavigation, runNavigation } from '#lib/navigation';
 import { queryClient } from '#lib/query-client';
 import { getSession } from '#lib/session';
 
@@ -69,7 +68,9 @@ export async function resolveOrganizationEntryTarget(
     return { to: '/organizations/list' };
 }
 
-type CurrentUserEntryTarget = OrganizationEntryTarget & { replace: true };
+type CurrentUserEntryTarget =
+    | OrganizationEntryTarget
+    | { to: '/auth/sign-in' };
 
 /**
  * Anonymous with no `anonymousTo` is a sentinel: the caller stays put.
@@ -78,36 +79,27 @@ type CurrentUserEntryTarget = OrganizationEntryTarget & { replace: true };
 export async function resolveCurrentUserEntryTarget(options: {
     fresh?: boolean;
     anonymousTo: '/auth/sign-in';
-}): Promise<CurrentUserEntryTarget | { to: '/auth/sign-in'; replace: true }>;
+}): Promise<CurrentUserEntryTarget>;
 export async function resolveCurrentUserEntryTarget(options?: {
     fresh?: boolean;
 }): Promise<CurrentUserEntryTarget | null>;
 export async function resolveCurrentUserEntryTarget(options?: {
     fresh?: boolean;
     anonymousTo?: '/auth/sign-in';
-}): Promise<
-    | CurrentUserEntryTarget
-    | { to: '/auth/sign-in'; replace: true }
-    | null
-> {
+}): Promise<CurrentUserEntryTarget | null> {
     const result = await loadCurrentUserOrganizations({
         fresh: options?.fresh,
     });
 
     if (result.status === 'anonymous') {
-        return options?.anonymousTo
-            ? { to: options.anonymousTo, replace: true }
-            : null;
+        return options?.anonymousTo ? { to: options.anonymousTo } : null;
     }
 
     if (result.status === 'error') {
-        return { to: '/organizations/list', replace: true };
+        return { to: '/organizations/list' };
     }
 
-    return {
-        ...(await resolveOrganizationEntryTarget(result.organizations)),
-        replace: true,
-    };
+    return resolveOrganizationEntryTarget(result.organizations);
 }
 
 /** Signed-in home and auth: 0 orgs → create, 1 org → its workspace, 2+ → chooser. */
@@ -117,7 +109,7 @@ export async function redirectToCurrentUserEntry(): Promise<void> {
         return;
     }
 
-    throwNavigation(target);
+    throw redirect({ ...target, replace: true });
 }
 
 /** List and organization routes stay closed when the user has no organization. */
@@ -135,7 +127,7 @@ export async function redirectIfUserHasNoOrganizations(): Promise<void> {
     const result = await loadCurrentUserOrganizations();
 
     if (result.status === 'ready' && result.organizations.length === 0) {
-        throwNavigation({ to: '/organizations/create', replace: true });
+        throw redirect({ to: '/organizations/create', replace: true });
     }
 }
 
@@ -143,12 +135,12 @@ export function useNavigateToOrganizationEntry() {
     const navigate = useNavigate();
 
     return useCallback(async () => {
-        await runNavigation(
-            navigate,
-            await resolveCurrentUserEntryTarget({
+        await navigate({
+            ...(await resolveCurrentUserEntryTarget({
                 fresh: true,
                 anonymousTo: '/auth/sign-in',
-            }),
-        );
+            })),
+            replace: true,
+        });
     }, [navigate]);
 }
