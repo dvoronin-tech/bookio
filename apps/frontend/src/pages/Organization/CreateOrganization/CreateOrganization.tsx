@@ -14,7 +14,7 @@ import { useIsOrganizationExists } from '#api/organizations/isOrganizationExists
 import { Controller, useForm, useWatch, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
-import { useNavigate, useRouter } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
 import { useDebouncedValidation } from '#utils/useDebouncedValidation';
@@ -37,7 +37,6 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export const CreateOrganization: FC = () => {
-    const router = useRouter();
     const navigate = useNavigate();
     const { data: session } = useSession();
     const { data: organization, mutateAsync, isPending, isSuccess } = useCreateOrganization();
@@ -87,10 +86,6 @@ export const CreateOrganization: FC = () => {
         handleSubmit(onSubmit, onInvalid)();
     }, [handleSubmit, onSubmit, onInvalid]);
 
-    const handleClose = useCallback(() => {
-        router.history.back();
-    }, [router]);
-
     const handleGoToConnect = useCallback(() => {
         void navigate({ to: '/organizations/connect' });
     }, [navigate]);
@@ -126,14 +121,6 @@ export const CreateOrganization: FC = () => {
                                 disabled={isDisabled}
                             >
                                 Я сотрудник — подключиться к организации
-                            </Button>
-                            <Button
-                                type="button"
-                                variant="simple-clean"
-                                className={styles.actionButton}
-                                onClick={handleClose}
-                            >
-                                Close
                             </Button>
                             <AccountSignOut />
                         </div>
@@ -179,7 +166,6 @@ const SuccessfulOrganizationCreation: FC<{
     data: CreateOrganizationResponse['data'];
 }> = ({ data }) => {
     const navigate = useNavigate();
-    const router = useRouter();
 
     const handleOpenBookingForms = useCallback(() => {
         void navigate({
@@ -187,10 +173,6 @@ const SuccessfulOrganizationCreation: FC<{
             params: { organizationId: data.organization.id },
         });
     }, [data.organization.id, navigate]);
-
-    const handleClose = useCallback(() => {
-        router.history.back();
-    }, [router]);
 
     return (
         <FormWizardLayout
@@ -205,14 +187,6 @@ const SuccessfulOrganizationCreation: FC<{
                         onClick={handleOpenBookingForms}
                     >
                         Открыть формы записи
-                    </Button>
-                    <Button
-                        type="button"
-                        variant="simple-clean"
-                        className={styles.actionButton}
-                        onClick={handleClose}
-                    >
-                        Close
                     </Button>
                     <AccountSignOut />
                 </div>
