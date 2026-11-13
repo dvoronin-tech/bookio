@@ -1,11 +1,11 @@
-import { type FC, useCallback } from 'react';
+import { type FC, useCallback, useState } from 'react';
 import styles from './CreateOrganization.module.scss';
-import { Button, Input, HiddenField, ValidatableInput } from '@bookio/ui';
+import { Button, Dialog, Input, HiddenField, ValidatableInput } from '@bookio/ui';
 import {
     useCreateOrganization,
     type CreateOrganizationResponse,
 } from '#api/organizations/createOrganization';
-import { useSession } from '#api/auth';
+import { useSession, useSignOut } from '#api/auth';
 import { slugSchema } from '@bookio/backend/schemas';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
@@ -14,7 +14,7 @@ import { useIsOrganizationExists } from '#api/organizations/isOrganizationExists
 import { Controller, useForm, useWatch, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
-import { useNavigate, useRouter } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
 import { useDebouncedValidation } from '#utils/useDebouncedValidation';
@@ -37,7 +37,7 @@ const formSchema = z.object({
 type FormData = z.infer<typeof formSchema>;
 
 export const CreateOrganization: FC = () => {
-    const router = useRouter();
+    const navigate = useNavigate();
     const { data: session } = useSession();
     const { data: organization, mutateAsync, isPending, isSuccess } = useCreateOrganization();
 
@@ -86,9 +86,9 @@ export const CreateOrganization: FC = () => {
         handleSubmit(onSubmit, onInvalid)();
     }, [handleSubmit, onSubmit, onInvalid]);
 
-    const handleClose = useCallback(() => {
-        router.history.back();
-    }, [router]);
+    const handleGoToConnect = useCallback(() => {
+        void navigate({ to: '/organizations/connect' });
+    }, [navigate]);
 
     const isDisabled = isPending || isSubmitting;
 
@@ -99,22 +99,30 @@ export const CreateOrganization: FC = () => {
             ) : (
                 <FormWizardLayout
                     stepNumber={1}
-                    title="Let's create your organization"
-                    description="Choose a name and unique slug for your organization. You'll also set a password to protect access."
+                    title="Создайте организацию"
+                    description="Так появится рабочее пространство для формы записи."
                     onEnterComplete={isDisabled ? undefined : handleSubmitForm}
                     footer={
                         <div className={styles.footerActions}>
                             <Button
                                 type="button"
                                 variant="primary-filled"
+                                className={styles.actionButton}
                                 onClick={handleSubmitForm}
                                 disabled={isDisabled}
                             >
                                 Create Organization
                             </Button>
-                            <Button type="button" variant="simple-clean" onClick={handleClose}>
-                                Close
+                            <Button
+                                type="button"
+                                variant="simple-outlined"
+                                className={styles.actionButton}
+                                onClick={handleGoToConnect}
+                                disabled={isDisabled}
+                            >
+                                Я сотрудник — подключиться к организации
                             </Button>
+                            <AccountSignOut />
                         </div>
                     }
                 >
@@ -154,14 +162,17 @@ export const CreateOrganization: FC = () => {
     );
 };
 
-const SuccessfulOrganizationCreation: FC<{ data: CreateOrganizationResponse['data'] }> = ({
-    data,
-}) => {
+const SuccessfulOrganizationCreation: FC<{
+    data: CreateOrganizationResponse['data'];
+}> = ({ data }) => {
     const navigate = useNavigate();
 
-    const handleGoToOrganizations = useCallback(() => {
-        void navigate({ to: '/organizations/list' });
-    }, [navigate]);
+    const handleOpenBookingForms = useCallback(() => {
+        void navigate({
+            to: '/$organizationId/booking-forms',
+            params: { organizationId: data.organization.id },
+        });
+    }, [data.organization.id, navigate]);
 
     return (
         <FormWizardLayout
@@ -170,9 +181,14 @@ const SuccessfulOrganizationCreation: FC<{ data: CreateOrganizationResponse['dat
             description="Your organization has been created successfully. Below, in the hidden field, you can find the organization secret key. Copy and keep it in a safe place."
             footer={
                 <div className={styles.footerActions}>
-                    <Button variant="primary-filled" onClick={handleGoToOrganizations}>
-                        Go to organizations
+                    <Button
+                        variant="primary-filled"
+                        className={styles.actionButton}
+                        onClick={handleOpenBookingForms}
+                    >
+                        Открыть формы записи
                     </Button>
+                    <AccountSignOut />
                 </div>
             }
         >
@@ -181,5 +197,58 @@ const SuccessfulOrganizationCreation: FC<{ data: CreateOrganizationResponse['dat
                 onCopy={(value) => copyToClipboard(value, 'Secret key')}
             />
         </FormWizardLayout>
+    );
+};
+
+const AccountSignOut: FC = () => {
+    const navigate = useNavigate();
+    const [isLogoutDialogOpen, setIsLogoutDialogOpen] = useState(false);
+    const { mutateAsync, isPending } = useSignOut();
+
+    const handleLogout = async () => {
+        const logoutRes = mutateAsync();
+
+        await toast.promise(logoutRes, {
+            loading: 'Trying to logout',
+            error: (error) =>
+                `Something went wrong during logout, error: ${error}`,
+            success: "You've been logged out successfully",
+        });
+
+        const logoutData = await logoutRes;
+        if (logoutData.success) {
+            setIsLogoutDialogOpen(false);
+            await navigate({ to: '/auth/sign-in' });
+        }
+    };
+
+    return (
+        <>
+            <button
+                type="button"
+                className={styles.signOut}
+                onClick={() => setIsLogoutDialogOpen(true)}
+                disabled={isPending}
+            >
+                Не тот аккаунт? Выйти
+            </button>
+            <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
+                <Dialog.Title>Are you sure that you want to log out?</Dialog.Title>
+                <Dialog.Description>
+                    If you continue, you will be logged out.
+                </Dialog.Description>
+                <Dialog.Actions>
+                    <Dialog.Button
+                        variant="simple-clean"
+                        onClick={() => setIsLogoutDialogOpen(false)}
+                    >
+                        Go back
+                    </Dialog.Button>
+                    <Dialog.Button variant="red-filled" onClick={handleLogout}>
+                        Выйти
+                    </Dialog.Button>
+                </Dialog.Actions>
+            </Dialog>
+        </>
     );
 };

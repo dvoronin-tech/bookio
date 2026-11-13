@@ -7,7 +7,7 @@ import {
 } from '#api/organizations/connectToOrganization';
 import { z } from 'zod';
 import { toast } from 'react-hot-toast';
-import { useNavigate, useRouter } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
@@ -22,7 +22,6 @@ type FormData = z.infer<typeof formSchema>;
 
 export const ConnectOrganization: FC = () => {
     const navigate = useNavigate();
-    const router = useRouter();
     const { mutateAsync, isSuccess, isPending } = useConnectToOrganization();
 
     const {
@@ -50,9 +49,9 @@ export const ConnectOrganization: FC = () => {
         handleSubmit(onSubmit, onInvalid)();
     }, [handleSubmit, onSubmit, onInvalid]);
 
-    const handleClose = useCallback(() => {
-        router.history.back();
-    }, [router]);
+    const handleGoToCreate = useCallback(() => {
+        void navigate({ to: '/organizations/create' });
+    }, [navigate]);
 
     useEffect(() => {
         if (isSuccess) {
@@ -73,13 +72,20 @@ export const ConnectOrganization: FC = () => {
                     <Button
                         type="button"
                         variant="primary-filled"
+                        className={styles.actionButton}
                         onClick={handleSubmitForm}
                         disabled={isDisabled}
                     >
                         Connect to Organization
                     </Button>
-                    <Button type="button" variant="simple-clean" onClick={handleClose}>
-                        Close
+                    <Button
+                        type="button"
+                        variant="simple-outlined"
+                        className={styles.actionButton}
+                        onClick={handleGoToCreate}
+                        disabled={isDisabled}
+                    >
+                        Я владелец — создать организацию
                     </Button>
                 </div>
             }
