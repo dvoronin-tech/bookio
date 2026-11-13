@@ -1,4 +1,3 @@
-import { redirect, useNavigate } from '@tanstack/react-router';
 import {
     bookingFormsQueryKey,
     fetchBookingForms,
@@ -19,8 +18,6 @@ export function validateCreateBookingFormSearch(
 
     return {};
 }
-
-type AppNavigate = ReturnType<typeof useNavigate>;
 
 async function loadBookingFormCount(
     organizationId: string,
@@ -65,55 +62,42 @@ export async function resolveOrganizationWorkspaceTarget(
     };
 }
 
-export async function redirectToOrganizationWorkspace(
-    organizationId: string,
-): Promise<never> {
-    throw redirect({
-        ...(await resolveOrganizationWorkspaceTarget(organizationId)),
-        replace: true,
-    });
-}
-
-export async function navigateToOrganizationWorkspace(
-    navigate: AppNavigate,
-    organizationId: string,
-    options?: { replace?: boolean },
-): Promise<void> {
-    await navigate({
-        ...(await resolveOrganizationWorkspaceTarget(organizationId)),
-        replace: options?.replace,
-    });
-}
+export type CreateBookingFormRouteTarget = {
+    to: '/$organizationId/booking-forms/create';
+    params: { organizationId: string };
+    search: CreateBookingFormSearch;
+};
 
 /**
  * Latch `guided` from the forms count when the create route loads.
+ * Returns null when this visit should stay on the current search.
  * The param stays for this visit, so creating the form (count becomes 1)
  * does not put the list exit back on the success step.
  */
-export async function redirectCreateRouteToGuidedFirstForm(options: {
+export async function resolveCreateBookingFormRoute(options: {
     organizationId: string;
     guided: boolean;
-}): Promise<void> {
+}): Promise<CreateBookingFormRouteTarget | null> {
     const count = await loadBookingFormCount(options.organizationId);
     if (count === null) {
-        return;
+        return null;
     }
 
     if (count === 0 && !options.guided) {
-        throw redirect({
+        return {
             to: '/$organizationId/booking-forms/create',
             params: { organizationId: options.organizationId },
             search: { guided: true },
-            replace: true,
-        });
+        };
     }
 
     if (count > 0 && options.guided) {
-        throw redirect({
+        return {
             to: '/$organizationId/booking-forms/create',
             params: { organizationId: options.organizationId },
             search: {},
-            replace: true,
-        });
+        };
     }
+
+    return null;
 }

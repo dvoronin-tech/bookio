@@ -1,14 +1,15 @@
 import { useCallback } from 'react';
-import { redirect, useNavigate } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
 import {
     fetchOrganizationsByUserId,
     organizationsQueryKey,
     type OrganizationsType,
 } from '#api/organizations/getOrganizationsByUserId';
 import {
-    navigateToOrganizationWorkspace,
-    redirectToOrganizationWorkspace,
+    resolveOrganizationWorkspaceTarget,
+    type OrganizationWorkspaceTarget,
 } from '#lib/bookingFormEntry';
+import { throwNavigation, runNavigation } from '#lib/navigation';
 import { queryClient } from '#lib/query-client';
 import { getSession } from '#lib/session';
 
@@ -45,36 +46,78 @@ export async function loadCurrentUserOrganizations(options?: {
     }
 }
 
-export async function redirectToOrganizationEntry(
+export type OrganizationEntryTarget =
+    | { to: '/organizations/create' }
+    | { to: '/organizations/list' }
+    | OrganizationWorkspaceTarget;
+
+/** 0 orgs → create, 1 → its workspace, 2+ → chooser. */
+export async function resolveOrganizationEntryTarget(
     organizations: OrganizationsType,
-): Promise<never> {
+): Promise<OrganizationEntryTarget> {
     if (organizations.length === 0) {
-        throw redirect({ to: '/organizations/create', replace: true });
+        return { to: '/organizations/create' };
     }
 
     const organization =
         organizations.length === 1 ? organizations[0] : undefined;
 
     if (organization) {
-        await redirectToOrganizationWorkspace(organization.id);
+        return resolveOrganizationWorkspaceTarget(organization.id);
     }
 
-    throw redirect({ to: '/organizations/list', replace: true });
+    return { to: '/organizations/list' };
+}
+
+type CurrentUserEntryTarget = OrganizationEntryTarget & { replace: true };
+
+/**
+ * Anonymous with no `anonymousTo` is a sentinel: the caller stays put.
+ * Error opens the chooser. A ready session uses the org-count target.
+ */
+export async function resolveCurrentUserEntryTarget(options: {
+    fresh?: boolean;
+    anonymousTo: '/auth/sign-in';
+}): Promise<CurrentUserEntryTarget | { to: '/auth/sign-in'; replace: true }>;
+export async function resolveCurrentUserEntryTarget(options?: {
+    fresh?: boolean;
+}): Promise<CurrentUserEntryTarget | null>;
+export async function resolveCurrentUserEntryTarget(options?: {
+    fresh?: boolean;
+    anonymousTo?: '/auth/sign-in';
+}): Promise<
+    | CurrentUserEntryTarget
+    | { to: '/auth/sign-in'; replace: true }
+    | null
+> {
+    const result = await loadCurrentUserOrganizations({
+        fresh: options?.fresh,
+    });
+
+    if (result.status === 'anonymous') {
+        return options?.anonymousTo
+            ? { to: options.anonymousTo, replace: true }
+            : null;
+    }
+
+    if (result.status === 'error') {
+        return { to: '/organizations/list', replace: true };
+    }
+
+    return {
+        ...(await resolveOrganizationEntryTarget(result.organizations)),
+        replace: true,
+    };
 }
 
 /** Signed-in home and auth: 0 orgs → create, 1 org → its workspace, 2+ → chooser. */
 export async function redirectToCurrentUserEntry(): Promise<void> {
-    const result = await loadCurrentUserOrganizations();
-
-    if (result.status === 'anonymous') {
+    const target = await resolveCurrentUserEntryTarget();
+    if (!target) {
         return;
     }
 
-    if (result.status === 'error') {
-        throw redirect({ to: '/organizations/list', replace: true });
-    }
-
-    await redirectToOrganizationEntry(result.organizations);
+    throwNavigation(target);
 }
 
 /** List and organization routes stay closed when the user has no organization. */
@@ -92,7 +135,7 @@ export async function redirectIfUserHasNoOrganizations(): Promise<void> {
     const result = await loadCurrentUserOrganizations();
 
     if (result.status === 'ready' && result.organizations.length === 0) {
-        throw redirect({ to: '/organizations/create', replace: true });
+        throwNavigation({ to: '/organizations/create', replace: true });
     }
 }
 
@@ -100,35 +143,12 @@ export function useNavigateToOrganizationEntry() {
     const navigate = useNavigate();
 
     return useCallback(async () => {
-        const result = await loadCurrentUserOrganizations({ fresh: true });
-
-        if (result.status === 'anonymous') {
-            await navigate({ to: '/auth/sign-in', replace: true });
-            return;
-        }
-
-        if (result.status === 'error') {
-            await navigate({ to: '/organizations/list', replace: true });
-            return;
-        }
-
-        if (result.organizations.length === 0) {
-            await navigate({ to: '/organizations/create', replace: true });
-            return;
-        }
-
-        const organization =
-            result.organizations.length === 1
-                ? result.organizations[0]
-                : undefined;
-
-        if (organization) {
-            await navigateToOrganizationWorkspace(navigate, organization.id, {
-                replace: true,
-            });
-            return;
-        }
-
-        await navigate({ to: '/organizations/list', replace: true });
+        await runNavigation(
+            navigate,
+            await resolveCurrentUserEntryTarget({
+                fresh: true,
+                anonymousTo: '/auth/sign-in',
+            }),
+        );
     }, [navigate]);
 }
