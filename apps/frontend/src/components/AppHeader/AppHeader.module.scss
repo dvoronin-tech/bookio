@@ -16,9 +16,23 @@
         padding: 0 2rem;
     }
 
+    .headerEnd {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
+        min-width: 0;
+    }
+
     .dropdown {
         width: fit-content;
         max-width: 20rem;
+    }
+
+    .languageFlag {
+        width: 2rem;
+        height: 1.4rem;
+        display: block;
+        border-radius: 0.2rem;
     }
 
     .menuItemImage {

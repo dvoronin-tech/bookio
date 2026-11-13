@@ -3,7 +3,7 @@ import styles from './AppHeader.module.scss';
 import Logo from '#assets/logo.svg?react';
 import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
-import { Button, Dialog, Dropdown, Loader } from '@bookio/ui';
+import { Button, Dialog, Dropdown, Loader, SegmentedControl } from '@bookio/ui';
 
 import {
     useGetOrganization,
@@ -15,11 +15,15 @@ import FormIcon from '#assets/icons/form.svg?react';
 import TableIcon from '#assets/icons/table.svg?react';
 import OrganizationIcon from '#assets/icons/organization.svg?react';
 import LogOutIcon from '#assets/icons/log-out.svg?react';
+import FlagUsIcon from '#assets/icons/flag-us.svg?react';
+import FlagRuIcon from '#assets/icons/flag-ru.svg?react';
 
 import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { useSession, useSignOut } from '#api/auth';
+import { m } from '../../paraglide/messages.js';
+import { getLocale, setLocale } from '../../paraglide/runtime.js';
 
 export const AppHeader: FC = () => {
     const params = organizationRouteApi.useParams({ shouldThrow: false });
@@ -48,10 +52,32 @@ export const AppHeader: FC = () => {
             >
                 <Logo className={styles.logo} />
             </button>
-            <div className={styles.dropdown}>
-                <HeaderDropdown />
+            <div className={styles.headerEnd}>
+                <LanguageSwitch />
+                <div className={styles.dropdown}>
+                    <HeaderDropdown />
+                </div>
             </div>
         </div>
+    );
+};
+
+const LanguageSwitch: FC = () => {
+    const locale = getLocale();
+
+    return (
+        <SegmentedControl
+            aria-label="Language"
+            value={locale}
+            onValueChange={setLocale}
+        >
+            <SegmentedControl.Item value="en" aria-label={m.language_en()}>
+                <FlagUsIcon className={styles.languageFlag} />
+            </SegmentedControl.Item>
+            <SegmentedControl.Item value="ru" aria-label={m.language_ru()}>
+                <FlagRuIcon className={styles.languageFlag} />
+            </SegmentedControl.Item>
+        </SegmentedControl>
     );
 };
 
