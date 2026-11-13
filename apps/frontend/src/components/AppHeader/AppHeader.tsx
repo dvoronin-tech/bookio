@@ -3,7 +3,7 @@ import styles from './AppHeader.module.scss';
 import Logo from '#assets/logo.svg?react';
 import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
-import { Button, Dialog, Dropdown, Loader } from '@bookio/ui';
+import { Button, Dialog, Dropdown, Loader, SegmentedControl } from '@bookio/ui';
 
 import {
     useGetOrganization,
@@ -66,32 +66,23 @@ const LanguageSwitch: FC = () => {
     const locale = getLocale();
 
     return (
-        <div className={styles.languageSwitch}>
-            <button
-                type="button"
-                className={clsx(
-                    styles.languageOption,
-                    locale === 'en' && styles.languageOptionActive,
-                )}
-                aria-pressed={locale === 'en'}
-                aria-label={m.language_en()}
-                onClick={() => setLocale('en')}
-            >
-                <FlagUsIcon className={styles.languageFlag} />
-            </button>
-            <button
-                type="button"
-                className={clsx(
-                    styles.languageOption,
-                    locale === 'ru' && styles.languageOptionActive,
-                )}
-                aria-pressed={locale === 'ru'}
-                aria-label={m.language_ru()}
-                onClick={() => setLocale('ru')}
-            >
-                <FlagRuIcon className={styles.languageFlag} />
-            </button>
-        </div>
+        <SegmentedControl
+            aria-label="Language"
+            value={locale}
+            onChange={setLocale}
+            options={[
+                {
+                    value: 'en',
+                    label: m.language_en(),
+                    icon: <FlagUsIcon className={styles.languageFlag} />,
+                },
+                {
+                    value: 'ru',
+                    label: m.language_ru(),
+                    icon: <FlagRuIcon className={styles.languageFlag} />,
+                },
+            ]}
+        />
     );
 };
 

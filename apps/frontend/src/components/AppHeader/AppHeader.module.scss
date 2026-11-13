@@ -28,35 +28,6 @@
         max-width: 20rem;
     }
 
-    .languageSwitch {
-        display: flex;
-        align-items: center;
-        gap: 0.6rem;
-        flex: 0 0 auto;
-    }
-
-    .languageOption {
-        display: flex;
-        align-items: center;
-        padding: 0.2rem;
-        border-radius: 0.4rem;
-        line-height: 0;
-        opacity: 0.4;
-
-        &:hover {
-            opacity: 0.75;
-        }
-    }
-
-    .languageOptionActive {
-        opacity: 1;
-        box-shadow: 0 0 0 1px var(--color-text-main);
-
-        &:hover {
-            opacity: 1;
-        }
-    }
-
     .languageFlag {
         width: 2rem;
         height: 1.4rem;

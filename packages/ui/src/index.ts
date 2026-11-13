@@ -71,6 +71,12 @@ export type { TooltipProps } from './Tooltip/Tooltip.js';
 export { default as ProgressBar } from './ProgressBar/ProgressBar.js';
 export type { ProgressBarProps } from './ProgressBar/ProgressBar.js';
 
+export { default as SegmentedControl } from './SegmentedControl/SegmentedControl.js';
+export type {
+    SegmentedControlOption,
+    SegmentedControlProps,
+} from './SegmentedControl/SegmentedControl.js';
+
 export { default as Loader } from './Loader/Loader.js';
 export { default as PageLoader } from './Loader/PageLoader.js';
 
