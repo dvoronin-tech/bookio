@@ -20,6 +20,8 @@ import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { useSession, useSignOut } from '#api/auth';
+import { m } from '../../paraglide/messages.js';
+import { getLocale, setLocale } from '../../paraglide/runtime.js';
 
 export const AppHeader: FC = () => {
     const params = organizationRouteApi.useParams({ shouldThrow: false });
@@ -48,9 +50,43 @@ export const AppHeader: FC = () => {
             >
                 <Logo className={styles.logo} />
             </button>
-            <div className={styles.dropdown}>
-                <HeaderDropdown />
+            <div className={styles.headerEnd}>
+                <LanguageSwitch />
+                <div className={styles.dropdown}>
+                    <HeaderDropdown />
+                </div>
             </div>
+        </div>
+    );
+};
+
+const LanguageSwitch: FC = () => {
+    const locale = getLocale();
+
+    return (
+        <div className={styles.languageSwitch}>
+            <button
+                type="button"
+                className={clsx(
+                    styles.languageOption,
+                    locale === 'en' && styles.languageOptionActive,
+                )}
+                aria-pressed={locale === 'en'}
+                onClick={() => setLocale('en')}
+            >
+                {m.language_en()}
+            </button>
+            <button
+                type="button"
+                className={clsx(
+                    styles.languageOption,
+                    locale === 'ru' && styles.languageOptionActive,
+                )}
+                aria-pressed={locale === 'ru'}
+                onClick={() => setLocale('ru')}
+            >
+                {m.language_ru()}
+            </button>
         </div>
     );
 };

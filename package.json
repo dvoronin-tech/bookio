@@ -8,7 +8,7 @@
         "front": "pnpm --filter @bookio/frontend",
         "back": "pnpm --filter @bookio/backend",
         "db": "pnpm --filter @bookio/db",
-        "typecheck": "tsc -b --pretty",
+        "typecheck": "pnpm --filter @bookio/frontend exec paraglide-js compile --project ./project.inlang && tsc -b --pretty",
         "dev": "pnpm -r --parallel --filter @bookio/backend --filter @bookio/frontend --filter @bookio/booking-form run dev"
     },
     "keywords": [],

@@ -4,8 +4,13 @@ import { RouterProvider } from '@tanstack/react-router';
 import { queryClient } from '#lib/query-client';
 import { router } from './router';
 import { Toaster } from 'react-hot-toast';
-import './index.css';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { getLocale, getTextDirection } from './paraglide/runtime.js';
+import './index.css';
+
+document.documentElement.lang = getLocale();
+document.documentElement.dir = getTextDirection();
+
 createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>
         <Toaster

@@ -4,6 +4,7 @@ import { defineConfig } from 'vite';
 import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react';
 import svgr from 'vite-plugin-svgr';
+import { paraglideVitePlugin } from '@inlang/paraglide-js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -16,6 +17,7 @@ export default defineConfig({
         }),
         react(),
         svgr(),
+        paraglideVitePlugin({ project: './project.inlang' }),
     ],
     resolve: {
         alias: [

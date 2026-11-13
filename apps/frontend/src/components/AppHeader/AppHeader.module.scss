@@ -16,9 +16,49 @@
         padding: 0 2rem;
     }
 
+    .headerEnd {
+        display: flex;
+        align-items: center;
+        gap: 1.6rem;
+        min-width: 0;
+    }
+
     .dropdown {
         width: fit-content;
         max-width: 20rem;
+    }
+
+    .languageSwitch {
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        flex: 0 0 auto;
+    }
+
+    .languageOption {
+        display: flex;
+        align-items: center;
+        padding: 0.2rem 0.3rem;
+        border-radius: 0.4rem;
+        font-size: 1.2rem;
+        font-weight: 700;
+        letter-spacing: 0.04em;
+        line-height: 1;
+        color: var(--color-text-main);
+        opacity: 0.4;
+
+        &:hover {
+            opacity: 0.75;
+        }
+    }
+
+    .languageOptionActive {
+        opacity: 1;
+        box-shadow: 0 0 0 1px var(--color-text-main);
+
+        &:hover {
+            opacity: 1;
+        }
     }
 
     .menuItemImage {
