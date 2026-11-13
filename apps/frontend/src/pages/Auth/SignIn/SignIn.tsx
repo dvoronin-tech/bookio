@@ -7,7 +7,7 @@ import { toast } from 'react-hot-toast';
 import { type FieldErrors, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
-import { useNavigateToOrganizationEntry } from '#lib/organizationEntry';
+import { goToCurrentUserEntry } from '#lib/organizationEntry';
 
 const signInSchema = z.object({
     email: z.email(),
@@ -32,7 +32,6 @@ type SignInData = z.infer<typeof signInSchema>;
 
 export const SignIn: FC = () => {
     const navigate = useNavigate();
-    const navigateToOrganizationEntry = useNavigateToOrganizationEntry();
     const { mutateAsync, isPending } = useSignIn();
 
     const {
@@ -50,7 +49,7 @@ export const SignIn: FC = () => {
             success: 'Signed in successfully',
             error: (error: Error) => error.message,
         });
-        await navigateToOrganizationEntry();
+        await goToCurrentUserEntry(navigate);
     };
 
     const onInvalid = (errors: FieldErrors<SignInData>) => {

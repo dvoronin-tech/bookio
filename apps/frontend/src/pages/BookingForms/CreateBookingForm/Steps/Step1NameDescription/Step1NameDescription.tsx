@@ -1,15 +1,25 @@
 import { type ChangeEvent, type FC, useCallback } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, Input, ValidatableInput } from '@bookio/ui';
+import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import toast from 'react-hot-toast';
-import { useRouter } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
+import {
+    createBookingFormRouteApi,
+    organizationRouteApi,
+} from '#lib/routeApis';
 import styles from './Step1NameDescription.module.scss';
 
 export const Step1NameDescription: FC = () => {
-    const router = useRouter();
+    const navigate = useNavigate();
+    const { guided } = createBookingFormRouteApi.useSearch();
+    const { organizationId: routeOrganizationId } =
+        organizationRouteApi.useParams();
+    const { data: bookingForms } = useGetBookingForms(routeOrganizationId);
+    const isGuidedFirstForm = guided === true || bookingForms?.length === 0;
     const { data, name, description, organizationId, setField, goToNextStep } =
         useCreateBookingFormStore(
             useShallow((s) => ({
@@ -42,8 +52,11 @@ export const Step1NameDescription: FC = () => {
     }, [data.name, goToNextStep]);
 
     const handleClose = useCallback(() => {
-        router.history.back();
-    }, [router]);
+        void navigate({
+            to: '/$organizationId/booking-forms',
+            params: { organizationId: routeOrganizationId },
+        });
+    }, [navigate, routeOrganizationId]);
 
     return (
         <FormWizardLayout
@@ -60,13 +73,15 @@ export const Step1NameDescription: FC = () => {
                     >
                         Go to next
                     </Button>
-                    <Button
-                        type="button"
-                        variant="simple-clean"
-                        onClick={handleClose}
-                    >
-                        Close
-                    </Button>
+                    {isGuidedFirstForm ? null : (
+                        <Button
+                            type="button"
+                            variant="simple-clean"
+                            onClick={handleClose}
+                        >
+                            Close
+                        </Button>
+                    )}
                 </div>
             }
         >

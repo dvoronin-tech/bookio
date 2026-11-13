@@ -5,6 +5,9 @@ import type { InferResponseType } from 'hono/client';
 import { useQuery, type UseQueryResult } from '@tanstack/react-query';
 import { useSession } from '#api/auth';
 
+export const bookingFormsQueryKey = (organizationId: string | undefined) =>
+    ['booking-forms', organizationId] as const;
+
 export const invalidateBookingForms = () => {
     void queryClient.invalidateQueries({
         queryKey: ['booking-forms'],
@@ -20,7 +23,7 @@ export type GetBookingFormsResponse = InferResponseType<
 export type BookingFormsType = GetBookingFormsResponse['data'];
 export type BookingFormType = BookingFormsType[number];
 
-const fetchBookingForms = async (
+export const fetchBookingForms = async (
     organizationId: string,
 ): Promise<BookingFormsType> => {
     const response = await getBookingFormsClient.$get({
@@ -39,7 +42,7 @@ export const useGetBookingForms = (
 ): UseQueryResult<BookingFormsType> => {
     const { data: session } = useSession();
     return useQuery<BookingFormsType>({
-        queryKey: ['booking-forms', organizationId],
+        queryKey: bookingFormsQueryKey(organizationId),
         queryFn: () => fetchBookingForms(organizationId!),
         enabled: !!session?.user.id && !!organizationId,
     });

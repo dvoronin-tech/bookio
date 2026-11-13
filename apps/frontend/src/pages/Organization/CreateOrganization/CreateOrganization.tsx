@@ -15,6 +15,7 @@ import { Controller, useForm, useWatch, type FieldErrors } from 'react-hook-form
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { useNavigate } from '@tanstack/react-router';
+import { goToOrganizationWorkspace } from '#lib/bookingFormEntry';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizardLayoutContext';
 import { useDebouncedValidation } from '#utils/useDebouncedValidation';
@@ -168,10 +169,7 @@ const SuccessfulOrganizationCreation: FC<{
     const navigate = useNavigate();
 
     const handleOpenBookingForms = useCallback(() => {
-        void navigate({
-            to: '/$organizationId/booking-forms',
-            params: { organizationId: data.organization.id },
-        });
+        void goToOrganizationWorkspace(data.organization.id, navigate);
     }, [data.organization.id, navigate]);
 
     return (
