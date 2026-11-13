@@ -4,3 +4,31 @@
     flex-direction: column;
     gap: 0.8rem;
 }
+
+.actionButton {
+    width: 100%;
+}
+
+.signOut {
+    align-self: center;
+    margin-top: 0.8rem;
+    padding: 0.4rem;
+    border: none;
+    background: none;
+    color: var(--color-text-secondary);
+    font-family: inherit;
+    font-size: 1.4rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: underline;
+    text-underline-offset: 0.25em;
+
+    &:hover:not(:disabled) {
+        color: var(--color-text-main);
+    }
+
+    &:disabled {
+        cursor: not-allowed;
+        opacity: 0.5;
+    }
+}

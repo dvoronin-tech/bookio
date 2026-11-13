@@ -52,8 +52,7 @@ export const BookingForms: FC = () => {
         return (
             <div className={styles.emptyContainer}>
                 <div className={styles.emptyContainerContent}>
-                    <h2>You haven't any booking forms yet</h2>
-                    <p>Create your first booking form to get started</p>
+                    <h2>Форм записи пока нет</h2>
                 </div>
                 <Button
                     variant="primary-filled"
@@ -65,7 +64,7 @@ export const BookingForms: FC = () => {
                         })
                     }
                 >
-                    Create your first booking form
+                    Создать первую форму
                 </Button>
             </div>
         );

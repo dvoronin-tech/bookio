@@ -1,4 +1,4 @@
-import { type FC, useCallback, useState } from 'react';
+import { type FC, useCallback, useEffect, useState } from 'react';
 import styles from './OrganizationList.module.scss';
 
 import { OrganizationItem } from '#components/OrganizationItem/OrganizationItem';
@@ -42,6 +42,12 @@ export const OrganizationList: FC = () => {
         setIsSearchOpen(true);
     };
 
+    useEffect(() => {
+        if (!error && data && data.length === 0) {
+            void navigate({ to: '/organizations/create', replace: true });
+        }
+    }, [data, error, navigate]);
+
     if (isPending) {
         return <PageLoader />;
     }
@@ -59,40 +65,15 @@ export const OrganizationList: FC = () => {
         );
     }
 
-    if (data.length === 0) {
-        return (
-            <div className={styles.emptyContainer}>
-                <div className={styles.emptyContainerContent}>
-                    <h2>You haven't any organizations yet</h2>
-                    <p>Create or connect to an organization to get started</p>
-                </div>
-                <div className={styles.emptyActions}>
-                    <Button
-                        variant="primary-filled"
-                        className={styles.emptyButton}
-                        onClick={handleGoToCreate}
-                    >
-                        <PlusIcon />
-                        Create organization
-                    </Button>
-                    <Button
-                        variant="simple-filled"
-                        className={styles.emptyButton}
-                        onClick={handleGoToConnect}
-                    >
-                        <ConnectIcon />
-                        Connect to organization
-                    </Button>
-                </div>
-            </div>
-        );
+    if (!data || data.length === 0) {
+        return <PageLoader />;
     }
 
     return (
         <div className={styles.page}>
             <div className={styles.header}>
                 <div className={styles.headerLeft}>
-                    <h2 className={styles.pageTitle}>Organizations</h2>
+                    <h2 className={styles.pageTitle}>Выберите организацию</h2>
                 </div>
 
                 <div className={styles.headerToolbar}>

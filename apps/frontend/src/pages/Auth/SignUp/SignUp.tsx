@@ -7,6 +7,7 @@ import { toast } from 'react-hot-toast';
 import { type FieldErrors, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
+import { useNavigateToOrganizationEntry } from '#lib/organizationEntry';
 
 const passwordSchema = z
     .string()
@@ -37,6 +38,7 @@ type SignUpData = z.infer<typeof signUpSchema>;
 
 export const SignUp: FC = () => {
     const navigate = useNavigate();
+    const navigateToOrganizationEntry = useNavigateToOrganizationEntry();
     const { mutateAsync, isPending } = useSignUp();
 
     const {
@@ -54,7 +56,7 @@ export const SignUp: FC = () => {
             success: 'Signed up successfully',
             error: (error: Error) => error.message,
         });
-        await navigate({ to: '/organizations/list' });
+        await navigateToOrganizationEntry();
     };
 
     const onInvalid = (errors: FieldErrors<SignUpData>) => {

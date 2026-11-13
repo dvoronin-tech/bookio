@@ -11,7 +11,9 @@ export type OrganizationsResponse200 = InferResponseType<
 export type OrganizationsType = OrganizationsResponse200['data'];
 export type OrganizationType = OrganizationsType[number];
 
-const fetchOrganizationsByUserId = async (userId: string) => {
+export const organizationsQueryKey = ['organizations'] as const;
+
+export const fetchOrganizationsByUserId = async (userId: string) => {
     const response = await hono.organizations.$get({
         query: { userId },
     });
@@ -28,7 +30,7 @@ export const useGetOrganizationsByUserId =
         const { data: session } = useSession();
 
         return useQuery({
-            queryKey: ['organizations'],
+            queryKey: organizationsQueryKey,
             enabled: !!session?.user?.id,
             queryFn: () => fetchOrganizationsByUserId(session!.user.id),
         });
