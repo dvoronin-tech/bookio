@@ -37,24 +37,39 @@ async function loadBookingFormCount(
     }
 }
 
+export type OrganizationWorkspaceTarget = {
+    to:
+        | '/$organizationId/booking-forms/create'
+        | '/$organizationId/booking-forms';
+    params: { organizationId: string };
+    search?: { guided: true };
+};
+
 /** First entry into a workspace: wizard when it has no forms, otherwise the list. */
-export async function redirectToOrganizationWorkspace(
+export async function resolveOrganizationWorkspaceTarget(
     organizationId: string,
-): Promise<never> {
+): Promise<OrganizationWorkspaceTarget> {
     const count = await loadBookingFormCount(organizationId);
 
     if (count === 0) {
-        throw redirect({
+        return {
             to: '/$organizationId/booking-forms/create',
             params: { organizationId },
             search: { guided: true },
-            replace: true,
-        });
+        };
     }
 
-    throw redirect({
+    return {
         to: '/$organizationId/booking-forms',
         params: { organizationId },
+    };
+}
+
+export async function redirectToOrganizationWorkspace(
+    organizationId: string,
+): Promise<never> {
+    throw redirect({
+        ...(await resolveOrganizationWorkspaceTarget(organizationId)),
         replace: true,
     });
 }
@@ -64,21 +79,8 @@ export async function navigateToOrganizationWorkspace(
     organizationId: string,
     options?: { replace?: boolean },
 ): Promise<void> {
-    const count = await loadBookingFormCount(organizationId);
-
-    if (count === 0) {
-        await navigate({
-            to: '/$organizationId/booking-forms/create',
-            params: { organizationId },
-            search: { guided: true },
-            replace: options?.replace,
-        });
-        return;
-    }
-
     await navigate({
-        to: '/$organizationId/booking-forms',
-        params: { organizationId },
+        ...(await resolveOrganizationWorkspaceTarget(organizationId)),
         replace: options?.replace,
     });
 }
