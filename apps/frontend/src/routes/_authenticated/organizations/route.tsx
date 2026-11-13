@@ -1,6 +1,5 @@
-import { createFileRoute } from '@tanstack/react-router';
-import { OrganizationLayout } from '#layouts/OrganizationLayout/OrganizationLayout';
+import { createFileRoute, Outlet } from '@tanstack/react-router';
 
 export const Route = createFileRoute('/_authenticated/organizations')({
-    component: OrganizationLayout,
+    component: Outlet,
 });
