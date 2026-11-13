@@ -5,6 +5,10 @@ import {
     organizationsQueryKey,
     type OrganizationsType,
 } from '#api/organizations/getOrganizationsByUserId';
+import {
+    navigateToOrganizationWorkspace,
+    redirectToOrganizationWorkspace,
+} from '#lib/bookingFormEntry';
 import { queryClient } from '#lib/query-client';
 import { getSession } from '#lib/session';
 
@@ -41,9 +45,9 @@ export async function loadCurrentUserOrganizations(options?: {
     }
 }
 
-export function redirectToOrganizationEntry(
+export async function redirectToOrganizationEntry(
     organizations: OrganizationsType,
-): never {
+): Promise<never> {
     if (organizations.length === 0) {
         throw redirect({ to: '/organizations/create', replace: true });
     }
@@ -52,17 +56,13 @@ export function redirectToOrganizationEntry(
         organizations.length === 1 ? organizations[0] : undefined;
 
     if (organization) {
-        throw redirect({
-            to: '/$organizationId/booking-forms',
-            params: { organizationId: organization.id },
-            replace: true,
-        });
+        await redirectToOrganizationWorkspace(organization.id);
     }
 
     throw redirect({ to: '/organizations/list', replace: true });
 }
 
-/** Signed-in home and auth: 0 → create, 1 → forms, 2+ → chooser. */
+/** Signed-in home and auth: 0 orgs → create, 1 org → its workspace, 2+ → chooser. */
 export async function redirectToCurrentUserEntry(): Promise<void> {
     const result = await loadCurrentUserOrganizations();
 
@@ -74,7 +74,7 @@ export async function redirectToCurrentUserEntry(): Promise<void> {
         throw redirect({ to: '/organizations/list', replace: true });
     }
 
-    redirectToOrganizationEntry(result.organizations);
+    await redirectToOrganizationEntry(result.organizations);
 }
 
 /** List and organization routes stay closed when the user has no organization. */
@@ -123,9 +123,7 @@ export function useNavigateToOrganizationEntry() {
                 : undefined;
 
         if (organization) {
-            await navigate({
-                to: '/$organizationId/booking-forms',
-                params: { organizationId: organization.id },
+            await navigateToOrganizationWorkspace(navigate, organization.id, {
                 replace: true,
             });
             return;

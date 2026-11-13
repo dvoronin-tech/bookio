@@ -5,11 +5,13 @@ import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import toast from 'react-hot-toast';
-import { useRouter } from '@tanstack/react-router';
+import { useNavigate } from '@tanstack/react-router';
+import { organizationRouteApi } from '#lib/routeApis';
 import styles from './Step1NameDescription.module.scss';
 
 export const Step1NameDescription: FC = () => {
-    const router = useRouter();
+    const navigate = useNavigate();
+    const { organizationId: routeOrganizationId } = organizationRouteApi.useParams();
     const { data, name, description, organizationId, setField, goToNextStep } =
         useCreateBookingFormStore(
             useShallow((s) => ({
@@ -42,8 +44,11 @@ export const Step1NameDescription: FC = () => {
     }, [data.name, goToNextStep]);
 
     const handleClose = useCallback(() => {
-        router.history.back();
-    }, [router]);
+        void navigate({
+            to: '/$organizationId/booking-forms',
+            params: { organizationId: routeOrganizationId },
+        });
+    }, [navigate, routeOrganizationId]);
 
     return (
         <FormWizardLayout

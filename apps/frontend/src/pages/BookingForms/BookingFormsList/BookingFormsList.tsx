@@ -61,6 +61,7 @@ export const BookingForms: FC = () => {
                         void navigate({
                             to: '/$organizationId/booking-forms/create',
                             params: { organizationId },
+                            search: { guided: true },
                         })
                     }
                 >

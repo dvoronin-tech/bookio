@@ -169,8 +169,9 @@ const SuccessfulOrganizationCreation: FC<{
 
     const handleOpenBookingForms = useCallback(() => {
         void navigate({
-            to: '/$organizationId/booking-forms',
+            to: '/$organizationId/booking-forms/create',
             params: { organizationId: data.organization.id },
+            search: { guided: true },
         });
     }, [data.organization.id, navigate]);
 

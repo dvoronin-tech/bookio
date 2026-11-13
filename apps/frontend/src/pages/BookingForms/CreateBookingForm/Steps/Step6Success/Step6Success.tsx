@@ -3,6 +3,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { useShallow } from 'zustand/shallow';
 import { Button } from '@bookio/ui';
 import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import { createBookingFormRouteApi } from '#lib/routeApis';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import styles from './Step6Success.module.scss';
 
@@ -10,6 +11,7 @@ import DoneIcon from '#assets/icons/done.svg?react';
 
 export const Step6Success: FC = () => {
     const navigate = useNavigate();
+    const { guided } = createBookingFormRouteApi.useSearch();
     const { organizationId, createdBookingFormId } = useCreateBookingFormStore(
         useShallow((s) => ({
             organizationId: s.data.organizationId,
@@ -39,7 +41,11 @@ export const Step6Success: FC = () => {
         <FormWizardLayout
             stepNumber={6}
             title="Booking form created"
-            description="Your booking form is ready. Continue to the configurator to set it up, or finish and return to the list."
+            description={
+                guided
+                    ? 'Your booking form is ready. Continue to the configurator to set it up.'
+                    : 'Your booking form is ready. Continue to the configurator to set it up, or finish and return to the list.'
+            }
             footer={
                 <div className={styles.footerActions}>
                     <Button
@@ -50,13 +56,15 @@ export const Step6Success: FC = () => {
                     >
                         Continue to configurator
                     </Button>
-                    <Button
-                        type="button"
-                        variant="simple-clean"
-                        onClick={handleFinish}
-                    >
-                        Finish
-                    </Button>
+                    {guided ? null : (
+                        <Button
+                            type="button"
+                            variant="simple-clean"
+                            onClick={handleFinish}
+                        >
+                            Finish
+                        </Button>
+                    )}
                 </div>
             }
         >
