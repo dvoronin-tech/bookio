@@ -9,32 +9,7 @@ import toast from 'react-hot-toast';
 import styles from './Step3Styles.module.scss';
 import { trimObj } from '#utils/trimObj.ts';
 import { m } from '../../../../../paraglide/messages.js';
-
-const COLOR_KEYS = [
-    'primary',
-    'bgMain',
-    'bgSecondary',
-    'borderColor',
-    'textMain',
-    'textSecondary',
-] as const;
-
-const colorLabel = (key: (typeof COLOR_KEYS)[number]) => {
-    switch (key) {
-        case 'primary':
-            return m.color_primary();
-        case 'bgMain':
-            return m.color_bg_main();
-        case 'bgSecondary':
-            return m.color_bg_secondary();
-        case 'borderColor':
-            return m.color_border();
-        case 'textMain':
-            return m.color_text_main();
-        case 'textSecondary':
-            return m.color_text_secondary();
-    }
-};
+import { COLOR_KEYS, colorLabel } from '../../colorLabels.ts';
 
 const colorFields = () =>
     COLOR_KEYS.map((key) => {

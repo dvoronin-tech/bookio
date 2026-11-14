@@ -12,6 +12,7 @@ import clsx from 'clsx';
 import styles from './Step5Review.module.scss';
 import { m } from '../../../../../paraglide/messages.js';
 import { getLocale } from '../../../../../paraglide/runtime.js';
+import { COLOR_KEYS, colorLabel } from '../../colorLabels.ts';
 
 type ReviewCell = {
     label: string;
@@ -24,32 +25,6 @@ type ReviewSection = {
     id: string;
     title: string;
     cells: ReviewCell[];
-};
-
-const COLOR_KEYS = [
-    'primary',
-    'bgMain',
-    'bgSecondary',
-    'borderColor',
-    'textMain',
-    'textSecondary',
-] as const;
-
-const colorLabel = (key: (typeof COLOR_KEYS)[number]) => {
-    switch (key) {
-        case 'primary':
-            return m.color_primary();
-        case 'bgMain':
-            return m.color_bg_main();
-        case 'bgSecondary':
-            return m.color_bg_secondary();
-        case 'borderColor':
-            return m.color_border();
-        case 'textMain':
-            return m.color_text_main();
-        case 'textSecondary':
-            return m.color_text_secondary();
-    }
 };
 
 const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
