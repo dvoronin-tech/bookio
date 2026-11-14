@@ -11,6 +11,7 @@ export type UseImagePickerOptions = {
     onChange?: (file: File | null) => void;
     accept?: string;
     disabled?: boolean;
+    invalidTypeError?: string;
 };
 
 export type UseImagePickerResult = UseFilePickerResult & {
@@ -21,12 +22,13 @@ export function useImagePicker({
     onChange,
     accept = DEFAULT_ACCEPT,
     disabled = false,
+    invalidTypeError = INVALID_TYPE_ERROR,
 }: UseImagePickerOptions): UseImagePickerResult {
     const picker = useFilePicker({
         onChange,
         accept,
         disabled,
-        invalidTypeError: INVALID_TYPE_ERROR,
+        invalidTypeError,
     });
     const [previewUrl, setPreviewUrl] = useState<string | null>(null);
 

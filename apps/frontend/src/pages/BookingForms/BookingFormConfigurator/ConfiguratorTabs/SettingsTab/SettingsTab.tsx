@@ -18,6 +18,7 @@ import { useGetOrganization } from '#api/organizations/getOrganizationData.ts';
 
 import { useForm, useWatch } from 'react-hook-form';
 import { useShallow } from 'zustand/shallow';
+import { m } from '../../../../../paraglide/messages.js';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore.ts';
 import { trimObj } from '#utils/trimObj.ts';
@@ -72,7 +73,7 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({
     const slugFormatResult = slugSchema.safeParse(trimmedSlug);
     const slugFormatError = slugFormatResult.success
         ? undefined
-        : (slugFormatResult.error.issues[0]?.message ?? 'Invalid slug');
+        : (slugFormatResult.error.issues[0]?.message ?? m.step2_invalid_slug());
 
     const { data: savedBookingForm } = useGetBookingForm(id);
 
@@ -101,7 +102,7 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({
     const slugErrorMessage = slugFormatError
         ? slugFormatError
         : slugIsTaken
-          ? 'Booking form with this slug already exists'
+          ? m.step2_slug_taken()
           : undefined;
 
     if (!bookingForm) {
@@ -111,20 +112,20 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({
     return (
         <div className={styles.settingsTab}>
             <ValidatableInput
-                label="Name"
+                label={m.name()}
                 className={styles.input}
                 {...register('name')}
                 isValid={nameIsValid}
-                errorMessage="Booking form with this name already exists"
+                errorMessage={m.step1_name_taken()}
             />
             <Input
-                label="Description"
+                label={m.description()}
                 type="textarea"
                 className={styles.textarea}
                 {...register('description')}
             />
             <ValidatableInput
-                label="Slug"
+                label={m.slug()}
                 className={styles.input}
                 {...register('slug')}
                 isValid={slugIsValid}
@@ -135,10 +136,10 @@ const SettingsTabForm: FC<SettingsTabFormProps> = ({
                 organizationSlug={organizationSlug}
             />
             <Checkbox
-                label="Mark required fields"
+                label={m.settings_mark_required()}
                 {...register('markRequiredFields')}
             />
-            <Checkbox label="Is active" {...register('isActive')} />
+            <Checkbox label={m.settings_is_active()} {...register('isActive')} />
         </div>
     );
 };
@@ -167,14 +168,13 @@ export const SettingsTab = () => {
             return (
                 <div className={styles.errorContainer}>
                     <h2>
-                        {organizationError?.message ||
-                            'An error occurred while fetching the data'}
+                        {organizationError?.message || m.settings_fetch_error()}
                     </h2>
                     <Button
                         variant="primary-outlined"
                         onClick={handleRefetchOrganization}
                     >
-                        Retry
+                        {m.retry()}
                     </Button>
                 </div>
             );

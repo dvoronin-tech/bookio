@@ -8,6 +8,7 @@ import clsx from 'clsx';
 import { configuratorTabs } from '../configuratorTabs.tsx';
 import styles from './ConfiguratorLayout.module.scss';
 import { ConfiguratorTabs } from './ConfiguratorTabs.tsx';
+import { m } from '../../../../paraglide/messages.js';
 
 export const ConfiguratorTabsSection: FC = memo(() => {
     const { activeTab, setActiveTab } = useBookingFormConfiguratorStore(
@@ -36,7 +37,7 @@ export const ConfiguratorTabsSection: FC = memo(() => {
                     })}
                     onClick={onScrollLeft}
                     disabled={!canScrollLeft}
-                    aria-label="Scroll tabs left"
+                    aria-label={m.scroll_tabs_left()}
                 >
                     <ArrowIcon className={styles.scrollArrowLeft} />
                 </button>
@@ -55,7 +56,7 @@ export const ConfiguratorTabsSection: FC = memo(() => {
                     })}
                     onClick={onScrollRight}
                     disabled={!canScrollRight}
-                    aria-label="Scroll tabs right"
+                    aria-label={m.scroll_tabs_right()}
                 >
                     <ArrowIcon className={styles.scrollArrowRight} />
                 </button>

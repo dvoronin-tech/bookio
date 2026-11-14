@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { getBookingsByIdSchema } from '@/schemas/booking/get.schema.js';
 import { db } from '@/db.js';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
@@ -7,7 +7,7 @@ import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 const factory = createFactory().createHandlers;
 
 export const getBookingsById = factory(
-    zValidator('query', getBookingsByIdSchema),
+    validate('query', getBookingsByIdSchema),
     async (c) => {
         try {
             const { bookingFormId } = c.req.valid('query');
@@ -20,7 +20,7 @@ export const getBookingsById = factory(
 
             return c.json(prepareSuccess(bookings));
         } catch (e) {
-            return c.json(prepareError('Failed to get bookings'), 500);
+            return c.json(prepareError('Failed to get bookings', 'internal'), 500);
         }
     },
 );

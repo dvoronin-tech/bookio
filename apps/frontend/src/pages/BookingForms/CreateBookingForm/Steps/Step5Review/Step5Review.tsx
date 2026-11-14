@@ -10,6 +10,9 @@ import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import styles from './Step5Review.module.scss';
+import { m } from '../../../../../paraglide/messages.js';
+import { getLocale } from '../../../../../paraglide/runtime.js';
+import { COLOR_KEYS, colorLabel } from '../../colorLabels.ts';
 
 type ReviewCell = {
     label: string;
@@ -24,46 +27,37 @@ type ReviewSection = {
     cells: ReviewCell[];
 };
 
-const COLOR_FIELDS = [
-    { key: 'primary', label: 'Primary' },
-    { key: 'bgMain', label: 'Background main' },
-    { key: 'bgSecondary', label: 'Background secondary' },
-    { key: 'borderColor', label: 'Border' },
-    { key: 'textMain', label: 'Text main' },
-    { key: 'textSecondary', label: 'Text secondary' },
-] as const;
-
 const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
     {
         id: 'general',
-        title: 'General',
+        title: m.step5_general(),
         cells: [
-            { label: 'Name', value: data.name },
+            { label: m.name(), value: data.name },
             {
-                label: 'Description',
-                value: data.description || 'No description',
+                label: m.description(),
+                value: data.description || m.step5_no_description(),
                 empty: !data.description,
             },
-            { label: 'Slug', value: data.slug },
+            { label: m.slug(), value: data.slug },
         ],
     },
     {
         id: 'colors',
-        title: 'Colors',
-        cells: COLOR_FIELDS.map(({ key, label }) => ({
-            label,
+        title: m.step5_colors(),
+        cells: COLOR_KEYS.map((key) => ({
+            label: colorLabel(key),
             value: data[key],
             color: data[key],
         })),
     },
     {
         id: 'metadata',
-        title: 'Metadata',
+        title: m.step5_metadata(),
         cells: [
-            { label: 'Title', value: data.metaTitle },
-            { label: 'Description', value: data.metaDescription },
+            { label: m.title(), value: data.metaTitle },
+            { label: m.description(), value: data.metaDescription },
             ...(data.additionalMeta.length === 0
-                ? [{ label: 'Additional', value: 'None', empty: true }]
+                ? [{ label: m.step5_additional(), value: m.step5_none(), empty: true }]
                 : data.additionalMeta.map((item) => ({
                       label: item.key,
                       value: item.value,
@@ -86,7 +80,8 @@ export const Step5Review: FC = () => {
     const { mutateAsync: createBookingForm, isPending } =
         useCreateBookingForm();
 
-    const sections = useMemo(() => buildReviewSections(data), [data]);
+    const locale = getLocale();
+    const sections = useMemo(() => buildReviewSections(data), [data, locale]);
 
     const handleCreate = useCallback(async () => {
         try {
@@ -107,8 +102,8 @@ export const Step5Review: FC = () => {
                     additionalMeta: data.additionalMeta,
                 }),
                 {
-                    loading: 'Creating booking form...',
-                    success: 'Booking form created successfully',
+                    loading: m.step5_creating(),
+                    success: m.step5_created(),
                     error: (error: Error) => error.message,
                 },
             );
@@ -123,8 +118,8 @@ export const Step5Review: FC = () => {
     return (
         <FormWizardLayout
             stepNumber={5}
-            title="Review your booking form"
-            description="Please confirm that all information is correct. You can go back to edit any step, or create the booking form."
+            title={m.step5_title()}
+            description={m.step5_description()}
             footer={
                 <div className={styles.footerActions}>
                     <Button
@@ -133,7 +128,7 @@ export const Step5Review: FC = () => {
                         onClick={handleCreate}
                         disabled={isPending}
                     >
-                        Create booking form
+                        {m.step5_create()}
                     </Button>
                     <Button
                         type="button"
@@ -141,7 +136,7 @@ export const Step5Review: FC = () => {
                         onClick={goToPreviousStep}
                         disabled={isPending}
                     >
-                        Back
+                        {m.back()}
                     </Button>
                 </div>
             }

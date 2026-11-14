@@ -30,6 +30,20 @@ export default defineConfig({
                 replacement: path.resolve(__dirname, '../backend/src/schemas/index.ts'),
             },
             {
+                find: '@bookio/shared/utils',
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/shared/src/utils/index.ts',
+                ),
+            },
+            {
+                find: '@bookio/shared/constants',
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/shared/src/constants.ts',
+                ),
+            },
+            {
                 find: '@bookio/backend',
                 replacement: path.resolve(__dirname, '../backend/src/routes/index.ts'),
             },
@@ -42,6 +56,7 @@ export default defineConfig({
             { find: '#utils', replacement: path.resolve(__dirname, 'src/utils') },
             { find: '#api', replacement: path.resolve(__dirname, 'src/api') },
             { find: '#store', replacement: path.resolve(__dirname, 'src/store') },
+            { find: '#i18n', replacement: path.resolve(__dirname, 'src/i18n') },
         ],
     },
     build: {

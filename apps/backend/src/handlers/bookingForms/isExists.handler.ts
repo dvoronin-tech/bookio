@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 import { isBookingFormExists } from '@/utils/isBookingFormExists.js';
 import { isBookingFormExistsSchema } from '@/schemas/bookingForms/isExists.schema.js';
@@ -7,7 +7,7 @@ import { isBookingFormExistsSchema } from '@/schemas/bookingForms/isExists.schem
 const factory = createFactory().createHandlers;
 
 export const isBookingFormExistsHandler = factory(
-    zValidator('json', isBookingFormExistsSchema),
+    validate('json', isBookingFormExistsSchema),
     async (c) => {
         try {
             const { name, slug, organizationId } = c.req.valid('json');
@@ -16,7 +16,10 @@ export const isBookingFormExistsHandler = factory(
 
             return c.json(prepareSuccess(isExists));
         } catch (error) {
-            return c.json(prepareError('Failed to check if booking form exists'));
+            return c.json(
+                prepareError('Failed to check if booking form exists', 'internal'),
+                500,
+            );
         }
     },
 );

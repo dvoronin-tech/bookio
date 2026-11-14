@@ -7,6 +7,7 @@ import { createClearClickHandler, createOpenOnKeyDownHandler } from '../utils/ev
 import { formatFileSize, getFileExtension } from '../utils/fileUtils.js';
 import FileCheckIcon from './icons/file-check.svg?react';
 import FileIcon from './icons/file.svg?react';
+import { m } from '../paraglide/messages.js';
 import styles from './FileDropField.module.scss';
 
 export type FileDropFieldProps = {
@@ -21,19 +22,21 @@ export type FileDropFieldProps = {
 
 function FileDropField({
     label,
-    placeholder = 'Drag & drop a file here, or click to browse',
+    placeholder,
     onChange,
     accept,
     disabled = false,
     className,
     id,
 }: FileDropFieldProps) {
+    const resolvedPlaceholder = placeholder ?? m.file_drop();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, isDragging, error, openFilePicker, clear, inputProps, dropProps } = useFilePicker({
         onChange,
         accept,
         disabled,
+        invalidTypeError: m.file_type(),
     });
 
     const handleKeyDown = createOpenOnKeyDownHandler(openFilePicker);
@@ -78,7 +81,7 @@ function FileDropField({
                                 type="button"
                                 className={styles.clearButton}
                                 onClick={handleClear}
-                                aria-label="Remove file"
+                                aria-label={m.remove_file()}
                             >
                                 <CloseIcon />
                             </button>
@@ -87,7 +90,7 @@ function FileDropField({
                 ) : (
                     <div className={styles.placeholder}>
                         <FileIcon className={styles.placeholderIcon} aria-hidden />
-                        <span className={styles.placeholderText}>{placeholder}</span>
+                        <span className={styles.placeholderText}>{resolvedPlaceholder}</span>
                     </div>
                 )}
             </div>

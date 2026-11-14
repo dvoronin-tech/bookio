@@ -7,6 +7,7 @@ import { createClearClickHandler } from '../utils/eventHandlers.js';
 import { formatFileSize } from '../utils/fileUtils.js';
 import FileCheckIcon from './icons/file-check.svg?react';
 import FileIcon from './icons/file.svg?react';
+import { m } from '../paraglide/messages.js';
 import styles from './FilePickerField.module.scss';
 
 export type FilePickerFieldProps = {
@@ -21,19 +22,21 @@ export type FilePickerFieldProps = {
 
 function FilePickerField({
     label,
-    placeholder = 'Select a file',
+    placeholder,
     onChange,
     accept,
     disabled = false,
     className,
     id,
 }: FilePickerFieldProps) {
+    const resolvedPlaceholder = placeholder ?? m.file_select();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, error, openFilePicker, clear, inputProps } = useFilePicker({
         onChange,
         accept,
         disabled,
+        invalidTypeError: m.file_type(),
     });
 
     const handleClear = createClearClickHandler(clear);
@@ -60,7 +63,7 @@ function FilePickerField({
                         <FileIcon className={styles.fileIcon} aria-hidden />
                     )}
                     <span className={file ? styles.fileName : styles.placeholder}>
-                        {file?.name ?? placeholder}
+                        {file?.name ?? resolvedPlaceholder}
                     </span>
                     {file && <span className={styles.fileSize}>{formatFileSize(file.size)}</span>}
                 </button>
@@ -69,7 +72,7 @@ function FilePickerField({
                         type="button"
                         className={styles.clearButton}
                         onClick={handleClear}
-                        aria-label="Remove file"
+                        aria-label={m.remove_file()}
                     >
                         <CloseIcon />
                     </button>

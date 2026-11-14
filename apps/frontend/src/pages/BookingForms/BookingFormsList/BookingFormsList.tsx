@@ -9,6 +9,8 @@ import { BookingFormCard } from '#components/BookingFormCard/BookingFormCard.tsx
 import { filterByIsActive } from './utils/filterByIsActive.ts';
 
 import PlusIcon from '#assets/icons/plus.svg?react';
+import { plural } from '#i18n/locale';
+import { m } from '../../../paraglide/messages.js';
 
 type BookingFormListFilter = 'all' | 'active';
 
@@ -42,7 +44,7 @@ export const BookingForms: FC = () => {
             <div className={styles.errorContainer}>
                 <h2>{error.message}</h2>
                 <Button variant="primary-outlined" onClick={handleRetry}>
-                    Retry
+                    {m.retry()}
                 </Button>
             </div>
         );
@@ -52,7 +54,7 @@ export const BookingForms: FC = () => {
         return (
             <div className={styles.emptyContainer}>
                 <div className={styles.emptyContainerContent}>
-                    <h2>Форм записи пока нет</h2>
+                    <h2>{m.forms_empty()}</h2>
                 </div>
                 <Button
                     variant="primary-filled"
@@ -64,7 +66,7 @@ export const BookingForms: FC = () => {
                         })
                     }
                 >
-                    Создать первую форму
+                    {m.forms_create_first()}
                 </Button>
             </div>
         );
@@ -110,7 +112,7 @@ const BookingFormHeader: FC<BookingFormHeaderProps> = ({
     return (
         <div className={styles.bookingHeader}>
             <div className={styles.headerLeft}>
-                <h2 className={styles.pageTitle}>Booking Forms</h2>
+                <h2 className={styles.pageTitle}>{m.forms_title()}</h2>
                 <div className={styles.metaChips}>
                     <Button
                         variant="simple-filled"
@@ -120,7 +122,11 @@ const BookingFormHeader: FC<BookingFormHeaderProps> = ({
                         )}
                         onClick={() => onFilterChange('all')}
                     >
-                        {formsCount} forms
+                        {plural(formsCount, {
+                            one: m.forms_count_one({ count: formsCount }),
+                            few: m.forms_count_few({ count: formsCount }),
+                            many: m.forms_count_many({ count: formsCount }),
+                        })}
                     </Button>
                     <Button
                         variant="simple-filled"
@@ -131,7 +137,11 @@ const BookingFormHeader: FC<BookingFormHeaderProps> = ({
                         onClick={() => onFilterChange('active')}
                     >
                         <span className={styles.activeDot} aria-hidden />
-                        {activeFormsCount} active
+                        {plural(activeFormsCount, {
+                            one: m.forms_active_one({ count: activeFormsCount }),
+                            few: m.forms_active_few({ count: activeFormsCount }),
+                            many: m.forms_active_many({ count: activeFormsCount }),
+                        })}
                     </Button>
                 </div>
             </div>
@@ -160,7 +170,7 @@ const BookingFormHeader: FC<BookingFormHeaderProps> = ({
                     }
                 >
                     <PlusIcon />
-                    Create
+                    {m.create()}
                 </Button>
             </div>
         </div>

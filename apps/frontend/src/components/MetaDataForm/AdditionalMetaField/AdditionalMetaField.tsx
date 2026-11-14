@@ -3,6 +3,7 @@ import { Button, Input, SelectDropdown, type SelectDropdownOption } from '@booki
 import TrashIcon from '#assets/icons/trash.svg?react';
 
 import styles from './AdditionalMetaField.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 export interface AdditionalMetaFieldProps {
     id: string;
@@ -44,31 +45,31 @@ export const AdditionalMetaField: FC<AdditionalMetaFieldProps> = ({
     return (
         <div className={styles.additionalMetaField}>
             <SelectDropdown
-                label="Property"
+                label={m.meta_property()}
                 options={options}
                 selected={property || undefined}
                 onOptionClick={handlePropertyChange}
-                placeholder="Select property"
-                searchPlaceholder="Search properties..."
-                emptyOptionsText="No properties found"
+                placeholder={m.meta_select_property()}
+                searchPlaceholder={m.meta_search_properties()}
+                emptyOptionsText={m.meta_no_properties()}
                 triggerClassName={styles.propertyTrigger}
                 withSearch
             />
             <Input
-                label="Content"
+                label={m.meta_content()}
                 className={styles.valueInput}
                 value={value}
                 onChange={handleValueChange}
-                placeholder="Meta content"
+                placeholder={m.meta_content_placeholder()}
             />
             <Button
                 variant="red-clean"
                 onClick={handleOnRemove}
                 className={styles.removeButton}
-                aria-label="Remove meta field"
+                aria-label={m.meta_remove_aria()}
             >
                 <TrashIcon />
-                <span>Remove</span>
+                <span>{m.meta_remove()}</span>
             </Button>
         </div>
     );

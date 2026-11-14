@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { bookingFormFields, type BookingFormFieldSelect } from '@bookio/db';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
@@ -34,7 +34,7 @@ const resolveParentField = (
 };
 
 export const syncBookingFormFieldsHandler = factory(
-    zValidator('json', syncBookingFormFieldsSchema),
+    validate('json', syncBookingFormFieldsSchema),
     async (c) => {
         try {
             const { bookingFormId, fields } = c.req.valid('json');
@@ -120,11 +120,11 @@ export const syncBookingFormFieldsHandler = factory(
             return c.json(prepareSuccess(syncedFields));
         } catch (error) {
             if (error instanceof SyncFieldsError) {
-                return c.json(error.getError(), error.getStatusCode());
+                return c.json(error.getErrorMessage(), error.getStatusCode());
             }
 
             return c.json(
-                prepareError('Failed to sync booking form fields'),
+                prepareError('Failed to sync booking form fields', 'internal'),
                 500,
             );
         }
@@ -157,7 +157,7 @@ const checkBookingFormExists = async (bookingFormId: string) => {
     });
 
     if (!bookingForm) {
-        throw new SyncFieldsError(prepareError('Booking form not found'), 404);
+        throw new SyncFieldsError(prepareError('Booking form not found', 'not_found'), 404);
     }
 };
 
@@ -175,7 +175,7 @@ const checkFieldsRelatedToBookingForm = async (
         for (const field of fieldsWithIncomingIds) {
             if (field.bookingFormId !== bookingFormId) {
                 throw new SyncFieldsError(
-                    prepareError('Field belongs to a different booking form'),
+                    prepareError('Field belongs to a different booking form', 'field_wrong_form'),
                     400,
                 );
             }
@@ -200,14 +200,14 @@ const checkFieldHasValidParentField = async (
 
         if (!parentField) {
             throw new SyncFieldsError(
-                prepareError('Parent field not found'),
+                prepareError('Parent field not found', 'not_found'),
                 404,
             );
         }
 
         if (parentField.type !== 'group') {
             throw new SyncFieldsError(
-                prepareError('Parent field must be of type group'),
+                prepareError('Parent field must be of type group', 'parent_not_group'),
                 400,
             );
         }

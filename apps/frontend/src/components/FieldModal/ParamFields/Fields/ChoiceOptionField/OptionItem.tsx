@@ -4,6 +4,7 @@ import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { Button, ValidatableInput } from '@bookio/ui';
 import TrashIcon from '#assets/icons/trash.svg?react';
 import styles from '../../ParamFields.module.scss';
+import { m } from '../../../../../paraglide/messages.js';
 
 interface OptionItemProps {
     index: number;
@@ -29,7 +30,7 @@ export const OptionItem: FC<OptionItemProps> = ({ index, onRemove }) => {
 
     if (!option) return null;
 
-    const errorMessage = isLabelUnique === false ? 'Option labels must be unique' : undefined;
+    const errorMessage = isLabelUnique === false ? m.options_label_unique() : undefined;
 
     return (
         <div className={styles.option}>
@@ -39,17 +40,17 @@ export const OptionItem: FC<OptionItemProps> = ({ index, onRemove }) => {
                     variant="red-clean"
                     onClick={handleRemoveOption}
                     className={styles.removeOptionButton}
-                    aria-label="Remove option"
+                    aria-label={m.options_remove()}
                 >
                     <TrashIcon />
-                    <span>Remove option</span>
+                    <span>{m.options_remove()}</span>
                 </Button>
             </div>
 
             <ValidatableInput
                 isValid={isLabelUnique}
                 errorMessage={errorMessage}
-                label="Label"
+                label={m.param_option_label()}
                 type="text"
                 {...register(`params.options.${index}.label`)}
             />

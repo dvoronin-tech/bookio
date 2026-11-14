@@ -10,18 +10,36 @@ import tailwindcss from '@tailwindcss/vite';
 import { nitro } from 'nitro/vite';
 import { imagetools } from 'vite-imagetools';
 import svgr from 'vite-plugin-svgr';
+import { paraglideVitePlugin } from '@inlang/paraglide-js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
 const config = defineConfig({
     resolve: {
         tsconfigPaths: true,
-        alias: {
-            '@bookio/booking-form-ui': path.resolve(
-                __dirname,
-                '../../packages/booking-form-ui/src/index.ts',
-            ),
-        },
+        alias: [
+            {
+                find: '@bookio/shared/utils',
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/shared/src/utils/index.ts',
+                ),
+            },
+            {
+                find: '@bookio/shared/constants',
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/shared/src/constants.ts',
+                ),
+            },
+            {
+                find: /^@bookio\/booking-form-ui$/,
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/booking-form-ui/src/index.ts',
+                ),
+            },
+        ],
     },
     plugins: [
         devtools(),
@@ -31,6 +49,7 @@ const config = defineConfig({
         viteReact(),
         imagetools(),
         svgr(),
+        paraglideVitePlugin({ project: './project.inlang' }),
     ],
 });
 

@@ -67,7 +67,8 @@ const LanguageSwitch: FC = () => {
 
     return (
         <SegmentedControl
-            aria-label="Language"
+            className={styles.languageSwitch}
+            aria-label={m.language()}
             value={locale}
             onValueChange={setLocale}
         >
@@ -118,10 +119,9 @@ const HeaderDropdown: FC = () => {
         const logoutRes = mutateAsync();
 
         await toast.promise(logoutRes, {
-            loading: 'Trying to logout',
-            error: (error) =>
-                `Something went wrong during logout, error: ${error}`,
-            success: "You've been logged out successfully",
+            loading: m.header_logout_loading(),
+            error: (error) => m.header_logout_error({ error: String(error) }),
+            success: m.header_logout_success(),
         });
 
         const logoutData = await logoutRes;
@@ -142,10 +142,10 @@ const HeaderDropdown: FC = () => {
         }
 
         if (!organization || orgError) {
-            toast.error('Failed to fetch organization');
+            toast.error(m.header_org_fetch_failed());
             return (
                 <Button variant="primary-outlined" onClick={() => refetchOrg()}>
-                    Retry
+                    {m.retry()}
                 </Button>
             );
         }
@@ -158,7 +158,7 @@ const HeaderDropdown: FC = () => {
     } else if (!session?.user || userError) {
         return (
             <Button variant="primary-outlined" onClick={() => refetchUser()}>
-                Retry
+                {m.retry()}
             </Button>
         );
     }
@@ -174,7 +174,7 @@ const HeaderDropdown: FC = () => {
                     <>
                         <img
                             src={PlaceholderImage}
-                            alt="Organization image"
+                            alt={m.header_org_image_alt()}
                             className={styles.menuItemImage}
                         />
                         <div className={styles.menuItemText}>
@@ -200,7 +200,7 @@ const HeaderDropdown: FC = () => {
                     <OrganizationIcon
                         className={clsx(styles.menuItemIcon, styles.orange)}
                     />
-                    Organizations
+                    {m.header_organizations()}
                 </Dropdown.Item>
                 <Dropdown.Item
                     className={styles.menuItem}
@@ -209,7 +209,7 @@ const HeaderDropdown: FC = () => {
                     <LogOutIcon
                         className={clsx(styles.menuItemIcon, styles.pink)}
                     />
-                    Logout
+                    {m.logout()}
                 </Dropdown.Item>
             </Dropdown.Content>
 
@@ -218,20 +218,20 @@ const HeaderDropdown: FC = () => {
                 onOpenChange={setIsLogoutDialogOpen}
             >
                 <Dialog.Title>
-                    Are you sure that you want to log out?
+                    {m.header_logout_confirm_title()}
                 </Dialog.Title>
                 <Dialog.Description>
-                    If you continue, you will be logged out.
+                    {m.header_logout_confirm_description()}
                 </Dialog.Description>
                 <Dialog.Actions>
                     <Dialog.Button
                         variant="simple-clean"
                         onClick={() => setIsLogoutDialogOpen(false)}
                     >
-                        Go back
+                        {m.go_back()}
                     </Dialog.Button>
                     <Dialog.Button variant="red-filled" onClick={handleLogout}>
-                        Logout
+                        {m.logout()}
                     </Dialog.Button>
                 </Dialog.Actions>
             </Dialog>
@@ -270,7 +270,7 @@ const OrganizationDropdownElements: FC<OrganizationDropdownElementsProps> = ({
             <Dropdown.Item className={styles.companyInfo}>
                 <img
                     src={PlaceholderImage}
-                    alt="Organization image"
+                    alt={m.header_org_image_alt()}
                     className={styles.menuItemImage}
                 />
                 <div className={styles.menuItemText}>
@@ -283,7 +283,7 @@ const OrganizationDropdownElements: FC<OrganizationDropdownElementsProps> = ({
                 onClick={handleNavigateToBookingForms}
             >
                 <FormIcon className={clsx(styles.menuItemIcon, styles.blue)} />
-                Booking forms
+                {m.header_booking_forms()}
             </Dropdown.Item>
             <Dropdown.Item
                 className={styles.menuItem}
@@ -292,7 +292,7 @@ const OrganizationDropdownElements: FC<OrganizationDropdownElementsProps> = ({
                 <TableIcon
                     className={clsx(styles.menuItemIcon, styles.green)}
                 />
-                Bookings
+                {m.header_bookings()}
             </Dropdown.Item>
         </>
     );

@@ -13,6 +13,9 @@ import {
 import type { SelectDropdownOption } from '../../SelectDropdown/SelectDropdown.js';
 import { CalendarDay } from './CalendarDay.js';
 import { CalendarHeaderSection } from './CalendarHeaderSection.js';
+import { enUS, ru } from 'date-fns/locale';
+import { m } from '../../paraglide/messages.js';
+import { getLocale } from '../../paraglide/runtime.js';
 import styles from './Calendar.module.scss';
 
 export type CalendarProps = {
@@ -50,9 +53,10 @@ export function Calendar({ value, onChange, minYear, maxYear }: CalendarProps) {
         });
     }, [selectedIso, minYear, maxYear]);
 
+    const dateLocale = getLocale() === 'ru' ? ru : enUS;
     const calendarDays = useMemo(() => getDateGrid(currentDate), [currentDate]);
-    const daysOfWeek = useMemo(() => getDaysNames(), []);
-    const monthOptions = useMemo(() => getMonthNames(), []);
+    const daysOfWeek = useMemo(() => getDaysNames(dateLocale), [dateLocale]);
+    const monthOptions = useMemo(() => getMonthNames(dateLocale), [dateLocale]);
     const yearOptions = useMemo(() => {
         const viewYear = currentDate.getFullYear();
         const from = minYear ?? 0;
@@ -124,8 +128,8 @@ export function Calendar({ value, onChange, minYear, maxYear }: CalendarProps) {
                     selected={monthOptions[currentDate.getMonth()]}
                     options={monthOptions}
                     onChange={handleChangeMonth}
-                    prevLabel="Previous month"
-                    nextLabel="Next month"
+                    prevLabel={m.prev_month()}
+                    nextLabel={m.next_month()}
                 />
                 <CalendarHeaderSection
                     onPrev={handlePreviousYear}
@@ -133,8 +137,8 @@ export function Calendar({ value, onChange, minYear, maxYear }: CalendarProps) {
                     selected={String(currentDate.getFullYear())}
                     options={yearOptions}
                     onChange={handleChangeYear}
-                    prevLabel="Previous year"
-                    nextLabel="Next year"
+                    prevLabel={m.prev_year()}
+                    nextLabel={m.next_year()}
                 />
             </div>
 

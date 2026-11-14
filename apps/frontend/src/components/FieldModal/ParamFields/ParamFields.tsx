@@ -9,6 +9,39 @@ import { SimpleParamInput } from './Fields/SimpleParamInput/SimpleParamInput';
 import { TimeParamInput } from './Fields/TimeParamInput/TimeParamInput';
 import { SelectField } from './Fields/SelectField/SelectField';
 import { YearRangeField } from './Fields/YearRangeField/YearRangeField';
+import { m } from '../../../paraglide/messages.js';
+
+const paramFieldLabel = (formName: string, fallback: string) => {
+    switch (formName) {
+        case 'placeholder':
+            return m.param_placeholder();
+        case 'helpText':
+            return m.param_help_text();
+        case 'options':
+            return m.param_options();
+        case 'defaultValue':
+            return m.param_default_value();
+        case 'minYear':
+        case 'maxYear':
+            return m.param_year_range();
+        case 'min':
+            return m.param_min_time();
+        case 'max':
+            return m.param_max_time();
+        case 'step':
+            return m.param_minutes_step();
+        case 'rows':
+            return m.param_rows();
+        case 'accept':
+            return m.param_accepted_image_types();
+        case 'maxSizeMb':
+            return m.param_max_image_size();
+        case 'description':
+            return m.param_description();
+        default:
+            return fallback;
+    }
+};
 
 export const ParamFields: FC = () => {
     const { control } = useFormContext<FieldModalFormValues>();
@@ -21,7 +54,10 @@ export const ParamFields: FC = () => {
     );
 
     return fields.map((field) => {
-        const label = formatParamFieldLabel(field.label, field.required);
+        const label = formatParamFieldLabel(
+            paramFieldLabel(field.formName, field.label),
+            field.required,
+        );
 
         if (field.type === 'number') {
             return (
@@ -59,8 +95,8 @@ export const ParamFields: FC = () => {
                         key={field.formName}
                         label={label}
                         options={field.options}
-                        searchPlaceholder={field.searchPlaceholder}
-                        emptyOptionsText={field.emptyOptionsText}
+                        searchPlaceholder={m.param_search_types()}
+                        emptyOptionsText={m.param_no_types()}
                         withSearch={field.withSearch}
                     />
                 );
@@ -73,8 +109,8 @@ export const ParamFields: FC = () => {
                     label={label}
                     options={field.options}
                     multiple={field.multiple}
-                    searchPlaceholder={field.searchPlaceholder}
-                    emptyOptionsText={field.emptyOptionsText}
+                    searchPlaceholder={m.param_search_types()}
+                    emptyOptionsText={m.param_no_types()}
                     withSearch={field.withSearch}
                 />
             );

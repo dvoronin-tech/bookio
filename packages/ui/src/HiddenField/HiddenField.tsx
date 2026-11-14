@@ -4,6 +4,7 @@ import Input from '../Input/Input.js';
 import { CopyIcon } from './icons/CopyIcon.js';
 import { HideIcon } from './icons/HideIcon.js';
 import { ShowIcon } from './icons/ShowIcon.js';
+import { m } from '../paraglide/messages.js';
 import styles from './HiddenField.module.scss';
 
 export type HiddenFieldProps = {
@@ -40,7 +41,7 @@ function HiddenField({ value, className, onCopy }: HiddenFieldProps) {
                     type="button"
                     className={styles.actionButton}
                     onClick={handleCopy}
-                    aria-label="Copy"
+                    aria-label={m.copy()}
                 >
                     <CopyIcon />
                 </button>
@@ -48,7 +49,7 @@ function HiddenField({ value, className, onCopy }: HiddenFieldProps) {
                     type="button"
                     className={styles.actionButton}
                     onClick={handleToggleVisibility}
-                    aria-label={isVisible ? 'Hide' : 'Show'}
+                    aria-label={isVisible ? m.hide() : m.show()}
                 >
                     {isVisible ? <HideIcon /> : <ShowIcon />}
                 </button>

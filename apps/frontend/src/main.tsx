@@ -5,11 +5,13 @@ import { queryClient } from '#lib/query-client';
 import { router } from './router';
 import { Toaster } from 'react-hot-toast';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
+import { m } from './paraglide/messages.js';
 import { getLocale, getTextDirection } from './paraglide/runtime.js';
 import './index.css';
 
 document.documentElement.lang = getLocale();
 document.documentElement.dir = getTextDirection();
+document.title = m.app_name();
 
 createRoot(document.getElementById('root')!).render(
     <QueryClientProvider client={queryClient}>

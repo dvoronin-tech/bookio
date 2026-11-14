@@ -2,6 +2,7 @@ import { FloatingPortal } from '@floating-ui/react';
 import { memo, type CSSProperties, type HTMLAttributes } from 'react';
 import TimeColumn from './TimeColumn.js';
 import type { TimeOption } from './timeUtils.js';
+import { m } from '../paraglide/messages.js';
 import styles from './TimePicker.module.scss';
 
 export const OUTSIDE_CLICK_IGNORE_ATTR = 'data-outside-click-ignore';
@@ -43,13 +44,13 @@ function TimePopover({
                         options={hourOptions}
                         selected={selectedHour}
                         onSelect={onSelectHour}
-                        aria-label="Hours"
+                        aria-label={m.hours()}
                     />
                     <TimeColumn
                         options={minuteOptions}
                         selected={selectedMinute}
                         onSelect={onSelectMinute}
-                        aria-label="Minutes"
+                        aria-label={m.minutes()}
                     />
                 </div>
             </div>

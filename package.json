@@ -8,7 +8,7 @@
         "front": "pnpm --filter @bookio/frontend",
         "back": "pnpm --filter @bookio/backend",
         "db": "pnpm --filter @bookio/db",
-        "typecheck": "pnpm --filter @bookio/frontend exec paraglide-js compile --project ./project.inlang && tsc -b --pretty",
+        "typecheck": "pnpm --filter @bookio/ui exec paraglide-js compile --project ./project.inlang && pnpm --filter @bookio/booking-form-ui exec paraglide-js compile --project ./project.inlang && pnpm --filter @bookio/frontend exec paraglide-js compile --project ./project.inlang && pnpm --filter @bookio/booking-form exec paraglide-js compile --project ./project.inlang && tsc -b --pretty",
         "dev": "pnpm -r --parallel --filter @bookio/backend --filter @bookio/frontend --filter @bookio/booking-form run dev"
     },
     "keywords": [],

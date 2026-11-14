@@ -9,6 +9,7 @@ import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.
 import { slugSchema } from '@bookio/backend/schemas';
 import toast from 'react-hot-toast';
 import styles from './Step2UrlSlug.module.scss';
+import { m } from '../../../../../paraglide/messages.js';
 
 export const Step2UrlSlug: FC = () => {
     const { slug, organizationId, setField, goToNextStep, goToPreviousStep } =
@@ -47,11 +48,11 @@ export const Step2UrlSlug: FC = () => {
         slugIsValid !== false
             ? undefined
             : !isFormatValid
-              ? (formatResult?.error.issues[0]?.message ?? 'Invalid slug')
-              : 'Booking form with this slug already exists';
+              ? (formatResult?.error.issues[0]?.message ?? m.step2_invalid_slug())
+              : m.step2_slug_taken();
 
-    const organizationSlug = organization?.slug ?? 'your-org';
-    const previewSlug = trimmedSlug || 'your-form';
+    const organizationSlug = organization?.slug ?? m.url_org_fallback();
+    const previewSlug = trimmedSlug || m.url_form_fallback();
 
     const handleSlugChange = (event: ChangeEvent<HTMLInputElement>) => {
         setField('slug', event.target.value);
@@ -61,17 +62,17 @@ export const Step2UrlSlug: FC = () => {
         const parsed = slugSchema.safeParse(trimmedSlug);
         if (!parsed.success) {
             return toast.error(
-                parsed.error.issues[0]?.message ?? 'Invalid slug',
+                parsed.error.issues[0]?.message ?? m.step2_invalid_slug(),
             );
         }
 
         if (slugExistsIsValid === false) {
-            return toast.error('Booking form with this slug already exists');
+            return toast.error(m.step2_slug_taken());
         }
 
         if (slugExistsIsValid === undefined && trimmedSlug.length > 0) {
             return toast.error(
-                'Please wait until the slug availability check finishes',
+                m.step2_slug_pending(),
             );
         }
 
@@ -82,8 +83,8 @@ export const Step2UrlSlug: FC = () => {
     return (
         <FormWizardLayout
             stepNumber={2}
-            title="Choose a unique URL slug"
-            description="This slug becomes part of the public booking form link together with your organization slug. Clients will open this URL to book — keep it short and unique within your organization."
+            title={m.step2_title()}
+            description={m.step2_description()}
             onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
@@ -92,14 +93,14 @@ export const Step2UrlSlug: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        Go to next
+                        {m.wizard_next()}
                     </Button>
                     <Button
                         type="button"
                         variant="simple-clean"
                         onClick={goToPreviousStep}
                     >
-                        Back
+                        {m.back()}
                     </Button>
                 </div>
             }
@@ -107,7 +108,7 @@ export const Step2UrlSlug: FC = () => {
             <ValidatableInput
                 value={slug}
                 onChange={handleSlugChange}
-                placeholder="Slug*"
+                placeholder={m.step2_slug_placeholder()}
                 isValid={slugIsValid}
                 errorMessage={slugErrorMessage}
                 autoFocus

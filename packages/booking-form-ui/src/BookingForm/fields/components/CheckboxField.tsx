@@ -7,6 +7,7 @@ import { useBookingFormContext } from '../../BookingFormContext.js';
 import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 export const CheckboxField: FC<FieldRendererProps<'checkbox'>> = ({
     field,
@@ -23,7 +24,7 @@ export const CheckboxField: FC<FieldRendererProps<'checkbox'>> = ({
             <Checkbox
                 label={label}
                 {...register(field.key, {
-                    required: getRequiredRule(field),
+                    required: getRequiredRule(field, m.required({ name: field.name })),
                 })}
                 disabled={disabled}
             />

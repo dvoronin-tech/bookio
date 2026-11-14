@@ -8,6 +8,7 @@ import { useBookingFormContext } from '../../BookingFormContext.js';
 import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 export const DateInputField: FC<FieldRendererProps<'date'>> = ({ field }) => {
     const { formState, control, markRequiredFields } = useBookingFormContext();
@@ -19,7 +20,7 @@ export const DateInputField: FC<FieldRendererProps<'date'>> = ({ field }) => {
             name={field.key}
             control={control}
             rules={{
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, m.required({ name: field.name })),
             }}
             render={({ field: { value, onChange }, fieldState }) => (
                 <div className={styles.fieldStack}>

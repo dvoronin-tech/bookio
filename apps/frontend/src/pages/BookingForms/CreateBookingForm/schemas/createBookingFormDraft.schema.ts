@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { m } from '../../../../paraglide/messages.js';
 
 export const step1Schema = z.object({
     name: z.string().min(1).max(255),
@@ -7,7 +8,7 @@ export const step1Schema = z.object({
 });
 
 const hexColorSchema = z.string().regex(/^#([0-9A-Fa-f]{3}|[0-9A-Fa-f]{6})$/, {
-    message: 'Color must be a hex value (#RGB or #RRGGBB)',
+    message: m.color_invalid(),
 });
 
 export const step3Schema = z.object({
@@ -20,6 +21,6 @@ export const step3Schema = z.object({
 });
 
 export const step4Schema = z.object({
-    metaTitle: z.string().min(1, 'Title is required').max(255),
-    metaDescription: z.string().min(1, 'Description is required').max(255),
+    metaTitle: z.string().min(1, m.step4_title_required()).max(255),
+    metaDescription: z.string().min(1, m.step4_description_required()).max(255),
 });

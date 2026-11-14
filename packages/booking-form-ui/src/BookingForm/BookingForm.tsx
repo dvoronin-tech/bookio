@@ -19,6 +19,7 @@ import {
 import { RenderField } from './fields/FieldsMap.js';
 import { normalizePhoneNumber } from './fields/components/PhoneInputField.js';
 import { normalizeField } from './utils/normalizeField.js';
+import { m } from '../paraglide/messages.js';
 
 export type { BookingFormFieldInput } from './fields/field.types.js';
 
@@ -53,6 +54,40 @@ export type BookingFormProps = {
 
 export type FormState = 'idle' | 'loading' | 'error' | 'success';
 
+const readFieldIssues = (
+    error: unknown,
+): Array<{ name: string; message: string }> => {
+    if (typeof error !== 'object' || error === null || !('issues' in error)) {
+        return [];
+    }
+
+    const issues = (error as { issues?: unknown }).issues;
+    if (!Array.isArray(issues)) {
+        return [];
+    }
+
+    const result: Array<{ name: string; message: string }> = [];
+
+    for (const issue of issues) {
+        if (typeof issue !== 'object' || issue === null) {
+            continue;
+        }
+
+        const record = issue as { path?: unknown; message?: unknown };
+        const path = Array.isArray(record.path) ? record.path : [];
+        const name = [...path]
+            .reverse()
+            .find((part) => typeof part === 'string');
+        if (typeof name !== 'string' || typeof record.message !== 'string') {
+            continue;
+        }
+
+        result.push({ name, message: record.message });
+    }
+
+    return result;
+};
+
 function BookingForm({
     bookingFormData,
     onSubmit,
@@ -61,6 +96,7 @@ function BookingForm({
     isPreview = false,
 }: BookingFormProps) {
     const [formState, setFormState] = useState<FormState>('idle');
+    const [statusMessage, setStatusMessage] = useState<string | null>(null);
     const formStateRef = useRef<FormState>(formState);
 
     const { name, description, markRequiredFields } = bookingFormData;
@@ -76,7 +112,7 @@ function BookingForm({
             .sort((a, b) => a.order - b.order);
     }, [fields]);
 
-    const { register, control, handleSubmit } = useForm({
+    const { register, control, handleSubmit, setError } = useForm({
         mode: 'onChange',
     });
 
@@ -91,6 +127,7 @@ function BookingForm({
         }
 
         try {
+            setStatusMessage(null);
             setProcessingState('loading');
             const submittedData = { ...data };
             for (const field of fields) {
@@ -112,7 +149,14 @@ function BookingForm({
                 return;
             }
             setProcessingState('success');
-        } catch {
+        } catch (error) {
+            const issues = readFieldIssues(error);
+            for (const issue of issues) {
+                setError(issue.name, { type: 'server', message: issue.message });
+            }
+            setStatusMessage(
+                error instanceof Error ? error.message : m.submit_failed(),
+            );
             setProcessingState('error');
         }
     };
@@ -165,7 +209,7 @@ function BookingForm({
                 </div>
 
                 <Appear delayMs={getAppearDelayMs(rootFields.length)}>
-                    <SubmitButton />
+                    <SubmitButton message={statusMessage ?? undefined} />
                 </Appear>
             </form>
         </BookingFormProvider>

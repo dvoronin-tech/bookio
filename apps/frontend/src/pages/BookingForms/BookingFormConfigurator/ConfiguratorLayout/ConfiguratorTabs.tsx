@@ -6,7 +6,7 @@ import type { ConfiguratorTabValue } from '../configuratorTabs.tsx';
 
 export type ConfiguratorTab = {
     value: ConfiguratorTabValue;
-    content: string;
+    content: () => string;
     icon: ReactNode;
 };
 
@@ -25,7 +25,7 @@ export const ConfiguratorTabs: FC<{
             {tabs.map((tab) => (
                 <Tabs.Item key={tab.value} value={tab.value}>
                     <Tabs.Icon>{tab.icon}</Tabs.Icon>
-                    <Tabs.Content>{tab.content}</Tabs.Content>
+                    <Tabs.Content>{tab.content()}</Tabs.Content>
                 </Tabs.Item>
             ))}
         </Tabs>

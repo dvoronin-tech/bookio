@@ -28,11 +28,24 @@
         max-width: 20rem;
     }
 
+    .languageSwitch {
+        box-sizing: border-box;
+        height: 4.4rem;
+        padding: 0.6rem;
+        gap: 0.5rem;
+        border-radius: 0.8rem;
+
+        button {
+            padding: 0.65rem 1rem;
+            border-radius: 0.6rem;
+        }
+    }
+
     .languageFlag {
-        width: 2rem;
-        height: 1.4rem;
+        width: 3.2rem;
+        height: 2.1rem;
         display: block;
-        border-radius: 0.2rem;
+        border-radius: 0.3rem;
     }
 
     .menuItemImage {

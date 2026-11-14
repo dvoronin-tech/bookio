@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { Dialog } from '@bookio/ui';
 import styles from './FieldModal.module.scss';
+import { m } from '../../paraglide/messages.js';
 
 interface FieldModalHeaderProps {
     isEditMode: boolean;
@@ -8,11 +9,9 @@ interface FieldModalHeaderProps {
 
 export const FieldModalHeader: FC<FieldModalHeaderProps> = ({ isEditMode }) => (
     <div className={styles.header}>
-        <Dialog.Title>{isEditMode ? 'Edit field' : 'Create new field'}</Dialog.Title>
+        <Dialog.Title>{isEditMode ? m.field_edit_title() : m.field_create_title()}</Dialog.Title>
         <Dialog.Description>
-            {isEditMode
-                ? 'Update field settings'
-                : 'Configure a new field for your booking form'}
+            {isEditMode ? m.field_edit_description() : m.field_create_description()}
         </Dialog.Description>
     </div>
 );

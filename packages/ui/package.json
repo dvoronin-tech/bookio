@@ -7,10 +7,15 @@
         ".": {
             "types": "./src/index.ts",
             "default": "./src/index.ts"
+        },
+        "./server": {
+            "types": "./src/paraglide/server.d.ts",
+            "default": "./src/paraglide/server.js"
         }
     },
     "scripts": {
-        "build": "tsc"
+        "prepare": "paraglide-js compile --project ./project.inlang",
+        "build": "paraglide-js compile --project ./project.inlang && tsc"
     },
     "dependencies": {
         "@floating-ui/react": "^0.27.16",
@@ -25,6 +30,7 @@
         "@types/react": "^19.2.17",
         "@types/react-dom": "^19.2.3",
         "sass-embedded": "^1.100.0",
+        "@inlang/paraglide-js": "^3.2.2",
         "typescript": "^5.8.3"
     }
 }

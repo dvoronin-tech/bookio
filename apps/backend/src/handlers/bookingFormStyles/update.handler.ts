@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { bookingFormStyles } from '@bookio/db';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
@@ -9,7 +9,7 @@ import { updateBookingFormStylesSchema } from '@/schemas/bookingFormStyles/updat
 const factory = createFactory().createHandlers;
 
 export const updateBookingFormStylesHandler = factory(
-    zValidator('json', updateBookingFormStylesSchema),
+    validate('json', updateBookingFormStylesSchema),
     async (c) => {
         try {
             const {
@@ -27,7 +27,7 @@ export const updateBookingFormStylesHandler = factory(
             });
 
             if (!existingStyles) {
-                return c.json(prepareError('Booking form styles not found'), 404);
+                return c.json(prepareError('Booking form styles not found', 'not_found'), 404);
             }
 
             const [updated] = await db
@@ -37,12 +37,12 @@ export const updateBookingFormStylesHandler = factory(
                 .returning();
 
             if (!updated) {
-                return c.json(prepareError('Failed to update booking form styles'), 500);
+                return c.json(prepareError('Failed to update booking form styles', 'internal'), 500);
             }
 
             return c.json(prepareSuccess(updated));
         } catch (error) {
-            return c.json(prepareError('Failed to update booking form styles'), 500);
+            return c.json(prepareError('Failed to update booking form styles', 'internal'), 500);
         }
     },
 );

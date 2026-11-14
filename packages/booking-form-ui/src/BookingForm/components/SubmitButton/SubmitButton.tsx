@@ -1,8 +1,9 @@
 import { Button, Loader } from '@bookio/ui';
 import { useBookingFormContext } from '../../BookingFormContext.js';
 import styles from './SubmitButton.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
-export function SubmitButton() {
+export function SubmitButton({ message }: { message?: string }) {
     const { formState } = useBookingFormContext();
     const isLoading = formState === 'loading' || formState === 'success';
 
@@ -20,12 +21,12 @@ export function SubmitButton() {
                         <Loader />
                     </div>
                 ) : (
-                    <span className={styles.statusText}>Submit form</span>
+                    <span className={styles.statusText}>{m.submit()}</span>
                 )}
             </Button>
             {formState === 'error' && (
                 <p className={styles.errorNotification}>
-                    Failed to submit form
+                    {message ?? m.submit_failed()}
                 </p>
             )}
         </div>

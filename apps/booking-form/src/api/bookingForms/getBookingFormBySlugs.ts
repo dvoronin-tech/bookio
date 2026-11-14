@@ -21,10 +21,6 @@ export const fetchBookingFormBySlugs = async (
 
     const body = await response.json();
 
-    if (response.status === 404 && 'code' in body) {
-        throw new Error(body.error, { cause: body.code });
-    }
-
     validateError(response, body, 'Failed to get booking form by slugs');
 
     return body.data;

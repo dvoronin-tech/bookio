@@ -4,6 +4,8 @@ import type { BookingFormType } from '#api/bookingForms/getBookingForms.ts';
 import styles from './BookingAsideBar.module.scss';
 import { bookingsRouteApi } from '#lib/routeApis.ts';
 import { Link } from '@tanstack/react-router';
+import { plural } from '#i18n/locale';
+import { m } from '../../paraglide/messages.js';
 
 interface BookingFormAsideCardProps {
     bookingForm: BookingFormType;
@@ -14,8 +16,11 @@ export const BookingFormAsideCard: FC<BookingFormAsideCardProps> = ({
 }) => {
     const { organizationId, bookingFormId } = bookingsRouteApi.useParams();
 
-    const bookingsLabel =
-        bookingForm.totalBookings === 1 ? 'booking' : 'bookings';
+    const bookingsLabel = plural(bookingForm.totalBookings, {
+        one: m.bookings_count_one({ count: bookingForm.totalBookings }),
+        few: m.bookings_count_few({ count: bookingForm.totalBookings }),
+        many: m.bookings_count_many({ count: bookingForm.totalBookings }),
+    });
 
     const isActive = bookingForm.id === bookingFormId;
 
@@ -37,7 +42,7 @@ export const BookingFormAsideCard: FC<BookingFormAsideCardProps> = ({
                     })}
                 >
                     <span className={styles.statusDot} />
-                    {bookingForm.isActive ? 'Active' : 'Inactive'}
+                    {bookingForm.isActive ? m.active() : m.inactive()}
                 </span>
             </div>
             {bookingForm.description && (
@@ -46,7 +51,7 @@ export const BookingFormAsideCard: FC<BookingFormAsideCardProps> = ({
                 </p>
             )}
             <p className={styles.cardMeta}>
-                {bookingForm.totalBookings} {bookingsLabel}
+                {bookingsLabel}
             </p>
         </Link>
     );

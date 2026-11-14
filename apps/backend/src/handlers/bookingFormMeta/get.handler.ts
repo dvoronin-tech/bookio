@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 import { getBookingFormMetaSchema } from '@/schemas/bookingFormMeta/get.schema.js';
@@ -7,7 +7,7 @@ import { getBookingFormMetaSchema } from '@/schemas/bookingFormMeta/get.schema.j
 const factory = createFactory().createHandlers;
 
 export const getBookingFormMetaHandler = factory(
-    zValidator('query', getBookingFormMetaSchema),
+    validate('query', getBookingFormMetaSchema),
     async (c) => {
         try {
             const { bookingFormId } = c.req.valid('query');
@@ -17,12 +17,12 @@ export const getBookingFormMetaHandler = factory(
             });
 
             if (!meta) {
-                return c.json(prepareError('Booking form meta not found'), 404);
+                return c.json(prepareError('Booking form meta not found', 'not_found'), 404);
             }
 
             return c.json(prepareSuccess(meta));
         } catch (error) {
-            return c.json(prepareError('Failed to get booking form meta'), 500);
+            return c.json(prepareError('Failed to get booking form meta', 'internal'), 500);
         }
     },
 );
