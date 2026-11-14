@@ -24,7 +24,7 @@ import {
 } from './dateUtils.js';
 import CalendarIcon from './icons/calendar.svg?react';
 import { getThemeCssVars } from '../utils/themeCssVars.js';
-import { useUiCopy } from '../i18n/UiI18n.js';
+import { m } from '../paraglide/messages.js';
 import styles from './DatePicker.module.scss';
 
 const OUTSIDE_CLICK_IGNORE_ATTR = 'data-outside-click-ignore';
@@ -56,8 +56,7 @@ function DatePicker({
     maxYear: maxYearProp,
     'aria-label': ariaLabel,
 }: DatePickerProps) {
-    const copy = useUiCopy();
-    const resolvedAriaLabel = ariaLabel ?? copy.chooseDate;
+    const resolvedAriaLabel = ariaLabel ?? m.choose_date();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const placeholder = placeholderProp || DATE_PLACEHOLDER;
@@ -227,7 +226,7 @@ function DatePicker({
                     type="button"
                     className={styles.iconButton}
                     disabled={disabled}
-                    aria-label={open ? copy.closeDatePicker : copy.openDatePicker}
+                    aria-label={open ? m.close_date() : m.open_date()}
                     aria-haspopup="dialog"
                     aria-expanded={open}
                     onClick={handleTogglePopover}

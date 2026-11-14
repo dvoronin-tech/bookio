@@ -6,7 +6,7 @@ import { organizationRouteApi } from '#lib/routeApis.ts';
 import { BookingFormTile } from './BookingFormTile.tsx';
 import styles from './BookingsIndex.module.scss';
 import { plural } from '#i18n/locale';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 export const BookingsIndex: FC = () => {
     const navigate = useNavigate();

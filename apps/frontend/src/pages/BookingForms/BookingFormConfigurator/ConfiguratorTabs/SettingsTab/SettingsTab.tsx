@@ -18,7 +18,7 @@ import { useGetOrganization } from '#api/organizations/getOrganizationData.ts';
 
 import { useForm, useWatch } from 'react-hook-form';
 import { useShallow } from 'zustand/shallow';
-import { m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
 
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore.ts';
 import { trimObj } from '#utils/trimObj.ts';

@@ -1,5 +1,5 @@
 import { colorSections } from '#components/BookingFormStyles/bookingFormStyles.constants';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 import { useBookingFormStyles } from '#components/BookingFormStyles/hooks/useBookingFormStyles';
 import { StyleColorField } from '#components/BookingFormStyles/StyleColorField/StyleColorField';
 import { StyleColorGroup } from '#components/BookingFormStyles/StyleColorGroup/StyleColorGroup';

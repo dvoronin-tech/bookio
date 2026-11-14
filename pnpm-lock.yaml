@@ -329,6 +329,9 @@ importers:
         specifier: ^7.81.0
         version: 7.81.0(react@19.2.7)
     devDependencies:
+      '@inlang/paraglide-js':
+        specifier: ^3.2.2
+        version: 3.2.2(eslint@10.6.0(jiti@2.7.0))(typescript@5.9.3)(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(tsx@4.22.4))
       '@types/react':
         specifier: ^19.2.17
         version: 19.2.17
@@ -394,6 +397,9 @@ importers:
         specifier: ^7.6.1
         version: 7.6.1(react@19.2.7)
     devDependencies:
+      '@inlang/paraglide-js':
+        specifier: ^3.2.2
+        version: 3.2.2(eslint@10.6.0(jiti@2.7.0))(typescript@5.9.3)(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(tsx@4.22.4))
       '@types/react':
         specifier: ^19.2.17
         version: 19.2.17
@@ -8323,6 +8329,24 @@ snapshots:
   '@img/sharp-win32-x64@0.35.3':
     optional: true
 
+  '@inlang/paraglide-js@3.2.2(eslint@10.6.0(jiti@2.7.0))(typescript@5.9.3)(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(tsx@4.22.4))':
+    dependencies:
+      '@inlang/recommend-sherlock': 0.2.1
+      '@inlang/sdk': 4.2.0
+      commander: 11.1.0
+      consola: 3.4.0
+      jiti: 2.7.0
+      json5: 2.2.3
+      magic-string: 0.30.21
+      unplugin: 2.3.11
+      urlpattern-polyfill: 10.1.0
+      valibot: 1.5.0(typescript@5.9.3)
+    optionalDependencies:
+      eslint: 10.6.0(jiti@2.7.0)
+      vite: 8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(tsx@4.22.4)
+    transitivePeerDependencies:
+      - typescript
+
   '@inlang/paraglide-js@3.2.2(eslint@10.6.0(jiti@2.7.0))(typescript@6.0.3)(vite@8.1.3(@types/node@24.13.2)(esbuild@0.28.1)(jiti@2.7.0)(sass-embedded@1.100.0)(sass@1.100.0)(tsx@4.22.4))':
     dependencies:
       '@inlang/recommend-sherlock': 0.2.1
@@ -14582,6 +14606,10 @@ snapshots:
   uuid@2.0.1: {}
 
   uuid@3.4.0: {}
+
+  valibot@1.5.0(typescript@5.9.3):
+    optionalDependencies:
+      typescript: 5.9.3
 
   valibot@1.5.0(typescript@6.0.3):
     optionalDependencies:

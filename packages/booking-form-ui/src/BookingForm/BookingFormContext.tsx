@@ -1,14 +1,12 @@
 import { createContext, type FC, type ReactNode, useContext } from 'react';
 import type { Control, FieldValues, UseFormRegister } from 'react-hook-form';
 import type { FormState } from './BookingForm.js';
-import type { BookingFormCopy } from './copy.js';
 
 export type BookingFormContextValue = {
     register: UseFormRegister<FieldValues>;
     control: Control<FieldValues>;
     markRequiredFields: boolean;
     formState: FormState;
-    copy: BookingFormCopy;
 };
 
 const BookingFormContext = createContext<BookingFormContextValue | null>(null);

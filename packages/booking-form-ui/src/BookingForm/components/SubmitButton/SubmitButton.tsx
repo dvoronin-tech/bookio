@@ -1,9 +1,10 @@
 import { Button, Loader } from '@bookio/ui';
 import { useBookingFormContext } from '../../BookingFormContext.js';
 import styles from './SubmitButton.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 export function SubmitButton({ message }: { message?: string }) {
-    const { formState, copy } = useBookingFormContext();
+    const { formState } = useBookingFormContext();
     const isLoading = formState === 'loading' || formState === 'success';
 
     return (
@@ -20,12 +21,12 @@ export function SubmitButton({ message }: { message?: string }) {
                         <Loader />
                     </div>
                 ) : (
-                    <span className={styles.statusText}>{copy.submit}</span>
+                    <span className={styles.statusText}>{m.submit()}</span>
                 )}
             </Button>
             {formState === 'error' && (
                 <p className={styles.errorNotification}>
-                    {message ?? copy.submitFailed}
+                    {message ?? m.submit_failed()}
                 </p>
             )}
         </div>

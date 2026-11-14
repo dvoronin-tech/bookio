@@ -5,7 +5,7 @@ import Checkbox from '../Checkbox/Checkbox.js';
 import Dropdown from '../Dropdown/Dropdown.js';
 import Input from '../Input/Input.js';
 import { ArrowIcon } from './icons/ArrowIcon.js';
-import { useUiCopy } from '../i18n/UiI18n.js';
+import { m } from '../paraglide/messages.js';
 import styles from './SelectDropdown.module.scss';
 
 export type SelectDropdownOption = string | number;
@@ -69,10 +69,9 @@ function SelectDropdown(props: SelectDropdownProps) {
         scrollSelectedIntoView: scrollIntoView = false,
     } = props;
 
-    const copy = useUiCopy();
-    const resolvedPlaceholder = placeholder ?? copy.selectPlaceholder;
-    const resolvedSearchPlaceholder = searchPlaceholder ?? copy.searchPlaceholder;
-    const resolvedEmptyOptionsText = emptyOptionsText ?? copy.emptyOptions;
+    const resolvedPlaceholder = placeholder ?? m.select();
+    const resolvedSearchPlaceholder = searchPlaceholder ?? m.search();
+    const resolvedEmptyOptionsText = emptyOptionsText ?? m.empty_options();
 
     assertUniqueOptions(options);
 
@@ -99,8 +98,10 @@ function SelectDropdown(props: SelectDropdownProps) {
         const formatSelectedCount =
             props.multiple === true ? props.formatSelectedCount : undefined;
 
-        return (formatSelectedCount ?? copy.selectedCount)(selectedKeys.size);
-    }, [selectedKeys, resolvedPlaceholder, props, copy.selectedCount]);
+        return formatSelectedCount
+            ? formatSelectedCount(selectedKeys.size)
+            : m.selected_count({ count: selectedKeys.size });
+    }, [selectedKeys, resolvedPlaceholder, props]);
 
     const filteredOptions = useMemo(() => {
         if (!withSearch) return options;

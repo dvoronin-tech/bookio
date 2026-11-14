@@ -22,7 +22,8 @@ import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import { useSession, useSignOut } from '#api/auth';
-import { getLocale, m, setLocale } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
+import { getLocale, setLocale } from '../../paraglide/runtime.js';
 
 export const AppHeader: FC = () => {
     const params = organizationRouteApi.useParams({ shouldThrow: false });

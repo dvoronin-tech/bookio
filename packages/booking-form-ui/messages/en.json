@@ -1,0 +1,10 @@
+{
+    "submit": "Submit form",
+    "submit_failed": "Failed to submit form",
+    "required": "{name} is required",
+    "invalid_email": "Enter a valid email address",
+    "invalid_url": "Enter a valid URL",
+    "invalid_phone": "Enter a valid phone number",
+    "file_too_large": "File must be {maxSizeMb} MB or smaller",
+    "image_too_large": "Image must be {maxSizeMb} MB or smaller"
+}

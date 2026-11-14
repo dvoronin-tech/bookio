@@ -7,11 +7,12 @@ import { useBookingFormContext } from '../../BookingFormContext.js';
 import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 export const CheckboxField: FC<FieldRendererProps<'checkbox'>> = ({
     field,
 }) => {
-    const { formState, register, control, markRequiredFields, copy } = useBookingFormContext();
+    const { formState, register, control, markRequiredFields } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { helpText } = field.params;
     const { errorMessage } = useFieldError(control, field.key);
@@ -23,7 +24,7 @@ export const CheckboxField: FC<FieldRendererProps<'checkbox'>> = ({
             <Checkbox
                 label={label}
                 {...register(field.key, {
-                    required: getRequiredRule(field, copy.required(field.name)),
+                    required: getRequiredRule(field, m.required({ name: field.name })),
                 })}
                 disabled={disabled}
             />

@@ -13,7 +13,7 @@ import {
 import { useShallow } from 'zustand/shallow';
 
 import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField.tsx';
-import { m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
 
 export const FieldsTab: FC = () => {
     const { bookingFormId } = configuratorRouteApi.useParams();

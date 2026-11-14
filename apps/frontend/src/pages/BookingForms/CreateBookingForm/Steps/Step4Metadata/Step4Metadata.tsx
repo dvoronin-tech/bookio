@@ -6,7 +6,7 @@ import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.
 import { step4Schema } from '../../schemas/createBookingFormDraft.schema.ts';
 import toast from 'react-hot-toast';
 import styles from './Step4Metadata.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
 
 export const Step4Metadata: FC = () => {
     const {

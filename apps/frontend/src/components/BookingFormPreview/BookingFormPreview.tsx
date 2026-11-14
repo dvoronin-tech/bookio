@@ -10,8 +10,7 @@ import {
 } from '#utils/defaultBookingFormStyles';
 import scssStyles from './BookingFormPreview.module.scss';
 import { toBookingFormSettings } from '#utils/dataPreparers/bookingFormPreparers.ts';
-import { buildBookingFormCopy } from '#i18n/bookingFormCopy';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 const toPreviewCssVars = (colors: BookingFormStyles): CSSProperties =>
     ({
@@ -83,7 +82,6 @@ export const BookingFormPreview: FC = () => {
         >
             <BookingForm
                 isPreview
-                copy={buildBookingFormCopy()}
                 bookingFormData={{
                     ...settings,
                     fields,

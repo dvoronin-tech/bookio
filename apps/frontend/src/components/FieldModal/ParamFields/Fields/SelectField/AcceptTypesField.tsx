@@ -3,7 +3,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 import { imageAcceptOptions } from '#utils/paramsFieldConfig/imageAcceptOptions';
-import { m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
 
 const ALL_IMAGES_MIME_TYPE = imageAcceptOptions['All images'];
 

@@ -12,7 +12,7 @@ import {
     organizationRouteApi,
 } from '#lib/routeApis';
 import styles from './Step1NameDescription.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
 
 export const Step1NameDescription: FC = () => {
     const navigate = useNavigate();

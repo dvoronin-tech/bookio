@@ -2,7 +2,7 @@ import { clsx } from 'clsx';
 import type { FC } from 'react';
 
 import styles from './RequiredRow.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 interface RequiredRowProps {
     checked?: boolean;

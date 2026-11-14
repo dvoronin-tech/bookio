@@ -8,9 +8,10 @@ import { useBookingFormContext } from '../../BookingFormContext.js';
 import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 export const SelectField: FC<FieldRendererProps<'select'>> = ({ field }) => {
-    const { formState, control, markRequiredFields, copy } = useBookingFormContext();
+    const { formState, control, markRequiredFields } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { required } = field;
     const { defaultValue, options } = field.params;
@@ -29,7 +30,7 @@ export const SelectField: FC<FieldRendererProps<'select'>> = ({ field }) => {
             name={field.key}
             control={control}
             rules={{
-                required: getRequiredRule(field, copy.required(field.name)),
+                required: getRequiredRule(field, m.required({ name: field.name })),
             }}
             render={({ field: { value, onChange }, fieldState }) => {
                 return (

@@ -2,7 +2,7 @@ import { Fragment, useRef, type FC, type ReactNode } from 'react';
 import clsx from 'clsx';
 import { useEnterFieldNavigation } from '#hooks/useEnterFieldNavigation';
 import { useFormWizardTotalSteps } from './FormWizardLayoutContext';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 import styles from './FormWizardLayout.module.scss';
 
 type FormWizardLayoutProps = {

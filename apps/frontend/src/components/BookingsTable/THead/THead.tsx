@@ -4,7 +4,7 @@ import type { BookingByIdItem } from '#api/bookings/getBookingsById.ts';
 import { type FC, useEffect } from 'react';
 import clsx from 'clsx';
 import styles from './THead.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 interface THeadProps {
     table: ReactTable<BookingsTableFeatures, BookingByIdItem>;

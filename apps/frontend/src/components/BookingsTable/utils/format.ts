@@ -1,6 +1,6 @@
 import { format } from 'date-fns';
 import { dateFnsLocale } from '#i18n/locale';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 export const formatBookingDate = (
     dateStr: string | Date | null | undefined,

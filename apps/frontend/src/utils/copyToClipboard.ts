@@ -1,5 +1,5 @@
 import toast from 'react-hot-toast';
-import { m } from '#i18n/messages';
+import { m } from '../paraglide/messages.js';
 
 export const copyToClipboard = (text: string, label: string) => {
     void navigator.clipboard.writeText(text);

@@ -2,7 +2,6 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@lib/query-client';
 import { NotFoundPage } from '#/pages/Errors/NotFoundPage/NotFoundPage';
-import { AppLocale } from '#/i18n/AppLocale';
 import { LanguageSwitch } from '#/components/LanguageSwitch/LanguageSwitch';
 import { m } from '../paraglide/messages.js';
 import { getLocale, getTextDirection } from '../paraglide/runtime.js';
@@ -46,10 +45,8 @@ function RootDocument({ children }: { children: React.ReactNode }) {
             </head>
             <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
                 <QueryClientProvider client={queryClient}>
-                    <AppLocale>
-                        <LanguageSwitch />
-                        {children}
-                    </AppLocale>
+                    <LanguageSwitch />
+                    {children}
                 </QueryClientProvider>
                 <Scripts />
             </body>

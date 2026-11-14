@@ -4,7 +4,7 @@ import {
     DEFAULT_LIGHT_BOOKING_FORM_STYLES,
     type BookingFormStyles,
 } from '#utils/defaultBookingFormStyles';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 export const colorSections = () => [
     {

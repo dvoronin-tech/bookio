@@ -6,7 +6,7 @@ import PlusIcon from '#assets/icons/plus.svg?react';
 import { createEmptyOption } from '../../../utils/fieldModalParams';
 import { OptionItem } from './OptionItem';
 import styles from '../../ParamFields.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
 
 interface ChoiceOptionsFieldProps {
     label: string;

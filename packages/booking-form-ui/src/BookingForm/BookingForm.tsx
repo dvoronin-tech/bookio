@@ -19,7 +19,7 @@ import {
 import { RenderField } from './fields/FieldsMap.js';
 import { normalizePhoneNumber } from './fields/components/PhoneInputField.js';
 import { normalizeField } from './utils/normalizeField.js';
-import { defaultBookingFormCopy, type BookingFormCopy } from './copy.js';
+import { m } from '../paraglide/messages.js';
 
 export type { BookingFormFieldInput } from './fields/field.types.js';
 
@@ -50,7 +50,6 @@ export type BookingFormProps = {
      * and skips the exit animation.
      * */
     isPreview?: boolean;
-    copy?: BookingFormCopy;
 };
 
 export type FormState = 'idle' | 'loading' | 'error' | 'success';
@@ -95,7 +94,6 @@ function BookingForm({
     onInvalid,
     onSuccess,
     isPreview = false,
-    copy = defaultBookingFormCopy,
 }: BookingFormProps) {
     const [formState, setFormState] = useState<FormState>('idle');
     const [statusMessage, setStatusMessage] = useState<string | null>(null);
@@ -157,7 +155,7 @@ function BookingForm({
                 setError(issue.name, { type: 'server', message: issue.message });
             }
             setStatusMessage(
-                error instanceof Error ? error.message : copy.submitFailed,
+                error instanceof Error ? error.message : m.submit_failed(),
             );
             setProcessingState('error');
         }
@@ -179,7 +177,6 @@ function BookingForm({
             control={control}
             markRequiredFields={markRequiredFields}
             formState={formState}
-            copy={copy}
         >
             <form
                 noValidate

@@ -10,7 +10,7 @@ import { filterByIsActive } from './utils/filterByIsActive.ts';
 
 import PlusIcon from '#assets/icons/plus.svg?react';
 import { plural } from '#i18n/locale';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 type BookingFormListFilter = 'all' | 'active';
 

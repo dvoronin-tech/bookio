@@ -10,7 +10,7 @@ import {
 } from 'react';
 import Point, { type ProgressBarPoint } from './Point.js';
 import Segments, { type ProgressBarSegment } from './Segments.js';
-import { useUiCopy } from '../i18n/UiI18n.js';
+import { m } from '../paraglide/messages.js';
 import styles from './ProgressBar.module.scss';
 
 export type ProgressBarProps = {
@@ -46,8 +46,7 @@ function ProgressBar({
     className,
     'aria-label': ariaLabel,
 }: ProgressBarProps) {
-    const copy = useUiCopy();
-    const resolvedAriaLabel = ariaLabel ?? copy.progressBar;
+    const resolvedAriaLabel = ariaLabel ?? m.progress();
     const trackRef = useRef<HTMLDivElement>(null);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [activeDragIndex, setActiveDragIndex] = useState<number | null>(null);

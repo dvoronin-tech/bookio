@@ -5,7 +5,7 @@ import { type FC, useCallback } from 'react';
 import { SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 import styles from './BookingsTablePagination.module.scss';
 import { plural } from '#i18n/locale';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 const PAGE_SIZE_OPTIONS: SelectDropdownOption[] = [20, 50, 100];
 

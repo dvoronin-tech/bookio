@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { BOOKING_FORM_URL } from '#utils/constants';
 import styles from './BookingFormUrlPreview.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 type BookingFormUrlPreviewProps = {
     organizationSlug?: string;

@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Outlet } from '@tanstack/react-router';
 import Logo from '#assets/logo.svg?react';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 import styles from './AuthLayout.module.scss';
 
 export const AuthLayout: FC = () => {

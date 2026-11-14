@@ -7,7 +7,7 @@ import { createClearClickHandler } from '../utils/eventHandlers.js';
 import { formatFileSize } from '../utils/fileUtils.js';
 import FileCheckIcon from './icons/file-check.svg?react';
 import FileIcon from './icons/file.svg?react';
-import { useUiCopy } from '../i18n/UiI18n.js';
+import { m } from '../paraglide/messages.js';
 import styles from './FilePickerField.module.scss';
 
 export type FilePickerFieldProps = {
@@ -29,15 +29,14 @@ function FilePickerField({
     className,
     id,
 }: FilePickerFieldProps) {
-    const copy = useUiCopy();
-    const resolvedPlaceholder = placeholder ?? copy.fileSelectPlaceholder;
+    const resolvedPlaceholder = placeholder ?? m.file_select();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, error, openFilePicker, clear, inputProps } = useFilePicker({
         onChange,
         accept,
         disabled,
-        invalidTypeError: copy.fileTypeError,
+        invalidTypeError: m.file_type(),
     });
 
     const handleClear = createClearClickHandler(clear);
@@ -73,7 +72,7 @@ function FilePickerField({
                         type="button"
                         className={styles.clearButton}
                         onClick={handleClear}
-                        aria-label={copy.removeFile}
+                        aria-label={m.remove_file()}
                     >
                         <CloseIcon />
                     </button>

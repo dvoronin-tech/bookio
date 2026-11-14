@@ -19,7 +19,7 @@ import {
 import { useUpdateBookingFormStyles } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles.ts';
 import { useUpdateBookingFormMeta } from '#api/bookingForms/bookingFormMeta/updateBookingFormMeta.ts';
 import styles from './ConfiguratorLayout.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../../../paraglide/messages.js';
 
 export const ConfiguratorFooter: FC = memo(() => {
     const { bookingFormId, organizationId } = configuratorRouteApi.useParams();

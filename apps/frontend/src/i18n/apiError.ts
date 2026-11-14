@@ -1,5 +1,5 @@
 import { readErrorCode, type ErrorCode } from '@bookio/backend/constants';
-import { m } from '#i18n/messages';
+import { m } from '../paraglide/messages.js';
 
 export type ApiIssue = {
     path: Array<string | number>;

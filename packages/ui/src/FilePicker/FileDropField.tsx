@@ -7,7 +7,7 @@ import { createClearClickHandler, createOpenOnKeyDownHandler } from '../utils/ev
 import { formatFileSize, getFileExtension } from '../utils/fileUtils.js';
 import FileCheckIcon from './icons/file-check.svg?react';
 import FileIcon from './icons/file.svg?react';
-import { useUiCopy } from '../i18n/UiI18n.js';
+import { m } from '../paraglide/messages.js';
 import styles from './FileDropField.module.scss';
 
 export type FileDropFieldProps = {
@@ -29,15 +29,14 @@ function FileDropField({
     className,
     id,
 }: FileDropFieldProps) {
-    const copy = useUiCopy();
-    const resolvedPlaceholder = placeholder ?? copy.fileDropPlaceholder;
+    const resolvedPlaceholder = placeholder ?? m.file_drop();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, isDragging, error, openFilePicker, clear, inputProps, dropProps } = useFilePicker({
         onChange,
         accept,
         disabled,
-        invalidTypeError: copy.fileTypeError,
+        invalidTypeError: m.file_type(),
     });
 
     const handleKeyDown = createOpenOnKeyDownHandler(openFilePicker);
@@ -82,7 +81,7 @@ function FileDropField({
                                 type="button"
                                 className={styles.clearButton}
                                 onClick={handleClear}
-                                aria-label={copy.removeFile}
+                                aria-label={m.remove_file()}
                             >
                                 <CloseIcon />
                             </button>

@@ -6,11 +6,12 @@ import { useBookingFormContext } from '../../BookingFormContext.js';
 import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const EmailInputField: FC<FieldRendererProps<'email'>> = ({ field }) => {
-    const { formState, register, control, markRequiredFields, copy } = useBookingFormContext();
+    const { formState, register, control, markRequiredFields } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { hasError, errorMessage } = useFieldError(control, field.key);
     const label = formatLabel(markRequiredFields, field.name, field.required);
@@ -26,10 +27,10 @@ export const EmailInputField: FC<FieldRendererProps<'email'>> = ({ field }) => {
             errorMessage={errorMessage}
             useConfirmationColor={false}
             {...register(field.key, {
-                required: getRequiredRule(field, copy.required(field.name)),
+                required: getRequiredRule(field, m.required({ name: field.name })),
                 pattern: {
                     value: EMAIL_PATTERN,
-                    message: copy.invalidEmail,
+                    message: m.invalid_email(),
                 },
             })}
             disabled={disabled}

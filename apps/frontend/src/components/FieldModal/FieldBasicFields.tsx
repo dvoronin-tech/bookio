@@ -11,7 +11,7 @@ import {
     type FieldModalFormValues,
 } from '@bookio/backend/schemas';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 interface FieldBasicFieldsProps {
     fieldId?: string | null;

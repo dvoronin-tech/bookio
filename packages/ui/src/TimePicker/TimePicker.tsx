@@ -23,7 +23,7 @@ import {
     TIME_PLACEHOLDER,
 } from './timeUtils.js';
 import { getThemeCssVars } from '../utils/themeCssVars.js';
-import { useUiCopy } from '../i18n/UiI18n.js';
+import { m } from '../paraglide/messages.js';
 import styles from './TimePicker.module.scss';
 const DEFAULT_STEP = 1;
 
@@ -69,8 +69,7 @@ function TimePicker({
     step = DEFAULT_STEP,
     'aria-label': ariaLabel,
 }: TimePickerProps) {
-    const copy = useUiCopy();
-    const resolvedAriaLabel = ariaLabel ?? copy.chooseTime;
+    const resolvedAriaLabel = ariaLabel ?? m.choose_time();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const placeholder = placeholderProp || TIME_PLACEHOLDER;
@@ -213,7 +212,7 @@ function TimePicker({
                     type="button"
                     className={styles.iconButton}
                     disabled={disabled}
-                    aria-label={open ? copy.closeTimePicker : copy.openTimePicker}
+                    aria-label={open ? m.close_time() : m.open_time()}
                     aria-haspopup="dialog"
                     aria-expanded={open}
                     onClick={handleTogglePopover}

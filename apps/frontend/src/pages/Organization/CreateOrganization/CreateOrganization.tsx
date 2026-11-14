@@ -21,7 +21,8 @@ import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizar
 import { useDebouncedValidation } from '#utils/useDebouncedValidation';
 import { formatZodError } from '#utils/parseError';
 import { copyToClipboard } from '#utils/copyToClipboard.ts';
-import { getLocale, m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
+import { getLocale } from '../../../paraglide/runtime.js';
 import { applyValidationIssues } from '#i18n/apiError';
 
 function createFormSchema() {

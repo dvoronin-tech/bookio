@@ -5,7 +5,7 @@ import styles from './BookingAsideBar.module.scss';
 import { bookingsRouteApi } from '#lib/routeApis.ts';
 import { Link } from '@tanstack/react-router';
 import { plural } from '#i18n/locale';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 interface BookingFormAsideCardProps {
     bookingForm: BookingFormType;

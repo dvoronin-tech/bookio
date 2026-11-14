@@ -2,7 +2,7 @@ import { useCallback, useState, type FC } from 'react';
 import styles from './OrganizationItem.module.scss';
 import { format } from 'date-fns';
 import { dateFnsLocale } from '#i18n/locale';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 import { clsx } from 'clsx';
 import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import { Dialog } from '@bookio/ui';

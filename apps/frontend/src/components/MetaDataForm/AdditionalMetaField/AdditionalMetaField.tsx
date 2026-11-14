@@ -3,7 +3,7 @@ import { Button, Input, SelectDropdown, type SelectDropdownOption } from '@booki
 import TrashIcon from '#assets/icons/trash.svg?react';
 
 import styles from './AdditionalMetaField.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 export interface AdditionalMetaFieldProps {
     id: string;

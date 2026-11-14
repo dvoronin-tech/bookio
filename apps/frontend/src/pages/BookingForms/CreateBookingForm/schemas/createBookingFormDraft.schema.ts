@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { m } from '#i18n/messages';
+import { m } from '../../../../paraglide/messages.js';
 
 export const step1Schema = z.object({
     name: z.string().min(1).max(255),

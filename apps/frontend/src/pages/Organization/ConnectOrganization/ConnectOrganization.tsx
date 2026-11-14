@@ -12,7 +12,7 @@ import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 import { applyValidationIssues } from '#i18n/apiError';
 
 const formSchema = z.object({

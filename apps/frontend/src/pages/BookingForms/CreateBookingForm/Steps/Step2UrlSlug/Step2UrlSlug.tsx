@@ -9,7 +9,7 @@ import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.
 import { slugSchema } from '@bookio/backend/schemas';
 import toast from 'react-hot-toast';
 import styles from './Step2UrlSlug.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
 
 export const Step2UrlSlug: FC = () => {
     const { slug, organizationId, setField, goToNextStep, goToPreviousStep } =

@@ -6,7 +6,7 @@ import { fieldTypeIcons } from '#components/ConfiguratorField/fieldTypeIcons';
 import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormPreparers';
 import styles from './FieldTypeSelector.module.scss';
 import { fieldTypeLabel } from '#i18n/fieldTypeLabel';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 export const FieldTypeSelector: FC = () => {
     const { control, setValue } = useFormContext<FieldModalFormValues>();

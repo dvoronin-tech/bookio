@@ -5,7 +5,7 @@ import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfigurat
 import { configuratorTabs } from '../configuratorTabs.tsx';
 import styles from './ConfiguratorLayout.module.scss';
 import { useShallow } from 'zustand/shallow';
-import { m } from '#i18n/messages';
+import { m } from '../../../../paraglide/messages.js';
 
 export const ConfiguratorHeader: FC = memo(() => {
     const { activeTab, setIsCollapsed } = useBookingFormConfiguratorStore(

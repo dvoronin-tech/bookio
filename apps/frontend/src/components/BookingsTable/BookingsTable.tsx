@@ -15,7 +15,7 @@ import { THead } from '#components/BookingsTable/THead/THead.tsx';
 import { TBody } from '#components/BookingsTable/TBody/TBody.tsx';
 import { BookingsTablePagination } from '#components/BookingsTable/BookingsTablePagination/BookingsTablePagination.tsx';
 import { SimpleCell } from '#components/BookingsTable/components/SimpleCell.tsx';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 interface BookingsTableProps {
     data: BookingByIdItem[];

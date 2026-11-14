@@ -1,5 +1,5 @@
 import type { ComponentType, ReactNode } from 'react';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 import SettingsIcon from '#assets/icons/settings.svg?react';
 import FieldsIcon from '#assets/icons/fields.svg?react';

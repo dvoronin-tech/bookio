@@ -8,7 +8,7 @@ import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.
 import styles from './Step6Success.module.scss';
 
 import DoneIcon from '#assets/icons/done.svg?react';
-import { m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
 
 export const Step6Success: FC = () => {
     const navigate = useNavigate();

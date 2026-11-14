@@ -12,7 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { useDebounce } from 'use-debounce';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 import { applyValidationIssues } from '#i18n/apiError';
 
 const deleteBookingFormSchema = z.object({

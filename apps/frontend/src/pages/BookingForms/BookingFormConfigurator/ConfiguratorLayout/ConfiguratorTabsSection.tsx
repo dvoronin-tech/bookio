@@ -8,7 +8,7 @@ import clsx from 'clsx';
 import { configuratorTabs } from '../configuratorTabs.tsx';
 import styles from './ConfiguratorLayout.module.scss';
 import { ConfiguratorTabs } from './ConfiguratorTabs.tsx';
-import { m } from '#i18n/messages';
+import { m } from '../../../../paraglide/messages.js';
 
 export const ConfiguratorTabsSection: FC = memo(() => {
     const { activeTab, setActiveTab } = useBookingFormConfiguratorStore(

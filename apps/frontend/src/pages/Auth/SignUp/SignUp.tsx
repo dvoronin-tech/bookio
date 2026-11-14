@@ -8,7 +8,8 @@ import { type FieldErrors, useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { goToCurrentUserEntry } from '#lib/organizationEntry';
-import { getLocale, m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
+import { getLocale } from '../../../paraglide/runtime.js';
 
 function createSignUpSchema() {
     const passwordSchema = z

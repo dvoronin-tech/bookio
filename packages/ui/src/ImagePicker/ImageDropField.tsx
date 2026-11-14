@@ -6,7 +6,7 @@ import { createClearClickHandler, createOpenOnKeyDownHandler } from '../utils/ev
 import { formatFileSize, getFileExtension } from '../utils/fileUtils.js';
 import ImageIcon from './icons/image.svg?react';
 import { useImagePicker } from './useImagePicker.js';
-import { useUiCopy } from '../i18n/UiI18n.js';
+import { m } from '../paraglide/messages.js';
 import styles from './ImageDropField.module.scss';
 
 export type ImageDropFieldProps = {
@@ -34,8 +34,7 @@ function ImageDropField({
     className,
     id,
 }: ImageDropFieldProps) {
-    const copy = useUiCopy();
-    const resolvedPlaceholder = placeholder ?? copy.imageDropPlaceholder;
+    const resolvedPlaceholder = placeholder ?? m.image_drop();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, previewUrl, isDragging, error, openFilePicker, clear, inputProps, dropProps } =
@@ -43,7 +42,7 @@ function ImageDropField({
             onChange,
             accept,
             disabled,
-            invalidTypeError: copy.imageFileError,
+            invalidTypeError: m.image_file(),
         });
     const [dimensions, setDimensions] = useState<ImageDimensions | null>(null);
     const currentDimensions = dimensions?.url === previewUrl ? dimensions : null;
@@ -107,7 +106,7 @@ function ImageDropField({
                                 type="button"
                                 className={styles.clearButton}
                                 onClick={handleClear}
-                                aria-label={copy.removeImage}
+                                aria-label={m.remove_image()}
                             >
                                 <CloseIcon />
                             </button>

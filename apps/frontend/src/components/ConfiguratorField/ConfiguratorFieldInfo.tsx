@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 
 import styles from './ConfiguratorField.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 interface ConfiguratorFieldInfoProps {
     name: string;

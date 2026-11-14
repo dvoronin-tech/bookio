@@ -9,7 +9,7 @@ import { SimpleParamInput } from './Fields/SimpleParamInput/SimpleParamInput';
 import { TimeParamInput } from './Fields/TimeParamInput/TimeParamInput';
 import { SelectField } from './Fields/SelectField/SelectField';
 import { YearRangeField } from './Fields/YearRangeField/YearRangeField';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 const paramFieldLabel = (formName: string, fallback: string) => {
     switch (formName) {

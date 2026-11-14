@@ -1,5 +1,5 @@
 import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormPreparers';
-import { m } from '#i18n/messages';
+import { m } from '../paraglide/messages.js';
 
 export function fieldTypeLabel(type: SyncBookingFormFieldItem['type']): string {
     switch (type) {

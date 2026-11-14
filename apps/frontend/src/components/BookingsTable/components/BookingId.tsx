@@ -2,7 +2,7 @@ import { type FC } from 'react';
 import styles from './Components.module.scss';
 import CopyIcon from '#assets/icons/copy.svg?react';
 import { copyToClipboard } from '#utils/copyToClipboard.ts';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 interface BookingIdProps {
     bookingId: string;

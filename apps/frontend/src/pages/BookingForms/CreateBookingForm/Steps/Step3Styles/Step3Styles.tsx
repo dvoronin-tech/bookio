@@ -8,7 +8,7 @@ import { step3Schema } from '../../schemas/createBookingFormDraft.schema.ts';
 import toast from 'react-hot-toast';
 import styles from './Step3Styles.module.scss';
 import { trimObj } from '#utils/trimObj.ts';
-import { m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
 
 const COLOR_KEYS = [
     'primary',

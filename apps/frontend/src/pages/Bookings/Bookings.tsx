@@ -5,7 +5,7 @@ import { useGetBookingsById } from '#api/bookings/getBookingsById.ts';
 import { Button, PageLoader } from '@bookio/ui';
 import { bookingsRouteApi } from '#lib/routeApis.ts';
 import { BookingAsideBar } from '#components/AsideBar/BookingAsideBar.tsx';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 export const Bookings: FC = () => {
     return (

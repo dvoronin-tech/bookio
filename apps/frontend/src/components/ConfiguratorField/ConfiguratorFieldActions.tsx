@@ -4,7 +4,7 @@ import { Button } from '@bookio/ui';
 
 import EditIcon from '#assets/icons/pen.svg?react';
 import TrashIcon from '#assets/icons/trash.svg?react';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 interface ConfiguratorFieldActionsProps {
     name: string;

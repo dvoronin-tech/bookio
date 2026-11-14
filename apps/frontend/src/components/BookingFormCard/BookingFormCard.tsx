@@ -15,7 +15,7 @@ import CopyIcon from '#assets/icons/copy.svg?react';
 import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 const throwNoOrgToast = () => toast.error(m.forms_slug_not_loaded());
 

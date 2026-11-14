@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Button } from '@bookio/ui';
 import { useNavigate } from '@tanstack/react-router';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 import styles from './NotFound.module.scss';
 
 export const NotFound: FC = () => {

@@ -6,7 +6,7 @@ import { AdditionalMetaField } from './AdditionalMetaField/AdditionalMetaField';
 import { META_PROPERTIES } from './metaProperties';
 
 import styles from './MetaDataForm.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 interface AdditionalMetaRow {
     id: string;

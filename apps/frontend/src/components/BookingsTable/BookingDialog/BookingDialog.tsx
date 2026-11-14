@@ -6,7 +6,7 @@ import { BookingStatus } from '#components/BookingsTable/components/BookingStatu
 import { formatBookingDate } from '#components/BookingsTable/utils/format.ts';
 import { readBookingDataValue } from '#components/BookingsTable/utils/readBookingDataValue.ts';
 import styles from './BookingDialog.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 interface BookingDialogProps {
     selectedBookingId: string | null;

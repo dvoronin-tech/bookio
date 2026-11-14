@@ -11,7 +11,7 @@ import PlusIcon from '#assets/icons/plus.svg?react';
 import ConnectIcon from '#assets/icons/connect.svg?react';
 import SearchIcon from '#assets/icons/search.svg?react';
 import { OrganizationSearch } from '#components/OrganizationSearch/OrganizationSearch';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 export const OrganizationList: FC = () => {
     const { data, isPending, refetch, error } = useGetOrganizationsByUserId();

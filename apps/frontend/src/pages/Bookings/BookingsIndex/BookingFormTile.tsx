@@ -7,7 +7,7 @@ import styles from './BookingFormTile.module.scss';
 
 import CalendarIcon from '#assets/icons/calendar.svg?react';
 import { dateFnsLocale, plural } from '#i18n/locale';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 interface BookingFormTileProps {
     organizationId: string;

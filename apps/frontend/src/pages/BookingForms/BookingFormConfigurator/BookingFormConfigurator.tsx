@@ -12,7 +12,7 @@ import { toDefaultBookingFormData } from '#utils/dataPreparers/bookingFormPrepar
 import { Button, PageLoader } from '@bookio/ui';
 import PanelLeftOpenIcon from '#assets/icons/panel-left-open.svg?react';
 import styles from './BookingFormConfigurator.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 export const BookingFormConfigurator: FC = () => {
     const { bookingFormId } = configuratorRouteApi.useParams();

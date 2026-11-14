@@ -10,7 +10,8 @@ import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.
 import toast from 'react-hot-toast';
 import clsx from 'clsx';
 import styles from './Step5Review.module.scss';
-import { getLocale, m } from '#i18n/messages';
+import { m } from '../../../../../paraglide/messages.js';
+import { getLocale } from '../../../../../paraglide/runtime.js';
 
 type ReviewCell = {
     label: string;

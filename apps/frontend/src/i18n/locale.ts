@@ -1,20 +1,15 @@
 import { enUS, ru, type Locale } from 'date-fns/locale';
-import { getLocale } from '#i18n/messages';
+import { getLocale } from '../paraglide/runtime.js';
 
-export type AppLocale = 'en' | 'ru';
 export type PluralCategory = 'one' | 'few' | 'many';
 
-export function appLocale(): AppLocale {
-    return getLocale() === 'ru' ? 'ru' : 'en';
-}
-
 export function dateFnsLocale(): Locale {
-    return appLocale() === 'ru' ? ru : enUS;
+    return getLocale() === 'ru' ? ru : enUS;
 }
 
 export function pluralCategory(count: number): PluralCategory {
     const n = Math.abs(count);
-    if (appLocale() === 'en') {
+    if (getLocale() !== 'ru') {
         return n === 1 ? 'one' : 'many';
     }
 

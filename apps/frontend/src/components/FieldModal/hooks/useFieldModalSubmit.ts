@@ -5,7 +5,7 @@ import { createModalFieldSchema, type FieldModalFormValues } from '@bookio/backe
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { getNextSiblingFieldOrder } from '#utils/bookingFormFieldTree';
 import { normalizeFieldParams } from '../utils/fieldModalParams';
-import { m } from '#i18n/messages';
+import { m } from '../../../paraglide/messages.js';
 
 interface UseFieldModalSubmitParams {
     fieldId?: string | null;

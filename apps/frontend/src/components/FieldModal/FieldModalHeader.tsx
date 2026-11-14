@@ -1,7 +1,7 @@
 import type { FC } from 'react';
 import { Dialog } from '@bookio/ui';
 import styles from './FieldModal.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 interface FieldModalHeaderProps {
     isEditMode: boolean;

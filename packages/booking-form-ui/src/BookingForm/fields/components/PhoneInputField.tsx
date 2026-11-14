@@ -8,6 +8,7 @@ import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 import { clsx } from 'clsx';
 import { parsePhoneNumberFromString } from 'libphonenumber-js';
+import { m } from '../../../paraglide/messages.js';
 
 const PHONE_PREFIX = '+375';
 
@@ -17,7 +18,7 @@ export function normalizePhoneNumber(value: string): string | null {
 }
 
 export const PhoneInputField: FC<FieldRendererProps<'phone'>> = ({ field }) => {
-    const { formState, control, markRequiredFields, copy } = useBookingFormContext();
+    const { formState, control, markRequiredFields } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { placeholder, helpText } = field.params;
     const label = formatLabel(markRequiredFields, field.name, field.required);
@@ -31,7 +32,7 @@ export const PhoneInputField: FC<FieldRendererProps<'phone'>> = ({ field }) => {
                 validate: (value: string) =>
                     (!field.required && !value.trim()) ||
                     Boolean(normalizePhoneNumber(value)) ||
-                    copy.invalidPhone,
+                    m.invalid_phone(),
             }}
             render={({
                 field: { value, onChange, onBlur, ref },

@@ -80,9 +80,6 @@ export type {
 export { default as Loader } from './Loader/Loader.js';
 export { default as PageLoader } from './Loader/PageLoader.js';
 
-export { UiI18nProvider, useUiCopy, useUiDateLocale, defaultUiCopy } from './i18n/UiI18n.js';
-export type { UiCopy, UiLocale } from './i18n/UiI18n.js';
-
 export { Reorder } from './DragAndDrop/DragAndDrop.js';
 export { useReorderContext } from './DragAndDrop/ExternalReorderContext.js';
 export type { ItemId } from './DragAndDrop/InternalReorderContext.js';

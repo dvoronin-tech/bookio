@@ -2,7 +2,7 @@ import type { FC, MouseEvent } from 'react';
 import { Dialog } from '@bookio/ui';
 import PlusIcon from '#assets/icons/plus.svg?react';
 import styles from './FieldModal.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 interface FieldModalActionsProps {
     isEditMode: boolean;

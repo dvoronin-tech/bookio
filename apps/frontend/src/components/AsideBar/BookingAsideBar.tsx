@@ -4,7 +4,7 @@ import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { organizationRouteApi } from '#lib/routeApis';
 import { BookingFormAsideCard } from './BookingFormAsideCard.tsx';
 import styles from './BookingAsideBar.module.scss';
-import { m } from '#i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 export const BookingAsideBar: FC = () => {
     return (
