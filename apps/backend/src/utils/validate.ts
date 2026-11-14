@@ -1,6 +1,7 @@
 import type { ValidationTargets } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import type { ZodType } from 'zod';
+import type { ErrorCode } from '@/constants/errorCodes.js';
 
 type ValidationIssue = {
     path: Array<string | number>;
@@ -76,7 +77,7 @@ export const toValidationIssue = (issue: RawIssue): ValidationIssue => {
 export const validationErrorBody = (issues: readonly RawIssue[]) => {
     return {
         success: false as const,
-        code: 'validation',
+        code: 'validation' satisfies ErrorCode,
         error: 'Validation failed',
         issues: issues.map(toValidationIssue),
     };

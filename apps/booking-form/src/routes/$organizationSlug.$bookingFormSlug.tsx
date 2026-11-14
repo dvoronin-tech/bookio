@@ -6,6 +6,7 @@ import { MainPage } from '#/pages/MainPage/MainPage';
 import { BookingFormDataContext } from '#/store/BookingFormData/BookingFormDataContext';
 import { StepsProvider } from '#/store/Steps/StepsContext';
 import { createFileRoute } from '@tanstack/react-router';
+import type { ErrorCode } from '@bookio/backend/constants';
 import { isApiError } from '#/i18n/apiError';
 
 export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
@@ -31,7 +32,7 @@ export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
             return {
                 bookingForm: null,
                 error: 'Failed to get booking form by slugs',
-                code: 'internal',
+                code: 'internal' satisfies ErrorCode,
             };
         }
     },

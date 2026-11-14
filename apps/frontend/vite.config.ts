@@ -30,6 +30,10 @@ export default defineConfig({
                 replacement: path.resolve(__dirname, '../backend/src/schemas/index.ts'),
             },
             {
+                find: '@bookio/backend/constants',
+                replacement: path.resolve(__dirname, '../backend/src/constants/index.ts'),
+            },
+            {
                 find: '@bookio/backend',
                 replacement: path.resolve(__dirname, '../backend/src/routes/index.ts'),
             },

@@ -1,15 +1,17 @@
+import type { ErrorCode } from '@/constants/errorCodes.js';
+
 export type ApiErrorParams = Record<string, unknown>;
 
 export type ApiErrorBody = {
     success: false;
-    code: string;
+    code: ErrorCode;
     error: string;
     params?: ApiErrorParams;
 };
 
 export const prepareError = (
     error: string,
-    code: string,
+    code: ErrorCode,
     params?: ApiErrorParams,
 ): ApiErrorBody => {
     if (params && Object.keys(params).length > 0) {

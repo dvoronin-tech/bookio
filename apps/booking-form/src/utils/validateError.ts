@@ -1,3 +1,4 @@
+import type { ErrorCode } from '@bookio/backend/constants';
 import { toApiError } from '#/i18n/apiError';
 
 type ApiErrorBody = {
@@ -32,7 +33,7 @@ export function validateError<TBody>(
 
     if (!response.ok) {
         throw toApiError(
-            { code: 'internal', error: fallbackMessage },
+            { code: 'internal' satisfies ErrorCode, error: fallbackMessage },
             fallbackMessage,
         );
     }

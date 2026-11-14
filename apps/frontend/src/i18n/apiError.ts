@@ -1,3 +1,4 @@
+import { readErrorCode, type ErrorCode } from '@bookio/backend/constants';
 import { m } from '#i18n/messages';
 
 export type ApiIssue = {
@@ -13,13 +14,13 @@ type ErrorBody = {
 };
 
 export class ApiError extends Error {
-    readonly code: string;
+    readonly code: ErrorCode;
     readonly english: string;
     readonly issues?: ApiIssue[];
 
     constructor(
         message: string,
-        code: string,
+        code: ErrorCode,
         english: string,
         issues?: ApiIssue[],
     ) {
@@ -34,7 +35,7 @@ export class ApiError extends Error {
 export const isApiError = (error: unknown): error is ApiError =>
     error instanceof ApiError;
 
-const translateCode = (code: string) => {
+const translateCode = (code: ErrorCode) => {
     switch (code) {
         case 'not_found':
             return m.err_not_found();
@@ -58,8 +59,12 @@ const translateCode = (code: string) => {
             return m.err_internal();
         case 'validation':
             return m.err_validation();
-        default:
+        case 'unknown':
             return m.unknown_error();
+        default: {
+            const unexpected: never = code;
+            return unexpected;
+        }
     }
 };
 
@@ -131,7 +136,7 @@ export const toApiError = (
         typeof body.error === 'string' ? body.error : fallbackEnglish;
     console.error(english);
 
-    const code = typeof body.code === 'string' ? body.code : 'internal';
+    const code = readErrorCode(body.code);
     const issues = code === 'validation' ? readIssues(body.issues) : undefined;
     const message =
         code === 'validation'
