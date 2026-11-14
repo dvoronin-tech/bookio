@@ -8,7 +8,7 @@
     "scripts": {
         "dev": "vite dev --port 3000",
         "generate-routes": "tsr generate",
-        "build": "paraglide-js compile --project ./project.inlang && vite build",
+        "build": "pnpm --filter @bookio/ui --filter @bookio/booking-form-ui exec paraglide-js compile --project ./project.inlang && paraglide-js compile --project ./project.inlang && vite build",
         "preview": "vite preview",
         "test": "vitest run",
         "lint": "eslint",

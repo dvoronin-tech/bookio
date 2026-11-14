@@ -3,7 +3,7 @@
     "framework": "vite",
     "installCommand": "cd ../.. && pnpm install",
     "buildCommand": "pnpm run build",
-    "ignoreCommand": "git diff --quiet HEAD^ HEAD -- ./ ../../packages/ui ../../apps/backend",
+    "ignoreCommand": "git diff --quiet HEAD^ HEAD -- ./ ../../packages/ui ../../packages/booking-form-ui ../../apps/backend",
     "rewrites": [
         {
             "source": "/api/:path*",
