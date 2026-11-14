@@ -12,6 +12,7 @@ import { toDefaultBookingFormData } from '#utils/dataPreparers/bookingFormPrepar
 import { Button, PageLoader } from '@bookio/ui';
 import PanelLeftOpenIcon from '#assets/icons/panel-left-open.svg?react';
 import styles from './BookingFormConfigurator.module.scss';
+import { m } from '#i18n/messages';
 
 export const BookingFormConfigurator: FC = () => {
     const { bookingFormId } = configuratorRouteApi.useParams();
@@ -61,14 +62,13 @@ export const BookingFormConfigurator: FC = () => {
             return (
                 <div className={styles.errorContainer}>
                     <h2>
-                        {bookingFormError?.message ||
-                            'An error occurred while fetching the data'}
+                        {bookingFormError?.message || m.settings_fetch_error()}
                     </h2>
                     <Button
                         variant="primary-outlined"
                         onClick={handleRefetchBookingForm}
                     >
-                        Retry
+                        {m.retry()}
                     </Button>
                 </div>
             );

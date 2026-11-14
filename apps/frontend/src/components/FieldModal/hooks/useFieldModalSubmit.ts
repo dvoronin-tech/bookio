@@ -5,6 +5,7 @@ import { createModalFieldSchema, type FieldModalFormValues } from '@bookio/backe
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
 import { getNextSiblingFieldOrder } from '#utils/bookingFormFieldTree';
 import { normalizeFieldParams } from '../utils/fieldModalParams';
+import { m } from '#i18n/messages';
 
 interface UseFieldModalSubmitParams {
     fieldId?: string | null;
@@ -36,19 +37,19 @@ export const useFieldModalSubmit = ({
         }
 
         const isUniqueKey = (() => {
-            if (!formData.key?.trim()) return { success: false, message: 'Key is required' };
+            if (!formData.key?.trim()) return { success: false, message: m.field_key_required() };
 
             const conflictingField = currentFields.find(
                 (field) => field.key === formData.key && field.id !== existingField?.id,
             );
 
-            if (conflictingField) return { success: false, message: 'Key must be unique yes' };
+            if (conflictingField) return { success: false, message: m.field_key_unique() };
 
             return { success: true };
         })();
 
         if (!isUniqueKey.success) {
-            toast.error(isUniqueKey.message ?? 'Unknown error', {
+            toast.error(isUniqueKey.message ?? m.unknown_error(), {
                 position: 'top-right',
                 duration: 4000,
             });

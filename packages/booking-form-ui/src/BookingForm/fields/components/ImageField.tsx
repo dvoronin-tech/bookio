@@ -10,7 +10,7 @@ import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
 export const ImageField: FC<FieldRendererProps<'image'>> = ({ field }) => {
-    const { formState, control, markRequiredFields } = useBookingFormContext();
+    const { formState, control, markRequiredFields, copy } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { placeholder, accept, maxSizeMb } = field.params;
     const label = formatLabel(markRequiredFields, field.name, field.required);
@@ -20,14 +20,14 @@ export const ImageField: FC<FieldRendererProps<'image'>> = ({ field }) => {
             name={field.key}
             control={control}
             rules={{
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, copy.required(field.name)),
                 validate: (value: File | null) => {
                     if (!value || !maxSizeMb) {
                         return true;
                     }
                     return (
                         value.size <= maxSizeMb * 1024 * 1024 ||
-                        `Image must be ${maxSizeMb} MB or smaller`
+                        copy.imageTooLarge(maxSizeMb)
                     );
                 },
             }}

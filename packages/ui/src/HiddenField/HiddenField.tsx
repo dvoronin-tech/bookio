@@ -4,6 +4,7 @@ import Input from '../Input/Input.js';
 import { CopyIcon } from './icons/CopyIcon.js';
 import { HideIcon } from './icons/HideIcon.js';
 import { ShowIcon } from './icons/ShowIcon.js';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import styles from './HiddenField.module.scss';
 
 export type HiddenFieldProps = {
@@ -13,6 +14,7 @@ export type HiddenFieldProps = {
 };
 
 function HiddenField({ value, className, onCopy }: HiddenFieldProps) {
+    const copy = useUiCopy();
     const [isVisible, setIsVisible] = useState(false);
 
     const displayValue = isVisible ? value : '*'.repeat(value.length);
@@ -40,7 +42,7 @@ function HiddenField({ value, className, onCopy }: HiddenFieldProps) {
                     type="button"
                     className={styles.actionButton}
                     onClick={handleCopy}
-                    aria-label="Copy"
+                    aria-label={copy.copy}
                 >
                     <CopyIcon />
                 </button>
@@ -48,7 +50,7 @@ function HiddenField({ value, className, onCopy }: HiddenFieldProps) {
                     type="button"
                     className={styles.actionButton}
                     onClick={handleToggleVisibility}
-                    aria-label={isVisible ? 'Hide' : 'Show'}
+                    aria-label={isVisible ? copy.hide : copy.show}
                 >
                     {isVisible ? <HideIcon /> : <ShowIcon />}
                 </button>

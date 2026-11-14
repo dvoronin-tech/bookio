@@ -13,6 +13,7 @@ import {
 import { useShallow } from 'zustand/shallow';
 
 import { ConfiguratorField } from '#components/ConfiguratorField/ConfiguratorField.tsx';
+import { m } from '#i18n/messages';
 
 export const FieldsTab: FC = () => {
     const { bookingFormId } = configuratorRouteApi.useParams();
@@ -138,7 +139,7 @@ export const FieldsTab: FC = () => {
                         variant="primary-outlined"
                         onClick={handleOpenCreateModal}
                     >
-                        Add field
+                        {m.fields_add()}
                     </Button>
                 </Reorder>
             </div>

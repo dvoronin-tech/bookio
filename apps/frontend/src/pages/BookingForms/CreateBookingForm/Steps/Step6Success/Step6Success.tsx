@@ -8,6 +8,7 @@ import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.
 import styles from './Step6Success.module.scss';
 
 import DoneIcon from '#assets/icons/done.svg?react';
+import { m } from '#i18n/messages';
 
 export const Step6Success: FC = () => {
     const navigate = useNavigate();
@@ -40,11 +41,9 @@ export const Step6Success: FC = () => {
     return (
         <FormWizardLayout
             stepNumber={6}
-            title="Booking form created"
+            title={m.step6_title()}
             description={
-                guided
-                    ? 'Your booking form is ready. Continue to the configurator to set it up.'
-                    : 'Your booking form is ready. Continue to the configurator to set it up, or finish and return to the list.'
+                guided ? m.step6_description_guided() : m.step6_description()
             }
             footer={
                 <div className={styles.footerActions}>
@@ -54,7 +53,7 @@ export const Step6Success: FC = () => {
                         onClick={handleContinueToConfigurator}
                         disabled={!createdBookingFormId}
                     >
-                        Continue to configurator
+                        {m.step6_continue()}
                     </Button>
                     {guided ? null : (
                         <Button
@@ -62,7 +61,7 @@ export const Step6Success: FC = () => {
                             variant="simple-clean"
                             onClick={handleFinish}
                         >
-                            Finish
+                            {m.finish()}
                         </Button>
                     )}
                 </div>

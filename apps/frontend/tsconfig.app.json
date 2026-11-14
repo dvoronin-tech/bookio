@@ -33,7 +33,8 @@
             "#components/*": ["./src/components/*"],
             "#utils/*": ["./src/utils/*"],
             "#api/*": ["./src/api/*"],
-            "#store/*": ["./src/store/*"]
+            "#store/*": ["./src/store/*"],
+            "#i18n/*": ["./src/i18n/*"]
         },
 
         /* Linting */

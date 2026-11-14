@@ -5,6 +5,7 @@ import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfigurat
 import { configuratorTabs } from '../configuratorTabs.tsx';
 import styles from './ConfiguratorLayout.module.scss';
 import { useShallow } from 'zustand/shallow';
+import { m } from '#i18n/messages';
 
 export const ConfiguratorHeader: FC = memo(() => {
     const { activeTab, setIsCollapsed } = useBookingFormConfiguratorStore(
@@ -18,14 +19,14 @@ export const ConfiguratorHeader: FC = memo(() => {
             <h2 className={styles.title}>
                 {
                     configuratorTabs.find((tab) => tab.value === activeTab)
-                        ?.content
+                        ?.content()
                 }
             </h2>
             <button
                 type="button"
                 className={styles.collapseButton}
                 onClick={() => setIsCollapsed(true)}
-                aria-label="Collapse panel"
+                aria-label={m.collapse_panel()}
             >
                 <PanelLeftCloseIcon />
             </button>

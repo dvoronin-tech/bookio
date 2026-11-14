@@ -24,6 +24,7 @@ import {
 } from './dateUtils.js';
 import CalendarIcon from './icons/calendar.svg?react';
 import { getThemeCssVars } from '../utils/themeCssVars.js';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import styles from './DatePicker.module.scss';
 
 const OUTSIDE_CLICK_IGNORE_ATTR = 'data-outside-click-ignore';
@@ -53,8 +54,10 @@ function DatePicker({
     placeholder: placeholderProp,
     minYear: minYearProp,
     maxYear: maxYearProp,
-    'aria-label': ariaLabel = 'Choose date',
+    'aria-label': ariaLabel,
 }: DatePickerProps) {
+    const copy = useUiCopy();
+    const resolvedAriaLabel = ariaLabel ?? copy.chooseDate;
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const placeholder = placeholderProp || DATE_PLACEHOLDER;
@@ -200,7 +203,7 @@ function DatePicker({
                         inputMode="numeric"
                         autoComplete="off"
                         autoFocus={focused}
-                        aria-label={label ? undefined : ariaLabel}
+                        aria-label={label ? undefined : resolvedAriaLabel}
                         onAccept={setDraft}
                         onFocus={handleOnFocus}
                         onBlur={handleBlur}
@@ -216,7 +219,7 @@ function DatePicker({
                         disabled={disabled}
                         inputMode="numeric"
                         autoComplete="off"
-                        aria-label={label ? undefined : ariaLabel}
+                        aria-label={label ? undefined : resolvedAriaLabel}
                         onFocus={() => setFocused(true)}
                     />
                 )}
@@ -224,7 +227,7 @@ function DatePicker({
                     type="button"
                     className={styles.iconButton}
                     disabled={disabled}
-                    aria-label={open ? 'Close date picker' : 'Open date picker'}
+                    aria-label={open ? copy.closeDatePicker : copy.openDatePicker}
                     aria-haspopup="dialog"
                     aria-expanded={open}
                     onClick={handleTogglePopover}

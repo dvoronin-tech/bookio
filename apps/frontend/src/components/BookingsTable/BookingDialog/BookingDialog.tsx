@@ -6,6 +6,7 @@ import { BookingStatus } from '#components/BookingsTable/components/BookingStatu
 import { formatBookingDate } from '#components/BookingsTable/utils/format.ts';
 import { readBookingDataValue } from '#components/BookingsTable/utils/readBookingDataValue.ts';
 import styles from './BookingDialog.module.scss';
+import { m } from '#i18n/messages';
 
 interface BookingDialogProps {
     selectedBookingId: string | null;
@@ -16,7 +17,7 @@ interface BookingDialogProps {
 
 const renderDataValue = (value: unknown) => {
     if (value == null || value === '') {
-        return <i>EMPTY</i>;
+        return <i>{m.empty()}</i>;
     }
 
     if (typeof value === 'object') {
@@ -49,19 +50,19 @@ export const BookingDialog: FC<BookingDialogProps> = ({
             closeOnEscape
             contentClassName={styles.content}
         >
-            <Dialog.Title>Booking</Dialog.Title>
+            <Dialog.Title>{m.dialog_booking()}</Dialog.Title>
             {visibleBooking && (
                 <div className={styles.body}>
                     <header className={styles.header}>
                         <dl className={styles.fields}>
                             <div className={styles.field}>
-                                <dt className={styles.label}>Booking Id</dt>
+                                <dt className={styles.label}>{m.table_booking_id()}</dt>
                                 <dd className={styles.value}>
                                     <BookingId bookingId={visibleBooking.id} />
                                 </dd>
                             </div>
                             <div className={styles.field}>
-                                <dt className={styles.label}>Status</dt>
+                                <dt className={styles.label}>{m.table_status()}</dt>
                                 <dd className={styles.value}>
                                     <BookingStatus
                                         status={visibleBooking.status}
@@ -69,20 +70,20 @@ export const BookingDialog: FC<BookingDialogProps> = ({
                                 </dd>
                             </div>
                             <div className={styles.field}>
-                                <dt className={styles.label}>Created at</dt>
+                                <dt className={styles.label}>{m.table_created_at()}</dt>
                                 <dd className={styles.value}>
                                     {formatBookingDate(
                                         visibleBooking.createdAt,
-                                    ) || <i>EMPTY</i>}
+                                    ) || <i>{m.empty()}</i>}
                                 </dd>
                             </div>
                         </dl>
                     </header>
                     <section className={styles.dataSection}>
-                        <h3 className={styles.sectionTitle}>Booking data</h3>
+                        <h3 className={styles.sectionTitle}>{m.dialog_booking_data()}</h3>
                         <div className={styles.dataContainer}>
                             {dataKeys.length === 0 ? (
-                                <i>EMPTY</i>
+                                <i>{m.empty()}</i>
                             ) : (
                                 <dl className={styles.fields}>
                                     {dataKeys.map((key) => (
@@ -111,7 +112,7 @@ export const BookingDialog: FC<BookingDialogProps> = ({
                     variant="simple-clean"
                     onClick={() => onOpenChange(false)}
                 >
-                    Close
+                    {m.close()}
                 </Dialog.Button>
             </Dialog.Actions>
         </Dialog>

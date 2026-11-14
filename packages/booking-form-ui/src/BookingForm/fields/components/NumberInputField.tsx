@@ -10,7 +10,7 @@ import styles from '../Fields.module.scss';
 export const NumberInputField: FC<FieldRendererProps<'number'>> = ({
     field,
 }) => {
-    const { formState, register, control, markRequiredFields } = useBookingFormContext();
+    const { formState, register, control, markRequiredFields, copy } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { hasError, errorMessage } = useFieldError(control, field.key);
     const label = formatLabel(markRequiredFields, field.name, field.required);
@@ -27,7 +27,7 @@ export const NumberInputField: FC<FieldRendererProps<'number'>> = ({
             useConfirmationColor={false}
             {...register(field.key, {
                 valueAsNumber: true,
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, copy.required(field.name)),
             })}
             disabled={disabled}
         />

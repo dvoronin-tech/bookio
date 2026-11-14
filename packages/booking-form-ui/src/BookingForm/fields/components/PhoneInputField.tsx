@@ -17,7 +17,7 @@ export function normalizePhoneNumber(value: string): string | null {
 }
 
 export const PhoneInputField: FC<FieldRendererProps<'phone'>> = ({ field }) => {
-    const { formState, control, markRequiredFields } = useBookingFormContext();
+    const { formState, control, markRequiredFields, copy } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { placeholder, helpText } = field.params;
     const label = formatLabel(markRequiredFields, field.name, field.required);
@@ -31,7 +31,7 @@ export const PhoneInputField: FC<FieldRendererProps<'phone'>> = ({ field }) => {
                 validate: (value: string) =>
                     (!field.required && !value.trim()) ||
                     Boolean(normalizePhoneNumber(value)) ||
-                    'Enter a valid phone number',
+                    copy.invalidPhone,
             }}
             render={({
                 field: { value, onChange, onBlur, ref },

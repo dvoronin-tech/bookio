@@ -10,7 +10,7 @@ import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
 export const DateInputField: FC<FieldRendererProps<'date'>> = ({ field }) => {
-    const { formState, control, markRequiredFields } = useBookingFormContext();
+    const { formState, control, markRequiredFields, copy } = useBookingFormContext();
     const disabled = formState === 'loading';
     const label = formatLabel(markRequiredFields, field.name, field.required);
 
@@ -19,7 +19,7 @@ export const DateInputField: FC<FieldRendererProps<'date'>> = ({ field }) => {
             name={field.key}
             control={control}
             rules={{
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, copy.required(field.name)),
             }}
             render={({ field: { value, onChange }, fieldState }) => (
                 <div className={styles.fieldStack}>

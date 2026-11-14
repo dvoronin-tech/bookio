@@ -2,6 +2,7 @@ import { FloatingPortal } from '@floating-ui/react';
 import { memo, type CSSProperties, type HTMLAttributes } from 'react';
 import TimeColumn from './TimeColumn.js';
 import type { TimeOption } from './timeUtils.js';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import styles from './TimePicker.module.scss';
 
 export const OUTSIDE_CLICK_IGNORE_ATTR = 'data-outside-click-ignore';
@@ -29,6 +30,7 @@ function TimePopover({
     onSelectHour,
     onSelectMinute,
 }: TimePopoverProps) {
+    const copy = useUiCopy();
     return (
         <FloatingPortal>
             <div
@@ -43,13 +45,13 @@ function TimePopover({
                         options={hourOptions}
                         selected={selectedHour}
                         onSelect={onSelectHour}
-                        aria-label="Hours"
+                        aria-label={copy.hours}
                     />
                     <TimeColumn
                         options={minuteOptions}
                         selected={selectedMinute}
                         onSelect={onSelectMinute}
-                        aria-label="Minutes"
+                        aria-label={copy.minutes}
                     />
                 </div>
             </div>

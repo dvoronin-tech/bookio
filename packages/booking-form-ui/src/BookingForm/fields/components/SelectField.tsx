@@ -10,7 +10,7 @@ import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
 export const SelectField: FC<FieldRendererProps<'select'>> = ({ field }) => {
-    const { formState, control, markRequiredFields } = useBookingFormContext();
+    const { formState, control, markRequiredFields, copy } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { required } = field;
     const { defaultValue, options } = field.params;
@@ -29,7 +29,7 @@ export const SelectField: FC<FieldRendererProps<'select'>> = ({ field }) => {
             name={field.key}
             control={control}
             rules={{
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, copy.required(field.name)),
             }}
             render={({ field: { value, onChange }, fieldState }) => {
                 return (

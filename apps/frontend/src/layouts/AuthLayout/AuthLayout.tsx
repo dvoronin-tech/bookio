@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 import { Outlet } from '@tanstack/react-router';
 import Logo from '#assets/logo.svg?react';
+import { m } from '#i18n/messages';
 import styles from './AuthLayout.module.scss';
 
 export const AuthLayout: FC = () => {
@@ -25,16 +26,15 @@ const BrandPanel: FC = () => {
                 <Logo className={styles.logo} />
                 <div className={styles.brandCopy}>
                     <h1 className={styles.brandHeadline}>
-                        Booking forms, ready for your guests.
+                        {m.auth_headline()}
                     </h1>
                     <p className={styles.brandSubtitle}>
-                        Design branded booking experiences your organization can
-                        share in minutes.
+                        {m.auth_subtitle()}
                     </p>
                     <ul className={styles.featureList}>
-                        <li>Branded forms that match your identity</li>
-                        <li>Live bookings as they happen</li>
-                        <li>Built around your organization</li>
+                        <li>{m.auth_feature_branded()}</li>
+                        <li>{m.auth_feature_live()}</li>
+                        <li>{m.auth_feature_org()}</li>
                     </ul>
                 </div>
             </div>

@@ -2,6 +2,7 @@ import { type FC } from 'react';
 import styles from './Components.module.scss';
 import CopyIcon from '#assets/icons/copy.svg?react';
 import { copyToClipboard } from '#utils/copyToClipboard.ts';
+import { m } from '#i18n/messages';
 
 interface BookingIdProps {
     bookingId: string;
@@ -16,9 +17,9 @@ export const BookingId: FC<BookingIdProps> = ({ bookingId }) => {
                 className={styles.copyBtn}
                 onClick={(e) => {
                     e.stopPropagation();
-                    copyToClipboard(bookingId, 'Booking ID');
+                    copyToClipboard(bookingId, m.table_copy_id_label());
                 }}
-                title="Copy full ID"
+                title={m.table_copy_id_title()}
             >
                 <CopyIcon width={14} height={14} />
             </button>

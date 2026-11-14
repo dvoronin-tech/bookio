@@ -8,7 +8,7 @@
     "scripts": {
         "dev": "vite dev --port 3000",
         "generate-routes": "tsr generate",
-        "build": "vite build",
+        "build": "paraglide-js compile --project ./project.inlang && vite build",
         "preview": "vite preview",
         "test": "vitest run",
         "lint": "eslint",
@@ -39,6 +39,7 @@
         "zustand": "^5.0.14"
     },
     "devDependencies": {
+        "@inlang/paraglide-js": "^3.2.2",
         "@tailwindcss/typography": "^0.5.16",
         "@tanstack/devtools-vite": "0.8.6",
         "@tanstack/eslint-config": "0.4.0",

@@ -23,6 +23,7 @@ import {
     TIME_PLACEHOLDER,
 } from './timeUtils.js';
 import { getThemeCssVars } from '../utils/themeCssVars.js';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import styles from './TimePicker.module.scss';
 const DEFAULT_STEP = 1;
 
@@ -66,8 +67,10 @@ function TimePicker({
     min,
     max,
     step = DEFAULT_STEP,
-    'aria-label': ariaLabel = 'Choose time',
+    'aria-label': ariaLabel,
 }: TimePickerProps) {
+    const copy = useUiCopy();
+    const resolvedAriaLabel = ariaLabel ?? copy.chooseTime;
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const placeholder = placeholderProp || TIME_PLACEHOLDER;
@@ -186,7 +189,7 @@ function TimePicker({
                         inputMode="numeric"
                         autoComplete="off"
                         autoFocus={focused}
-                        aria-label={label ? undefined : ariaLabel}
+                        aria-label={label ? undefined : resolvedAriaLabel}
                         onAccept={(next: string) => setDraft(next)}
                         onFocus={() => setFocused(true)}
                         onBlur={handleBlur}
@@ -202,7 +205,7 @@ function TimePicker({
                         disabled={disabled}
                         inputMode="numeric"
                         autoComplete="off"
-                        aria-label={label ? undefined : ariaLabel}
+                        aria-label={label ? undefined : resolvedAriaLabel}
                         onFocus={() => setFocused(true)}
                     />
                 )}
@@ -210,7 +213,7 @@ function TimePicker({
                     type="button"
                     className={styles.iconButton}
                     disabled={disabled}
-                    aria-label={open ? 'Close time picker' : 'Open time picker'}
+                    aria-label={open ? copy.closeTimePicker : copy.openTimePicker}
                     aria-haspopup="dialog"
                     aria-expanded={open}
                     onClick={handleTogglePopover}

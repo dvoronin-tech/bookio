@@ -10,6 +10,7 @@ import {
 } from 'react';
 import Point, { type ProgressBarPoint } from './Point.js';
 import Segments, { type ProgressBarSegment } from './Segments.js';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import styles from './ProgressBar.module.scss';
 
 export type ProgressBarProps = {
@@ -43,8 +44,10 @@ function ProgressBar({
     step = 1,
     disabled = false,
     className,
-    'aria-label': ariaLabel = 'Progress bar',
+    'aria-label': ariaLabel,
 }: ProgressBarProps) {
+    const copy = useUiCopy();
+    const resolvedAriaLabel = ariaLabel ?? copy.progressBar;
     const trackRef = useRef<HTMLDivElement>(null);
     const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
     const [activeDragIndex, setActiveDragIndex] = useState<number | null>(null);
@@ -189,7 +192,7 @@ function ProgressBar({
         <div
             className={clsx(styles.root, disabled && styles.disabled, className)}
             role="group"
-            aria-label={ariaLabel}
+            aria-label={resolvedAriaLabel}
         >
             <div ref={trackRef} className={styles.track} onPointerDown={handleTrackPointerDown}>
                 <div className={styles.trackInner}>

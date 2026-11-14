@@ -5,6 +5,7 @@ import { useBookingFormData } from '#/store/BookingFormData/BookingFormDataConte
 import { useSteps } from '#/store/Steps/StepsContext';
 import { stepsManager } from '#/store/Steps/stepsManager';
 import { useCreateBooking } from '@api/bookingForms/createBooking.ts';
+import { buildBookingFormCopy } from '#/i18n/bookingFormCopy';
 
 export const BookingFormLayout: FC = () => {
     const bookingForm = useBookingFormData();
@@ -27,6 +28,7 @@ export const BookingFormLayout: FC = () => {
     return (
         <div className={styles.bookingFormLayout}>
             <BookingForm
+                copy={buildBookingFormCopy()}
                 bookingFormData={bookingForm}
                 onSubmit={handleSubmit}
                 onSuccess={handleSuccess}

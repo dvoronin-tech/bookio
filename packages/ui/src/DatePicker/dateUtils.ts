@@ -10,7 +10,7 @@ import {
     startOfMonth,
     startOfWeek,
 } from 'date-fns';
-import { enUS } from 'date-fns/locale';
+import { enUS, type Locale } from 'date-fns/locale';
 
 const WEEK_OPTIONS = { weekStartsOn: 1 as const, locale: enUS };
 export const DATE_DISPLAY_FORMAT = 'dd.MM.yyyy';
@@ -27,17 +27,17 @@ export function getDateGrid(currentDate: Date): Date[] {
     return eachDayOfInterval({ start, end });
 }
 
-export function getDaysNames(): string[] {
-    const start = startOfWeek(new Date(), WEEK_OPTIONS);
+export function getDaysNames(locale: Locale = enUS): string[] {
+    const start = startOfWeek(new Date(), { weekStartsOn: 1, locale });
 
     return Array.from({ length: 7 }, (_, index) =>
-        format(addDays(start, index), 'EEEEEE', { locale: enUS }),
+        format(addDays(start, index), 'EEEEEE', { locale }),
     );
 }
 
-export function getMonthNames(): string[] {
+export function getMonthNames(locale: Locale = enUS): string[] {
     return Array.from({ length: 12 }, (_, month) =>
-        format(new Date(2000, month, 1), 'LLLL', { locale: enUS }),
+        format(new Date(2000, month, 1), 'LLLL', { locale }),
     );
 }
 

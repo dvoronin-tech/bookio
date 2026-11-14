@@ -10,6 +10,7 @@ import tailwindcss from '@tailwindcss/vite';
 import { nitro } from 'nitro/vite';
 import { imagetools } from 'vite-imagetools';
 import svgr from 'vite-plugin-svgr';
+import { paraglideVitePlugin } from '@inlang/paraglide-js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
@@ -31,6 +32,7 @@ const config = defineConfig({
         viteReact(),
         imagetools(),
         svgr(),
+        paraglideVitePlugin({ project: './project.inlang' }),
     ],
 });
 

@@ -1,17 +1,26 @@
 import { format } from 'date-fns';
+import { dateFnsLocale } from '#i18n/locale';
+import { m } from '#i18n/messages';
 
 export const formatBookingDate = (
     dateStr: string | Date | null | undefined,
 ) => {
-    return dateStr && format(new Date(dateStr), 'dd.MM.yyyy HH:mm');
+    return (
+        dateStr &&
+        format(new Date(dateStr), 'dd.MM.yyyy HH:mm', { locale: dateFnsLocale() })
+    );
 };
 
 export const formatStatusText = (status: string) => {
     switch (status) {
         case 'cancelled_by_user':
-            return 'Cancelled by user';
+            return m.status_cancelled_by_user();
         case 'cancelled_by_admin':
-            return 'Cancelled by admin';
+            return m.status_cancelled_by_admin();
+        case 'pending':
+            return m.status_pending();
+        case 'confirmed':
+            return m.status_confirmed();
         default:
             return status;
     }

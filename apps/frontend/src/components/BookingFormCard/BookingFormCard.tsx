@@ -15,9 +15,9 @@ import CopyIcon from '#assets/icons/copy.svg?react';
 import { useNavigate } from '@tanstack/react-router';
 import { organizationRouteApi } from '#lib/routeApis';
 import { useGetOrganization } from '#api/organizations/getOrganizationData';
+import { m } from '#i18n/messages';
 
-const throwNoOrgToast = () =>
-    toast.error("Organization slug haven't loaded yet");
+const throwNoOrgToast = () => toast.error(m.forms_slug_not_loaded());
 
 export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
     bookingForm,
@@ -29,7 +29,7 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
 
     const slug = organization?.slug;
 
-    const bookingFormUrl = `${BOOKING_FORM_URL}/${slug ?? 'LOADING'}/${bookingForm.slug}`;
+    const bookingFormUrl = `${BOOKING_FORM_URL}/${slug ?? m.forms_url_loading()}/${bookingForm.slug}`;
 
     const handleOpenDeleteDialog = useCallback(() => {
         setIsDeleting(true);
@@ -41,7 +41,7 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
             e.stopPropagation();
 
             if (slug) {
-                copyToClipboard(bookingFormUrl, 'Booking form URL');
+                copyToClipboard(bookingFormUrl, m.forms_url());
             } else {
                 throwNoOrgToast();
             }
@@ -84,8 +84,8 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
                                 <span className={styles.statusDot} />
                                 <span>
                                     {bookingForm.isActive
-                                        ? 'Active'
-                                        : 'Inactive'}
+                                        ? m.active()
+                                        : m.inactive()}
                                 </span>
                             </span>
                         </div>
@@ -98,7 +98,7 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
                         <div className={styles.metricRow}>
                             <div className={styles.metricLeft}>
                                 <CalendarIcon className={styles.metricIcon} />
-                                <span>Bookings this month</span>
+                                <span>{m.forms_bookings_month()}</span>
                             </div>
                             <span className={styles.bookingsCount}>
                                 {bookingForm.totalBookings}
@@ -107,7 +107,7 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
 
                         <div className={styles.urlBlock}>
                             <span className={styles.urlLabel}>
-                                Booking form URL
+                                {m.forms_url()}
                             </span>
                             <a
                                 className={styles.urlRow}
@@ -120,7 +120,7 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
                                     type="button"
                                     className={styles.copyButton}
                                     onClick={handleCopyBookingFormUrl}
-                                    aria-label="Copy booking form URL"
+                                    aria-label={m.forms_copy_url()}
                                 >
                                     <CopyIcon />
                                 </button>
@@ -134,7 +134,7 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
                         variant="red-clean"
                         onClick={handleOpenDeleteDialog}
                         className={styles.bookingFormCardButton}
-                        aria-label="Delete booking form"
+                        aria-label={m.forms_delete_aria()}
                     >
                         <TrashIcon />
                     </Button>
@@ -143,7 +143,7 @@ export const BookingFormCard: FC<{ bookingForm: BookingFormType }> = ({
                         className={styles.bookingFormCardConfiguratorButton}
                         onClick={handleOpenConfigurator}
                     >
-                        Open configurator
+                        {m.forms_open_configurator()}
                     </Button>
                 </div>
             </div>
