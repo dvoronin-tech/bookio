@@ -7,6 +7,7 @@ import { logger } from 'hono/logger';
 import { cors } from 'hono/cors';
 
 import { TRUSTED_ORIGINS, PORT } from '@/utils/constants.js';
+import { prepareError } from '@/utils/prepareResponse.js';
 
 const app = new Hono();
 
@@ -29,6 +30,11 @@ app.get('/', (c) => {
 });
 
 app.route('/api', routes);
+
+app.onError((error, c) => {
+    console.error(error);
+    return c.json(prepareError('Internal server error', 'internal'), 500);
+});
 
 export default app;
 

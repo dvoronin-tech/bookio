@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { createBookingSchema } from '@/schemas/booking/create.schema.js';
 import { db } from '@/db.js';
 import { bookingForms, bookings } from '@bookio/db';
@@ -9,7 +9,7 @@ import { prepareError } from '@/utils/prepareResponse.js';
 const factory = createFactory().createHandlers;
 
 export const createBookingHandler = factory(
-    zValidator('json', createBookingSchema),
+    validate('json', createBookingSchema),
     async (c) => {
         try {
             const { bookingFormId, data } = c.req.valid('json');
@@ -36,7 +36,7 @@ export const createBookingHandler = factory(
             return c.body(null, 204);
         } catch (e) {
             console.error(e);
-            return c.json(prepareError('Failed to create booking'), 500);
+            return c.json(prepareError('Failed to create booking', 'internal'), 500);
         }
     },
 );

@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { and, eq } from 'drizzle-orm';
 import { members, organizations } from '@bookio/db';
@@ -9,7 +9,7 @@ import { logoutOrganizationSchema } from '@/schemas/organization/logout.schema.j
 const factory = createFactory().createHandlers;
 
 export const logoutOrganizationHandler = factory(
-    zValidator('json', logoutOrganizationSchema),
+    validate('json', logoutOrganizationSchema),
     async (c) => {
         const { userId, organizationId, organizationPassword } = c.req.valid('json');
 
@@ -19,7 +19,7 @@ export const logoutOrganizationHandler = factory(
             .where(and(eq(members.userId, userId), eq(members.organizationId, organizationId)));
 
         if (!member) {
-            return c.json(prepareError('Member not found'), 404);
+            return c.json(prepareError('Member not found', 'not_found'), 404);
         }
 
         if (member.role === 'owner') {
@@ -28,11 +28,11 @@ export const logoutOrganizationHandler = factory(
                 .from(organizations)
                 .where(eq(organizations.id, organizationId));
             if (!organization) {
-                return c.json(prepareError('Organization not found'), 404);
+                return c.json(prepareError('Organization not found', 'not_found'), 404);
             }
 
             if (organization.password !== organizationPassword) {
-                return c.json(prepareError('Invalid organization password'), 401);
+                return c.json(prepareError('Invalid organization password', 'invalid_password'), 401);
             }
 
             const [deletedOrganization] = await db
@@ -43,7 +43,7 @@ export const logoutOrganizationHandler = factory(
             if (deletedOrganization) {
                 return c.json(prepareSuccess('Organization deleted successfully'));
             } else {
-                return c.json(prepareError('Failed to delete organization'), 500);
+                return c.json(prepareError('Failed to delete organization', 'internal'), 500);
             }
         }
 

@@ -6,6 +6,7 @@ import { MainPage } from '#/pages/MainPage/MainPage';
 import { BookingFormDataContext } from '#/store/BookingFormData/BookingFormDataContext';
 import { StepsProvider } from '#/store/Steps/StepsContext';
 import { createFileRoute } from '@tanstack/react-router';
+import { isApiError } from '#/i18n/apiError';
 
 export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
     loader: async ({ params }) => {
@@ -19,18 +20,18 @@ export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
             return { bookingForm };
         } catch (error) {
             console.error(error);
-            if (error instanceof Error && typeof error.cause === 'string') {
+            if (isApiError(error)) {
                 return {
                     bookingForm: null,
-                    error: error.message,
-                    code: error.cause,
+                    error: error.english,
+                    code: error.code,
                 };
             }
 
             return {
                 bookingForm: null,
                 error: 'Failed to get booking form by slugs',
-                code: 'UNKNOWN_ERROR',
+                code: 'internal',
             };
         }
     },
@@ -66,12 +67,12 @@ function RouteComponent() {
     const { code, bookingForm } = Route.useLoaderData();
 
     switch (code) {
-        case 'ORGANIZATION_NOT_FOUND':
-        case 'BOOKING_FORM_NOT_FOUND':
+        case 'not_found':
             return <NotFoundPage />;
-        case 'BOOKING_FORM_NOT_ACTIVE':
+        case 'inactive':
             return <InactiveBookingFormPage />;
-        case 'UNKNOWN_ERROR':
+        case 'internal':
+        case 'validation':
             return <ErrorPage />;
     }
 

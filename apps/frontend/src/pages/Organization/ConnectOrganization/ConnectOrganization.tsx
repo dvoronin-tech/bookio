@@ -13,6 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { m } from '#i18n/messages';
+import { applyValidationIssues } from '#i18n/apiError';
 
 const formSchema = z.object({
     slug: z.string().min(1).max(255),
@@ -28,6 +29,7 @@ export const ConnectOrganization: FC = () => {
     const {
         register,
         handleSubmit,
+        setError,
         formState: { isSubmitting },
     } = useForm<FormData>({
         resolver: zodResolver(formSchema),
@@ -38,9 +40,18 @@ export const ConnectOrganization: FC = () => {
         await toast.promise(mutateAsync(data), {
             loading: m.org_connect_loading(),
             success: m.org_connect_success(),
-            error: (error: Error) => error.message,
+            error: (error: Error) => {
+                applyValidationIssues(
+                    error,
+                    setError as (
+                        name: string,
+                        error: { type: string; message: string },
+                    ) => void,
+                );
+                return error.message;
+            },
         });
-    }, [mutateAsync]);
+    }, [mutateAsync, setError]);
 
     const onInvalid = useCallback((errors: FieldErrors<FormData>) => {
         toast.error(getFirstFieldError(errors) ?? m.invalid_form_data());

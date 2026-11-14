@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { bookingForms } from '@bookio/db';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
@@ -10,7 +10,7 @@ import { updateBookingFormSchema } from '@/schemas/bookingForms/update.schema.js
 const factory = createFactory().createHandlers;
 
 export const updateBookingFormHandler = factory(
-    zValidator('json', updateBookingFormSchema),
+    validate('json', updateBookingFormSchema),
     async (c) => {
         try {
             const { id, ...dataToUpdate } = c.req.valid('json');
@@ -22,7 +22,7 @@ export const updateBookingFormHandler = factory(
             });
 
             if (!existingBookingForm) {
-                return c.json(prepareError('Booking form not found'), 404);
+                return c.json(prepareError('Booking form not found', 'not_found'), 404);
             }
 
             if (name !== undefined && name !== existingBookingForm.name) {
@@ -35,6 +35,7 @@ export const updateBookingFormHandler = factory(
                     return c.json(
                         prepareError(
                             'Booking form with this name already exists',
+                            'name_taken',
                         ),
                         400,
                     );
@@ -51,6 +52,7 @@ export const updateBookingFormHandler = factory(
                     return c.json(
                         prepareError(
                             'Booking form with this slug already exists',
+                            'slug_taken',
                         ),
                         400,
                     );
@@ -65,14 +67,14 @@ export const updateBookingFormHandler = factory(
 
             if (!updatedBookingForm) {
                 return c.json(
-                    prepareError('Failed to update booking form'),
+                    prepareError('Failed to update booking form', 'internal'),
                     500,
                 );
             }
 
             return c.json(prepareSuccess(updatedBookingForm));
         } catch (error) {
-            return c.json(prepareError('Failed to update booking form'), 500);
+            return c.json(prepareError('Failed to update booking form', 'internal'), 500);
         }
     },
 );

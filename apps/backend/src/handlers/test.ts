@@ -1,12 +1,12 @@
 import { Hono } from 'hono';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { createFactory } from 'hono/factory';
 import { db } from '@/db.js';
 import { testSchema } from '@/schemas/test.schema.js';
 
 const factory = createFactory().createHandlers;
 
-const testHandler = factory(zValidator('query', testSchema), async (c) => {
+const testHandler = factory(validate('query', testSchema), async (c) => {
     const { bookingFormId } = c.req.valid('query');
 
     const form = await db.query.bookingForms.findFirst({
