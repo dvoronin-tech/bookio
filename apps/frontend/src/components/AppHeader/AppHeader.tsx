@@ -67,6 +67,7 @@ const LanguageSwitch: FC = () => {
 
     return (
         <SegmentedControl
+            className={styles.languageSwitch}
             aria-label={m.language()}
             value={locale}
             onValueChange={setLocale}
