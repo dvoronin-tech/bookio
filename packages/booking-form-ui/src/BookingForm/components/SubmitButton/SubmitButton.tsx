@@ -2,7 +2,7 @@ import { Button, Loader } from '@bookio/ui';
 import { useBookingFormContext } from '../../BookingFormContext.js';
 import styles from './SubmitButton.module.scss';
 
-export function SubmitButton() {
+export function SubmitButton({ message }: { message?: string }) {
     const { formState, copy } = useBookingFormContext();
     const isLoading = formState === 'loading' || formState === 'success';
 
@@ -25,7 +25,7 @@ export function SubmitButton() {
             </Button>
             {formState === 'error' && (
                 <p className={styles.errorNotification}>
-                    {copy.submitFailed}
+                    {message ?? copy.submitFailed}
                 </p>
             )}
         </div>

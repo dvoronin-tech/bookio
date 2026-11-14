@@ -22,6 +22,7 @@ import { useDebouncedValidation } from '#utils/useDebouncedValidation';
 import { formatZodError } from '#utils/parseError';
 import { copyToClipboard } from '#utils/copyToClipboard.ts';
 import { getLocale, m } from '#i18n/messages';
+import { applyValidationIssues } from '#i18n/apiError';
 
 function createFormSchema() {
     return z.object({
@@ -50,6 +51,7 @@ export const CreateOrganization: FC = () => {
         register,
         control,
         handleSubmit,
+        setError,
         formState: { isSubmitting },
     } = useForm<FormData>({
         resolver: zodResolver(formSchema),
@@ -77,10 +79,19 @@ export const CreateOrganization: FC = () => {
             await toast.promise(mutateAsync({ ...data, userId: session!.user.id }), {
                 loading: m.org_create_loading(),
                 success: m.org_create_success(),
-                error: (error: Error) => error.message,
+                error: (error: Error) => {
+                    applyValidationIssues(
+                        error,
+                        setError as (
+                            name: string,
+                            error: { type: string; message: string },
+                        ) => void,
+                    );
+                    return error.message;
+                },
             });
         },
-        [mutateAsync, session, slugIsValid],
+        [mutateAsync, session, setError, slugIsValid],
     );
 
     const onInvalid = useCallback((errors: FieldErrors<FormData>) => {

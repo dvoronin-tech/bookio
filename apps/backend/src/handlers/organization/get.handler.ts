@@ -1,6 +1,6 @@
 import { createFactory } from 'hono/factory';
 import { db } from '@/db.js';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { members, organizations } from '@bookio/db';
 import { eq } from 'drizzle-orm';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
@@ -13,7 +13,7 @@ import {
 const factory = createFactory().createHandlers;
 
 export const getUserOrganizationsHandler = factory(
-    zValidator('query', organizationSchema),
+    validate('query', organizationSchema),
     async (c) => {
         try {
             const { userId } = c.req.valid('query');
@@ -38,13 +38,13 @@ export const getUserOrganizationsHandler = factory(
 
             return c.json(prepareSuccess(organizationsData), 200);
         } catch (error) {
-            return c.json(prepareError('Failed to get user organizations'), 500);
+            return c.json(prepareError('Failed to get user organizations', 'internal'), 500);
         }
     },
 );
 
 export const getOrganizationDataHandler = factory(
-    zValidator('query', getOrganizationDataSchema),
+    validate('query', getOrganizationDataSchema),
     async (c) => {
         try {
             const { organizationId, userId } = c.req.valid('query');
@@ -55,18 +55,18 @@ export const getOrganizationDataHandler = factory(
                 .where(eq(organizations.id, organizationId));
 
             if (!organization) {
-                return c.json(prepareError('Organization not found'), 404);
+                return c.json(prepareError('Organization not found', 'not_found'), 404);
             }
 
             const member = await getMemberByOrgAndUserId(organizationId, userId);
 
             if (!member) {
-                return c.json(prepareError('You are not a member of this organization'), 403);
+                return c.json(prepareError('You are not a member of this organization', 'forbidden'), 403);
             }
 
             return c.json(prepareSuccess(organization), 200);
         } catch (error) {
-            return c.json(prepareError('Failed to get organization data'), 500);
+            return c.json(prepareError('Failed to get organization data', 'internal'), 500);
         }
     },
 );

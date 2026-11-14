@@ -13,6 +13,7 @@ import { z } from 'zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { useDebounce } from 'use-debounce';
 import { m } from '#i18n/messages';
+import { applyValidationIssues } from '#i18n/apiError';
 
 const deleteBookingFormSchema = z.object({
     name: z.string().min(1).max(255),
@@ -31,7 +32,7 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
     ({ bookingForm, open, onOpenChange }) => {
         const { mutateAsync: deleteBookingForm } = useDeleteBookingForm(bookingForm.id);
 
-        const { register, handleSubmit, control, reset } = useForm<DeleteBookingFormFormData>({
+        const { register, handleSubmit, control, reset, setError } = useForm<DeleteBookingFormFormData>({
             defaultValues: {
                 name: '',
                 organizationPassword: '',
@@ -61,13 +62,24 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
                     {
                         loading: m.forms_deleting({ name: bookingForm.name }),
                         success: m.forms_deleted({ name: bookingForm.name }),
-                        error: m.forms_delete_failed({ name: bookingForm.name }),
+                        error: (error: Error) => {
+                            applyValidationIssues(
+                                error,
+                                setError as (
+                                    name: string,
+                                    error: { type: string; message: string },
+                                ) => void,
+                            );
+                            return error instanceof Error
+                                ? error.message
+                                : m.forms_delete_failed({ name: bookingForm.name });
+                        },
                     },
                 );
 
                 onOpenChange(false);
             },
-            [deleteBookingForm, bookingForm.id, bookingForm.name, onOpenChange],
+            [deleteBookingForm, bookingForm.id, bookingForm.name, onOpenChange, setError],
         );
 
         const onInvalid = useCallback((errors: FieldErrors<DeleteBookingFormFormData>) => {

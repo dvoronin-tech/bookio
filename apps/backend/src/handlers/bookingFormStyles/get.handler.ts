@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 import { getBookingFormStylesSchema } from '@/schemas/bookingFormStyles/get.schema.js';
@@ -7,7 +7,7 @@ import { getBookingFormStylesSchema } from '@/schemas/bookingFormStyles/get.sche
 const factory = createFactory().createHandlers;
 
 export const getBookingFormStylesHandler = factory(
-    zValidator('query', getBookingFormStylesSchema),
+    validate('query', getBookingFormStylesSchema),
     async (c) => {
         try {
             const { bookingFormId } = c.req.valid('query');
@@ -17,12 +17,12 @@ export const getBookingFormStylesHandler = factory(
             });
 
             if (!styles) {
-                return c.json(prepareError('Booking form styles not found'), 404);
+                return c.json(prepareError('Booking form styles not found', 'not_found'), 404);
             }
 
             return c.json(prepareSuccess(styles));
         } catch (error) {
-            return c.json(prepareError('Failed to get booking form styles'), 500);
+            return c.json(prepareError('Failed to get booking form styles', 'internal'), 500);
         }
     },
 );

@@ -1,9 +1,10 @@
-import { parseError } from './parseError';
-import type { ZodError } from 'zod';
+import { toApiError } from '#/i18n/apiError';
 
 type ApiErrorBody = {
     success: false;
-    error: string | ZodError;
+    code?: string;
+    error?: string;
+    issues?: unknown;
 };
 
 type ApiSuccessBody = {
@@ -25,11 +26,14 @@ export function validateError<TBody>(
     body: TBody,
     fallbackMessage: string,
 ): asserts body is Extract<TBody, ApiSuccessBody> {
-    if (!response.ok && !hasFailedSuccess(body)) {
-        throw new Error(fallbackMessage);
+    if (hasFailedSuccess(body)) {
+        throw toApiError(body, fallbackMessage);
     }
 
-    if (hasFailedSuccess(body)) {
-        throw new Error(parseError(body));
+    if (!response.ok) {
+        throw toApiError(
+            { code: 'internal', error: fallbackMessage },
+            fallbackMessage,
+        );
     }
 }
