@@ -1,7 +1,10 @@
 import { type ChangeEvent, type FC, useCallback } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, ColorPicker, Input } from '@bookio/ui';
-import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import {
+    shouldReturnToReview,
+    useCreateBookingFormStore,
+} from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import { DEFAULT_DARK_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyles.ts';
 import { step3Schema } from '../../schemas/createBookingFormDraft.schema.ts';
@@ -53,6 +56,7 @@ export const Step3Styles: FC = () => {
         setField,
         goToNextStep,
         goToPreviousStep,
+        reviewEditThroughStep,
     } = useCreateBookingFormStore(
         useShallow((s) => ({
             primary: s.data.primary,
@@ -64,8 +68,10 @@ export const Step3Styles: FC = () => {
             setField: s.setField,
             goToNextStep: s.goToNextStep,
             goToPreviousStep: s.goToPreviousStep,
+            reviewEditThroughStep: s.reviewEditThroughStep,
         })),
     );
+    const returnsToReview = shouldReturnToReview(3, reviewEditThroughStep);
 
     const values = {
         primary,
@@ -143,7 +149,7 @@ export const Step3Styles: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        Go to next
+                        {returnsToReview ? 'Back to review' : 'Go to next'}
                     </Button>
                     <Button
                         type="button"

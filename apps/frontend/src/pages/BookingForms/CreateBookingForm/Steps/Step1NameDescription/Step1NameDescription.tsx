@@ -3,7 +3,10 @@ import { useShallow } from 'zustand/shallow';
 import { Button, Input, ValidatableInput } from '@bookio/ui';
 import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts';
-import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import {
+    shouldReturnToReview,
+    useCreateBookingFormStore,
+} from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import toast from 'react-hot-toast';
 import { useNavigate } from '@tanstack/react-router';
@@ -20,17 +23,26 @@ export const Step1NameDescription: FC = () => {
         organizationRouteApi.useParams();
     const { data: bookingForms } = useGetBookingForms(routeOrganizationId);
     const isGuidedFirstForm = guided === true || bookingForms?.length === 0;
-    const { data, name, description, organizationId, setField, goToNextStep } =
-        useCreateBookingFormStore(
-            useShallow((s) => ({
-                data: s.data,
-                name: s.data.name,
-                description: s.data.description,
-                organizationId: s.data.organizationId,
-                setField: s.setField,
-                goToNextStep: s.goToNextStep,
-            })),
-        );
+    const {
+        data,
+        name,
+        description,
+        organizationId,
+        setField,
+        goToNextStep,
+        reviewEditThroughStep,
+    } = useCreateBookingFormStore(
+        useShallow((s) => ({
+            data: s.data,
+            name: s.data.name,
+            description: s.data.description,
+            organizationId: s.data.organizationId,
+            setField: s.setField,
+            goToNextStep: s.goToNextStep,
+            reviewEditThroughStep: s.reviewEditThroughStep,
+        })),
+    );
+    const returnsToReview = shouldReturnToReview(1, reviewEditThroughStep);
 
     const { isValid: nameIsValid } = useIsBookingFormExists({
         organizationId,
@@ -71,7 +83,7 @@ export const Step1NameDescription: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        Go to next
+                        {returnsToReview ? 'Back to review' : 'Go to next'}
                     </Button>
                     {isGuidedFirstForm ? null : (
                         <Button

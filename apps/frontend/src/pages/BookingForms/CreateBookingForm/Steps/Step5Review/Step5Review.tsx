@@ -4,6 +4,7 @@ import { Button } from '@bookio/ui';
 import { useCreateBookingForm } from '#api/bookingForms/createBookingForm.ts';
 import {
     type CreateBookingFormDraft,
+    type CreateBookingFormStep,
     useCreateBookingFormStore,
 } from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
@@ -21,6 +22,8 @@ type ReviewCell = {
 type ReviewSection = {
     id: string;
     title: string;
+    step: CreateBookingFormStep;
+    throughStep: CreateBookingFormStep;
     cells: ReviewCell[];
 };
 
@@ -37,6 +40,9 @@ const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
     {
         id: 'general',
         title: 'General',
+        step: 1,
+        // Name and description are edited on step 1; slug is step 2.
+        throughStep: 2,
         cells: [
             { label: 'Name', value: data.name },
             {
@@ -50,6 +56,8 @@ const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
     {
         id: 'colors',
         title: 'Colors',
+        step: 3,
+        throughStep: 3,
         cells: COLOR_FIELDS.map(({ key, label }) => ({
             label,
             value: data[key],
@@ -59,6 +67,8 @@ const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
     {
         id: 'metadata',
         title: 'Metadata',
+        step: 4,
+        throughStep: 4,
         cells: [
             { label: 'Title', value: data.metaTitle },
             { label: 'Description', value: data.metaDescription },
@@ -73,15 +83,21 @@ const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
 ];
 
 export const Step5Review: FC = () => {
-    const { data, goToPreviousStep, goToNextStep, setCreatedBookingFormId } =
-        useCreateBookingFormStore(
-            useShallow((s) => ({
-                data: s.data,
-                goToPreviousStep: s.goToPreviousStep,
-                goToNextStep: s.goToNextStep,
-                setCreatedBookingFormId: s.setCreatedBookingFormId,
-            })),
-        );
+    const {
+        data,
+        goToPreviousStep,
+        goToNextStep,
+        editFromReview,
+        setCreatedBookingFormId,
+    } = useCreateBookingFormStore(
+        useShallow((s) => ({
+            data: s.data,
+            goToPreviousStep: s.goToPreviousStep,
+            goToNextStep: s.goToNextStep,
+            editFromReview: s.editFromReview,
+            setCreatedBookingFormId: s.setCreatedBookingFormId,
+        })),
+    );
 
     const { mutateAsync: createBookingForm, isPending } =
         useCreateBookingForm();
@@ -124,7 +140,7 @@ export const Step5Review: FC = () => {
         <FormWizardLayout
             stepNumber={5}
             title="Review your booking form"
-            description="Please confirm that all information is correct. You can go back to edit any step, or create the booking form."
+            description="Please confirm that all information is correct. Click a section to edit that step, or create the booking form."
             footer={
                 <div className={styles.footerActions}>
                     <Button
@@ -148,7 +164,16 @@ export const Step5Review: FC = () => {
         >
             <div className={styles.summary}>
                 {sections.map((section, sectionIndex) => (
-                    <section key={section.id} className={styles.section}>
+                    <button
+                        key={section.id}
+                        type="button"
+                        className={styles.section}
+                        disabled={isPending}
+                        aria-label={`Edit ${section.title}`}
+                        onClick={() =>
+                            editFromReview(section.step, section.throughStep)
+                        }
+                    >
                         <header className={styles.sectionHeader}>
                             <span className={styles.sectionIndex}>
                                 {String(sectionIndex + 1).padStart(2, '0')}
@@ -156,6 +181,7 @@ export const Step5Review: FC = () => {
                             <h3 className={styles.sectionTitle}>
                                 {section.title}
                             </h3>
+                            <span className={styles.editHint}>Edit</span>
                         </header>
 
                         <div className={styles.elements}>
@@ -188,7 +214,7 @@ export const Step5Review: FC = () => {
                                 </div>
                             ))}
                         </div>
-                    </section>
+                    </button>
                 ))}
             </div>
         </FormWizardLayout>

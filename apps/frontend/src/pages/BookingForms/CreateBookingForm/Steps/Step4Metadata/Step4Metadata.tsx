@@ -1,7 +1,10 @@
 import { type ChangeEvent, type FC, useCallback } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, Input } from '@bookio/ui';
-import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import {
+    shouldReturnToReview,
+    useCreateBookingFormStore,
+} from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import { step4Schema } from '../../schemas/createBookingFormDraft.schema.ts';
 import toast from 'react-hot-toast';
@@ -14,6 +17,7 @@ export const Step4Metadata: FC = () => {
         setField,
         goToNextStep,
         goToPreviousStep,
+        reviewEditThroughStep,
     } = useCreateBookingFormStore(
         useShallow((s) => ({
             metaTitle: s.data.metaTitle,
@@ -21,8 +25,10 @@ export const Step4Metadata: FC = () => {
             setField: s.setField,
             goToNextStep: s.goToNextStep,
             goToPreviousStep: s.goToPreviousStep,
+            reviewEditThroughStep: s.reviewEditThroughStep,
         })),
     );
+    const returnsToReview = shouldReturnToReview(4, reviewEditThroughStep);
 
     const handleMetaTitleChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
@@ -69,7 +75,7 @@ export const Step4Metadata: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        Go to next
+                        {returnsToReview ? 'Back to review' : 'Go to next'}
                     </Button>
                     <Button
                         type="button"
