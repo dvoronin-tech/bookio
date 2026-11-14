@@ -1,5 +1,5 @@
 import type { ErrorCode } from '@bookio/backend/constants';
-import { toApiError } from '#/i18n/apiError';
+import { ApiError } from '#/i18n/apiError';
 
 type ApiErrorBody = {
     success: false;
@@ -28,11 +28,11 @@ export function validateError<TBody>(
     fallbackMessage: string,
 ): asserts body is Extract<TBody, ApiSuccessBody> {
     if (hasFailedSuccess(body)) {
-        throw toApiError(body, fallbackMessage);
+        throw new ApiError(body, fallbackMessage);
     }
 
     if (!response.ok) {
-        throw toApiError(
+        throw new ApiError(
             { code: 'internal' satisfies ErrorCode, error: fallbackMessage },
             fallbackMessage,
         );

@@ -13,7 +13,7 @@ import { z } from 'zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { useDebounce } from 'use-debounce';
 import { m } from '../../paraglide/messages.js';
-import { applyValidationIssues } from '#i18n/apiError';
+import { ApiError } from '#i18n/apiError';
 
 const deleteBookingFormSchema = z.object({
     name: z.string().min(1).max(255),
@@ -63,13 +63,14 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
                         loading: m.forms_deleting({ name: bookingForm.name }),
                         success: m.forms_deleted({ name: bookingForm.name }),
                         error: (error: Error) => {
-                            applyValidationIssues(
-                                error,
-                                setError as (
-                                    name: string,
-                                    error: { type: string; message: string },
-                                ) => void,
-                            );
+                            if (ApiError.isApiError(error)) {
+                                error.applyValidationIssues(
+                                    setError as (
+                                        name: string,
+                                        error: { type: string; message: string },
+                                    ) => void,
+                                );
+                            }
                             return error instanceof Error
                                 ? error.message
                                 : m.forms_delete_failed({ name: bookingForm.name });

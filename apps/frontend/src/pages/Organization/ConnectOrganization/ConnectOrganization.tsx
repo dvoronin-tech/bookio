@@ -13,7 +13,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
 import { m } from '../../../paraglide/messages.js';
-import { applyValidationIssues } from '#i18n/apiError';
+import { ApiError } from '#i18n/apiError';
 
 const formSchema = z.object({
     slug: z.string().min(1).max(255),
@@ -36,22 +36,26 @@ export const ConnectOrganization: FC = () => {
         defaultValues: { slug: '', password: '' },
     });
 
-    const onSubmit = useCallback(async (data: FormData) => {
-        await toast.promise(mutateAsync(data), {
-            loading: m.org_connect_loading(),
-            success: m.org_connect_success(),
-            error: (error: Error) => {
-                applyValidationIssues(
-                    error,
-                    setError as (
-                        name: string,
-                        error: { type: string; message: string },
-                    ) => void,
-                );
-                return error.message;
-            },
-        });
-    }, [mutateAsync, setError]);
+    const onSubmit = useCallback(
+        async (data: FormData) => {
+            await toast.promise(mutateAsync(data), {
+                loading: m.org_connect_loading(),
+                success: m.org_connect_success(),
+                error: (error: Error) => {
+                    if (ApiError.isApiError(error)) {
+                        error.applyValidationIssues(
+                            setError as (
+                                name: string,
+                                error: { type: string; message: string },
+                            ) => void,
+                        );
+                    }
+                    return error.message;
+                },
+            });
+        },
+        [mutateAsync, setError],
+    );
 
     const onInvalid = useCallback((errors: FieldErrors<FormData>) => {
         toast.error(getFirstFieldError(errors) ?? m.invalid_form_data());

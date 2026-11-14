@@ -7,7 +7,7 @@ import { BookingFormDataContext } from '#/store/BookingFormData/BookingFormDataC
 import { StepsProvider } from '#/store/Steps/StepsContext';
 import { createFileRoute } from '@tanstack/react-router';
 import type { ErrorCode } from '@bookio/backend/constants';
-import { isApiError } from '#/i18n/apiError';
+import { ApiError } from '#/i18n/apiError';
 
 export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
     loader: async ({ params }) => {
@@ -21,7 +21,7 @@ export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({
             return { bookingForm };
         } catch (error) {
             console.error(error);
-            if (isApiError(error)) {
+            if (ApiError.isApiError(error)) {
                 return {
                     bookingForm: null,
                     error: error.english,

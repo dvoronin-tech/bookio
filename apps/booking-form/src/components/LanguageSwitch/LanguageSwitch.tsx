@@ -4,12 +4,13 @@ import FlagUsIcon from '#/assets/icons/flag-us.svg?react';
 import FlagRuIcon from '#/assets/icons/flag-ru.svg?react';
 import { m } from '../../paraglide/messages.js';
 import { getLocale, setLocale } from '../../paraglide/runtime.js';
+import styles from './LanguageSwitch.module.scss';
 
 export const LanguageSwitch: FC = () => {
     const locale = getLocale();
 
     return (
-        <div className="fixed top-4 right-4 z-50">
+        <div className={styles.languageSwitch}>
             <SegmentedControl
                 aria-label={m.language()}
                 value={locale}

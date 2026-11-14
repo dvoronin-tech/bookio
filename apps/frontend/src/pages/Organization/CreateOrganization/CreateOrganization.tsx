@@ -23,7 +23,7 @@ import { formatZodError } from '#utils/parseError';
 import { copyToClipboard } from '#utils/copyToClipboard.ts';
 import { m } from '../../../paraglide/messages.js';
 import { getLocale } from '../../../paraglide/runtime.js';
-import { applyValidationIssues } from '#i18n/apiError';
+import { ApiError } from '#i18n/apiError';
 
 function createFormSchema() {
     return z.object({
@@ -81,13 +81,14 @@ export const CreateOrganization: FC = () => {
                 loading: m.org_create_loading(),
                 success: m.org_create_success(),
                 error: (error: Error) => {
-                    applyValidationIssues(
-                        error,
-                        setError as (
-                            name: string,
-                            error: { type: string; message: string },
-                        ) => void,
-                    );
+                    if (ApiError.isApiError(error)) {
+                        error.applyValidationIssues(
+                            setError as (
+                                name: string,
+                                error: { type: string; message: string },
+                            ) => void,
+                        );
+                    }
                     return error.message;
                 },
             });
