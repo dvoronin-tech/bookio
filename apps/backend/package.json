@@ -16,15 +16,12 @@
         "./schemas": {
             "types": "./src/schemas/index.ts",
             "default": "./src/schemas/index.ts"
-        },
-        "./constants": {
-            "types": "./src/constants/index.ts",
-            "default": "./src/constants/index.ts"
         }
     },
     "dependencies": {
         "@better-auth/drizzle-adapter": "^1.6.23",
         "@bookio/db": "workspace:*",
+        "@bookio/shared": "workspace:*",
         "@hono/node-server": "^2.0.6",
         "@hono/zod-validator": "^0.8.0",
         "better-auth": "^1.6.23",

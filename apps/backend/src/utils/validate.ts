@@ -1,7 +1,7 @@
 import type { ValidationTargets } from 'hono';
 import { zValidator } from '@hono/zod-validator';
 import type { ZodType } from 'zod';
-import type { ErrorCode } from '@/constants/errorCodes.js';
+import type { ErrorCode } from '@bookio/shared/constants';
 
 type ValidationIssue = {
     path: Array<string | number>;

@@ -6,7 +6,7 @@ import { MainPage } from '#/pages/MainPage/MainPage';
 import { BookingFormDataContext } from '#/store/BookingFormData/BookingFormDataContext';
 import { StepsProvider } from '#/store/Steps/StepsContext';
 import { createFileRoute } from '@tanstack/react-router';
-import type { ErrorCode } from '@bookio/backend/constants';
+import type { ErrorCode } from '@bookio/shared/constants';
 import { ApiError } from '#/i18n/apiError';
 
 export const Route = createFileRoute('/$organizationSlug/$bookingFormSlug')({

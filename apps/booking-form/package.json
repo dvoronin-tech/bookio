@@ -17,6 +17,7 @@
     },
     "dependencies": {
         "@bookio/backend": "workspace:*",
+        "@bookio/shared": "workspace:*",
         "@bookio/booking-form-ui": "workspace:*",
         "@bookio/ui": "workspace:*",
         "@tailwindcss/vite": "^4.1.18",

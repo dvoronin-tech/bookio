@@ -30,8 +30,18 @@ export default defineConfig({
                 replacement: path.resolve(__dirname, '../backend/src/schemas/index.ts'),
             },
             {
-                find: '@bookio/backend/constants',
-                replacement: path.resolve(__dirname, '../backend/src/constants/index.ts'),
+                find: '@bookio/shared/utils',
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/shared/src/utils/index.ts',
+                ),
+            },
+            {
+                find: '@bookio/shared/constants',
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/shared/src/constants.ts',
+                ),
             },
             {
                 find: '@bookio/backend',

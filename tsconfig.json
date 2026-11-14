@@ -6,6 +6,7 @@
 		{ "path": "./apps/frontend" },
 		{ "path": "./apps/booking-form" },
 		{ "path": "./packages/db" },
+		{ "path": "./packages/shared" },
 		{ "path": "./packages/ui" }
 	]
 }

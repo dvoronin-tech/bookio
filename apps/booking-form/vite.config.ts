@@ -19,6 +19,20 @@ const config = defineConfig({
         tsconfigPaths: true,
         alias: [
             {
+                find: '@bookio/shared/utils',
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/shared/src/utils/index.ts',
+                ),
+            },
+            {
+                find: '@bookio/shared/constants',
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/shared/src/constants.ts',
+                ),
+            },
+            {
                 find: /^@bookio\/booking-form-ui$/,
                 replacement: path.resolve(
                     __dirname,

@@ -1,4 +1,4 @@
-import type { ErrorCode } from '@/constants/errorCodes.js';
+import type { ErrorCode } from '@bookio/shared/constants';
 
 export type ApiErrorParams = Record<string, unknown>;
 
