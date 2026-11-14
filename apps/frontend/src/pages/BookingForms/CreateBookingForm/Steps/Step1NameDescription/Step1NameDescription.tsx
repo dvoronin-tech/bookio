@@ -1,37 +1,38 @@
 import { type ChangeEvent, type FC, useCallback } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, Input, ValidatableInput } from '@bookio/ui';
-import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts';
-import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import {
+    shouldReturnToReview,
+    useCreateBookingFormStore,
+} from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import toast from 'react-hot-toast';
-import { useNavigate } from '@tanstack/react-router';
-import {
-    createBookingFormRouteApi,
-    organizationRouteApi,
-} from '#lib/routeApis';
 import styles from './Step1NameDescription.module.scss';
 import { m } from '../../../../../paraglide/messages.js';
+import { CreateBookingFormCloseButton } from '../../CreateBookingFormCloseButton.tsx';
 
 export const Step1NameDescription: FC = () => {
-    const navigate = useNavigate();
-    const { guided } = createBookingFormRouteApi.useSearch();
-    const { organizationId: routeOrganizationId } =
-        organizationRouteApi.useParams();
-    const { data: bookingForms } = useGetBookingForms(routeOrganizationId);
-    const isGuidedFirstForm = guided === true || bookingForms?.length === 0;
-    const { data, name, description, organizationId, setField, goToNextStep } =
-        useCreateBookingFormStore(
-            useShallow((s) => ({
-                data: s.data,
-                name: s.data.name,
-                description: s.data.description,
-                organizationId: s.data.organizationId,
-                setField: s.setField,
-                goToNextStep: s.goToNextStep,
-            })),
-        );
+    const {
+        data,
+        name,
+        description,
+        organizationId,
+        setField,
+        goToNextStep,
+        reviewEditThroughStep,
+    } = useCreateBookingFormStore(
+        useShallow((s) => ({
+            data: s.data,
+            name: s.data.name,
+            description: s.data.description,
+            organizationId: s.data.organizationId,
+            setField: s.setField,
+            goToNextStep: s.goToNextStep,
+            reviewEditThroughStep: s.reviewEditThroughStep,
+        })),
+    );
+    const returnsToReview = shouldReturnToReview(1, reviewEditThroughStep);
 
     const { isValid: nameIsValid } = useIsBookingFormExists({
         organizationId,
@@ -52,13 +53,6 @@ export const Step1NameDescription: FC = () => {
         goToNextStep();
     }, [data.name, goToNextStep]);
 
-    const handleClose = useCallback(() => {
-        void navigate({
-            to: '/$organizationId/booking-forms',
-            params: { organizationId: routeOrganizationId },
-        });
-    }, [navigate, routeOrganizationId]);
-
     return (
         <FormWizardLayout
             stepNumber={1}
@@ -72,17 +66,11 @@ export const Step1NameDescription: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        {m.wizard_next()}
+                        {returnsToReview
+                            ? m.wizard_back_to_review()
+                            : m.wizard_next()}
                     </Button>
-                    {isGuidedFirstForm ? null : (
-                        <Button
-                            type="button"
-                            variant="simple-clean"
-                            onClick={handleClose}
-                        >
-                            {m.close()}
-                        </Button>
-                    )}
+                    <CreateBookingFormCloseButton />
                 </div>
             }
         >

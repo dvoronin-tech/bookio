@@ -1,7 +1,10 @@
 import { type ChangeEvent, type FC, useCallback } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, ColorPicker, Input } from '@bookio/ui';
-import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import {
+    shouldReturnToReview,
+    useCreateBookingFormStore,
+} from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import { DEFAULT_DARK_BOOKING_FORM_STYLES } from '#utils/defaultBookingFormStyles.ts';
 import { step3Schema } from '../../schemas/createBookingFormDraft.schema.ts';
@@ -10,6 +13,7 @@ import styles from './Step3Styles.module.scss';
 import { trimObj } from '#utils/trimObj.ts';
 import { m } from '../../../../../paraglide/messages.js';
 import { COLOR_KEYS, colorLabel } from '../../colorLabels.ts';
+import { CreateBookingFormCloseButton } from '../../CreateBookingFormCloseButton.tsx';
 
 const colorFields = () =>
     COLOR_KEYS.map((key) => {
@@ -35,6 +39,7 @@ export const Step3Styles: FC = () => {
         setField,
         goToNextStep,
         goToPreviousStep,
+        reviewEditThroughStep,
     } = useCreateBookingFormStore(
         useShallow((s) => ({
             primary: s.data.primary,
@@ -46,8 +51,10 @@ export const Step3Styles: FC = () => {
             setField: s.setField,
             goToNextStep: s.goToNextStep,
             goToPreviousStep: s.goToPreviousStep,
+            reviewEditThroughStep: s.reviewEditThroughStep,
         })),
     );
+    const returnsToReview = shouldReturnToReview(3, reviewEditThroughStep);
 
     const values = {
         primary,
@@ -126,7 +133,9 @@ export const Step3Styles: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        {m.wizard_next()}
+                        {returnsToReview
+                            ? m.wizard_back_to_review()
+                            : m.wizard_next()}
                     </Button>
                     <Button
                         type="button"
@@ -142,6 +151,7 @@ export const Step3Styles: FC = () => {
                     >
                         {m.back()}
                     </Button>
+                    <CreateBookingFormCloseButton />
                 </div>
             }
         >
