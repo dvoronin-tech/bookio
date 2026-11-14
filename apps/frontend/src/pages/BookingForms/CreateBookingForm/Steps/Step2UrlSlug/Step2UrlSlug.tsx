@@ -13,6 +13,7 @@ import { slugSchema } from '@bookio/backend/schemas';
 import toast from 'react-hot-toast';
 import styles from './Step2UrlSlug.module.scss';
 import { m } from '../../../../../paraglide/messages.js';
+import { CreateBookingFormCloseButton } from '../../CreateBookingFormCloseButton.tsx';
 
 export const Step2UrlSlug: FC = () => {
     const {
@@ -115,6 +116,7 @@ export const Step2UrlSlug: FC = () => {
                     >
                         {m.back()}
                     </Button>
+                    <CreateBookingFormCloseButton />
                 </div>
             }
         >

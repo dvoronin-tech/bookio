@@ -10,6 +10,7 @@ import { step4Schema } from '../../schemas/createBookingFormDraft.schema.ts';
 import toast from 'react-hot-toast';
 import styles from './Step4Metadata.module.scss';
 import { m } from '../../../../../paraglide/messages.js';
+import { CreateBookingFormCloseButton } from '../../CreateBookingFormCloseButton.tsx';
 
 export const Step4Metadata: FC = () => {
     const {
@@ -87,6 +88,7 @@ export const Step4Metadata: FC = () => {
                     >
                         {m.back()}
                     </Button>
+                    <CreateBookingFormCloseButton />
                 </div>
             }
         >

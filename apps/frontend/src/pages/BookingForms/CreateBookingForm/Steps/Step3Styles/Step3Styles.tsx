@@ -13,6 +13,7 @@ import styles from './Step3Styles.module.scss';
 import { trimObj } from '#utils/trimObj.ts';
 import { m } from '../../../../../paraglide/messages.js';
 import { COLOR_KEYS, colorLabel } from '../../colorLabels.ts';
+import { CreateBookingFormCloseButton } from '../../CreateBookingFormCloseButton.tsx';
 
 const colorFields = () =>
     COLOR_KEYS.map((key) => {
@@ -150,6 +151,7 @@ export const Step3Styles: FC = () => {
                     >
                         {m.back()}
                     </Button>
+                    <CreateBookingFormCloseButton />
                 </div>
             }
         >

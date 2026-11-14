@@ -14,6 +14,7 @@ import styles from './Step5Review.module.scss';
 import { m } from '../../../../../paraglide/messages.js';
 import { getLocale } from '../../../../../paraglide/runtime.js';
 import { COLOR_KEYS, colorLabel } from '../../colorLabels.ts';
+import { CreateBookingFormCloseButton } from '../../CreateBookingFormCloseButton.tsx';
 
 type ReviewCell = {
     label: string;
@@ -154,6 +155,7 @@ export const Step5Review: FC = () => {
                     >
                         {m.back()}
                     </Button>
+                    <CreateBookingFormCloseButton disabled={isPending} />
                 </div>
             }
         >
