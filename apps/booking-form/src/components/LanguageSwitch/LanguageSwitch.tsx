@@ -12,15 +12,16 @@ export const LanguageSwitch: FC = () => {
     return (
         <div className={styles.languageSwitch}>
             <SegmentedControl
+                className={styles.segmentedControl}
                 aria-label={m.language()}
                 value={locale}
                 onValueChange={setLocale}
             >
                 <SegmentedControl.Item value="en" aria-label={m.language_en()}>
-                    <FlagUsIcon width={20} height={14} />
+                    <FlagUsIcon className={styles.flag} />
                 </SegmentedControl.Item>
                 <SegmentedControl.Item value="ru" aria-label={m.language_ru()}>
-                    <FlagRuIcon width={20} height={14} />
+                    <FlagRuIcon className={styles.flag} />
                 </SegmentedControl.Item>
             </SegmentedControl>
         </div>
