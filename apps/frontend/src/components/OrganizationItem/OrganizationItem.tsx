@@ -1,7 +1,8 @@
 import { useCallback, useState, type FC } from 'react';
 import styles from './OrganizationItem.module.scss';
 import { format } from 'date-fns';
-import { ru } from 'date-fns/locale';
+import { dateFnsLocale } from '#i18n/locale';
+import { m } from '../../paraglide/messages.js';
 import { clsx } from 'clsx';
 import PlaceholderImage from '#assets/images/OrganizationPlaceholder.webp';
 import { Dialog } from '@bookio/ui';
@@ -14,20 +15,14 @@ import TrashIcon from '#assets/icons/trash.svg?react';
 import { useLogoutOrganization } from '#api/organizations/logoutOgranization';
 import { useOnPress } from '#hooks/useOnPress';
 
-const getDialogContent = (organizationName: string, role: OrganizationType['role']) => {
+const roleLabel = (role: OrganizationType['role']) => {
     switch (role) {
         case 'owner':
-            return {
-                title: `Are you sure you want to <span class='${styles.red}'>remove</span> ${organizationName}?`,
-                description:
-                    "This action will remove the organization and all its members will be removed from it.<br /><br />If you're sure, enter organization password to confirm.",
-            };
-        default:
-            return {
-                title: `Are you sure you want to logout from ${organizationName}?`,
-                description:
-                    'This action will logout you from the organization and you will lose your role status.',
-            };
+            return m.org_role_owner();
+        case 'admin':
+            return m.org_role_admin();
+        case 'member':
+            return m.org_role_member();
     }
 };
 
@@ -67,7 +62,7 @@ export const OrganizationItem: FC<OrganizationItemProps> = ({
 
     const handleLogoutOrganization = useCallback(async () => {
         if (role === 'owner' && organizationPassword.trim() === '') {
-            toast.error('Please enter the organization password');
+            toast.error(m.org_password_required());
             return;
         }
 
@@ -75,8 +70,8 @@ export const OrganizationItem: FC<OrganizationItemProps> = ({
             role === 'owner' ? { organizationId, organizationPassword } : { organizationId };
 
         await toast.promise(logoutOrganization(payload), {
-            loading: 'Logging out...',
-            success: 'Logged out successfully',
+            loading: m.org_logging_out(),
+            success: m.org_logged_out(),
             error: (error: Error) => error.message,
         });
 
@@ -91,8 +86,6 @@ export const OrganizationItem: FC<OrganizationItemProps> = ({
         },
         [],
     );
-
-    const { title, description } = getDialogContent(organizationName, role);
 
     const handleClickOnOrganization = useCallback(() => {
         if (isOpenLogoutDialog) return;
@@ -113,9 +106,13 @@ export const OrganizationItem: FC<OrganizationItemProps> = ({
                     </h3>
                     <div className={styles.organizationAdditionalInfo}>
                         <div className={clsx(styles.role, { [styles.owner]: role === 'owner' })}>
-                            {role}
+                            {roleLabel(role)}
                         </div>
-                        <span>{format(new Date(createdAt), 'dd/MM/yyyy', { locale: ru })}</span>
+                        <span>
+                            {format(new Date(createdAt), 'dd/MM/yyyy', {
+                                locale: dateFnsLocale(),
+                            })}
+                        </span>
                     </div>
                 </div>
 
@@ -136,25 +133,36 @@ export const OrganizationItem: FC<OrganizationItemProps> = ({
                     contentClassName={styles.logoutDialog}
                 >
                     <Dialog.Title>
-                        <span dangerouslySetInnerHTML={{ __html: title }} />
+                        {role === 'owner'
+                            ? m.org_remove_title({ name: organizationName })
+                            : m.org_leave_title({ name: organizationName })}
                     </Dialog.Title>
                     <Dialog.Description>
-                        <span dangerouslySetInnerHTML={{ __html: description }} />
+                        {role === 'owner' ? (
+                            <>
+                                {m.org_remove_description_lead()}
+                                <br />
+                                <br />
+                                {m.org_remove_description_confirm()}
+                            </>
+                        ) : (
+                            m.org_leave_description()
+                        )}
                     </Dialog.Description>
                     {role === 'owner' && (
                         <Dialog.Input
                             type="password"
-                            placeholder="Enter organization password"
+                            placeholder={m.org_password_confirm_placeholder()}
                             value={organizationPassword}
                             onChange={handleChangeOrganizationPassword}
                         />
                     )}
                     <Dialog.Actions>
                         <Dialog.Button variant="simple-clean" onClick={handleCloseLogoutDialog}>
-                            Cancel
+                            {m.cancel()}
                         </Dialog.Button>
                         <Dialog.Button variant="red-filled" onClick={handleLogoutOrganization}>
-                            Logout
+                            {m.logout()}
                         </Dialog.Button>
                     </Dialog.Actions>
                 </Dialog>

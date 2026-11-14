@@ -31,6 +31,7 @@ import {
     normalizeHex,
     type Hsv,
 } from './colorUtils.js';
+import { m } from '../paraglide/messages.js';
 import styles from './ColorPicker.module.scss';
 
 const FALLBACK_HSV: Hsv = { h: 0, s: 1, v: 1 };
@@ -52,8 +53,9 @@ function ColorPicker({
     disabled = false,
     id,
     showValue = true,
-    'aria-label': ariaLabel = 'Choose color',
+    'aria-label': ariaLabel,
 }: ColorPickerProps) {
+    const resolvedAriaLabel = ariaLabel ?? m.choose_color();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const [open, setOpen] = useState(false);
@@ -188,7 +190,7 @@ function ColorPicker({
                 id={inputId}
                 className={triggerClasses}
                 disabled={disabled}
-                aria-label={ariaLabel}
+                aria-label={resolvedAriaLabel}
                 aria-haspopup="dialog"
                 aria-expanded={open}
                 {...getReferenceProps()}
@@ -243,7 +245,7 @@ function ColorPicker({
                                 onBlur={commitHexDraft}
                                 onKeyDown={handleHexKeyDown}
                                 placeholder="#000000"
-                                aria-label="Hex color"
+                                aria-label={m.hex()}
                                 className={styles.hexInput}
                                 spellCheck={false}
                                 autoComplete="off"

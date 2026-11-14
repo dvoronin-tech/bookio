@@ -1,4 +1,4 @@
-import { type FC, useCallback, useState } from 'react';
+import { type FC, useCallback, useMemo, useState } from 'react';
 import styles from './CreateOrganization.module.scss';
 import { Button, Dialog, Input, HiddenField, ValidatableInput } from '@bookio/ui';
 import {
@@ -21,31 +21,38 @@ import { FormWizardLayoutProvider } from '#components/FormWizardLayout/FormWizar
 import { useDebouncedValidation } from '#utils/useDebouncedValidation';
 import { formatZodError } from '#utils/parseError';
 import { copyToClipboard } from '#utils/copyToClipboard.ts';
+import { m } from '../../../paraglide/messages.js';
+import { getLocale } from '../../../paraglide/runtime.js';
+import { ApiError } from '#i18n/apiError';
 
-const formSchema = z.object({
-    name: z.string().min(3).max(255),
-    slug: slugSchema,
-    password: z
-        .string()
-        .min(6)
-        .max(255)
-        .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/, {
-            message:
-                'Password must contain at least one uppercase letter, one lowercase letter, one number and one special character',
-        }),
-}) satisfies z.ZodType<Omit<CreateOrganizationRequest, 'userId'>>;
+function createFormSchema() {
+    return z.object({
+        name: z.string().min(3).max(255),
+        slug: slugSchema,
+        password: z
+            .string()
+            .min(6)
+            .max(255)
+            .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{6,}$/, {
+                message: m.org_password_rules(),
+            }),
+    }) satisfies z.ZodType<Omit<CreateOrganizationRequest, 'userId'>>;
+}
 
-type FormData = z.infer<typeof formSchema>;
+type FormData = z.infer<ReturnType<typeof createFormSchema>>;
 
 export const CreateOrganization: FC = () => {
     const navigate = useNavigate();
     const { data: session } = useSession();
     const { data: organization, mutateAsync, isPending, isSuccess } = useCreateOrganization();
+    const locale = getLocale();
+    const formSchema = useMemo(() => createFormSchema(), [locale]);
 
     const {
         register,
         control,
         handleSubmit,
+        setError,
         formState: { isSubmitting },
     } = useForm<FormData>({
         resolver: zodResolver(formSchema),
@@ -66,21 +73,31 @@ export const CreateOrganization: FC = () => {
     const onSubmit = useCallback(
         async (data: FormData) => {
             if (slugIsValid === false) {
-                toast.error('Organization slug is already taken');
+                toast.error(m.org_slug_taken());
                 return;
             }
 
             await toast.promise(mutateAsync({ ...data, userId: session!.user.id }), {
-                loading: 'Creating organization...',
-                success: 'Organization created successfully',
-                error: (error: Error) => error.message,
+                loading: m.org_create_loading(),
+                success: m.org_create_success(),
+                error: (error: Error) => {
+                    if (ApiError.isApiError(error)) {
+                        error.applyValidationIssues(
+                            setError as (
+                                name: string,
+                                error: { type: string; message: string },
+                            ) => void,
+                        );
+                    }
+                    return error.message;
+                },
             });
         },
-        [mutateAsync, session, slugIsValid],
+        [mutateAsync, session, setError, slugIsValid],
     );
 
     const onInvalid = useCallback((errors: FieldErrors<FormData>) => {
-        toast.error(getFirstFieldError(errors) ?? 'Invalid form data');
+        toast.error(getFirstFieldError(errors) ?? m.invalid_form_data());
     }, []);
 
     const handleSubmitForm = useCallback(() => {
@@ -100,8 +117,8 @@ export const CreateOrganization: FC = () => {
             ) : (
                 <FormWizardLayout
                     stepNumber={1}
-                    title="Создайте организацию"
-                    description="Так появится рабочее пространство для формы записи."
+                    title={m.org_create_title()}
+                    description={m.org_create_description()}
                     onEnterComplete={isDisabled ? undefined : handleSubmitForm}
                     footer={
                         <div className={styles.footerActions}>
@@ -112,7 +129,7 @@ export const CreateOrganization: FC = () => {
                                 onClick={handleSubmitForm}
                                 disabled={isDisabled}
                             >
-                                Create Organization
+                                {m.org_create_submit()}
                             </Button>
                             <Button
                                 type="button"
@@ -121,14 +138,14 @@ export const CreateOrganization: FC = () => {
                                 onClick={handleGoToConnect}
                                 disabled={isDisabled}
                             >
-                                Я сотрудник — подключиться к организации
+                                {m.org_create_as_member()}
                             </Button>
                             <AccountSignOut />
                         </div>
                     }
                 >
                     <Input
-                        placeholder="Organization name"
+                        placeholder={m.org_name_placeholder()}
                         disabled={isDisabled}
                         autoFocus
                         {...register('name')}
@@ -139,11 +156,11 @@ export const CreateOrganization: FC = () => {
                         render={({ field }) => (
                             <ValidatableInput
                                 {...field}
-                                placeholder="Unique organization slug"
+                                placeholder={m.org_slug_placeholder()}
                                 isValid={slugIsValid && !slugFormatError}
                                 errorMessage={
                                     !slugIsValid
-                                        ? 'Organization slug is already taken'
+                                        ? m.org_slug_taken()
                                         : slugFormatError
                                 }
                                 disabled={isDisabled}
@@ -152,7 +169,7 @@ export const CreateOrganization: FC = () => {
                     />
                     <Input
                         type="password"
-                        placeholder="Organization password"
+                        placeholder={m.org_password_placeholder()}
                         autoComplete="new-password"
                         disabled={isDisabled}
                         {...register('password')}
@@ -175,8 +192,8 @@ const SuccessfulOrganizationCreation: FC<{
     return (
         <FormWizardLayout
             stepNumber={2}
-            title={`Organization ${data.organization.name} created successfully`}
-            description="Your organization has been created successfully. Below, in the hidden field, you can find the organization secret key. Copy and keep it in a safe place."
+            title={m.org_created_title({ name: data.organization.name })}
+            description={m.org_created_description()}
             footer={
                 <div className={styles.footerActions}>
                     <Button
@@ -184,7 +201,7 @@ const SuccessfulOrganizationCreation: FC<{
                         className={styles.actionButton}
                         onClick={handleOpenBookingForms}
                     >
-                        Открыть формы записи
+                        {m.org_open_forms()}
                     </Button>
                     <AccountSignOut />
                 </div>
@@ -192,7 +209,7 @@ const SuccessfulOrganizationCreation: FC<{
         >
             <HiddenField
                 value={data.organization.secretKey}
-                onCopy={(value) => copyToClipboard(value, 'Secret key')}
+                onCopy={(value) => copyToClipboard(value, m.org_secret_key())}
             />
         </FormWizardLayout>
     );
@@ -207,10 +224,9 @@ const AccountSignOut: FC = () => {
         const logoutRes = mutateAsync();
 
         await toast.promise(logoutRes, {
-            loading: 'Trying to logout',
-            error: (error) =>
-                `Something went wrong during logout, error: ${error}`,
-            success: "You've been logged out successfully",
+            loading: m.header_logout_loading(),
+            error: (error) => m.header_logout_error({ error: String(error) }),
+            success: m.header_logout_success(),
         });
 
         const logoutData = await logoutRes;
@@ -228,22 +244,22 @@ const AccountSignOut: FC = () => {
                 onClick={() => setIsLogoutDialogOpen(true)}
                 disabled={isPending}
             >
-                Не тот аккаунт? Выйти
+                {m.org_wrong_account()}
             </button>
             <Dialog open={isLogoutDialogOpen} onOpenChange={setIsLogoutDialogOpen}>
-                <Dialog.Title>Are you sure that you want to log out?</Dialog.Title>
+                <Dialog.Title>{m.header_logout_confirm_title()}</Dialog.Title>
                 <Dialog.Description>
-                    If you continue, you will be logged out.
+                    {m.header_logout_confirm_description()}
                 </Dialog.Description>
                 <Dialog.Actions>
                     <Dialog.Button
                         variant="simple-clean"
                         onClick={() => setIsLogoutDialogOpen(false)}
                     >
-                        Go back
+                        {m.go_back()}
                     </Dialog.Button>
                     <Dialog.Button variant="red-filled" onClick={handleLogout}>
-                        Выйти
+                        {m.logout()}
                     </Dialog.Button>
                 </Dialog.Actions>
             </Dialog>

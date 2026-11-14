@@ -10,6 +10,8 @@
         "types": ["node"],
         "paths": {
             "@/*": ["./src/*"],
+            "@bookio/shared/utils": ["../../packages/shared/src/utils/index.ts"],
+            "@bookio/shared/constants": ["../../packages/shared/src/constants.ts"]
         },
         "jsx": "react-jsx",
         "jsxImportSource": "hono/jsx",

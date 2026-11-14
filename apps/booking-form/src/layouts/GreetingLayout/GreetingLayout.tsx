@@ -6,6 +6,7 @@ import { useSteps } from '#/store/Steps/StepsContext';
 import { stepsManager } from '#/store/Steps/stepsManager';
 import clsx from 'clsx';
 import { useBookingFormData } from '#/store/BookingFormData/BookingFormDataContext';
+import { m } from '../../paraglide/messages.js';
 
 export const GreetingLayout: FC = () => {
     const setStep = useSteps((s) => s.setStep);
@@ -55,7 +56,7 @@ interface GreetingButtonProps {
 const GreetingButton: FC<GreetingButtonProps> = memo(({ onClick }) => {
     return (
         <button type="button" className={styles.cta} onClick={onClick}>
-            Book now
+            {m.book_now()}
             <ArrowIcon className={styles.ctaIcon} aria-hidden />
         </button>
     );
@@ -78,7 +79,7 @@ const GreetingFooter: FC = memo(() => {
             <span className={styles.creditMark} aria-hidden>
                 B
             </span>
-            <span className={styles.creditText}>Powered by Bookio</span>
+            <span className={styles.creditText}>{m.powered_by()}</span>
         </div>
     );
 });

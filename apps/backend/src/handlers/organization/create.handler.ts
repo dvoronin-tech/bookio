@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { members, organizations } from '@bookio/db';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
@@ -9,7 +9,7 @@ import { organizationSchema } from '@/schemas/organization/create.schema.js';
 const factory = createFactory().createHandlers;
 
 export const createOrganizationHandler = factory(
-    zValidator('json', organizationSchema),
+    validate('json', organizationSchema),
     async (c) => {
         const { name, password, userId, slug } = c.req.valid('json');
 
@@ -19,7 +19,7 @@ export const createOrganizationHandler = factory(
             .where(eq(organizations.slug, slug));
 
         if (existingOrganization) {
-            return c.json(prepareError('Organization with this slug already exists'), 400);
+            return c.json(prepareError('Organization with this slug already exists', 'slug_taken'), 400);
         }
 
         const [organization] = await db
@@ -37,7 +37,7 @@ export const createOrganizationHandler = factory(
             .returning();
 
         if (!member) {
-            return c.json(prepareError('Failed to create member'), 500);
+            return c.json(prepareError('Failed to create member', 'internal'), 500);
         }
 
         return c.json(

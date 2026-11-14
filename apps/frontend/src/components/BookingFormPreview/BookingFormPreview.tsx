@@ -10,6 +10,7 @@ import {
 } from '#utils/defaultBookingFormStyles';
 import scssStyles from './BookingFormPreview.module.scss';
 import { toBookingFormSettings } from '#utils/dataPreparers/bookingFormPreparers.ts';
+import { m } from '../../paraglide/messages.js';
 
 const toPreviewCssVars = (colors: BookingFormStyles): CSSProperties =>
     ({
@@ -52,7 +53,7 @@ export const BookingFormPreview: FC = () => {
     ]);
 
     const handlePreviewSuccess = useCallback(() => {
-        toast.success('Form submitted successfully');
+        toast.success(m.preview_submitted());
     }, []);
 
     if (!data?.settings || !data?.fields || !data?.styles) {

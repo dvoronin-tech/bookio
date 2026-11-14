@@ -12,6 +12,8 @@ import { useForm, type FieldErrors } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout';
+import { m } from '../../../paraglide/messages.js';
+import { ApiError } from '#i18n/apiError';
 
 const formSchema = z.object({
     slug: z.string().min(1).max(255),
@@ -27,22 +29,36 @@ export const ConnectOrganization: FC = () => {
     const {
         register,
         handleSubmit,
+        setError,
         formState: { isSubmitting },
     } = useForm<FormData>({
         resolver: zodResolver(formSchema),
         defaultValues: { slug: '', password: '' },
     });
 
-    const onSubmit = useCallback(async (data: FormData) => {
-        await toast.promise(mutateAsync(data), {
-            loading: 'Connecting to organization...',
-            success: 'Connected to organization successfully',
-            error: (error: Error) => error.message,
-        });
-    }, [mutateAsync]);
+    const onSubmit = useCallback(
+        async (data: FormData) => {
+            await toast.promise(mutateAsync(data), {
+                loading: m.org_connect_loading(),
+                success: m.org_connect_success(),
+                error: (error: Error) => {
+                    if (ApiError.isApiError(error)) {
+                        error.applyValidationIssues(
+                            setError as (
+                                name: string,
+                                error: { type: string; message: string },
+                            ) => void,
+                        );
+                    }
+                    return error.message;
+                },
+            });
+        },
+        [mutateAsync, setError],
+    );
 
     const onInvalid = useCallback((errors: FieldErrors<FormData>) => {
-        toast.error(getFirstFieldError(errors) ?? 'Invalid form data');
+        toast.error(getFirstFieldError(errors) ?? m.invalid_form_data());
     }, []);
 
     const handleSubmitForm = useCallback(() => {
@@ -64,8 +80,8 @@ export const ConnectOrganization: FC = () => {
     return (
         <FormWizardLayout
             stepNumber={1}
-            title="Let's connect to an organization"
-            description="Enter the organization slug and password you received from the organization owner."
+            title={m.org_connect_title()}
+            description={m.org_connect_description()}
             onEnterComplete={isDisabled ? undefined : handleSubmitForm}
             footer={
                 <div className={styles.footerActions}>
@@ -76,7 +92,7 @@ export const ConnectOrganization: FC = () => {
                         onClick={handleSubmitForm}
                         disabled={isDisabled}
                     >
-                        Connect to Organization
+                        {m.org_connect_submit()}
                     </Button>
                     <Button
                         type="button"
@@ -85,20 +101,20 @@ export const ConnectOrganization: FC = () => {
                         onClick={handleGoToCreate}
                         disabled={isDisabled}
                     >
-                        Я владелец — создать организацию
+                        {m.org_connect_as_owner()}
                     </Button>
                 </div>
             }
         >
             <Input
-                placeholder="Organization slug"
+                placeholder={m.org_connect_slug_placeholder()}
                 disabled={isDisabled}
                 autoFocus
                 {...register('slug')}
             />
             <Input
                 type="password"
-                placeholder="Organization password"
+                placeholder={m.org_password_placeholder()}
                 disabled={isDisabled}
                 {...register('password')}
             />

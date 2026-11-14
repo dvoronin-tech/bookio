@@ -1,4 +1,5 @@
 node_modules
+src/paraglide
 .DS_Store
 dist
 dist-ssr

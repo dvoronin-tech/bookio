@@ -11,6 +11,7 @@ import PlusIcon from '#assets/icons/plus.svg?react';
 import ConnectIcon from '#assets/icons/connect.svg?react';
 import SearchIcon from '#assets/icons/search.svg?react';
 import { OrganizationSearch } from '#components/OrganizationSearch/OrganizationSearch';
+import { m } from '../../../paraglide/messages.js';
 
 export const OrganizationList: FC = () => {
     const { data, isPending, refetch, error } = useGetOrganizationsByUserId();
@@ -55,9 +56,9 @@ export const OrganizationList: FC = () => {
 
         return (
             <div className={styles.errorContainer}>
-                <h2>Failed to load organizations</h2>
+                <h2>{m.org_list_failed()}</h2>
                 <Button variant="primary-outlined" onClick={handleRetry}>
-                    Retry
+                    {m.retry()}
                 </Button>
             </div>
         );
@@ -71,7 +72,7 @@ export const OrganizationList: FC = () => {
         <div className={styles.page}>
             <div className={styles.header}>
                 <div className={styles.headerLeft}>
-                    <h2 className={styles.pageTitle}>Выберите организацию</h2>
+                    <h2 className={styles.pageTitle}>{m.org_list_title()}</h2>
                 </div>
 
                 <div className={styles.headerToolbar}>
@@ -81,7 +82,7 @@ export const OrganizationList: FC = () => {
                         </Input.Icon>
                         <Input
                             type="search"
-                            placeholder="Search"
+                            placeholder={m.search()}
                             onClick={handleOpenSearch}
                             readOnly
                         />
@@ -92,7 +93,7 @@ export const OrganizationList: FC = () => {
                         onClick={handleGoToConnect}
                     >
                         <ConnectIcon />
-                        Connect
+                        {m.connect()}
                     </Button>
                     <Button
                         variant="primary-filled"
@@ -100,7 +101,7 @@ export const OrganizationList: FC = () => {
                         onClick={handleGoToCreate}
                     >
                         <PlusIcon />
-                        Create
+                        {m.create()}
                     </Button>
                 </div>
             </div>

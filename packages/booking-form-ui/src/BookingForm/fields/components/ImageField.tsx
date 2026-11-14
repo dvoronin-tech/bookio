@@ -8,6 +8,7 @@ import { useBookingFormContext } from '../../BookingFormContext.js';
 import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 export const ImageField: FC<FieldRendererProps<'image'>> = ({ field }) => {
     const { formState, control, markRequiredFields } = useBookingFormContext();
@@ -20,14 +21,14 @@ export const ImageField: FC<FieldRendererProps<'image'>> = ({ field }) => {
             name={field.key}
             control={control}
             rules={{
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, m.required({ name: field.name })),
                 validate: (value: File | null) => {
                     if (!value || !maxSizeMb) {
                         return true;
                     }
                     return (
                         value.size <= maxSizeMb * 1024 * 1024 ||
-                        `Image must be ${maxSizeMb} MB or smaller`
+                        m.image_too_large({ maxSizeMb })
                     );
                 },
             }}

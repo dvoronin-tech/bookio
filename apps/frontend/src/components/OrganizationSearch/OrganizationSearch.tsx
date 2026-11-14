@@ -14,6 +14,7 @@ import { useNavigate } from '@tanstack/react-router';
 import { goToOrganizationWorkspace } from '#lib/bookingFormEntry';
 import { toast } from 'react-hot-toast';
 import SearchIcon from '#assets/icons/search.svg?react';
+import { m } from '../../paraglide/messages.js';
 
 const createTrigrams = (value: string) => {
     return value
@@ -129,7 +130,7 @@ export const OrganizationSearch: FC<OrganizationSearchProps> = ({
                 </Input.Icon>
                 <Input
                     type="search"
-                    placeholder="Search"
+                    placeholder={m.search()}
                     ref={searchInputRef}
                     onChange={handleSearchChange}
                     autoFocus

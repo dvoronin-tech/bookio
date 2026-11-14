@@ -6,6 +6,8 @@ import type { BookingFormType } from '#api/bookingForms/getBookingForms.ts';
 import styles from './BookingFormTile.module.scss';
 
 import CalendarIcon from '#assets/icons/calendar.svg?react';
+import { dateFnsLocale, plural } from '#i18n/locale';
+import { m } from '../../../paraglide/messages.js';
 
 interface BookingFormTileProps {
     organizationId: string;
@@ -16,8 +18,11 @@ export const BookingFormTile: FC<BookingFormTileProps> = ({
     organizationId,
     bookingForm,
 }) => {
-    const bookingsLabel =
-        bookingForm.totalBookings === 1 ? 'booking' : 'bookings';
+    const totalLabel = plural(bookingForm.totalBookings, {
+        one: m.total_bookings_one(),
+        few: m.total_bookings_few(),
+        many: m.total_bookings_many(),
+    });
 
     return (
         <Link
@@ -37,18 +42,18 @@ export const BookingFormTile: FC<BookingFormTileProps> = ({
                     })}
                 >
                     <span className={styles.statusDot} />
-                    {bookingForm.isActive ? 'Active' : 'Inactive'}
+                    {bookingForm.isActive ? m.active() : m.inactive()}
                 </span>
             </div>
 
             <p className={styles.description}>
-                {bookingForm.description || 'No description'}
+                {bookingForm.description || m.step5_no_description()}
             </p>
 
             <div className={styles.stat}>
                 <div className={styles.statLabel}>
                     <CalendarIcon className={styles.statIcon} />
-                    <span>Total {bookingsLabel}</span>
+                    <span>{totalLabel}</span>
                 </div>
                 <span className={styles.statValue}>
                     {bookingForm.totalBookings}
@@ -57,8 +62,11 @@ export const BookingFormTile: FC<BookingFormTileProps> = ({
 
             <div className={styles.footer}>
                 <span className={styles.createdAt}>
-                    Created{' '}
-                    {format(new Date(bookingForm.createdAt), 'dd/MM/yyyy')}
+                    {m.tile_created({
+                        date: format(new Date(bookingForm.createdAt), 'dd/MM/yyyy', {
+                            locale: dateFnsLocale(),
+                        }),
+                    })}
                 </span>
             </div>
         </Link>

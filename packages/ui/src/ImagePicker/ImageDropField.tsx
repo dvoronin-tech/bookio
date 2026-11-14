@@ -6,6 +6,7 @@ import { createClearClickHandler, createOpenOnKeyDownHandler } from '../utils/ev
 import { formatFileSize, getFileExtension } from '../utils/fileUtils.js';
 import ImageIcon from './icons/image.svg?react';
 import { useImagePicker } from './useImagePicker.js';
+import { m } from '../paraglide/messages.js';
 import styles from './ImageDropField.module.scss';
 
 export type ImageDropFieldProps = {
@@ -26,17 +27,23 @@ type ImageDimensions = {
 
 function ImageDropField({
     label,
-    placeholder = 'Drag & drop an image here, or click to browse',
+    placeholder,
     onChange,
     accept,
     disabled = false,
     className,
     id,
 }: ImageDropFieldProps) {
+    const resolvedPlaceholder = placeholder ?? m.image_drop();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, previewUrl, isDragging, error, openFilePicker, clear, inputProps, dropProps } =
-        useImagePicker({ onChange, accept, disabled });
+        useImagePicker({
+            onChange,
+            accept,
+            disabled,
+            invalidTypeError: m.image_file(),
+        });
     const [dimensions, setDimensions] = useState<ImageDimensions | null>(null);
     const currentDimensions = dimensions?.url === previewUrl ? dimensions : null;
 
@@ -99,7 +106,7 @@ function ImageDropField({
                                 type="button"
                                 className={styles.clearButton}
                                 onClick={handleClear}
-                                aria-label="Remove image"
+                                aria-label={m.remove_image()}
                             >
                                 <CloseIcon />
                             </button>
@@ -108,7 +115,7 @@ function ImageDropField({
                 ) : (
                     <div className={styles.placeholder}>
                         <ImageIcon className={styles.placeholderIcon} aria-hidden />
-                        <span className={styles.placeholderText}>{placeholder}</span>
+                        <span className={styles.placeholderText}>{resolvedPlaceholder}</span>
                     </div>
                 )}
             </div>

@@ -6,6 +6,7 @@ import { useBookingFormContext } from '../../BookingFormContext.js';
 import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 const URL_PATTERN = /^https?:\/\/\S+$/i;
 
@@ -26,10 +27,10 @@ export const UrlInputField: FC<FieldRendererProps<'url'>> = ({ field }) => {
             errorMessage={errorMessage}
             useConfirmationColor={false}
             {...register(field.key, {
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, m.required({ name: field.name })),
                 pattern: {
                     value: URL_PATTERN,
-                    message: 'Enter a valid URL',
+                    message: m.invalid_url(),
                 },
             })}
             disabled={disabled}

@@ -5,6 +5,7 @@ import Checkbox from '../Checkbox/Checkbox.js';
 import Dropdown from '../Dropdown/Dropdown.js';
 import Input from '../Input/Input.js';
 import { ArrowIcon } from './icons/ArrowIcon.js';
+import { m } from '../paraglide/messages.js';
 import styles from './SelectDropdown.module.scss';
 
 export type SelectDropdownOption = string | number;
@@ -38,8 +39,6 @@ type SelectDropdownMultipleProps = SelectDropdownBaseProps & {
 export type SelectDropdownProps =
     SelectDropdownSingleProps | SelectDropdownMultipleProps;
 
-const defaultFormatSelectedCount = (count: number) => `${count} selected`;
-
 function assertUniqueOptions(options: SelectDropdownOption[]) {
     const seen = new Set<string>();
 
@@ -59,9 +58,9 @@ function SelectDropdown(props: SelectDropdownProps) {
         label,
         options,
         onOptionClick,
-        placeholder = 'Select...',
-        searchPlaceholder = 'Search...',
-        emptyOptionsText = 'No options found',
+        placeholder,
+        searchPlaceholder,
+        emptyOptionsText,
         placement,
         triggerClassName,
         withSearch = false,
@@ -69,6 +68,10 @@ function SelectDropdown(props: SelectDropdownProps) {
         disabled = false,
         scrollSelectedIntoView: scrollIntoView = false,
     } = props;
+
+    const resolvedPlaceholder = placeholder ?? m.select();
+    const resolvedSearchPlaceholder = searchPlaceholder ?? m.search();
+    const resolvedEmptyOptionsText = emptyOptionsText ?? m.empty_options();
 
     assertUniqueOptions(options);
 
@@ -86,7 +89,7 @@ function SelectDropdown(props: SelectDropdownProps) {
     }, [props.multiple, props.selected]);
 
     const triggerText = useMemo(() => {
-        if (selectedKeys.size === 0) return placeholder;
+        if (selectedKeys.size === 0) return resolvedPlaceholder;
         if (selectedKeys.size === 1) {
             const [onlySelected] = selectedKeys;
             return onlySelected;
@@ -95,10 +98,10 @@ function SelectDropdown(props: SelectDropdownProps) {
         const formatSelectedCount =
             props.multiple === true ? props.formatSelectedCount : undefined;
 
-        return (formatSelectedCount ?? defaultFormatSelectedCount)(
-            selectedKeys.size,
-        );
-    }, [selectedKeys, placeholder, props]);
+        return formatSelectedCount
+            ? formatSelectedCount(selectedKeys.size)
+            : m.selected_count({ count: selectedKeys.size });
+    }, [selectedKeys, resolvedPlaceholder, props]);
 
     const filteredOptions = useMemo(() => {
         if (!withSearch) return options;
@@ -167,7 +170,7 @@ function SelectDropdown(props: SelectDropdownProps) {
                     {withSearch && (
                         <div className={styles.dropdownSearch}>
                             <Input
-                                placeholder={searchPlaceholder}
+                                placeholder={resolvedSearchPlaceholder}
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 className={styles.dropdownSearchInput}
@@ -178,7 +181,7 @@ function SelectDropdown(props: SelectDropdownProps) {
                     <div className={styles.dropdownOptions}>
                         {filteredOptions.length === 0 ? (
                             <p className={styles.dropdownEmpty}>
-                                {emptyOptionsText}
+                                {resolvedEmptyOptionsText}
                             </p>
                         ) : (
                             filteredOptions.map((option) => {

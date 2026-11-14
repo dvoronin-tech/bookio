@@ -4,11 +4,12 @@ import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { organizationRouteApi } from '#lib/routeApis';
 import { BookingFormAsideCard } from './BookingFormAsideCard.tsx';
 import styles from './BookingAsideBar.module.scss';
+import { m } from '../../paraglide/messages.js';
 
 export const BookingAsideBar: FC = () => {
     return (
-        <aside className={styles.asideBar} aria-label="Booking forms">
-            <h2 className={styles.title}>Booking forms</h2>
+        <aside className={styles.asideBar} aria-label={m.aside_label()}>
+            <h2 className={styles.title}>{m.aside_title()}</h2>
             <AsideBarContent />
         </aside>
     );
@@ -42,7 +43,7 @@ const AsideBarContent: FC = () => {
             <div className={styles.state}>
                 <p className={styles.stateText}>{error.message}</p>
                 <Button variant="primary-outlined" onClick={handleRetry}>
-                    Retry
+                    {m.retry()}
                 </Button>
             </div>
         );
@@ -51,7 +52,7 @@ const AsideBarContent: FC = () => {
     if (!bookingForms?.length) {
         return (
             <div className={styles.state}>
-                <p className={styles.stateText}>No booking forms yet</p>
+                <p className={styles.stateText}>{m.forms_empty()}</p>
             </div>
         );
     }

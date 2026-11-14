@@ -7,6 +7,7 @@ import { useBookingFormContext } from '../../BookingFormContext.js';
 import type { FieldRendererProps } from '../field.types.js';
 import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 export const TextAreaField: FC<FieldRendererProps<'textarea'>> = ({
     field,
@@ -28,7 +29,7 @@ export const TextAreaField: FC<FieldRendererProps<'textarea'>> = ({
             errorMessage={errorMessage}
             useConfirmationColor={false}
             {...register(field.key, {
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, m.required({ name: field.name })),
             })}
             disabled={disabled}
         />

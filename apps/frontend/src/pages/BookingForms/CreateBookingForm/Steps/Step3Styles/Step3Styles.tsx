@@ -11,39 +11,21 @@ import { step3Schema } from '../../schemas/createBookingFormDraft.schema.ts';
 import toast from 'react-hot-toast';
 import styles from './Step3Styles.module.scss';
 import { trimObj } from '#utils/trimObj.ts';
+import { m } from '../../../../../paraglide/messages.js';
+import { COLOR_KEYS, colorLabel } from '../../colorLabels.ts';
 
-const COLOR_FIELDS = [
-    {
-        key: 'primary',
-        label: 'Primary',
-        placeholder: `Primary* (${DEFAULT_DARK_BOOKING_FORM_STYLES.primary})`,
-    },
-    {
-        key: 'bgMain',
-        label: 'Background main',
-        placeholder: `Background main* (${DEFAULT_DARK_BOOKING_FORM_STYLES.bgMain})`,
-    },
-    {
-        key: 'bgSecondary',
-        label: 'Background secondary',
-        placeholder: `Background secondary* (${DEFAULT_DARK_BOOKING_FORM_STYLES.bgSecondary})`,
-    },
-    {
-        key: 'borderColor',
-        label: 'Border',
-        placeholder: `Border* (${DEFAULT_DARK_BOOKING_FORM_STYLES.borderColor})`,
-    },
-    {
-        key: 'textMain',
-        label: 'Text main',
-        placeholder: `Text main* (${DEFAULT_DARK_BOOKING_FORM_STYLES.textMain})`,
-    },
-    {
-        key: 'textSecondary',
-        label: 'Text secondary',
-        placeholder: `Text secondary* (${DEFAULT_DARK_BOOKING_FORM_STYLES.textSecondary})`,
-    },
-] as const;
+const colorFields = () =>
+    COLOR_KEYS.map((key) => {
+        const label = colorLabel(key);
+        return {
+            key,
+            label,
+            placeholder: m.color_placeholder({
+                label,
+                value: DEFAULT_DARK_BOOKING_FORM_STYLES[key],
+            }),
+        };
+    });
 
 export const Step3Styles: FC = () => {
     const {
@@ -82,8 +64,10 @@ export const Step3Styles: FC = () => {
         textSecondary,
     };
 
+    const fields = colorFields();
+
     const handleChange =
-        (key: (typeof COLOR_FIELDS)[number]['key']) =>
+        (key: (typeof COLOR_KEYS)[number]) =>
         (event: ChangeEvent<HTMLInputElement>) => {
             setField(key, event.target.value);
         };
@@ -113,8 +97,7 @@ export const Step3Styles: FC = () => {
         const parsed = step3Schema.safeParse(trimmed);
         if (!parsed.success) {
             return toast.error(
-                parsed.error.issues[0]?.message ??
-                    'Color must be a hex value (#RGB or #RRGGBB)',
+                parsed.error.issues[0]?.message ?? m.color_invalid(),
             );
         }
 
@@ -139,8 +122,8 @@ export const Step3Styles: FC = () => {
     return (
         <FormWizardLayout
             stepNumber={3}
-            title="Choose booking form colors"
-            description="Set the color palette for the public booking form. Use hex values like #RGB or #RRGGBB for primary, backgrounds, border, and text."
+            title={m.step3_title()}
+            description={m.step3_description()}
             onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
@@ -149,26 +132,28 @@ export const Step3Styles: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        {returnsToReview ? 'Back to review' : 'Go to next'}
+                        {returnsToReview
+                            ? m.wizard_back_to_review()
+                            : m.wizard_next()}
                     </Button>
                     <Button
                         type="button"
                         variant="simple-clean"
                         onClick={handleUseDefaults}
                     >
-                        Use defaults
+                        {m.use_defaults()}
                     </Button>
                     <Button
                         type="button"
                         variant="simple-clean"
                         onClick={goToPreviousStep}
                     >
-                        Back
+                        {m.back()}
                     </Button>
                 </div>
             }
         >
-            {COLOR_FIELDS.map(({ key, label, placeholder }) => (
+            {fields.map(({ key, label, placeholder }) => (
                 <div key={key} className={styles.colorField}>
                     <Input
                         label={label}

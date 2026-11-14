@@ -8,7 +8,7 @@ import {
     type RefObject,
 } from 'react';
 
-const DEFAULT_INVALID_TYPE_ERROR = 'This file type is not supported';
+export const DEFAULT_INVALID_TYPE_ERROR = 'This file type is not supported';
 
 function isFileAccepted(file: File, accept: string): boolean {
     return accept.split(',').some((rawToken) => {

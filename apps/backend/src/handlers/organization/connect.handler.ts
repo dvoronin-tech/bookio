@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { members, organizations } from '@bookio/db';
 import { and, eq } from 'drizzle-orm';
@@ -9,7 +9,7 @@ import { connectOrganizationSchema } from '@/schemas/organization/connect.schema
 const factory = createFactory().createHandlers;
 
 export const connectOrganizationHandler = factory(
-    zValidator('json', connectOrganizationSchema),
+    validate('json', connectOrganizationSchema),
     async (c) => {
         const { slug, password, userId } = c.req.valid('json');
 
@@ -19,11 +19,11 @@ export const connectOrganizationHandler = factory(
             .where(eq(organizations.slug, slug));
 
         if (!organization) {
-            return c.json(prepareError('Organization not found'), 404);
+            return c.json(prepareError('Organization not found', 'not_found'), 404);
         }
 
         if (organization.password !== password) {
-            return c.json(prepareError('Invalid password'), 401);
+            return c.json(prepareError('Invalid password', 'invalid_password'), 401);
         }
 
         const [member] = await db
@@ -32,7 +32,7 @@ export const connectOrganizationHandler = factory(
             .where(and(eq(members.organizationId, organization.id), eq(members.userId, userId)));
 
         if (member) {
-            return c.json(prepareError('You are already a member of this organization'), 400);
+            return c.json(prepareError('You are already a member of this organization', 'already_member'), 400);
         }
 
         const [newMember] = await db
@@ -45,7 +45,7 @@ export const connectOrganizationHandler = factory(
             .returning();
 
         if (!newMember) {
-            return c.json(prepareError('Failed to add you to the organization'), 500);
+            return c.json(prepareError('Failed to add you to the organization', 'internal'), 500);
         }
 
         return c.json(

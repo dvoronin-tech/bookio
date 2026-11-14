@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { bookingFormMetaData } from '@bookio/db';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
@@ -9,7 +9,7 @@ import { updateBookingFormMetaSchema } from '@/schemas/bookingFormMeta/update.sc
 const factory = createFactory().createHandlers;
 
 export const updateBookingFormMetaHandler = factory(
-    zValidator('json', updateBookingFormMetaSchema),
+    validate('json', updateBookingFormMetaSchema),
     async (c) => {
         try {
             const { bookingFormId, title, description, additionalMetaData } = c.req.valid('json');
@@ -19,7 +19,7 @@ export const updateBookingFormMetaHandler = factory(
             });
 
             if (!existingMeta) {
-                return c.json(prepareError('Booking form meta not found'), 404);
+                return c.json(prepareError('Booking form meta not found', 'not_found'), 404);
             }
 
             const [updatedMeta] = await db
@@ -29,12 +29,12 @@ export const updateBookingFormMetaHandler = factory(
                 .returning();
 
             if (!updatedMeta) {
-                return c.json(prepareError('Failed to update booking form meta'), 500);
+                return c.json(prepareError('Failed to update booking form meta', 'internal'), 500);
             }
 
             return c.json(prepareSuccess(updatedMeta));
         } catch (error) {
-            return c.json(prepareError('Failed to update booking form meta'), 500);
+            return c.json(prepareError('Failed to update booking form meta', 'internal'), 500);
         }
     },
 );

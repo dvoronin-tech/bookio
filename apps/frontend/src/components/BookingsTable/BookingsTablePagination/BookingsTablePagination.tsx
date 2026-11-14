@@ -4,6 +4,8 @@ import type { BookingByIdItem } from '#api/bookings/getBookingsById.ts';
 import { type FC, useCallback } from 'react';
 import { SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 import styles from './BookingsTablePagination.module.scss';
+import { plural } from '#i18n/locale';
+import { m } from '../../../paraglide/messages.js';
 
 const PAGE_SIZE_OPTIONS: SelectDropdownOption[] = [20, 50, 100];
 
@@ -29,19 +31,24 @@ export const BookingsTablePagination: FC<BookingsTablePaginationProps> = ({
         <div className={styles.pagination}>
             <div className={styles.paginationInfo}>
                 <span>
-                    Page <strong>{pageIndex + 1}</strong> of{' '}
-                    <strong>{Math.max(pageCount, 1)}</strong>
+                    {m.table_page({
+                        page: pageIndex + 1,
+                        pages: Math.max(pageCount, 1),
+                    })}
                 </span>
                 <span>
-                    ({totalRows} total{' '}
-                    {totalRows === 1 ? 'booking' : 'bookings'})
+                    {plural(totalRows, {
+                        one: m.table_total_one({ count: totalRows }),
+                        few: m.table_total_few({ count: totalRows }),
+                        many: m.table_total_many({ count: totalRows }),
+                    })}
                 </span>
                 <div className={styles.pageSizeSelect}>
                     <SelectDropdown
                         options={PAGE_SIZE_OPTIONS}
                         selected={pageSize}
                         onOptionClick={handlePageSizeChange}
-                        placeholder="Page size"
+                        placeholder={m.table_page_size()}
                         highlightSelected
                         triggerClassName={styles.pageSizeTrigger}
                     />
@@ -63,7 +70,7 @@ export const BookingsTablePagination: FC<BookingsTablePaginationProps> = ({
                     onClick={() => table.previousPage()}
                     disabled={!table.getCanPreviousPage()}
                 >
-                    ‹ Prev
+                    {m.table_prev()}
                 </button>
                 <button
                     type="button"
@@ -71,7 +78,7 @@ export const BookingsTablePagination: FC<BookingsTablePaginationProps> = ({
                     onClick={() => table.nextPage()}
                     disabled={!table.getCanNextPage()}
                 >
-                    Next ›
+                    {m.table_next()}
                 </button>
                 <button
                     type="button"

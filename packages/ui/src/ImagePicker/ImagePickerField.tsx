@@ -4,6 +4,7 @@ import { InputField } from '../Input/Input.js';
 import CloseIcon from '../icons/close.svg?react';
 import { createClearClickHandler } from '../utils/eventHandlers.js';
 import { useImagePicker } from './useImagePicker.js';
+import { m } from '../paraglide/messages.js';
 import styles from './ImagePickerField.module.scss';
 
 export type ImagePickerFieldProps = {
@@ -18,19 +19,21 @@ export type ImagePickerFieldProps = {
 
 function ImagePickerField({
     label,
-    placeholder = 'Select an image',
+    placeholder,
     onChange,
     accept,
     disabled = false,
     className,
     id,
 }: ImagePickerFieldProps) {
+    const resolvedPlaceholder = placeholder ?? m.image_select();
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, previewUrl, error, openFilePicker, clear, inputProps } = useImagePicker({
         onChange,
         accept,
         disabled,
+        invalidTypeError: m.image_file(),
     });
 
     const handleClear = createClearClickHandler(clear);
@@ -55,7 +58,7 @@ function ImagePickerField({
                         <img className={styles.preview} src={previewUrl} alt="" aria-hidden />
                     )}
                     <span className={file ? styles.fileName : styles.placeholder}>
-                        {file?.name ?? placeholder}
+                        {file?.name ?? resolvedPlaceholder}
                     </span>
                 </button>
                 {file && !disabled && (
@@ -63,7 +66,7 @@ function ImagePickerField({
                         type="button"
                         className={styles.clearButton}
                         onClick={handleClear}
-                        aria-label="Remove image"
+                        aria-label={m.remove_image()}
                     >
                         <CloseIcon />
                     </button>

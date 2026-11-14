@@ -2,6 +2,7 @@ import { Fragment, useRef, type FC, type ReactNode } from 'react';
 import clsx from 'clsx';
 import { useEnterFieldNavigation } from '#hooks/useEnterFieldNavigation';
 import { useFormWizardTotalSteps } from './FormWizardLayoutContext';
+import { m } from '../../paraglide/messages.js';
 import styles from './FormWizardLayout.module.scss';
 
 type FormWizardLayoutProps = {
@@ -43,7 +44,7 @@ export const FormWizardLayout: FC<FormWizardLayoutProps> = ({
                                     <span className={styles.heroAccentLine} />
                                 </span>
                             ) : (
-                                <div className={styles.progressTrack} role="list" aria-label="Form steps">
+                                <div className={styles.progressTrack} role="list" aria-label={m.wizard_steps()}>
                                     {Array.from({ length: totalSteps }, (_, index) => {
                                         const step = index + 1;
 
@@ -62,13 +63,13 @@ export const FormWizardLayout: FC<FormWizardLayoutProps> = ({
                                                     aria-current={
                                                         step === stepNumber ? 'step' : undefined
                                                     }
-                                                    aria-label={`Step ${step}${
+                                                    aria-label={
                                                         step === stepNumber
-                                                            ? ', current'
+                                                            ? m.wizard_step_current({ step })
                                                             : step < stepNumber
-                                                              ? ', completed'
-                                                              : ''
-                                                    }`}
+                                                              ? m.wizard_step_completed({ step })
+                                                              : m.wizard_step({ step })
+                                                    }
                                                 />
                                             </Fragment>
                                         );

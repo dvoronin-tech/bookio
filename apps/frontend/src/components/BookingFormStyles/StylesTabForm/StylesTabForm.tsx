@@ -1,4 +1,5 @@
-import { COLOR_SECTIONS } from '#components/BookingFormStyles/bookingFormStyles.constants';
+import { colorSections } from '#components/BookingFormStyles/bookingFormStyles.constants';
+import { m } from '../../../paraglide/messages.js';
 import { useBookingFormStyles } from '#components/BookingFormStyles/hooks/useBookingFormStyles';
 import { StyleColorField } from '#components/BookingFormStyles/StyleColorField/StyleColorField';
 import { StyleColorGroup } from '#components/BookingFormStyles/StyleColorGroup/StyleColorGroup';
@@ -17,22 +18,22 @@ export const StylesTabForm: FC = () => {
     return (
         <div className={styles.stylesTabForm}>
             <div className={styles.themesSection}>
-                <span className={styles.themesLabel}>Theme</span>
+                <span className={styles.themesLabel}>{m.styles_theme()}</span>
                 <div className={styles.themesRow}>
                     <ThemeCard
-                        name="Custom"
+                        name={m.theme_custom()}
                         variant="custom"
                         selected={theme}
                         onClick={handleThemeChange}
                     />
                     <ThemeCard
-                        name="Dark"
+                        name={m.theme_dark()}
                         variant="dark"
                         selected={theme}
                         onClick={handleThemeChange}
                     />
                     <ThemeCard
-                        name="Light"
+                        name={m.theme_light()}
                         variant="light"
                         selected={theme}
                         onClick={handleThemeChange}
@@ -41,8 +42,8 @@ export const StylesTabForm: FC = () => {
             </div>
 
             <div className={styles.colorsSection}>
-                <span className={styles.colorsLabel}>Colors</span>
-                {COLOR_SECTIONS.map(({ heading, fields }) => (
+                <span className={styles.colorsLabel}>{m.styles_colors()}</span>
+                {colorSections().map(({ heading, fields }) => (
                     <StyleColorGroup key={heading} heading={heading}>
                         {fields.map(({ key, label }) => (
                             <StyleColorField

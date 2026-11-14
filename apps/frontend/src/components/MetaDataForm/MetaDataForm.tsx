@@ -6,6 +6,7 @@ import { AdditionalMetaField } from './AdditionalMetaField/AdditionalMetaField';
 import { META_PROPERTIES } from './metaProperties';
 
 import styles from './MetaDataForm.module.scss';
+import { m } from '../../paraglide/messages.js';
 
 interface AdditionalMetaRow {
     id: string;
@@ -111,21 +112,21 @@ export const MetaDataForm: FC = memo(() => {
     return (
         <section className={styles.metaDataForm}>
             <Input
-                label="Title"
+                label={m.title()}
                 className={styles.input}
                 value={bookingFormMeta.title}
                 onChange={handleChange}
                 name="title"
             />
             <Input
-                label="Description"
+                label={m.description()}
                 type="textarea"
                 className={styles.textarea}
                 value={bookingFormMeta.description}
                 onChange={handleChange}
                 name="description"
             />
-            <span className={styles.additionalMetaFieldsLabel}>Additional meta fields</span>
+            <span className={styles.additionalMetaFieldsLabel}>{m.meta_additional()}</span>
             <div className={styles.additionalMetaFields}>
                 {additionalMetaRows.map((row) => (
                     <AdditionalMetaField
@@ -145,7 +146,7 @@ export const MetaDataForm: FC = memo(() => {
                 className={styles.addButton}
                 onClick={handleAddAdditionalMetaField}
             >
-                Add meta field
+                {m.meta_add()}
             </Button>
         </section>
     );

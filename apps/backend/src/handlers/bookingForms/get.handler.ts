@@ -1,5 +1,5 @@
 import { createFactory } from 'hono/factory';
-import { zValidator } from '@hono/zod-validator';
+import { validate } from '@/utils/validate.js';
 import { db } from '@/db.js';
 import { prepareError, prepareSuccess } from '@/utils/prepareResponse.js';
 import {
@@ -11,7 +11,7 @@ import {
 const factory = createFactory().createHandlers;
 
 export const getBookingFormsHandler = factory(
-    zValidator('query', getBookingFormsSchema),
+    validate('query', getBookingFormsSchema),
     async (c) => {
         try {
             const { organizationId } = c.req.valid('query');
@@ -23,13 +23,13 @@ export const getBookingFormsHandler = factory(
 
             return c.json(prepareSuccess(forms));
         } catch (error) {
-            return c.json(prepareError('Failed to get booking forms'), 500);
+            return c.json(prepareError('Failed to get booking forms', 'internal'), 500);
         }
     },
 );
 
 export const getBookingFormHandler = factory(
-    zValidator('query', getBookingFormSchema),
+    validate('query', getBookingFormSchema),
     async (c) => {
         try {
             const { bookingFormId } = c.req.valid('query');
@@ -47,18 +47,18 @@ export const getBookingFormHandler = factory(
             });
 
             if (!form) {
-                return c.json(prepareError('Booking form not found'), 404);
+                return c.json(prepareError('Booking form not found', 'not_found'), 404);
             }
 
             return c.json(prepareSuccess(form));
         } catch (error) {
-            return c.json(prepareError('Failed to get booking form'), 500);
+            return c.json(prepareError('Failed to get booking form', 'internal'), 500);
         }
     },
 );
 
 export const getBookingFromBySlugsHandler = factory(
-    zValidator('query', getBookingFormBySlugsSchema),
+    validate('query', getBookingFormBySlugsSchema),
     async (c) => {
         try {
             const { organizationSlug, bookingFormSlug } = c.req.valid('query');
@@ -82,20 +82,14 @@ export const getBookingFromBySlugsHandler = factory(
 
             if (!organization) {
                 return c.json(
-                    prepareError(
-                        'Organization not found',
-                        'ORGANIZATION_NOT_FOUND',
-                    ),
+                    prepareError('Organization not found', 'not_found'),
                     404,
                 );
             }
 
             if (!organization.bookingForms.length) {
                 return c.json(
-                    prepareError(
-                        'Booking form not found',
-                        'BOOKING_FORM_NOT_FOUND',
-                    ),
+                    prepareError('Booking form not found', 'not_found'),
                     404,
                 );
             }
@@ -104,10 +98,7 @@ export const getBookingFromBySlugsHandler = factory(
 
             if (!bookingForm.isActive) {
                 return c.json(
-                    prepareError(
-                        'Booking form is not active',
-                        'BOOKING_FORM_NOT_ACTIVE',
-                    ),
+                    prepareError('Booking form is not active', 'inactive'),
                     404,
                 );
             }
@@ -115,7 +106,7 @@ export const getBookingFromBySlugsHandler = factory(
             return c.json(prepareSuccess(bookingForm));
         } catch (error) {
             return c.json(
-                prepareError('Failed to get booking form by slugs'),
+                prepareError('Failed to get booking form by slugs', 'internal'),
                 500,
             );
         }

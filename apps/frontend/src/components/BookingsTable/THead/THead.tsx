@@ -4,6 +4,7 @@ import type { BookingByIdItem } from '#api/bookings/getBookingsById.ts';
 import { type FC, useEffect } from 'react';
 import clsx from 'clsx';
 import styles from './THead.module.scss';
+import { m } from '../../../paraglide/messages.js';
 
 interface THeadProps {
     table: ReactTable<BookingsTableFeatures, BookingByIdItem>;
@@ -53,7 +54,7 @@ export const THead: FC<THeadProps> = ({ table }) => {
                                     <div
                                         role="separator"
                                         aria-orientation="vertical"
-                                        aria-label="Resize column"
+                                        aria-label={m.table_resize()}
                                         className={clsx(
                                             styles.resizer,
                                             header.column.getIsResizing() &&

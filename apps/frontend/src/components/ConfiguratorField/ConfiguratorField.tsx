@@ -112,7 +112,11 @@ const ConfiguratorGroupItem: FC<ConfiguratorItemProps> = memo(
                             fieldKey={fieldKey}
                             required={required}
                         />
-                        <ConfiguratorFieldActions onEdit={handleEdit} onDelete={handleDelete} />
+                        <ConfiguratorFieldActions
+                            name={name}
+                            onEdit={handleEdit}
+                            onDelete={handleDelete}
+                        />
                     </div>
                 </div>
                 {childFields.length > 0 && <ConfiguratorFieldGroupData childFields={childFields} />}
@@ -139,7 +143,11 @@ const ConfiguratorFieldItem: FC<ConfiguratorItemProps> = memo(
                 <div className={styles.content}>
                     <ConfiguratorFieldTypeBadge type={type} />
                     <ConfiguratorFieldInfo name={name} fieldKey={fieldKey} required={required} />
-                    <ConfiguratorFieldActions onEdit={handleEdit} onDelete={handleDelete} />
+                    <ConfiguratorFieldActions
+                        name={name}
+                        onEdit={handleEdit}
+                        onDelete={handleDelete}
+                    />
                 </div>
             </div>
         );

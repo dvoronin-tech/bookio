@@ -1,4 +1,5 @@
 import type { ComponentType, ReactNode } from 'react';
+import { m } from '../../../paraglide/messages.js';
 
 import SettingsIcon from '#assets/icons/settings.svg?react';
 import FieldsIcon from '#assets/icons/fields.svg?react';
@@ -21,7 +22,7 @@ export type ConfiguratorTabValue = (typeof CONFIGURATOR_TAB_VALUES)[number];
 
 type ConfiguratorTabConfig = {
     value: ConfiguratorTabValue;
-    content: string;
+    content: () => string;
     icon: ReactNode;
     Panel?: ComponentType;
 };
@@ -29,25 +30,25 @@ type ConfiguratorTabConfig = {
 export const configuratorTabs: ConfiguratorTabConfig[] = [
     {
         value: 'settings',
-        content: 'Basic settings',
+        content: () => m.tab_settings(),
         icon: <SettingsIcon />,
         Panel: SettingsTab,
     },
     {
         value: 'fields',
-        content: 'Fields',
+        content: () => m.tab_fields(),
         icon: <FieldsIcon />,
         Panel: FieldsTab,
     },
     {
         value: 'styles',
-        content: 'Styles',
+        content: () => m.tab_styles(),
         icon: <StylesIcon />,
         Panel: StylesTab,
     },
     {
         value: 'meta',
-        content: 'Meta',
+        content: () => m.tab_meta(),
         icon: <MetaIcon />,
         Panel: MetaTab,
     },

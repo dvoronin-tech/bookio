@@ -1,0 +1,22 @@
+{
+    "name": "@bookio/shared",
+    "version": "0.0.0",
+    "private": true,
+    "type": "module",
+    "exports": {
+        "./constants": {
+            "types": "./src/constants.ts",
+            "default": "./src/constants.ts"
+        },
+        "./utils": {
+            "types": "./src/utils/index.ts",
+            "default": "./src/utils/index.ts"
+        }
+    },
+    "scripts": {
+        "typecheck": "tsc --noEmit"
+    },
+    "devDependencies": {
+        "typescript": "^5.8.3"
+    }
+}

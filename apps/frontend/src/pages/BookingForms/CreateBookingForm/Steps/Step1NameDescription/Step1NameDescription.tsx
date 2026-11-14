@@ -15,6 +15,7 @@ import {
     organizationRouteApi,
 } from '#lib/routeApis';
 import styles from './Step1NameDescription.module.scss';
+import { m } from '../../../../../paraglide/messages.js';
 
 export const Step1NameDescription: FC = () => {
     const navigate = useNavigate();
@@ -58,7 +59,7 @@ export const Step1NameDescription: FC = () => {
     };
 
     const handleClickNext = useCallback(() => {
-        if (!data.name) return toast.error('Name is required');
+        if (!data.name) return toast.error(m.step1_name_required());
 
         goToNextStep();
     }, [data.name, goToNextStep]);
@@ -73,8 +74,8 @@ export const Step1NameDescription: FC = () => {
     return (
         <FormWizardLayout
             stepNumber={1}
-            title="Enter name and description of booking form"
-            description="The name must be unique within your organization. The description should explain the purpose of this booking form."
+            title={m.step1_title()}
+            description={m.step1_description()}
             onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
@@ -83,7 +84,9 @@ export const Step1NameDescription: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        {returnsToReview ? 'Back to review' : 'Go to next'}
+                        {returnsToReview
+                            ? m.wizard_back_to_review()
+                            : m.wizard_next()}
                     </Button>
                     {isGuidedFirstForm ? null : (
                         <Button
@@ -91,7 +94,7 @@ export const Step1NameDescription: FC = () => {
                             variant="simple-clean"
                             onClick={handleClose}
                         >
-                            Close
+                            {m.close()}
                         </Button>
                     )}
                 </div>
@@ -100,15 +103,15 @@ export const Step1NameDescription: FC = () => {
             <ValidatableInput
                 value={name}
                 onChange={handleNameChange}
-                placeholder="Name*"
+                placeholder={m.step1_name_placeholder()}
                 isValid={nameIsValid}
-                errorMessage={'Booking form with this name already exists'}
+                errorMessage={m.step1_name_taken()}
                 autoFocus
             />
             <Input
                 value={description}
                 onChange={handleDescriptionChange}
-                placeholder="Description"
+                placeholder={m.step1_description_placeholder()}
             />
         </FormWizardLayout>
     );
