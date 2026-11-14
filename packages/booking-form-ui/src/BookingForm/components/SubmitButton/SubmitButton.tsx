@@ -3,7 +3,7 @@ import { useBookingFormContext } from '../../BookingFormContext.js';
 import styles from './SubmitButton.module.scss';
 
 export function SubmitButton() {
-    const { formState } = useBookingFormContext();
+    const { formState, copy } = useBookingFormContext();
     const isLoading = formState === 'loading' || formState === 'success';
 
     return (
@@ -20,12 +20,12 @@ export function SubmitButton() {
                         <Loader />
                     </div>
                 ) : (
-                    <span className={styles.statusText}>Submit form</span>
+                    <span className={styles.statusText}>{copy.submit}</span>
                 )}
             </Button>
             {formState === 'error' && (
                 <p className={styles.errorNotification}>
-                    Failed to submit form
+                    {copy.submitFailed}
                 </p>
             )}
         </div>

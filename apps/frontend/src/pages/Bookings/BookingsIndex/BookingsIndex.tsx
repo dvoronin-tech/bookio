@@ -5,6 +5,8 @@ import { useGetBookingForms } from '#api/bookingForms/getBookingForms.ts';
 import { organizationRouteApi } from '#lib/routeApis.ts';
 import { BookingFormTile } from './BookingFormTile.tsx';
 import styles from './BookingsIndex.module.scss';
+import { plural } from '#i18n/locale';
+import { m } from '#i18n/messages';
 
 export const BookingsIndex: FC = () => {
     const navigate = useNavigate();
@@ -36,10 +38,10 @@ export const BookingsIndex: FC = () => {
     if (error) {
         return (
             <div className={styles.state}>
-                <h2>Failed to load booking forms</h2>
+                <h2>{m.bookings_forms_failed()}</h2>
                 <p>{error.message}</p>
                 <Button variant="primary-outlined" onClick={handleRetry}>
-                    Retry
+                    {m.retry()}
                 </Button>
             </div>
         );
@@ -48,8 +50,8 @@ export const BookingsIndex: FC = () => {
     if (bookingForms.length === 0) {
         return (
             <div className={styles.state}>
-                <h2>No booking forms yet</h2>
-                <p>Create a booking form to start collecting bookings.</p>
+                <h2>{m.forms_empty()}</h2>
+                <p>{m.bookings_no_forms_description()}</p>
                 <Button
                     variant="primary-filled"
                     className={styles.stateButton}
@@ -60,31 +62,39 @@ export const BookingsIndex: FC = () => {
                         })
                     }
                 >
-                    Create your first booking form
+                    {m.bookings_create_first()}
                 </Button>
             </div>
         );
     }
 
-    const bookingsLabel = totalBookings === 1 ? 'booking' : 'bookings';
-    const formsLabel = bookingForms.length === 1 ? 'form' : 'forms';
+    const formsLabel = plural(bookingForms.length, {
+        one: m.forms_count_one({ count: bookingForms.length }),
+        few: m.forms_count_few({ count: bookingForms.length }),
+        many: m.forms_count_many({ count: bookingForms.length }),
+    });
+    const bookingsLabel = plural(totalBookings, {
+        one: m.bookings_count_one({ count: totalBookings }),
+        few: m.bookings_count_few({ count: totalBookings }),
+        many: m.bookings_count_many({ count: totalBookings }),
+    });
 
     return (
         <div className={styles.page}>
             <div className={styles.header}>
-                <h2 className={styles.pageTitle}>Bookings</h2>
+                <h2 className={styles.pageTitle}>{m.bookings_title()}</h2>
                 <div className={styles.metaChips}>
                     <Button
                         variant="simple-filled"
                         className={styles.chipButton}
                     >
-                        {bookingForms.length} {formsLabel}
+                        {formsLabel}
                     </Button>
                     <Button
                         variant="simple-filled"
                         className={styles.chipButton}
                     >
-                        {totalBookings} {bookingsLabel}
+                        {bookingsLabel}
                     </Button>
                 </div>
             </div>

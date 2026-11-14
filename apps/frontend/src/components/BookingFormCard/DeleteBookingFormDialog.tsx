@@ -12,6 +12,7 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { getFirstFieldError } from '#utils/formErrors';
 import { useDebounce } from 'use-debounce';
+import { m } from '#i18n/messages';
 
 const deleteBookingFormSchema = z.object({
     name: z.string().min(1).max(255),
@@ -47,7 +48,7 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
         const onSubmit = useCallback(
             async (data: DeleteBookingFormFormData) => {
                 if (data.name.trim() !== bookingForm.name.trim()) {
-                    toast.error('Booking form name does not match');
+                    toast.error(m.forms_delete_name_mismatch());
                     return;
                 }
 
@@ -58,9 +59,9 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
                         organizationPassword: data.organizationPassword,
                     }),
                     {
-                        loading: `Deleting ${bookingForm.name}`,
-                        success: `Deleted ${bookingForm.name}`,
-                        error: `Failed to delete ${bookingForm.name}`,
+                        loading: m.forms_deleting({ name: bookingForm.name }),
+                        success: m.forms_deleted({ name: bookingForm.name }),
+                        error: m.forms_delete_failed({ name: bookingForm.name }),
                     },
                 );
 
@@ -70,7 +71,7 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
         );
 
         const onInvalid = useCallback((errors: FieldErrors<DeleteBookingFormFormData>) => {
-            toast.error(getFirstFieldError(errors) ?? 'Invalid form data');
+            toast.error(getFirstFieldError(errors) ?? m.invalid_form_data());
         }, []);
 
         const name = useWatch({ control, name: 'name' });
@@ -90,13 +91,12 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
 
         return (
             <Dialog open={open} onOpenChange={onOpenChange}>
-                <Dialog.Title>Delete Booking Form</Dialog.Title>
+                <Dialog.Title>{m.forms_delete_title()}</Dialog.Title>
                 <Dialog.Description>
-                    Are you sure you want to delete this booking form?
+                    {m.forms_delete_question()}
                 </Dialog.Description>
                 <Dialog.Description>
-                    If you really want to delete this booking form, please enter the booking form
-                    name, your organization password, and click on the delete button.
+                    {m.forms_delete_instructions()}
                 </Dialog.Description>
                 <form
                     onSubmit={handleSubmit(onSubmit, onInvalid)}
@@ -105,26 +105,26 @@ export const DeleteBookingFormDialog: FC<DeleteBookingFormDialogProps> = memo(
                     <div className={styles.inputsGroup}>
                         <ValidatableInput
                             {...register('name')}
-                            placeholder="Enter the name of the booking form"
+                            placeholder={m.forms_delete_name_placeholder()}
                             isValid={isNameMatching}
                             errorMessage={
                                 isNameMatching === false
-                                    ? 'Booking form name does not match'
+                                    ? m.forms_delete_name_mismatch()
                                     : undefined
                             }
                         />
                         <ValidatableInput
                             {...register('organizationPassword')}
                             type="password"
-                            placeholder="Enter organization password"
+                            placeholder={m.org_password_confirm_placeholder()}
                         />
                     </div>
                     <div className={styles.buttonsGroup}>
                         <Button variant="simple-clean" onClick={() => onOpenChange(false)}>
-                            Cancel
+                            {m.cancel()}
                         </Button>
                         <Button type="submit" variant="red-clean" disabled={!canDelete}>
-                            Delete
+                            {m.delete()}
                         </Button>
                     </div>
                 </form>

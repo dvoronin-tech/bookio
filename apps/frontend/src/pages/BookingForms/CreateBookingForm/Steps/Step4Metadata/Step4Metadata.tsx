@@ -6,6 +6,7 @@ import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.
 import { step4Schema } from '../../schemas/createBookingFormDraft.schema.ts';
 import toast from 'react-hot-toast';
 import styles from './Step4Metadata.module.scss';
+import { m } from '#i18n/messages';
 
 export const Step4Metadata: FC = () => {
     const {
@@ -47,7 +48,7 @@ export const Step4Metadata: FC = () => {
         const parsed = step4Schema.safeParse(trimmed);
         if (!parsed.success) {
             return toast.error(
-                parsed.error.issues[0]?.message ?? 'Invalid metadata',
+                parsed.error.issues[0]?.message ?? m.step4_invalid(),
             );
         }
 
@@ -59,8 +60,8 @@ export const Step4Metadata: FC = () => {
     return (
         <FormWizardLayout
             stepNumber={4}
-            title="Set page metadata"
-            description="Title and description are required for SEO and social previews."
+            title={m.step4_title()}
+            description={m.step4_description()}
             onEnterComplete={handleClickNext}
             footer={
                 <div className={styles.footerActions}>
@@ -69,30 +70,30 @@ export const Step4Metadata: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        Go to next
+                        {m.wizard_next()}
                     </Button>
                     <Button
                         type="button"
                         variant="simple-clean"
                         onClick={goToPreviousStep}
                     >
-                        Back
+                        {m.back()}
                     </Button>
                 </div>
             }
         >
             <Input
-                label="Title"
+                label={m.title()}
                 value={metaTitle}
                 onChange={handleMetaTitleChange}
-                placeholder="Title*"
+                placeholder={m.step4_title_placeholder()}
                 autoFocus
             />
             <Input
-                label="Description"
+                label={m.description()}
                 value={metaDescription}
                 onChange={handleMetaDescriptionChange}
-                placeholder="Description*"
+                placeholder={m.step4_description_placeholder()}
             />
         </FormWizardLayout>
     );

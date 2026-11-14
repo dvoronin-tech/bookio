@@ -5,6 +5,7 @@ import { useGetBookingsById } from '#api/bookings/getBookingsById.ts';
 import { Button, PageLoader } from '@bookio/ui';
 import { bookingsRouteApi } from '#lib/routeApis.ts';
 import { BookingAsideBar } from '#components/AsideBar/BookingAsideBar.tsx';
+import { m } from '#i18n/messages';
 
 export const Bookings: FC = () => {
     return (
@@ -32,13 +33,13 @@ const TableContent = () => {
     if (error)
         return (
             <div className={styles.errorContainer}>
-                <h2>Failed to load bookings</h2>
+                <h2>{m.bookings_failed()}</h2>
                 <p>{error.message}</p>
                 <Button
                     variant="primary-outlined"
                     onClick={() => void refetch()}
                 >
-                    Retry
+                    {m.retry()}
                 </Button>
             </div>
         );
@@ -46,11 +47,8 @@ const TableContent = () => {
     if (!data.length)
         return (
             <div className={styles.emptyContainer}>
-                <h2>No bookings yet</h2>
-                <p>
-                    When customers submit your booking forms, their appointments
-                    will appear here.
-                </p>
+                <h2>{m.bookings_empty_title()}</h2>
+                <p>{m.bookings_empty_description()}</p>
             </div>
         );
     return <BookingsTable data={data} />;

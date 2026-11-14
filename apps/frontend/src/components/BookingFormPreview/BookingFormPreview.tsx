@@ -10,6 +10,8 @@ import {
 } from '#utils/defaultBookingFormStyles';
 import scssStyles from './BookingFormPreview.module.scss';
 import { toBookingFormSettings } from '#utils/dataPreparers/bookingFormPreparers.ts';
+import { buildBookingFormCopy } from '#i18n/bookingFormCopy';
+import { m } from '#i18n/messages';
 
 const toPreviewCssVars = (colors: BookingFormStyles): CSSProperties =>
     ({
@@ -52,7 +54,7 @@ export const BookingFormPreview: FC = () => {
     ]);
 
     const handlePreviewSuccess = useCallback(() => {
-        toast.success('Form submitted successfully');
+        toast.success(m.preview_submitted());
     }, []);
 
     if (!data?.settings || !data?.fields || !data?.styles) {
@@ -81,6 +83,7 @@ export const BookingFormPreview: FC = () => {
         >
             <BookingForm
                 isPreview
+                copy={buildBookingFormCopy()}
                 bookingFormData={{
                     ...settings,
                     fields,

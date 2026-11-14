@@ -5,6 +5,7 @@ import Checkbox from '../Checkbox/Checkbox.js';
 import Dropdown from '../Dropdown/Dropdown.js';
 import Input from '../Input/Input.js';
 import { ArrowIcon } from './icons/ArrowIcon.js';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import styles from './SelectDropdown.module.scss';
 
 export type SelectDropdownOption = string | number;
@@ -38,8 +39,6 @@ type SelectDropdownMultipleProps = SelectDropdownBaseProps & {
 export type SelectDropdownProps =
     SelectDropdownSingleProps | SelectDropdownMultipleProps;
 
-const defaultFormatSelectedCount = (count: number) => `${count} selected`;
-
 function assertUniqueOptions(options: SelectDropdownOption[]) {
     const seen = new Set<string>();
 
@@ -59,9 +58,9 @@ function SelectDropdown(props: SelectDropdownProps) {
         label,
         options,
         onOptionClick,
-        placeholder = 'Select...',
-        searchPlaceholder = 'Search...',
-        emptyOptionsText = 'No options found',
+        placeholder,
+        searchPlaceholder,
+        emptyOptionsText,
         placement,
         triggerClassName,
         withSearch = false,
@@ -69,6 +68,11 @@ function SelectDropdown(props: SelectDropdownProps) {
         disabled = false,
         scrollSelectedIntoView: scrollIntoView = false,
     } = props;
+
+    const copy = useUiCopy();
+    const resolvedPlaceholder = placeholder ?? copy.selectPlaceholder;
+    const resolvedSearchPlaceholder = searchPlaceholder ?? copy.searchPlaceholder;
+    const resolvedEmptyOptionsText = emptyOptionsText ?? copy.emptyOptions;
 
     assertUniqueOptions(options);
 
@@ -86,7 +90,7 @@ function SelectDropdown(props: SelectDropdownProps) {
     }, [props.multiple, props.selected]);
 
     const triggerText = useMemo(() => {
-        if (selectedKeys.size === 0) return placeholder;
+        if (selectedKeys.size === 0) return resolvedPlaceholder;
         if (selectedKeys.size === 1) {
             const [onlySelected] = selectedKeys;
             return onlySelected;
@@ -95,10 +99,8 @@ function SelectDropdown(props: SelectDropdownProps) {
         const formatSelectedCount =
             props.multiple === true ? props.formatSelectedCount : undefined;
 
-        return (formatSelectedCount ?? defaultFormatSelectedCount)(
-            selectedKeys.size,
-        );
-    }, [selectedKeys, placeholder, props]);
+        return (formatSelectedCount ?? copy.selectedCount)(selectedKeys.size);
+    }, [selectedKeys, resolvedPlaceholder, props, copy.selectedCount]);
 
     const filteredOptions = useMemo(() => {
         if (!withSearch) return options;
@@ -167,7 +169,7 @@ function SelectDropdown(props: SelectDropdownProps) {
                     {withSearch && (
                         <div className={styles.dropdownSearch}>
                             <Input
-                                placeholder={searchPlaceholder}
+                                placeholder={resolvedSearchPlaceholder}
                                 value={searchQuery}
                                 onChange={handleSearchChange}
                                 className={styles.dropdownSearchInput}
@@ -178,7 +180,7 @@ function SelectDropdown(props: SelectDropdownProps) {
                     <div className={styles.dropdownOptions}>
                         {filteredOptions.length === 0 ? (
                             <p className={styles.dropdownEmpty}>
-                                {emptyOptionsText}
+                                {resolvedEmptyOptionsText}
                             </p>
                         ) : (
                             filteredOptions.map((option) => {

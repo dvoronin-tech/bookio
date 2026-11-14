@@ -6,6 +6,7 @@ import { createClearClickHandler, createOpenOnKeyDownHandler } from '../utils/ev
 import { formatFileSize, getFileExtension } from '../utils/fileUtils.js';
 import ImageIcon from './icons/image.svg?react';
 import { useImagePicker } from './useImagePicker.js';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import styles from './ImageDropField.module.scss';
 
 export type ImageDropFieldProps = {
@@ -26,17 +27,24 @@ type ImageDimensions = {
 
 function ImageDropField({
     label,
-    placeholder = 'Drag & drop an image here, or click to browse',
+    placeholder,
     onChange,
     accept,
     disabled = false,
     className,
     id,
 }: ImageDropFieldProps) {
+    const copy = useUiCopy();
+    const resolvedPlaceholder = placeholder ?? copy.imageDropPlaceholder;
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, previewUrl, isDragging, error, openFilePicker, clear, inputProps, dropProps } =
-        useImagePicker({ onChange, accept, disabled });
+        useImagePicker({
+            onChange,
+            accept,
+            disabled,
+            invalidTypeError: copy.imageFileError,
+        });
     const [dimensions, setDimensions] = useState<ImageDimensions | null>(null);
     const currentDimensions = dimensions?.url === previewUrl ? dimensions : null;
 
@@ -99,7 +107,7 @@ function ImageDropField({
                                 type="button"
                                 className={styles.clearButton}
                                 onClick={handleClear}
-                                aria-label="Remove image"
+                                aria-label={copy.removeImage}
                             >
                                 <CloseIcon />
                             </button>
@@ -108,7 +116,7 @@ function ImageDropField({
                 ) : (
                     <div className={styles.placeholder}>
                         <ImageIcon className={styles.placeholderIcon} aria-hidden />
-                        <span className={styles.placeholderText}>{placeholder}</span>
+                        <span className={styles.placeholderText}>{resolvedPlaceholder}</span>
                     </div>
                 )}
             </div>

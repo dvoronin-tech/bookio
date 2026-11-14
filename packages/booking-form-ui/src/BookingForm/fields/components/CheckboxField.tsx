@@ -11,7 +11,7 @@ import styles from '../Fields.module.scss';
 export const CheckboxField: FC<FieldRendererProps<'checkbox'>> = ({
     field,
 }) => {
-    const { formState, register, control, markRequiredFields } = useBookingFormContext();
+    const { formState, register, control, markRequiredFields, copy } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { helpText } = field.params;
     const { errorMessage } = useFieldError(control, field.key);
@@ -23,7 +23,7 @@ export const CheckboxField: FC<FieldRendererProps<'checkbox'>> = ({
             <Checkbox
                 label={label}
                 {...register(field.key, {
-                    required: getRequiredRule(field),
+                    required: getRequiredRule(field, copy.required(field.name)),
                 })}
                 disabled={disabled}
             />

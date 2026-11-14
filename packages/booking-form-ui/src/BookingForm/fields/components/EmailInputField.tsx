@@ -10,7 +10,7 @@ import styles from '../Fields.module.scss';
 const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export const EmailInputField: FC<FieldRendererProps<'email'>> = ({ field }) => {
-    const { formState, register, control, markRequiredFields } = useBookingFormContext();
+    const { formState, register, control, markRequiredFields, copy } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { hasError, errorMessage } = useFieldError(control, field.key);
     const label = formatLabel(markRequiredFields, field.name, field.required);
@@ -26,10 +26,10 @@ export const EmailInputField: FC<FieldRendererProps<'email'>> = ({ field }) => {
             errorMessage={errorMessage}
             useConfirmationColor={false}
             {...register(field.key, {
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, copy.required(field.name)),
                 pattern: {
                     value: EMAIL_PATTERN,
-                    message: 'Enter a valid email address',
+                    message: copy.invalidEmail,
                 },
             })}
             disabled={disabled}

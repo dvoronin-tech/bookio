@@ -9,7 +9,7 @@ import { formatLabel } from '../../utils/formatLabel.js';
 import styles from '../Fields.module.scss';
 
 export const RadioField: FC<FieldRendererProps<'radio'>> = ({ field }) => {
-    const { formState, register, control, markRequiredFields } = useBookingFormContext();
+    const { formState, register, control, markRequiredFields, copy } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { errorMessage } = useFieldError(control, field.key);
     const label = formatLabel(markRequiredFields, field.name, field.required);
@@ -18,7 +18,7 @@ export const RadioField: FC<FieldRendererProps<'radio'>> = ({ field }) => {
         <div className={styles.fieldStack}>
             <Radio
                 {...register(field.key, {
-                    required: getRequiredRule(field),
+                    required: getRequiredRule(field, copy.required(field.name)),
                 })}
                 disabled={disabled}
             >

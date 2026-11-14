@@ -15,6 +15,7 @@ import { THead } from '#components/BookingsTable/THead/THead.tsx';
 import { TBody } from '#components/BookingsTable/TBody/TBody.tsx';
 import { BookingsTablePagination } from '#components/BookingsTable/BookingsTablePagination/BookingsTablePagination.tsx';
 import { SimpleCell } from '#components/BookingsTable/components/SimpleCell.tsx';
+import { m } from '#i18n/messages';
 
 interface BookingsTableProps {
     data: BookingByIdItem[];
@@ -55,20 +56,20 @@ export const BookingsTable: FC<BookingsTableProps> = ({ data }) => {
         () =>
             createColumn.columns([
                 createColumn.accessor('id', {
-                    header: 'Booking Id',
+                    header: m.table_booking_id(),
                     cell: ({ getValue }) => (
                         <BookingId bookingId={getValue()} />
                     ),
                 }),
                 createColumn.accessor('status', {
-                    header: 'Status',
+                    header: m.table_status(),
                     size: 200,
                     cell: ({ getValue }) => (
                         <BookingStatus status={getValue()} />
                     ),
                 }),
                 createColumn.accessor('createdAt', {
-                    header: 'Created at',
+                    header: m.table_created_at(),
                     size: 200,
                     cell: ({ getValue }) => (
                         <SimpleCell data={formatBookingDate(getValue())} />

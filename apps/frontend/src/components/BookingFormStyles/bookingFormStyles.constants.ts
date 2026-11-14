@@ -4,28 +4,29 @@ import {
     DEFAULT_LIGHT_BOOKING_FORM_STYLES,
     type BookingFormStyles,
 } from '#utils/defaultBookingFormStyles';
+import { m } from '#i18n/messages';
 
-export const COLOR_SECTIONS = [
+export const colorSections = () => [
     {
-        heading: 'Accent',
-        fields: [{ key: 'primary', label: 'Primary' }],
+        heading: m.styles_accent(),
+        fields: [{ key: 'primary' as const, label: m.color_primary() }],
     },
     {
-        heading: 'Surfaces',
+        heading: m.styles_surfaces(),
         fields: [
-            { key: 'bgMain', label: 'Background' },
-            { key: 'bgSecondary', label: 'Surface' },
-            { key: 'borderColor', label: 'Border' },
+            { key: 'bgMain' as const, label: m.styles_background() },
+            { key: 'bgSecondary' as const, label: m.styles_surface() },
+            { key: 'borderColor' as const, label: m.color_border() },
         ],
     },
     {
-        heading: 'Text',
+        heading: m.styles_text(),
         fields: [
-            { key: 'textMain', label: 'Primary text' },
-            { key: 'textSecondary', label: 'Secondary text' },
+            { key: 'textMain' as const, label: m.styles_primary_text() },
+            { key: 'textSecondary' as const, label: m.styles_secondary_text() },
         ],
     },
-] as const;
+];
 
 export const THEMES: Record<Exclude<ThemeVariant, 'custom'>, BookingFormStyles> = {
     dark: DEFAULT_DARK_BOOKING_FORM_STYLES,

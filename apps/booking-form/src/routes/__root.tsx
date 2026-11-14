@@ -2,6 +2,9 @@ import { HeadContent, Scripts, createRootRoute } from '@tanstack/react-router';
 import { QueryClientProvider } from '@tanstack/react-query';
 import { queryClient } from '@lib/query-client';
 import { NotFoundPage } from '#/pages/Errors/NotFoundPage/NotFoundPage';
+import { AppLocale } from '#/i18n/AppLocale';
+import { LanguageSwitch } from '#/components/LanguageSwitch/LanguageSwitch';
+import { getLocale, getTextDirection, m } from '#/i18n/messages';
 
 import appCss from '../styles.css?url';
 
@@ -16,7 +19,7 @@ export const Route = createRootRoute({
                 content: 'width=device-width, initial-scale=1',
             },
             {
-                title: 'TanStack Start Starter',
+                title: m.app_name(),
             },
         ],
         links: [
@@ -36,12 +39,17 @@ export const Route = createRootRoute({
 
 function RootDocument({ children }: { children: React.ReactNode }) {
     return (
-        <html lang="en" suppressHydrationWarning>
+        <html lang={getLocale()} dir={getTextDirection()} suppressHydrationWarning>
             <head>
                 <HeadContent />
             </head>
             <body className="font-sans antialiased [overflow-wrap:anywhere] selection:bg-[rgba(79,184,178,0.24)]">
-                <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+                <QueryClientProvider client={queryClient}>
+                    <AppLocale>
+                        <LanguageSwitch />
+                        {children}
+                    </AppLocale>
+                </QueryClientProvider>
                 <Scripts />
             </body>
         </html>

@@ -2,6 +2,7 @@ import { clsx } from 'clsx';
 import type { FC } from 'react';
 
 import styles from './RequiredRow.module.scss';
+import { m } from '#i18n/messages';
 
 interface RequiredRowProps {
     checked?: boolean;
@@ -19,13 +20,13 @@ export const RequiredRow: FC<RequiredRowProps> = ({
             type="button"
             role="switch"
             aria-checked={checked}
-            aria-label="Required"
+            aria-label={m.required()}
             className={clsx(styles.requiredRow, className)}
             onClick={() => onCheckedChange?.(!checked)}
         >
             <div className={styles.text}>
-                <span className={styles.title}>Required</span>
-                <span className={styles.hint}>Guest must fill this field</span>
+                <span className={styles.title}>{m.required()}</span>
+                <span className={styles.hint}>{m.required_hint()}</span>
             </div>
             <span className={clsx(styles.toggle, checked && styles.toggleChecked)} aria-hidden="true">
                 <span className={styles.knob} />

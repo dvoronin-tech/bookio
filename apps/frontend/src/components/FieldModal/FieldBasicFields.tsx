@@ -11,16 +11,11 @@ import {
     type FieldModalFormValues,
 } from '@bookio/backend/schemas';
 import { useBookingFormConfiguratorStore } from '#store/useBookingFormConfiguratorStore';
+import { m } from '#i18n/messages';
 
 interface FieldBasicFieldsProps {
     fieldId?: string | null;
 }
-
-// Field keys can't contain spaces (fieldKeySchema), so this sentinel never collides
-const NO_GROUP_OPTION = 'No group';
-const KEY_HELP_TEXT =
-    "The key is used to identify the field in the booking form. It must be unique within the booking form. You won't be able to change that name in the future";
-const KEY_HELP_TEXT_ON_EDIT = 'You cant change that param';
 
 export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
     const { register, setValue, control } =
@@ -31,30 +26,31 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
     const bookingFormFields = useBookingFormConfiguratorStore(
         (s) => s.bookingFormFields,
     );
+    const noGroupOption = m.field_no_group();
 
     const groupOptions = useMemo(
         () => [
-            NO_GROUP_OPTION,
+            noGroupOption,
             ...(bookingFormFields?.fields
                 .filter((field) => field.type === 'group')
                 .map((field) => field.key) ?? []),
         ],
-        [bookingFormFields],
+        [bookingFormFields, noGroupOption],
     );
 
     const selectedGroup = useMemo(() => {
-        if (!watchedParentId) return NO_GROUP_OPTION;
+        if (!watchedParentId) return noGroupOption;
 
         return (
             bookingFormFields?.fields.find(
                 (field) => field.id === watchedParentId,
-            )?.key ?? NO_GROUP_OPTION
+            )?.key ?? noGroupOption
         );
-    }, [bookingFormFields, watchedParentId]);
+    }, [bookingFormFields, watchedParentId, noGroupOption]);
 
     const onSelectGroup = useCallback(
         (option: SelectDropdownOption) => {
-            if (option === NO_GROUP_OPTION) {
+            if (option === noGroupOption) {
                 setValue('parentId', '');
                 return;
             }
@@ -64,7 +60,7 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
             );
             setValue('parentId', group?.id ?? '');
         },
-        [bookingFormFields, setValue],
+        [bookingFormFields, noGroupOption, setValue],
     );
 
     const { isKeyValid, keyErrorMessage } = useMemo(() => {
@@ -77,7 +73,7 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
             return {
                 isKeyValid: false,
                 keyErrorMessage:
-                    formatResult.error.issues[0]?.message ?? 'Invalid key',
+                    formatResult.error.issues[0]?.message ?? m.field_key_invalid(),
             };
         }
 
@@ -88,7 +84,7 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
         if (conflictingField) {
             return {
                 isKeyValid: false,
-                keyErrorMessage: 'Key must be unique',
+                keyErrorMessage: m.field_key_unique(),
             };
         }
 
@@ -107,24 +103,24 @@ export const FieldBasicFields: FC<FieldBasicFieldsProps> = ({ fieldId }) => {
 
     return (
         <>
-            <Input label="Label*" {...register('name')} />
+            <Input label={m.field_label()} {...register('name')} />
             <ValidatableInput
-                label="Key*"
+                label={m.field_key()}
                 {...register('key')}
                 disabled={!!fieldId}
                 isValid={isKeyValid}
                 errorMessage={keyErrorMessage}
-                helpText={fieldId ? KEY_HELP_TEXT_ON_EDIT : KEY_HELP_TEXT}
+                helpText={fieldId ? m.field_key_help_edit() : m.field_key_help()}
             />
             {watchedType !== 'group' && (
                 <SelectDropdown
                     options={groupOptions}
                     selected={selectedGroup}
                     onOptionClick={onSelectGroup}
-                    searchPlaceholder="Search group"
-                    placeholder="No group selected"
-                    emptyOptionsText="No groups found"
-                    label="Group"
+                    searchPlaceholder={m.field_search_group()}
+                    placeholder={m.field_no_group_placeholder()}
+                    emptyOptionsText={m.field_no_groups()}
+                    label={m.field_group()}
                     withSearch
                 />
             )}

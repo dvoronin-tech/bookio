@@ -19,12 +19,7 @@ import {
 import { useUpdateBookingFormStyles } from '#api/bookingForms/bookingFormStyles/updateBookingFormStyles.ts';
 import { useUpdateBookingFormMeta } from '#api/bookingForms/bookingFormMeta/updateBookingFormMeta.ts';
 import styles from './ConfiguratorLayout.module.scss';
-
-const NO_CHANGES_MESSAGE = 'No changes to save';
-const ACTIVE_WITHOUT_FIELDS_MESSAGE = "A booking form without fields can't be active";
-const META_TITLE_AND_DESCRIPTION_MESSAGE = 'Meta title and description are required';
-const META_TITLE_MESSAGE = 'Meta title is required';
-const META_DESCRIPTION_MESSAGE = 'Meta description is required';
+import { m } from '#i18n/messages';
 
 export const ConfiguratorFooter: FC = memo(() => {
     const { bookingFormId, organizationId } = configuratorRouteApi.useParams();
@@ -205,15 +200,13 @@ export const ConfiguratorFooter: FC = memo(() => {
         );
 
         void toast.promise(savePromises, {
-            loading: 'Saving booking form...',
+            loading: m.save_loading(),
             success: () => {
                 handleNavigateToBookingForms();
-                return 'Booking form saved successfully';
+                return m.save_success();
             },
             error: (err) =>
-                err instanceof Error
-                    ? err.message
-                    : 'Failed to save booking form',
+                err instanceof Error ? err.message : m.save_failed(),
         });
     }, [
         saveRequestThunks,
@@ -239,20 +232,20 @@ export const ConfiguratorFooter: FC = memo(() => {
 
     const missingMetaMessage = isMetaTitleMissing
         ? isMetaDescriptionMissing
-            ? META_TITLE_AND_DESCRIPTION_MESSAGE
-            : META_TITLE_MESSAGE
+            ? m.save_meta_both()
+            : m.save_meta_title()
         : isMetaDescriptionMissing
-          ? META_DESCRIPTION_MESSAGE
+          ? m.save_meta_description()
           : null;
 
     const saveDisabledReason = isSaving
         ? null
         : isActiveWithoutFields
-          ? ACTIVE_WITHOUT_FIELDS_MESSAGE
+          ? m.save_active_without_fields()
           : missingMetaMessage
             ? missingMetaMessage
             : !hasSomethingToSave
-              ? NO_CHANGES_MESSAGE
+              ? m.save_no_changes()
               : null;
 
     return (
@@ -262,7 +255,7 @@ export const ConfiguratorFooter: FC = memo(() => {
                 variant="simple-clean"
                 onClick={handleNavigateToBookingForms}
             >
-                Back
+                {m.back()}
             </Button>
             <Tooltip message={saveDisabledReason} className={styles.saveButtonWrap}>
                 <Button
@@ -271,7 +264,7 @@ export const ConfiguratorFooter: FC = memo(() => {
                     onClick={handleSave}
                     disabled={Boolean(saveDisabledReason) || isSaving}
                 >
-                    {isSaving ? 'Saving…' : 'Save booking form'}
+                    {isSaving ? m.save_saving() : m.save_button()}
                 </Button>
             </Tooltip>
         </div>

@@ -6,6 +6,7 @@ import PlusIcon from '#assets/icons/plus.svg?react';
 import { createEmptyOption } from '../../../utils/fieldModalParams';
 import { OptionItem } from './OptionItem';
 import styles from '../../ParamFields.module.scss';
+import { m } from '#i18n/messages';
 
 interface ChoiceOptionsFieldProps {
     label: string;
@@ -40,7 +41,7 @@ export const ChoiceOptionsField: FC<ChoiceOptionsFieldProps> = ({ label }) => {
 
             <div className={styles.optionsPanel}>
                 {fields.length === 0 ? (
-                    <p className={styles.optionsEmpty}>No options yet. Add the first one below.</p>
+                    <p className={styles.optionsEmpty}>{m.options_empty()}</p>
                 ) : (
                     <div className={styles.optionsList}>
                         {fields.map((field, index) => (
@@ -59,7 +60,7 @@ export const ChoiceOptionsField: FC<ChoiceOptionsFieldProps> = ({ label }) => {
                     onClick={handleAddOption}
                 >
                     <PlusIcon />
-                    Add option
+                    {m.options_add()}
                 </Button>
             </div>
         </div>

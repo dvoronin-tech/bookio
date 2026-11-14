@@ -3,6 +3,7 @@ import { Input as BaseInput, InputField } from '../Input/Input.js';
 import Tooltip from '../Tooltip/Tooltip.js';
 import WarningIcon from './icons/warning.svg?react';
 import styles from './ValidatableInput.module.scss';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import {
     useValidatableInput,
     type NativeValidatableInputProps,
@@ -13,12 +14,14 @@ import {
 export type { ValidatableInputProps };
 
 function ErrorHint({ message }: { message?: string }) {
+    const copy = useUiCopy();
+
     return (
         <Tooltip
             message={message}
             className={styles.warningTrigger}
             tabIndex={message ? 0 : undefined}
-            aria-label={message ?? 'Validation error'}
+            aria-label={message ?? copy.validationError}
         >
             <WarningIcon className={styles.warningIcon} aria-hidden />
         </Tooltip>

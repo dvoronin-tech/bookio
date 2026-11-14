@@ -1,6 +1,7 @@
 import type { FC } from 'react';
 
 import styles from './ConfiguratorField.module.scss';
+import { m } from '#i18n/messages';
 
 interface ConfiguratorFieldInfoProps {
     name: string;
@@ -17,7 +18,7 @@ export const ConfiguratorFieldInfo: FC<ConfiguratorFieldInfoProps> = ({
         <div className={styles.info}>
             <div className={styles.nameRow}>
                 <span className={styles.name}>{name}</span>
-                {required ? <span className={styles.requiredDot} aria-label="Required" /> : null}
+                {required ? <span className={styles.requiredDot} aria-label={m.required()} /> : null}
             </div>
             <span className={styles.fieldKey}>{fieldKey}</span>
         </div>

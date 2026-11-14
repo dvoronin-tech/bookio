@@ -11,7 +11,7 @@ import styles from '../Fields.module.scss';
 export const TextAreaField: FC<FieldRendererProps<'textarea'>> = ({
     field,
 }) => {
-    const { formState, register, control, markRequiredFields } = useBookingFormContext();
+    const { formState, register, control, markRequiredFields, copy } = useBookingFormContext();
     const disabled = formState === 'loading';
     const { hasError, errorMessage } = useFieldError(control, field.key);
     const label = formatLabel(markRequiredFields, field.name, field.required);
@@ -28,7 +28,7 @@ export const TextAreaField: FC<FieldRendererProps<'textarea'>> = ({
             errorMessage={errorMessage}
             useConfirmationColor={false}
             {...register(field.key, {
-                required: getRequiredRule(field),
+                required: getRequiredRule(field, copy.required(field.name)),
             })}
             disabled={disabled}
         />

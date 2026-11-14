@@ -5,6 +5,8 @@ import { ChoiceChip } from '#components/ChoiceChip/ChoiceChip';
 import { fieldTypeIcons } from '#components/ConfiguratorField/fieldTypeIcons';
 import type { SyncBookingFormFieldItem } from '#utils/dataPreparers/bookingFormPreparers';
 import styles from './FieldTypeSelector.module.scss';
+import { fieldTypeLabel } from '#i18n/fieldTypeLabel';
+import { m } from '#i18n/messages';
 
 export const FieldTypeSelector: FC = () => {
     const { control, setValue } = useFormContext<FieldModalFormValues>();
@@ -12,7 +14,7 @@ export const FieldTypeSelector: FC = () => {
 
     return (
         <div className={styles.fieldTypesWrapper}>
-            <span className={styles.fieldTypesLabel}>Field type*</span>
+            <span className={styles.fieldTypesLabel}>{m.field_type()}</span>
             <div className={styles.fieldTypes}>
                 {(Object.keys(fieldTypeIcons) as Array<SyncBookingFormFieldItem['type']>)
                     .filter((typeOption): typeOption is SyncBookingFormFieldItem['type'] => {
@@ -33,7 +35,7 @@ export const FieldTypeSelector: FC = () => {
                                 onClick={handleSelectFieldType}
                                 active={typeOption === type}
                             >
-                                {typeOption.charAt(0).toUpperCase() + typeOption.slice(1)}
+                                {fieldTypeLabel(typeOption)}
                             </ChoiceChip>
                         );
                     },

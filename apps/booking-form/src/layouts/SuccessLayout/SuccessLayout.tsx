@@ -1,6 +1,7 @@
 import { type FC, memo } from 'react';
 import CheckIcon from '#/assets/icons/check.svg?react';
 import styles from './SuccessLayout.module.scss';
+import { m } from '#/i18n/messages';
 
 export const SuccessLayout: FC = () => {
     return (
@@ -18,12 +19,8 @@ const SuccessHero: FC = memo(() => {
             <span className={styles.check} aria-hidden>
                 <CheckIcon className={styles.checkIcon} />
             </span>
-            <h1 className={styles.title}>You're booked</h1>
-            <p className={styles.description}>
-                Your booking has been submitted successfully. You may close this
-                page via "Done" button. If additional information is needed, you
-                will be contacted.
-            </p>
+            <h1 className={styles.title}>{m.success_title()}</h1>
+            <p className={styles.description}>{m.success_description()}</p>
         </div>
     );
 });
@@ -35,7 +32,7 @@ const SuccessButton: FC = memo(() => {
 
     return (
         <button type="button" className={styles.cta} onClick={handleDone}>
-            Done
+            {m.done()}
         </button>
     );
 });
@@ -46,7 +43,7 @@ const SuccessFooter: FC = memo(() => {
             <span className={styles.creditMark} aria-hidden>
                 B
             </span>
-            <span className={styles.creditText}>Powered by Bookio</span>
+            <span className={styles.creditText}>{m.powered_by()}</span>
         </div>
     );
 });

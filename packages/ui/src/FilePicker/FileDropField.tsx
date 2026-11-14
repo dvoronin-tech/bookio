@@ -7,6 +7,7 @@ import { createClearClickHandler, createOpenOnKeyDownHandler } from '../utils/ev
 import { formatFileSize, getFileExtension } from '../utils/fileUtils.js';
 import FileCheckIcon from './icons/file-check.svg?react';
 import FileIcon from './icons/file.svg?react';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import styles from './FileDropField.module.scss';
 
 export type FileDropFieldProps = {
@@ -21,19 +22,22 @@ export type FileDropFieldProps = {
 
 function FileDropField({
     label,
-    placeholder = 'Drag & drop a file here, or click to browse',
+    placeholder,
     onChange,
     accept,
     disabled = false,
     className,
     id,
 }: FileDropFieldProps) {
+    const copy = useUiCopy();
+    const resolvedPlaceholder = placeholder ?? copy.fileDropPlaceholder;
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, isDragging, error, openFilePicker, clear, inputProps, dropProps } = useFilePicker({
         onChange,
         accept,
         disabled,
+        invalidTypeError: copy.fileTypeError,
     });
 
     const handleKeyDown = createOpenOnKeyDownHandler(openFilePicker);
@@ -78,7 +82,7 @@ function FileDropField({
                                 type="button"
                                 className={styles.clearButton}
                                 onClick={handleClear}
-                                aria-label="Remove file"
+                                aria-label={copy.removeFile}
                             >
                                 <CloseIcon />
                             </button>
@@ -87,7 +91,7 @@ function FileDropField({
                 ) : (
                     <div className={styles.placeholder}>
                         <FileIcon className={styles.placeholderIcon} aria-hidden />
-                        <span className={styles.placeholderText}>{placeholder}</span>
+                        <span className={styles.placeholderText}>{resolvedPlaceholder}</span>
                     </div>
                 )}
             </div>

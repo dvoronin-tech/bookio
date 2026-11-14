@@ -3,6 +3,7 @@ import { useFormContext, useWatch } from 'react-hook-form';
 import type { FieldModalFormValues } from '@bookio/backend/schemas';
 import { SelectDropdown, type SelectDropdownOption } from '@bookio/ui';
 import { imageAcceptOptions } from '#utils/paramsFieldConfig/imageAcceptOptions';
+import { m } from '#i18n/messages';
 
 const ALL_IMAGES_MIME_TYPE = imageAcceptOptions['All images'];
 
@@ -81,7 +82,10 @@ export const AcceptTypesField: FC<AcceptTypesFieldProps> = ({
         [watchedAccept, setValue],
     );
 
-    const formatSelectedCount = useCallback((count: number) => `${count} types selected`, []);
+    const formatSelectedCount = useCallback(
+        (count: number) => m.types_selected({ count }),
+        [],
+    );
 
     return (
         <SelectDropdown
@@ -89,7 +93,7 @@ export const AcceptTypesField: FC<AcceptTypesFieldProps> = ({
             options={options}
             selected={displayedSelected}
             onOptionClick={handleToggleAcceptType}
-            placeholder="Select allowed types"
+            placeholder={m.accept_placeholder()}
             searchPlaceholder={searchPlaceholder}
             emptyOptionsText={emptyOptionsText}
             formatSelectedCount={formatSelectedCount}

@@ -4,6 +4,7 @@ import { InputField } from '../Input/Input.js';
 import CloseIcon from '../icons/close.svg?react';
 import { createClearClickHandler } from '../utils/eventHandlers.js';
 import { useImagePicker } from './useImagePicker.js';
+import { useUiCopy } from '../i18n/UiI18n.js';
 import styles from './ImagePickerField.module.scss';
 
 export type ImagePickerFieldProps = {
@@ -18,19 +19,22 @@ export type ImagePickerFieldProps = {
 
 function ImagePickerField({
     label,
-    placeholder = 'Select an image',
+    placeholder,
     onChange,
     accept,
     disabled = false,
     className,
     id,
 }: ImagePickerFieldProps) {
+    const copy = useUiCopy();
+    const resolvedPlaceholder = placeholder ?? copy.imageSelectPlaceholder;
     const generatedId = useId();
     const inputId = id ?? generatedId;
     const { file, previewUrl, error, openFilePicker, clear, inputProps } = useImagePicker({
         onChange,
         accept,
         disabled,
+        invalidTypeError: copy.imageFileError,
     });
 
     const handleClear = createClearClickHandler(clear);
@@ -55,7 +59,7 @@ function ImagePickerField({
                         <img className={styles.preview} src={previewUrl} alt="" aria-hidden />
                     )}
                     <span className={file ? styles.fileName : styles.placeholder}>
-                        {file?.name ?? placeholder}
+                        {file?.name ?? resolvedPlaceholder}
                     </span>
                 </button>
                 {file && !disabled && (
@@ -63,7 +67,7 @@ function ImagePickerField({
                         type="button"
                         className={styles.clearButton}
                         onClick={handleClear}
-                        aria-label="Remove image"
+                        aria-label={copy.removeImage}
                     >
                         <CloseIcon />
                     </button>
