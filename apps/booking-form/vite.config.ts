@@ -17,12 +17,15 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const config = defineConfig({
     resolve: {
         tsconfigPaths: true,
-        alias: {
-            '@bookio/booking-form-ui': path.resolve(
-                __dirname,
-                '../../packages/booking-form-ui/src/index.ts',
-            ),
-        },
+        alias: [
+            {
+                find: /^@bookio\/booking-form-ui$/,
+                replacement: path.resolve(
+                    __dirname,
+                    '../../packages/booking-form-ui/src/index.ts',
+                ),
+            },
+        ],
     },
     plugins: [
         devtools(),
