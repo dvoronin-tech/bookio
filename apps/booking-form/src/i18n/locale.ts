@@ -1,4 +1,4 @@
-import { getLocale } from '#/i18n/messages';
+import { getLocale } from '../paraglide/runtime.js';
 
 export type AppLocale = 'en' | 'ru';
 

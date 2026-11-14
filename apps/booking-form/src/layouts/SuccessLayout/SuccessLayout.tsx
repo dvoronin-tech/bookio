@@ -1,7 +1,7 @@
 import { type FC, memo } from 'react';
 import CheckIcon from '#/assets/icons/check.svg?react';
 import styles from './SuccessLayout.module.scss';
-import { m } from '#/i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 export const SuccessLayout: FC = () => {
     return (

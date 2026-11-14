@@ -1,5 +1,5 @@
 import type { BookingFormCopy } from '@bookio/booking-form-ui';
-import { m } from '#/i18n/messages';
+import { m } from '../paraglide/messages.js';
 
 export function buildBookingFormCopy(): BookingFormCopy {
     return {

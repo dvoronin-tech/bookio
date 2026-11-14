@@ -4,7 +4,8 @@ import { queryClient } from '@lib/query-client';
 import { NotFoundPage } from '#/pages/Errors/NotFoundPage/NotFoundPage';
 import { AppLocale } from '#/i18n/AppLocale';
 import { LanguageSwitch } from '#/components/LanguageSwitch/LanguageSwitch';
-import { getLocale, getTextDirection, m } from '#/i18n/messages';
+import { m } from '../paraglide/messages.js';
+import { getLocale, getTextDirection } from '../paraglide/runtime.js';
 
 import appCss from '../styles.css?url';
 

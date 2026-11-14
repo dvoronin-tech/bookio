@@ -6,7 +6,7 @@ import { useSteps } from '#/store/Steps/StepsContext';
 import { stepsManager } from '#/store/Steps/stepsManager';
 import clsx from 'clsx';
 import { useBookingFormData } from '#/store/BookingFormData/BookingFormDataContext';
-import { m } from '#/i18n/messages';
+import { m } from '../../paraglide/messages.js';
 
 export const GreetingLayout: FC = () => {
     const setStep = useSteps((s) => s.setStep);

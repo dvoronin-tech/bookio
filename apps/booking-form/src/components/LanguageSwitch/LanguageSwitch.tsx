@@ -2,7 +2,8 @@ import type { FC } from 'react';
 import { SegmentedControl } from '@bookio/ui';
 import FlagUsIcon from '#/assets/icons/flag-us.svg?react';
 import FlagRuIcon from '#/assets/icons/flag-ru.svg?react';
-import { getLocale, m, setLocale } from '#/i18n/messages';
+import { m } from '../../paraglide/messages.js';
+import { getLocale, setLocale } from '../../paraglide/runtime.js';
 
 export const LanguageSwitch: FC = () => {
     const locale = getLocale();
