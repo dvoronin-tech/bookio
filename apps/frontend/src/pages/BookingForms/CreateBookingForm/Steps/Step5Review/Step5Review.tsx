@@ -4,6 +4,7 @@ import { Button } from '@bookio/ui';
 import { useCreateBookingForm } from '#api/bookingForms/createBookingForm.ts';
 import {
     type CreateBookingFormDraft,
+    type CreateBookingFormStep,
     useCreateBookingFormStore,
 } from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
@@ -13,6 +14,7 @@ import styles from './Step5Review.module.scss';
 import { m } from '../../../../../paraglide/messages.js';
 import { getLocale } from '../../../../../paraglide/runtime.js';
 import { COLOR_KEYS, colorLabel } from '../../colorLabels.ts';
+import { CreateBookingFormCloseButton } from '../../CreateBookingFormCloseButton.tsx';
 
 type ReviewCell = {
     label: string;
@@ -24,6 +26,8 @@ type ReviewCell = {
 type ReviewSection = {
     id: string;
     title: string;
+    step: CreateBookingFormStep;
+    throughStep: CreateBookingFormStep;
     cells: ReviewCell[];
 };
 
@@ -31,6 +35,9 @@ const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
     {
         id: 'general',
         title: m.step5_general(),
+        step: 1,
+        // Name and description are edited on step 1; slug is step 2.
+        throughStep: 2,
         cells: [
             { label: m.name(), value: data.name },
             {
@@ -44,6 +51,8 @@ const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
     {
         id: 'colors',
         title: m.step5_colors(),
+        step: 3,
+        throughStep: 3,
         cells: COLOR_KEYS.map((key) => ({
             label: colorLabel(key),
             value: data[key],
@@ -53,6 +62,8 @@ const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
     {
         id: 'metadata',
         title: m.step5_metadata(),
+        step: 4,
+        throughStep: 4,
         cells: [
             { label: m.title(), value: data.metaTitle },
             { label: m.description(), value: data.metaDescription },
@@ -67,15 +78,21 @@ const buildReviewSections = (data: CreateBookingFormDraft): ReviewSection[] => [
 ];
 
 export const Step5Review: FC = () => {
-    const { data, goToPreviousStep, goToNextStep, setCreatedBookingFormId } =
-        useCreateBookingFormStore(
-            useShallow((s) => ({
-                data: s.data,
-                goToPreviousStep: s.goToPreviousStep,
-                goToNextStep: s.goToNextStep,
-                setCreatedBookingFormId: s.setCreatedBookingFormId,
-            })),
-        );
+    const {
+        data,
+        goToPreviousStep,
+        goToNextStep,
+        editFromReview,
+        setCreatedBookingFormId,
+    } = useCreateBookingFormStore(
+        useShallow((s) => ({
+            data: s.data,
+            goToPreviousStep: s.goToPreviousStep,
+            goToNextStep: s.goToNextStep,
+            editFromReview: s.editFromReview,
+            setCreatedBookingFormId: s.setCreatedBookingFormId,
+        })),
+    );
 
     const { mutateAsync: createBookingForm, isPending } =
         useCreateBookingForm();
@@ -138,12 +155,24 @@ export const Step5Review: FC = () => {
                     >
                         {m.back()}
                     </Button>
+                    <CreateBookingFormCloseButton disabled={isPending} />
                 </div>
             }
         >
             <div className={styles.summary}>
                 {sections.map((section, sectionIndex) => (
-                    <section key={section.id} className={styles.section}>
+                    <button
+                        key={section.id}
+                        type="button"
+                        className={styles.section}
+                        disabled={isPending}
+                        aria-label={m.step5_edit_section({
+                            title: section.title,
+                        })}
+                        onClick={() =>
+                            editFromReview(section.step, section.throughStep)
+                        }
+                    >
                         <header className={styles.sectionHeader}>
                             <span className={styles.sectionIndex}>
                                 {String(sectionIndex + 1).padStart(2, '0')}
@@ -151,6 +180,9 @@ export const Step5Review: FC = () => {
                             <h3 className={styles.sectionTitle}>
                                 {section.title}
                             </h3>
+                            <span className={styles.editHint}>
+                                {m.step5_edit()}
+                            </span>
                         </header>
 
                         <div className={styles.elements}>
@@ -183,7 +215,7 @@ export const Step5Review: FC = () => {
                                 </div>
                             ))}
                         </div>
-                    </section>
+                    </button>
                 ))}
             </div>
         </FormWizardLayout>

@@ -4,24 +4,36 @@ import { Button, ValidatableInput } from '@bookio/ui';
 import { BookingFormUrlPreview } from '#components/BookingFormUrlPreview/BookingFormUrlPreview.tsx';
 import { useIsBookingFormExists } from '#api/bookingForms/isBookingFormExists.ts';
 import { useGetOrganization } from '#api/organizations/getOrganizationData.ts';
-import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import {
+    shouldReturnToReview,
+    useCreateBookingFormStore,
+} from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import { slugSchema } from '@bookio/backend/schemas';
 import toast from 'react-hot-toast';
 import styles from './Step2UrlSlug.module.scss';
 import { m } from '../../../../../paraglide/messages.js';
+import { CreateBookingFormCloseButton } from '../../CreateBookingFormCloseButton.tsx';
 
 export const Step2UrlSlug: FC = () => {
-    const { slug, organizationId, setField, goToNextStep, goToPreviousStep } =
-        useCreateBookingFormStore(
-            useShallow((s) => ({
-                slug: s.data.slug,
-                organizationId: s.data.organizationId,
-                setField: s.setField,
-                goToNextStep: s.goToNextStep,
-                goToPreviousStep: s.goToPreviousStep,
-            })),
-        );
+    const {
+        slug,
+        organizationId,
+        setField,
+        goToNextStep,
+        goToPreviousStep,
+        reviewEditThroughStep,
+    } = useCreateBookingFormStore(
+        useShallow((s) => ({
+            slug: s.data.slug,
+            organizationId: s.data.organizationId,
+            setField: s.setField,
+            goToNextStep: s.goToNextStep,
+            goToPreviousStep: s.goToPreviousStep,
+            reviewEditThroughStep: s.reviewEditThroughStep,
+        })),
+    );
+    const returnsToReview = shouldReturnToReview(2, reviewEditThroughStep);
 
     const { data: organization } = useGetOrganization(
         organizationId || undefined,
@@ -93,7 +105,9 @@ export const Step2UrlSlug: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        {m.wizard_next()}
+                        {returnsToReview
+                            ? m.wizard_back_to_review()
+                            : m.wizard_next()}
                     </Button>
                     <Button
                         type="button"
@@ -102,6 +116,7 @@ export const Step2UrlSlug: FC = () => {
                     >
                         {m.back()}
                     </Button>
+                    <CreateBookingFormCloseButton />
                 </div>
             }
         >

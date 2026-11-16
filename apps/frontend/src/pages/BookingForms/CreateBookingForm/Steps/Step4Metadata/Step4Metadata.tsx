@@ -1,12 +1,16 @@
 import { type ChangeEvent, type FC, useCallback } from 'react';
 import { useShallow } from 'zustand/shallow';
 import { Button, Input } from '@bookio/ui';
-import { useCreateBookingFormStore } from '#store/useCreateBookingFormStore.ts';
+import {
+    shouldReturnToReview,
+    useCreateBookingFormStore,
+} from '#store/useCreateBookingFormStore.ts';
 import { FormWizardLayout } from '#components/FormWizardLayout/FormWizardLayout.tsx';
 import { step4Schema } from '../../schemas/createBookingFormDraft.schema.ts';
 import toast from 'react-hot-toast';
 import styles from './Step4Metadata.module.scss';
 import { m } from '../../../../../paraglide/messages.js';
+import { CreateBookingFormCloseButton } from '../../CreateBookingFormCloseButton.tsx';
 
 export const Step4Metadata: FC = () => {
     const {
@@ -15,6 +19,7 @@ export const Step4Metadata: FC = () => {
         setField,
         goToNextStep,
         goToPreviousStep,
+        reviewEditThroughStep,
     } = useCreateBookingFormStore(
         useShallow((s) => ({
             metaTitle: s.data.metaTitle,
@@ -22,8 +27,10 @@ export const Step4Metadata: FC = () => {
             setField: s.setField,
             goToNextStep: s.goToNextStep,
             goToPreviousStep: s.goToPreviousStep,
+            reviewEditThroughStep: s.reviewEditThroughStep,
         })),
     );
+    const returnsToReview = shouldReturnToReview(4, reviewEditThroughStep);
 
     const handleMetaTitleChange = useCallback(
         (event: ChangeEvent<HTMLInputElement>) => {
@@ -70,7 +77,9 @@ export const Step4Metadata: FC = () => {
                         variant="primary-filled"
                         onClick={handleClickNext}
                     >
-                        {m.wizard_next()}
+                        {returnsToReview
+                            ? m.wizard_back_to_review()
+                            : m.wizard_next()}
                     </Button>
                     <Button
                         type="button"
@@ -79,6 +88,7 @@ export const Step4Metadata: FC = () => {
                     >
                         {m.back()}
                     </Button>
+                    <CreateBookingFormCloseButton />
                 </div>
             }
         >
